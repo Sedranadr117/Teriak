@@ -1,8 +1,9 @@
 class EndPoints {
-  static const String baserUrl = "";
+  static const String baserUrl = "http://159.198.75.161:13000/api/v1/";
   static const String template = "template/";
-}
 
-class ApiKey {
-  static String id = "id";
+  // Auth endpoints
+  static const String adminLogin = "admin/login";
+  static const String logout = "admin/logout";
+  static const String profile = "admin/profile";
 }

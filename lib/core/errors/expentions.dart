@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:http/http.dart' as http;
 import 'package:teriak/core/errors/error_model.dart';
 
 //!ServerException
@@ -62,12 +63,32 @@ class UnknownException extends ServerException {
   UnknownException(super.errorModel);
 }
 
-  void handleHttpException(Object e) {
+void handleHttpException(Object e) {
   if (e is HttpException) {
-    throw ConnectionErrorException(ErrorModel(errorMessage: e.message, status: 500));
+    throw ConnectionErrorException(
+        ErrorModel(errorMessage: e.message, status: 500));
   } else {
     throw UnknownException(ErrorModel(errorMessage: e.toString(), status: 500));
   }
 }
 
-
+void handleHttpResponse(http.Response response) {
+  final status = response.statusCode;
+  final errorModel = ErrorModel(
+    errorMessage: response.body,
+    status: status,
+  );
+  if (status >= 200 && status < 300) {
+    return;
+  } else if (status == 401) {
+    throw UnauthorizedException(errorModel);
+  } else if (status == 403) {
+    throw ForbiddenException(errorModel);
+  } else if (status == 404) {
+    throw NotFoundException(errorModel);
+  } else if (status == 500) {
+    throw ServerException(errorModel);
+  } else {
+    throw UnknownException(errorModel);
+  }
+}
