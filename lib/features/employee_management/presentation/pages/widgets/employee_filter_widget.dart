@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class EmployeeFilterWidget extends StatelessWidget {
   final String selectedFilter;
@@ -43,33 +42,35 @@ class EmployeeFilterWidget extends StatelessWidget {
                   CustomIconWidget(
                     iconName: filter['icon']!,
                     color: isSelected
-                        ? AppTheme.lightTheme.colorScheme.onPrimary
-                        : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 16,
                   ),
                   SizedBox(width: 1.w),
                   Text(
                     filter['label']!,
-                    style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-                      color: isSelected
-                          ? AppTheme.lightTheme.colorScheme.onPrimary
-                          : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.w400,
-                    ),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: isSelected
+                              ? Theme.of(context).colorScheme.onPrimary
+                              : Theme.of(context).colorScheme.onSurfaceVariant,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.w400,
+                        ),
                   ),
                 ],
               ),
               onSelected: (selected) {
                 onFilterChanged(filter['label']!);
               },
-              backgroundColor: AppTheme.lightTheme.colorScheme.surface,
-              selectedColor: AppTheme.lightTheme.colorScheme.primary,
-              checkmarkColor: AppTheme.lightTheme.colorScheme.onPrimary,
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              selectedColor: Theme.of(context).colorScheme.primary,
+              checkmarkColor: Theme.of(context).colorScheme.onPrimary,
               side: BorderSide(
                 color: isSelected
-                    ? AppTheme.lightTheme.colorScheme.primary
-                    : AppTheme.lightTheme.colorScheme.outline
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context)
+                        .colorScheme
+                        .outline
                         .withValues(alpha: 0.3),
                 width: 1,
               ),

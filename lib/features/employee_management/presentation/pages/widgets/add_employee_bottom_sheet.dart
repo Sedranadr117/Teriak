@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 
 class AddEmployeeBottomSheet extends StatelessWidget {
@@ -20,7 +20,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
         'description': 'Licensed professional with full dispensing authority',
         'icon': 'local_pharmacy',
         'permissions': 'Full Access',
-        'color': AppTheme.lightTheme.colorScheme.primary,
+        'color': Theme.of(context).colorScheme.primary,
       },
       {
         'title': 'Senior Pharmacist',
@@ -28,14 +28,14 @@ class AddEmployeeBottomSheet extends StatelessWidget {
             'Experienced pharmacist with supervisory responsibilities',
         'icon': 'supervisor_account',
         'permissions': 'Full Access + Management',
-        'color': AppTheme.lightTheme.colorScheme.primary,
+        'color': Theme.of(context).colorScheme.primary,
       },
       {
         'title': 'Pharmacy Technician',
         'description': 'Certified technician supporting pharmacy operations',
         'icon': 'medical_services',
         'permissions': 'Limited Access',
-        'color': AppTheme.lightTheme.colorScheme.secondary,
+        'color': Theme.of(context).colorScheme.secondary,
       },
       {
         'title': 'Pharmacy Assistant',
@@ -49,13 +49,13 @@ class AddEmployeeBottomSheet extends StatelessWidget {
         'description': 'Student gaining practical experience under supervision',
         'icon': 'school',
         'permissions': 'Intern Access',
-        'color': AppTheme.lightTheme.colorScheme.tertiary,
+        'color': Theme.of(context).colorScheme.tertiary,
       },
     ];
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.lightTheme.bottomSheetTheme.backgroundColor,
+        color: Theme.of(context).bottomSheetTheme.backgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -67,7 +67,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
             width: 12.w,
             height: 0.5.h,
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.colorScheme.outline,
+              color: Theme.of(context).colorScheme.outline,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -79,16 +79,16 @@ class AddEmployeeBottomSheet extends StatelessWidget {
               children: [
                 Text(
                   'Add New Team Member',
-                  style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 SizedBox(height: 1.h),
                 Text(
                   'Select the role for the new team member',
-                  style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -114,16 +114,20 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                       child: Container(
                         padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
-                          color: AppTheme.lightTheme.cardColor,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppTheme.lightTheme.colorScheme.outline
+                            color: Theme.of(context)
+                                .colorScheme
+                                .outline
                                 .withValues(alpha: 0.2),
                             width: 1,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.lightTheme.colorScheme.shadow
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .shadow
                                   .withValues(alpha: 0.05),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
@@ -171,7 +175,8 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                                     style: AppTheme
                                         .lightTheme.textTheme.bodySmall
                                         ?.copyWith(
-                                      color: AppTheme.lightTheme.colorScheme
+                                      color: Theme.of(context)
+                                          .colorScheme
                                           .onSurfaceVariant,
                                     ),
                                     maxLines: 2,
@@ -182,12 +187,12 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                                     padding: EdgeInsets.symmetric(
                                         horizontal: 2.w, vertical: 0.5.h),
                                     decoration: BoxDecoration(
-                                      color: _getPermissionColor(
+                                      color: _getPermissionColor(context,
                                               role['permissions'] as String)
                                           .withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(6),
                                       border: Border.all(
-                                        color: _getPermissionColor(
+                                        color: _getPermissionColor(context,
                                                 role['permissions'] as String)
                                             .withValues(alpha: 0.3),
                                         width: 1,
@@ -198,7 +203,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                                       style: AppTheme
                                           .lightTheme.textTheme.labelSmall
                                           ?.copyWith(
-                                        color: _getPermissionColor(
+                                        color: _getPermissionColor(context,
                                             role['permissions'] as String),
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -236,9 +241,9 @@ class AddEmployeeBottomSheet extends StatelessWidget {
               ),
               child: Text(
                 'Cancel',
-                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
               ),
             ),
           ),
@@ -247,7 +252,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
     );
   }
 
-  Color _getPermissionColor(String permission) {
+  Color _getPermissionColor(BuildContext context, String permission) {
     switch (permission.toLowerCase()) {
       case 'full access':
       case 'full access + management':
@@ -256,9 +261,9 @@ class AddEmployeeBottomSheet extends StatelessWidget {
         return AppTheme.warningLight;
       case 'basic access':
       case 'intern access':
-        return AppTheme.lightTheme.colorScheme.secondary;
+        return Theme.of(context).colorScheme.secondary;
       default:
-        return AppTheme.lightTheme.colorScheme.onSurfaceVariant;
+        return Theme.of(context).colorScheme.onSurfaceVariant;
     }
   }
 }

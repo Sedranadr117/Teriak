@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/themes/assets.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -52,9 +52,18 @@ class _SplashScreenState extends State<SplashScreen>
 
     _fadeController.addStatusListener((status) {
       if (status == AnimationStatus.completed && mounted) {
-        Future.delayed(const Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 500), () async {
           if (mounted) {
-            Get.toNamed(AppPages.signin);
+            final cacheHelper = CacheHelper();
+            final token = cacheHelper.getData(key: 'token');
+            final isPharmacyRegistrationComplete = await cacheHelper.getData(
+                    key: 'isPharmacyRegistrationComplete') ??
+                false;
+            (token != null && token is String && token.isNotEmpty)
+                ? (isPharmacyRegistrationComplete
+                    ? Get.toNamed(AppPages.employeeManagement)
+                    : Get.toNamed(AppPages.pharmacyCompleteRegistration))
+                : Get.toNamed(AppPages.signin);
           }
         });
       }
@@ -84,10 +93,13 @@ class _SplashScreenState extends State<SplashScreen>
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
-                      AppTheme.lightTheme.primaryColor
+                      Theme.of(context)
+                          .primaryColor
                           .withOpacity(0.8 * _fadeAnimation.value + 0.2),
                       Colors.white.withOpacity(0.7),
-                      AppTheme.lightTheme.colorScheme.secondary
+                      Theme.of(context)
+                          .colorScheme
+                          .secondary
                           .withOpacity(0.5 * _fadeAnimation.value + 0.2),
                     ],
                     stops: const [0.0, 0.6, 1.0],

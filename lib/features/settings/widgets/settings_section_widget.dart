@@ -23,15 +23,15 @@ class SettingsSectionWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
             child: Text(
               title,
-              style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
           ),
           Container(
             decoration: BoxDecoration(
-              color: AppTheme.lightTheme.colorScheme.surface,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -53,7 +53,9 @@ class SettingsSectionWidget extends StatelessWidget {
                       Divider(
                         height: 1,
                         thickness: 1,
-                        color: AppTheme.lightTheme.colorScheme.outline
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
                             .withValues(alpha: 0.2),
                         indent: 16,
                         endIndent: 16,

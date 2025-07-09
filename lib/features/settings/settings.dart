@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/routes/app_pages.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/themes/theme_controller.dart';
+import 'package:teriak/core/widgets/custom_app_bar.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
 import './widgets/user_profile_header_widget.dart';
@@ -15,10 +20,10 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final ThemeController _themeController = Get.find<ThemeController>();
   bool _biometricEnabled = false;
   bool _notificationsEnabled = true;
   bool _offlineStorageEnabled = true;
-  bool _darkThemeEnabled = false;
   bool _developerOptionsEnabled = false;
   String _selectedLanguage = 'English';
   int _sessionTimeout = 30;
@@ -41,22 +46,11 @@ class _SettingsState extends State<Settings> {
     final userData = _mockUserData.first;
 
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(
-          'Settings',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
-        ),
-        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
-        elevation: AppTheme.lightTheme.appBarTheme.elevation,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: CustomIconWidget(
-            iconName: 'arrow_back',
-            color: AppTheme.lightTheme.colorScheme.onSurface,
-            size: 24,
-          ),
-        ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: CustomAppBar(
+        title: 'Settings',
+        showThemeToggle:
+            false, // Don't show theme toggle in settings since it's already there
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -188,19 +182,17 @@ class _SettingsState extends State<Settings> {
                   onTap: () => _showLanguageDialog(context),
                   showArrow: true,
                 ),
-                SettingsItemWidget(
-                  icon: 'palette',
-                  title: 'Theme',
-                  subtitle: _darkThemeEnabled ? 'Dark' : 'Light',
-                  trailing: Switch(
-                    value: _darkThemeEnabled,
-                    onChanged: (value) {
-                      setState(() {
-                        _darkThemeEnabled = value;
-                      });
-                    },
-                  ),
-                ),
+                Obx(() => SettingsItemWidget(
+                      icon: 'palette',
+                      title: 'Theme',
+                      subtitle: _themeController.isDarkMode ? 'Dark' : 'Light',
+                      trailing: Switch(
+                        value: _themeController.isDarkMode,
+                        onChanged: (value) {
+                          _themeController.toggleTheme();
+                        },
+                      ),
+                    )),
                 SettingsItemWidget(
                   icon: 'storage',
                   title: 'Offline Storage',
@@ -320,10 +312,10 @@ class _SettingsState extends State<Settings> {
                     SizedBox(width: 2.w),
                     Text(
                       'Sign Out',
-                      style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                        color: AppTheme.onErrorLight,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: AppTheme.onErrorLight,
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
                   ],
                 ),
@@ -351,7 +343,7 @@ class _SettingsState extends State<Settings> {
         builder: (context, setState) => AlertDialog(
           title: Text(
             'Change Password',
-            style: AppTheme.lightTheme.textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           content: SizedBox(
             width: 80.w,
@@ -368,7 +360,7 @@ class _SettingsState extends State<Settings> {
                         iconName: obscureCurrentPassword
                             ? 'visibility'
                             : 'visibility_off',
-                        color: AppTheme.lightTheme.colorScheme.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         size: 20,
                       ),
                       onPressed: () {
@@ -390,7 +382,7 @@ class _SettingsState extends State<Settings> {
                         iconName: obscureNewPassword
                             ? 'visibility'
                             : 'visibility_off',
-                        color: AppTheme.lightTheme.colorScheme.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         size: 20,
                       ),
                       onPressed: () {
@@ -412,7 +404,7 @@ class _SettingsState extends State<Settings> {
                         iconName: obscureConfirmPassword
                             ? 'visibility'
                             : 'visibility_off',
-                        color: AppTheme.lightTheme.colorScheme.onSurface,
+                        color: Theme.of(context).colorScheme.onSurface,
                         size: 20,
                       ),
                       onPressed: () {
@@ -469,13 +461,13 @@ class _SettingsState extends State<Settings> {
           enabled
               ? 'Enable Biometric Authentication'
               : 'Disable Biometric Authentication',
-          style: AppTheme.lightTheme.textTheme.titleMedium,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         content: Text(
           enabled
               ? 'Would you like to enable biometric authentication for secure and quick access to your account?'
               : 'Are you sure you want to disable biometric authentication?',
-          style: AppTheme.lightTheme.textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         actions: [
           TextButton(
@@ -515,7 +507,7 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Select Language',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: SizedBox(
           width: 80.w,
@@ -558,7 +550,7 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Session Timeout',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: SizedBox(
           width: 80.w,
@@ -608,7 +600,7 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Sync Frequency',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: SizedBox(
           width: 80.w,
@@ -645,7 +637,7 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Contact Support',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -653,20 +645,20 @@ class _SettingsState extends State<Settings> {
           children: [
             Text(
               'Get in touch with our support team:',
-              style: AppTheme.lightTheme.textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(height: 2.h),
             Row(
               children: [
                 CustomIconWidget(
                   iconName: 'email',
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 20,
                 ),
                 SizedBox(width: 2.w),
                 Text(
                   'support@tiryaq.com',
-                  style: AppTheme.lightTheme.textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -675,13 +667,13 @@ class _SettingsState extends State<Settings> {
               children: [
                 CustomIconWidget(
                   iconName: 'phone',
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 20,
                 ),
                 SizedBox(width: 2.w),
                 Text(
                   '+1 (555) 123-4567',
-                  style: AppTheme.lightTheme.textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -690,13 +682,13 @@ class _SettingsState extends State<Settings> {
               children: [
                 CustomIconWidget(
                   iconName: 'schedule',
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 20,
                 ),
                 SizedBox(width: 2.w),
                 Text(
                   '24/7 Support Available',
-                  style: AppTheme.lightTheme.textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -727,7 +719,7 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Check for Updates',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -736,7 +728,7 @@ class _SettingsState extends State<Settings> {
             SizedBox(height: 2.h),
             Text(
               'Checking for updates...',
-              style: AppTheme.lightTheme.textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
@@ -751,11 +743,11 @@ class _SettingsState extends State<Settings> {
         builder: (context) => AlertDialog(
           title: Text(
             'Up to Date',
-            style: AppTheme.lightTheme.textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           content: Text(
             'You are using the latest version of TIRYAQ Manager.',
-            style: AppTheme.lightTheme.textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           actions: [
             ElevatedButton(
@@ -774,11 +766,11 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Sign Out',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: Text(
           'Are you sure you want to sign out? You will need to sign in again to access your account.',
-          style: AppTheme.lightTheme.textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         actions: [
           TextButton(
@@ -786,13 +778,12 @@ class _SettingsState extends State<Settings> {
             child: Text('Cancel'),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/login-screen',
-                (route) => false,
-              );
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove('token');
+              // Remove any other user data if needed
+
+              Get.offAllNamed(AppPages.signin);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Signed out successfully')),
               );
@@ -814,11 +805,11 @@ class _SettingsState extends State<Settings> {
       builder: (context) => AlertDialog(
         title: Text(
           'Coming Soon',
-          style: AppTheme.lightTheme.textTheme.titleLarge,
+          style: Theme.of(context).textTheme.titleLarge,
         ),
         content: Text(
           '\$feature feature is coming soon in the next update.',
-          style: AppTheme.lightTheme.textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         actions: [
           ElevatedButton(

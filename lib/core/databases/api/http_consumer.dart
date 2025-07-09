@@ -1,12 +1,31 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:teriak/core/databases/api/api_consumer.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/errors/expentions.dart';
 
 class HttpConsumer extends ApiConsumer {
   final String baseUrl;
+  final CacheHelper cacheHelper;
 
-  HttpConsumer({required this.baseUrl});
+  HttpConsumer({required this.baseUrl, required this.cacheHelper});
+
+  Map<String, String> _getHeaders({bool isFormData = false}) {
+    final headers = {
+      'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
+    };
+
+    // Add authorization token if available
+    final token = cacheHelper.getDataString(key: 'token');
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+      print('🔑 Adding token to headers: Bearer $token');
+    } else {
+      print('⚠️ No token found in cache');
+    }
+
+    return headers;
+  }
 
   @override
   Future<dynamic> get(String path,
@@ -14,7 +33,8 @@ class HttpConsumer extends ApiConsumer {
     try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-      final response = await http.get(uri);
+      final headers = _getHeaders();
+      final response = await http.get(uri, headers: headers);
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
@@ -30,15 +50,28 @@ class HttpConsumer extends ApiConsumer {
     try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-      final headers = {
-        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
-      };
+
+      print('🌐 Full URL: $uri');
+      print('📤 Request method: POST');
+      print('📦 Request data: $data');
+
+      final headers = _getHeaders(isFormData: isFormData);
+      print('📋 Headers: $headers');
+
       final body = isFormData ? data : json.encode(data);
+      print('📄 Request body: $body');
+
       final response = await http.post(uri, body: body, headers: headers);
+
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
+
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
+      print('💥 HTTP Error: $e');
       handleHttpException(e);
+      rethrow;
     }
   }
 
@@ -50,9 +83,7 @@ class HttpConsumer extends ApiConsumer {
     try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-      final headers = {
-        'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
-      };
+      final headers = _getHeaders(isFormData: isFormData);
       final body = isFormData ? data : json.encode(data);
       final response = await http.patch(uri, body: body, headers: headers);
       handleHttpResponse(response);
@@ -68,8 +99,9 @@ class HttpConsumer extends ApiConsumer {
     try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-      final response =
-          await http.delete(uri, body: data != null ? json.encode(data) : null);
+      final headers = _getHeaders();
+      final response = await http.delete(uri,
+          body: data != null ? json.encode(data) : null, headers: headers);
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {

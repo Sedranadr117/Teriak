@@ -1,4 +1,4 @@
-import '../../domain/entities/auth_entitiy.dart';
+import 'package:teriak/features/auth/domain/entities/auth_entity.dart';
 
 class AuthModel extends AuthEntity {
   AuthModel({
@@ -7,7 +7,6 @@ class AuthModel extends AuthEntity {
     super.firstName,
     super.lastName,
     super.role,
-    super.isAuthenticated,
   });
 
   factory AuthModel.fromJson(Map<String, dynamic> json) {
@@ -17,12 +16,9 @@ class AuthModel extends AuthEntity {
       firstName: json['firstName'],
       lastName: json['lastName'],
       role: json['role'],
-      isAuthenticated: json['token'] != null,
     );
   }
 
-  @override
-  // ignore: override_on_non_overriding_member
   Map<String, dynamic> toJson() {
     return {
       'token': token,

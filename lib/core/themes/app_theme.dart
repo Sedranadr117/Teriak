@@ -107,18 +107,18 @@ class AppTheme {
     cardColor: cardLight,
     dividerColor: dividerLight,
 
-    // AppBar theme for professional healthcare interface
+    // AppBar theme for professional healthcare latoface
     appBarTheme: AppBarTheme(
       backgroundColor: surfaceLight,
       foregroundColor: textPrimaryLight,
       elevation: 1.0,
       shadowColor: shadowLight,
-      titleTextStyle: GoogleFonts.inter(
+      titleTextStyle: GoogleFonts.lato(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: textPrimaryLight,
       ),
-      toolbarTextStyle: GoogleFonts.inter(
+      toolbarTextStyle: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: textPrimaryLight,
@@ -143,11 +143,11 @@ class AppTheme {
       unselectedItemColor: textSecondaryLight,
       elevation: 8.0,
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: GoogleFonts.inter(
+      selectedLabelStyle: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),
-      unselectedLabelStyle: GoogleFonts.inter(
+      unselectedLabelStyle: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
@@ -173,7 +173,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -188,7 +188,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -202,14 +202,14 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
       ),
     ),
 
-    // Typography using Inter font family for healthcare readability
+    // Typography using lato font family for healthcare readability
     textTheme: _buildTextTheme(isLight: true),
 
     // Input decoration optimized for healthcare forms
@@ -237,17 +237,17 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12.0),
         borderSide: const BorderSide(color: errorLight, width: 2.0),
       ),
-      labelStyle: GoogleFonts.inter(
+      labelStyle: GoogleFonts.lato(
         color: textSecondaryLight,
         fontSize: 16,
         fontWeight: FontWeight.w400,
       ),
-      hintStyle: GoogleFonts.inter(
+      hintStyle: GoogleFonts.lato(
         color: textDisabledLight,
         fontSize: 16,
         fontWeight: FontWeight.w400,
       ),
-      errorStyle: GoogleFonts.inter(
+      errorStyle: GoogleFonts.lato(
         color: errorLight,
         fontSize: 12,
         fontWeight: FontWeight.w400,
@@ -317,11 +317,11 @@ class AppTheme {
       unselectedLabelColor: textSecondaryLight,
       indicatorColor: primaryLight,
       indicatorSize: TabBarIndicatorSize.label,
-      labelStyle: GoogleFonts.inter(
+      labelStyle: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w600,
       ),
-      unselectedLabelStyle: GoogleFonts.inter(
+      unselectedLabelStyle: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
@@ -333,7 +333,7 @@ class AppTheme {
         color: textPrimaryLight.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8.0),
       ),
-      textStyle: GoogleFonts.inter(
+      textStyle: GoogleFonts.lato(
         color: surfaceLight,
         fontSize: 12,
         fontWeight: FontWeight.w400,
@@ -344,7 +344,7 @@ class AppTheme {
     // SnackBar theme for notifications
     snackBarTheme: SnackBarThemeData(
       backgroundColor: textPrimaryLight,
-      contentTextStyle: GoogleFonts.inter(
+      contentTextStyle: GoogleFonts.lato(
         color: surfaceLight,
         fontSize: 14,
         fontWeight: FontWeight.w400,
@@ -368,19 +368,19 @@ class AppTheme {
       ),
     ),
 
-    // Dialog theme for important interactions
+    // Dialog theme for important latoactions
     dialogTheme: DialogThemeData(
       backgroundColor: dialogLight,
       elevation: 8.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      titleTextStyle: GoogleFonts.inter(
+      titleTextStyle: GoogleFonts.lato(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: textPrimaryLight,
       ),
-      contentTextStyle: GoogleFonts.inter(
+      contentTextStyle: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: textPrimaryLight,
@@ -426,12 +426,12 @@ class AppTheme {
       foregroundColor: textPrimaryDark,
       elevation: 1.0,
       shadowColor: shadowDark,
-      titleTextStyle: GoogleFonts.inter(
+      titleTextStyle: GoogleFonts.lato(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: textPrimaryDark,
       ),
-      toolbarTextStyle: GoogleFonts.inter(
+      toolbarTextStyle: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: textPrimaryDark,
@@ -452,11 +452,11 @@ class AppTheme {
       unselectedItemColor: textSecondaryDark,
       elevation: 8.0,
       type: BottomNavigationBarType.fixed,
-      selectedLabelStyle: GoogleFonts.inter(
+      selectedLabelStyle: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w500,
       ),
-      unselectedLabelStyle: GoogleFonts.inter(
+      unselectedLabelStyle: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
@@ -478,7 +478,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -492,7 +492,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -505,7 +505,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.lato(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -536,17 +536,17 @@ class AppTheme {
         borderRadius: BorderRadius.circular(12.0),
         borderSide: const BorderSide(color: errorDark, width: 2.0),
       ),
-      labelStyle: GoogleFonts.inter(
+      labelStyle: GoogleFonts.lato(
         color: textSecondaryDark,
         fontSize: 16,
         fontWeight: FontWeight.w400,
       ),
-      hintStyle: GoogleFonts.inter(
+      hintStyle: GoogleFonts.lato(
         color: textDisabledDark,
         fontSize: 16,
         fontWeight: FontWeight.w400,
       ),
-      errorStyle: GoogleFonts.inter(
+      errorStyle: GoogleFonts.lato(
         color: errorDark,
         fontSize: 12,
         fontWeight: FontWeight.w400,
@@ -604,11 +604,11 @@ class AppTheme {
       unselectedLabelColor: textSecondaryDark,
       indicatorColor: primaryDark,
       indicatorSize: TabBarIndicatorSize.label,
-      labelStyle: GoogleFonts.inter(
+      labelStyle: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w600,
       ),
-      unselectedLabelStyle: GoogleFonts.inter(
+      unselectedLabelStyle: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
@@ -618,7 +618,7 @@ class AppTheme {
         color: textPrimaryDark.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(8.0),
       ),
-      textStyle: GoogleFonts.inter(
+      textStyle: GoogleFonts.lato(
         color: backgroundDark,
         fontSize: 12,
         fontWeight: FontWeight.w400,
@@ -627,7 +627,7 @@ class AppTheme {
     ),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: textPrimaryDark,
-      contentTextStyle: GoogleFonts.inter(
+      contentTextStyle: GoogleFonts.lato(
         color: backgroundDark,
         fontSize: 14,
         fontWeight: FontWeight.w400,
@@ -654,12 +654,12 @@ class AppTheme {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
       ),
-      titleTextStyle: GoogleFonts.inter(
+      titleTextStyle: GoogleFonts.lato(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: textPrimaryDark,
       ),
-      contentTextStyle: GoogleFonts.inter(
+      contentTextStyle: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: textPrimaryDark,
@@ -667,7 +667,7 @@ class AppTheme {
     ),
   );
 
-  /// Helper method to build text theme using Inter font family for healthcare readability
+  /// Helper method to build text theme using lato font family for healthcare readability
   static TextTheme _buildTextTheme({required bool isLight}) {
     final Color textPrimary = isLight ? textPrimaryLight : textPrimaryDark;
     final Color textSecondary =
@@ -676,54 +676,54 @@ class AppTheme {
 
     return TextTheme(
       // Display styles for large headings
-      displayLarge: GoogleFonts.inter(
+      displayLarge: GoogleFonts.lato(
         fontSize: 57,
         fontWeight: FontWeight.w400,
         color: textPrimary,
         letterSpacing: -0.25,
       ),
-      displayMedium: GoogleFonts.inter(
+      displayMedium: GoogleFonts.lato(
         fontSize: 45,
         fontWeight: FontWeight.w400,
         color: textPrimary,
       ),
-      displaySmall: GoogleFonts.inter(
+      displaySmall: GoogleFonts.lato(
         fontSize: 36,
         fontWeight: FontWeight.w400,
         color: textPrimary,
       ),
 
       // Headline styles for section headers
-      headlineLarge: GoogleFonts.inter(
+      headlineLarge: GoogleFonts.lato(
         fontSize: 32,
         fontWeight: FontWeight.w600,
         color: textPrimary,
       ),
-      headlineMedium: GoogleFonts.inter(
+      headlineMedium: GoogleFonts.lato(
         fontSize: 28,
         fontWeight: FontWeight.w600,
         color: textPrimary,
       ),
-      headlineSmall: GoogleFonts.inter(
+      headlineSmall: GoogleFonts.lato(
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: textPrimary,
       ),
 
       // Title styles for cards and components
-      titleLarge: GoogleFonts.inter(
+      titleLarge: GoogleFonts.lato(
         fontSize: 22,
         fontWeight: FontWeight.w500,
         color: textPrimary,
         letterSpacing: 0,
       ),
-      titleMedium: GoogleFonts.inter(
+      titleMedium: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: textPrimary,
         letterSpacing: 0.15,
       ),
-      titleSmall: GoogleFonts.inter(
+      titleSmall: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: textPrimary,
@@ -731,19 +731,19 @@ class AppTheme {
       ),
 
       // Body text for main content
-      bodyLarge: GoogleFonts.inter(
+      bodyLarge: GoogleFonts.lato(
         fontSize: 16,
         fontWeight: FontWeight.w400,
         color: textPrimary,
         letterSpacing: 0.5,
       ),
-      bodyMedium: GoogleFonts.inter(
+      bodyMedium: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w400,
         color: textPrimary,
         letterSpacing: 0.25,
       ),
-      bodySmall: GoogleFonts.inter(
+      bodySmall: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w400,
         color: textSecondary,
@@ -751,19 +751,19 @@ class AppTheme {
       ),
 
       // Label styles for buttons and form elements
-      labelLarge: GoogleFonts.inter(
+      labelLarge: GoogleFonts.lato(
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: textPrimary,
         letterSpacing: 0.1,
       ),
-      labelMedium: GoogleFonts.inter(
+      labelMedium: GoogleFonts.lato(
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: textPrimary,
         letterSpacing: 0.5,
       ),
-      labelSmall: GoogleFonts.inter(
+      labelSmall: GoogleFonts.lato(
         fontSize: 11,
         fontWeight: FontWeight.w500,
         color: textDisabled,

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class SettingsItemWidget extends StatelessWidget {
   final String icon;
@@ -36,14 +35,16 @@ class SettingsItemWidget extends StatelessWidget {
               width: 10.w,
               height: 10.w,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.primary
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
                     .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(5.w),
               ),
               child: Center(
                 child: CustomIconWidget(
                   iconName: icon,
-                  color: AppTheme.lightTheme.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 20,
                 ),
               ),
@@ -58,9 +59,9 @@ class SettingsItemWidget extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: AppTheme.lightTheme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -68,10 +69,12 @@ class SettingsItemWidget extends StatelessWidget {
                     SizedBox(height: 0.5.h),
                     Text(
                       subtitle!,
-                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightTheme.colorScheme.onSurface
-                            .withValues(alpha: 0.7),
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -86,7 +89,9 @@ class SettingsItemWidget extends StatelessWidget {
             else if (showArrow)
               CustomIconWidget(
                 iconName: 'chevron_right',
-                color: AppTheme.lightTheme.colorScheme.onSurface
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
                     .withValues(alpha: 0.5),
                 size: 20,
               ),

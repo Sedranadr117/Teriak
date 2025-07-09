@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
-import '../entities/auth_entitiy.dart';
+import '../entities/auth_entity.dart';
 import '../repositories/auth_repository.dart';
 
 class GetAuth {
@@ -15,10 +15,10 @@ class GetAuth {
   }
 }
 
-class AdminLogin {
+class mangerLogin {
   final AuthRepository repository;
 
-  AdminLogin({required this.repository});
+  mangerLogin({required this.repository});
 
   Future<Either<Failure, AuthEntity>> call({
     required String email,
@@ -28,20 +28,8 @@ class AdminLogin {
       params: AuthParams(
         email: email,
         password: password,
-        authType: AuthType.adminLogin,
+        authType: AuthType.mangerLogin,
       ),
-    );
-  }
-}
-
-class Logout {
-  final AuthRepository repository;
-
-  Logout({required this.repository});
-
-  Future<Either<Failure, AuthEntity>> call() {
-    return repository.getAuth(
-      params: AuthParams(authType: AuthType.logout),
     );
   }
 }

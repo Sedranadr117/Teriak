@@ -1,12 +1,24 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/routes/app_routes.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/themes/theme_controller.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final cacheHelper = CacheHelper();
+  await cacheHelper.init();
+  await NominatimGeocoding.init(reqCacheNum: 20);
+
+  Get.put(ThemeController());
+
   runApp(
     DevicePreview(
       enabled: true,
@@ -22,13 +34,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light,
-      initialRoute: AppPages.splash,
-      getPages: AppRoutes.routes,
+    return GetBuilder<ThemeController>(
+      builder: (themeController) => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: themeController.themeMode,
+        initialRoute: AppPages.splash,
+        getPages: AppRoutes.routes,
+      ),
     );
   }
 }

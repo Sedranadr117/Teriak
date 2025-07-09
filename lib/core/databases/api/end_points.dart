@@ -3,7 +3,7 @@ class EndPoints {
   static const String template = "template/";
 
   // Auth endpoints
-  static const String adminLogin = "admin/login";
-  static const String logout = "admin/logout";
-  static const String profile = "admin/profile";
+  static const String addPharmacy = "pharmacy/complete-registration";
+  static const String mangerLogin = "pharmacy/login";
+  static const String addEmployee = "/pharmacy/employees";
 }

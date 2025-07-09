@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class UserProfileHeaderWidget extends StatelessWidget {
   final Map<String, dynamic> userData;
@@ -22,8 +21,8 @@ class UserProfileHeaderWidget extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppTheme.lightTheme.colorScheme.primary,
-            AppTheme.lightTheme.colorScheme.primaryContainer,
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primaryContainer,
           ],
         ),
       ),
@@ -42,8 +41,8 @@ class UserProfileHeaderWidget extends StatelessWidget {
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        AppTheme.lightTheme.colorScheme.secondary,
-                        AppTheme.lightTheme.colorScheme.secondaryContainer,
+                        Theme.of(context).colorScheme.secondary,
+                        Theme.of(context).colorScheme.secondaryContainer,
                       ],
                     ),
                     borderRadius: BorderRadius.circular(6.w),
@@ -51,7 +50,7 @@ class UserProfileHeaderWidget extends StatelessWidget {
                   child: Center(
                     child: CustomIconWidget(
                       iconName: 'local_pharmacy',
-                      color: AppTheme.lightTheme.colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       size: 24,
                     ),
                   ),
@@ -59,11 +58,11 @@ class UserProfileHeaderWidget extends StatelessWidget {
                 SizedBox(width: 3.w),
                 Text(
                   'TIRYAQ',
-                  style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-                    color: AppTheme.lightTheme.colorScheme.onPrimary,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
                 ),
               ],
             ),
@@ -80,7 +79,7 @@ class UserProfileHeaderWidget extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.w),
                     border: Border.all(
-                      color: AppTheme.lightTheme.colorScheme.onPrimary,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       width: 3,
                     ),
                   ),
@@ -103,33 +102,34 @@ class UserProfileHeaderWidget extends StatelessWidget {
                     children: [
                       Text(
                         userData["name"] as String,
-                        style:
-                            AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                          color: AppTheme.lightTheme.colorScheme.onPrimary,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 0.5.h),
                       Text(
                         userData["role"] as String,
-                        style:
-                            AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                          color: AppTheme.lightTheme.colorScheme.onPrimary
-                              .withValues(alpha: 0.9),
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withValues(alpha: 0.9),
+                            ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       SizedBox(height: 0.5.h),
                       Text(
                         userData["email"] as String,
-                        style:
-                            AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                          color: AppTheme.lightTheme.colorScheme.onPrimary
-                              .withValues(alpha: 0.8),
-                        ),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimary
+                                  .withValues(alpha: 0.8),
+                            ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -145,7 +145,9 @@ class UserProfileHeaderWidget extends StatelessWidget {
             Container(
               padding: EdgeInsets.all(3.w),
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.onPrimary
+                color: Theme.of(context)
+                    .colorScheme
+                    .onPrimary
                     .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -153,6 +155,7 @@ class UserProfileHeaderWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatItem(
+                    context: context,
                     icon: 'store',
                     label: 'Pharmacies',
                     value: '${userData["pharmacyCount"]}',
@@ -160,10 +163,13 @@ class UserProfileHeaderWidget extends StatelessWidget {
                   Container(
                     width: 1,
                     height: 6.h,
-                    color: AppTheme.lightTheme.colorScheme.onPrimary
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onPrimary
                         .withValues(alpha: 0.3),
                   ),
                   _buildStatItem(
+                    context: context,
                     icon: 'access_time',
                     label: 'Last Login',
                     value: userData["lastLogin"] as String,
@@ -178,6 +184,7 @@ class UserProfileHeaderWidget extends StatelessWidget {
   }
 
   Widget _buildStatItem({
+    required BuildContext context,
     required String icon,
     required String label,
     required String value,
@@ -187,25 +194,27 @@ class UserProfileHeaderWidget extends StatelessWidget {
         children: [
           CustomIconWidget(
             iconName: icon,
-            color: AppTheme.lightTheme.colorScheme.onPrimary,
+            color: Theme.of(context).colorScheme.onPrimary,
             size: 24,
           ),
           SizedBox(height: 1.h),
           Text(
             label,
-            style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onPrimary
-                  .withValues(alpha: 0.8),
-            ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onPrimary
+                      .withValues(alpha: 0.8),
+                ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 0.5.h),
           Text(
             value,
-            style: AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-              color: AppTheme.lightTheme.colorScheme.onPrimary,
-              fontWeight: FontWeight.w600,
-            ),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

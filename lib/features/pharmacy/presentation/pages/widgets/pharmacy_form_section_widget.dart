@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class PharmacyFormSectionWidget extends StatefulWidget {
   final String title;
@@ -55,11 +54,10 @@ class _PharmacyFormSectionWidgetState extends State<PharmacyFormSectionWidget> {
                   Expanded(
                     child: Text(
                       widget.title,
-                      style:
-                          AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.lightTheme.colorScheme.primary,
-                      ),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                     ),
                   ),
                   AnimatedRotation(
@@ -67,7 +65,7 @@ class _PharmacyFormSectionWidgetState extends State<PharmacyFormSectionWidget> {
                     duration: const Duration(milliseconds: 200),
                     child: CustomIconWidget(
                       iconName: 'keyboard_arrow_down',
-                      color: AppTheme.lightTheme.colorScheme.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       size: 24,
                     ),
                   ),

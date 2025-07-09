@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
-import './widgets/add_employee_bottom_sheet.dart';
-import './widgets/employee_card_widget.dart';
-import './widgets/employee_filter_widget.dart';
+import 'package:teriak/core/widgets/custom_app_bar.dart';
+import 'widgets/add_employee_bottom_sheet.dart';
+import 'widgets/employee_card_widget.dart';
+import 'widgets/employee_filter_widget.dart';
 
 class EmployeeManagement extends StatefulWidget {
   const EmployeeManagement({super.key});
@@ -212,7 +213,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Add \$role form would open here'),
-              backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+              backgroundColor: Theme.of(context).colorScheme.primary,
             ),
           );
         },
@@ -251,7 +252,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Role assignment would be performed here'),
-                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
               );
             },
@@ -264,7 +265,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Pharmacy transfer would be performed here'),
-                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
               );
             },
@@ -284,29 +285,16 @@ class _EmployeeManagementState extends State<EmployeeManagement>
     final filteredEmployees = _getFilteredEmployees();
 
     return Scaffold(
-      backgroundColor: AppTheme.lightTheme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: AppTheme.lightTheme.appBarTheme.backgroundColor,
-        elevation: AppTheme.lightTheme.appBarTheme.elevation,
-        title: Text(
-          'Employee Management',
-          style: AppTheme.lightTheme.appBarTheme.titleTextStyle,
-        ),
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: CustomIconWidget(
-            iconName: 'arrow_back',
-            color: AppTheme.lightTheme.colorScheme.onSurface,
-            size: 24,
-          ),
-        ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: CustomAppBar(
+        title: 'Employee Management',
         actions: [
           if (_selectedEmployees.isNotEmpty)
             IconButton(
               onPressed: _showBulkActionsDialog,
               icon: CustomIconWidget(
                 iconName: 'more_vert',
-                color: AppTheme.lightTheme.colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
                 size: 24,
               ),
             ),
@@ -316,7 +304,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
             },
             icon: CustomIconWidget(
               iconName: 'settings',
-              color: AppTheme.lightTheme.colorScheme.onSurface,
+              color: Theme.of(context).colorScheme.onSurface,
               size: 24,
             ),
           ),
@@ -325,45 +313,46 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           preferredSize: Size.fromHeight(16.h),
           child: Column(
             children: [
-              // Search Bar
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Search employees...',
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.all(3.w),
-                      child: CustomIconWidget(
-                        iconName: 'search',
-                        color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-                        size: 20,
-                      ),
-                    ),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _searchQuery = '';
-                              });
-                            },
-                            icon: CustomIconWidget(
-                              iconName: 'clear',
-                              color: AppTheme
-                                  .lightTheme.colorScheme.onSurfaceVariant,
-                              size: 20,
-                            ),
-                          )
-                        : null,
-                  ),
-                ),
-              ),
+              // // Search Bar
+              // Container(
+              //   margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+              //   child: TextField(
+              //     controller: _searchController,
+              //     onChanged: (value) {
+              //       setState(() {
+              //         _searchQuery = value;
+              //       });
+              //     },
+              //     decoration: InputDecoration(
+              //       hintText: 'Search employees...',
+              //       prefixIcon: Padding(
+              //         padding: EdgeInsets.all(3.w),
+              //         child: CustomIconWidget(
+              //           iconName: 'search',
+              //           color: Theme.of(context).colorScheme.onSurfaceVariant,
+              //           size: 20,
+              //         ),
+              //       ),
+              //       suffixIcon: _searchQuery.isNotEmpty
+              //           ? IconButton(
+              //               onPressed: () {
+              //                 _searchController.clear();
+              //                 setState(() {
+              //                   _searchQuery = '';
+              //                 });
+              //               },
+              //               icon: CustomIconWidget(
+              //                 iconName: 'clear',
+              //                 color: Theme.of(context)
+              //                     .colorScheme
+              //                     .onSurfaceVariant,
+              //                 size: 20,
+              //               ),
+              //             )
+              //           : null,
+              //     ),
+              //   ),
+              // ),
 
               // Filter Widget
               EmployeeFilterWidget(
@@ -393,9 +382,10 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                           CustomIconWidget(
                             iconName: 'people',
                             color: _tabController.index == 0
-                                ? AppTheme.lightTheme.colorScheme.primary
-                                : AppTheme
-                                    .lightTheme.colorScheme.onSurfaceVariant,
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
                             size: 18,
                           ),
                           SizedBox(width: 2.w),
@@ -410,9 +400,10 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                           CustomIconWidget(
                             iconName: 'school',
                             color: _tabController.index == 1
-                                ? AppTheme.lightTheme.colorScheme.primary
-                                : AppTheme
-                                    .lightTheme.colorScheme.onSurfaceVariant,
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
                             size: 18,
                           ),
                           SizedBox(width: 2.w),
@@ -434,22 +425,24 @@ class _EmployeeManagementState extends State<EmployeeManagement>
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-              color: AppTheme.lightTheme.colorScheme.primaryContainer
+              color: Theme.of(context)
+                  .colorScheme
+                  .primaryContainer
                   .withValues(alpha: 0.1),
               child: Row(
                 children: [
                   CustomIconWidget(
                     iconName: 'check_circle',
-                    color: AppTheme.lightTheme.colorScheme.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 20,
                   ),
                   SizedBox(width: 2.w),
                   Text(
                     '\${_selectedEmployees.length} selected',
-                    style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                      color: AppTheme.lightTheme.colorScheme.primary,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                   const Spacer(),
                   TextButton(
@@ -477,20 +470,20 @@ class _EmployeeManagementState extends State<EmployeeManagement>
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showAddEmployeeBottomSheet,
         backgroundColor:
-            AppTheme.lightTheme.floatingActionButtonTheme.backgroundColor,
+            Theme.of(context).floatingActionButtonTheme.backgroundColor,
         foregroundColor:
-            AppTheme.lightTheme.floatingActionButtonTheme.foregroundColor,
+            Theme.of(context).floatingActionButtonTheme.foregroundColor,
         icon: CustomIconWidget(
           iconName: 'add',
-          color: AppTheme.lightTheme.floatingActionButtonTheme.foregroundColor!,
+          color: Theme.of(context).floatingActionButtonTheme.foregroundColor!,
           size: 24,
         ),
         label: Text(
           _tabController.index == 0 ? 'Add Employee' : 'Add Intern',
-          style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-            color:
-                AppTheme.lightTheme.floatingActionButtonTheme.foregroundColor,
-          ),
+          style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                color:
+                    Theme.of(context).floatingActionButtonTheme.foregroundColor,
+              ),
         ),
       ),
     );
@@ -500,7 +493,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
     if (_isLoading) {
       return Center(
         child: CircularProgressIndicator(
-          color: AppTheme.lightTheme.colorScheme.primary,
+          color: Theme.of(context).colorScheme.primary,
         ),
       );
     }
@@ -511,7 +504,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
 
     return RefreshIndicator(
       onRefresh: _refreshEmployees,
-      color: AppTheme.lightTheme.colorScheme.primary,
+      color: Theme.of(context).colorScheme.primary,
       child: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         itemCount: employees.length,
@@ -537,7 +530,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Edit \${employee["name"]} profile'),
-                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
               );
             },
@@ -545,7 +538,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Change role for \${employee["name"]}'),
-                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
               );
             },
@@ -553,7 +546,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('Update permissions for \${employee["name"]}'),
-                  backgroundColor: AppTheme.lightTheme.colorScheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                 ),
               );
             },
@@ -577,15 +570,15 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           children: [
             CustomIconWidget(
               iconName: isInternTab ? 'school' : 'people_outline',
-              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               size: 80,
             ),
             SizedBox(height: 3.h),
             Text(
               isInternTab ? 'No Interns Found' : 'No Employees Found',
-              style: AppTheme.lightTheme.textTheme.headlineSmall?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
             SizedBox(height: 1.h),
             Text(
@@ -595,9 +588,9 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                       ? 'Start by inviting your first intern to join the team'
                       : 'Start by inviting your first employee to join the team',
               textAlign: TextAlign.center,
-              style: AppTheme.lightTheme.textTheme.bodyMedium?.copyWith(
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-              ),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
             ),
             SizedBox(height: 4.h),
             if (_searchQuery.isEmpty && _selectedFilter == 'All')

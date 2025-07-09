@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class ProgressIndicatorWidget extends StatelessWidget {
   final double progress;
@@ -16,6 +15,29 @@ class ProgressIndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final steps = [
+      'Basic Info',
+      'Contact',
+      'Opening Hours',
+      'Manage Password',
+      'Complete',
+    ];
+    List<Widget> buildSteps(BuildContext context, double progress) {
+      final totalSteps = steps.length - 1;
+      return List.generate(steps.length, (index) {
+        final stepValue = index / totalSteps;
+        final isCompleted = progress >= stepValue;
+        final isActive =
+            (progress >= (index) / totalSteps) && (progress < stepValue);
+        return _buildProgressStep(
+          context,
+          steps[index],
+          isCompleted,
+          isActive: isActive,
+        );
+      });
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
       child: Column(
@@ -26,34 +48,34 @@ class ProgressIndicatorWidget extends StatelessWidget {
             children: [
               Text(
                 'Form Progress',
-                style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
               Row(
                 children: [
                   if (isDraftSaved) ...[
                     CustomIconWidget(
                       iconName: 'cloud_done',
-                      color: AppTheme.lightTheme.colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.secondary,
                       size: 16,
                     ),
                     SizedBox(width: 1.w),
                     Text(
                       'Draft Saved',
-                      style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                        color: AppTheme.lightTheme.colorScheme.secondary,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                     SizedBox(width: 3.w),
                   ],
                   Text(
                     '${(progress * 100).toInt()}%',
-                    style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.lightTheme.colorScheme.primary,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                   ),
                 ],
               ),
@@ -64,40 +86,20 @@ class ProgressIndicatorWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: AppTheme.lightTheme.colorScheme.outline
-                  .withValues(alpha: 0.3),
+              backgroundColor:
+                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
               valueColor: AlwaysStoppedAnimation<Color>(
-                progress == 1.0
-                    ? AppTheme.lightTheme.colorScheme.secondary
-                    : AppTheme.lightTheme.colorScheme.primary,
+                progress == 0.0
+                    ? Theme.of(context).colorScheme.secondary
+                    : Theme.of(context).colorScheme.primary,
               ),
               minHeight: 6,
             ),
           ),
           SizedBox(height: 1.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildProgressStep(
-                context,
-                'Basic Info',
-                progress >= 0.33,
-                isActive: progress >= 0.0 && progress < 0.66,
-              ),
-              _buildProgressStep(
-                context,
-                'Location',
-                progress >= 0.66,
-                isActive: progress >= 0.33 && progress < 1.0,
-              ),
-              _buildProgressStep(
-                context,
-                'Complete',
-                progress >= 1.0,
-                isActive: progress >= 1.0,
-              ),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: buildSteps(context, progress)),
         ],
       ),
     );
@@ -108,11 +110,11 @@ class ProgressIndicatorWidget extends StatelessWidget {
       {bool isActive = false}) {
     Color stepColor;
     if (isCompleted) {
-      stepColor = AppTheme.lightTheme.colorScheme.secondary;
+      stepColor = Theme.of(context).colorScheme.secondary;
     } else if (isActive) {
-      stepColor = AppTheme.lightTheme.colorScheme.primary;
+      stepColor = Theme.of(context).colorScheme.primary;
     } else {
-      stepColor = AppTheme.lightTheme.colorScheme.outline;
+      stepColor = Theme.of(context).colorScheme.outline;
     }
 
     return Column(
@@ -128,12 +130,12 @@ class ProgressIndicatorWidget extends StatelessWidget {
         SizedBox(height: 0.5.h),
         Text(
           label,
-          style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-            color: stepColor,
-            fontWeight:
-                isActive || isCompleted ? FontWeight.w600 : FontWeight.w400,
-            fontSize: 10.sp,
-          ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: stepColor,
+                fontWeight:
+                    isActive || isCompleted ? FontWeight.w600 : FontWeight.w400,
+                fontSize: 10.sp,
+              ),
         ),
       ],
     );

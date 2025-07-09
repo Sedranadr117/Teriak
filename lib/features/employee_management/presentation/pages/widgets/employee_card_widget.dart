@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/custom_icon_widget.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 
 class EmployeeCardWidget extends StatelessWidget {
@@ -36,8 +36,8 @@ class EmployeeCardWidget extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 2.h),
       child: Dismissible(
         key: Key('employee_${employee["id"]}'),
-        background: _buildSwipeBackground(isLeft: true),
-        secondaryBackground: _buildSwipeBackground(isLeft: false),
+        background: _buildSwipeBackground(context, isLeft: true),
+        secondaryBackground: _buildSwipeBackground(context, isLeft: false),
         onDismissed: (direction) {
           if (direction == DismissDirection.startToEnd) {
             // Swipe right - Quick actions
@@ -62,23 +62,29 @@ class EmployeeCardWidget extends StatelessWidget {
             duration: const Duration(milliseconds: 200),
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppTheme.lightTheme.colorScheme.primaryContainer
+                  ? Theme.of(context)
+                      .colorScheme
+                      .primaryContainer
                       .withValues(alpha: 0.1)
-                  : AppTheme.lightTheme.cardColor,
+                  : Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
               border: isSelected
                   ? Border.all(
-                      color: AppTheme.lightTheme.colorScheme.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       width: 2,
                     )
                   : Border.all(
-                      color: AppTheme.lightTheme.colorScheme.outline
+                      color: Theme.of(context)
+                          .colorScheme
+                          .outline
                           .withValues(alpha: 0.2),
                       width: 1,
                     ),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.lightTheme.colorScheme.shadow
+                  color: Theme.of(context)
+                      .colorScheme
+                      .shadow
                       .withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
@@ -96,7 +102,7 @@ class EmployeeCardWidget extends StatelessWidget {
                         margin: EdgeInsets.only(right: 3.w),
                         child: CustomIconWidget(
                           iconName: 'check_circle',
-                          color: AppTheme.lightTheme.colorScheme.primary,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 24,
                         ),
                       ),
@@ -111,8 +117,8 @@ class EmployeeCardWidget extends StatelessWidget {
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isActive
-                                  ? AppTheme.lightTheme.colorScheme.primary
-                                  : AppTheme.lightTheme.colorScheme.outline,
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.outline,
                               width: 2,
                             ),
                           ),
@@ -136,10 +142,10 @@ class EmployeeCardWidget extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: isActive
                                   ? AppTheme.successLight
-                                  : AppTheme.lightTheme.colorScheme.outline,
+                                  : Theme.of(context).colorScheme.outline,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: AppTheme.lightTheme.cardColor,
+                                color: Theme.of(context).cardColor,
                                 width: 2,
                               ),
                             ),
@@ -200,53 +206,31 @@ class EmployeeCardWidget extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                                 horizontal: 2.w, vertical: 0.5.h),
                             decoration: BoxDecoration(
-                              color: _getRoleColor(employee["role"] as String)
+                              color: _getRoleColor(
+                                      context, employee["role"] as String)
                                   .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color: _getRoleColor(employee["role"] as String)
+                                color: _getRoleColor(
+                                        context, employee["role"] as String)
                                     .withValues(alpha: 0.3),
                                 width: 1,
                               ),
                             ),
                             child: Text(
                               employee["role"] as String,
-                              style: AppTheme.lightTheme.textTheme.labelSmall
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
                                   ?.copyWith(
-                                color:
-                                    _getRoleColor(employee["role"] as String),
-                                fontWeight: FontWeight.w500,
-                              ),
+                                    color: _getRoleColor(
+                                        context, employee["role"] as String),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                             ),
                           ),
 
                           SizedBox(height: 1.h),
-
-                          // Pharmacy and Last Login
-                          Row(
-                            children: [
-                              CustomIconWidget(
-                                iconName: 'location_on',
-                                color: AppTheme
-                                    .lightTheme.colorScheme.onSurfaceVariant,
-                                size: 14,
-                              ),
-                              SizedBox(width: 1.w),
-                              Expanded(
-                                child: Text(
-                                  employee["pharmacy"] as String,
-                                  style: AppTheme.lightTheme.textTheme.bodySmall
-                                      ?.copyWith(
-                                    color: AppTheme.lightTheme.colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 0.5.h),
 
                           Row(
                             children: [
@@ -259,11 +243,13 @@ class EmployeeCardWidget extends StatelessWidget {
                               SizedBox(width: 1.w),
                               Text(
                                 'Last login: ${employee["lastLogin"]}',
-                                style: AppTheme.lightTheme.textTheme.bodySmall
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
                                     ?.copyWith(
-                                  color: AppTheme
-                                      .lightTheme.colorScheme.onSurfaceVariant,
-                                ),
+                                      color: AppTheme.lightTheme.colorScheme
+                                          .onSurfaceVariant,
+                                    ),
                               ),
                             ],
                           ),
@@ -280,25 +266,26 @@ class EmployeeCardWidget extends StatelessWidget {
                               horizontal: 2.w, vertical: 0.5.h),
                           decoration: BoxDecoration(
                             color: _getPermissionColor(
-                                    employee["permissions"] as String)
+                                    context, employee["permissions"] as String)
                                 .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             employee["permissions"] as String,
-                            style: AppTheme.lightTheme.textTheme.labelSmall
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
                                 ?.copyWith(
-                              color: _getPermissionColor(
-                                  employee["permissions"] as String),
-                              fontWeight: FontWeight.w500,
-                            ),
+                                  color: _getPermissionColor(context,
+                                      employee["permissions"] as String),
+                                  fontWeight: FontWeight.w500,
+                                ),
                           ),
                         ),
                         SizedBox(height: 1.h),
                         CustomIconWidget(
                           iconName: 'chevron_right',
-                          color:
-                              AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                           size: 20,
                         ),
                       ],
@@ -314,11 +301,15 @@ class EmployeeCardWidget extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
                     decoration: BoxDecoration(
-                      color: AppTheme.lightTheme.colorScheme.secondaryContainer
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondaryContainer
                           .withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: AppTheme.lightTheme.colorScheme.secondary
+                        color: Theme.of(context)
+                            .colorScheme
+                            .secondary
                             .withValues(alpha: 0.3),
                         width: 1,
                       ),
@@ -327,17 +318,19 @@ class EmployeeCardWidget extends StatelessWidget {
                       children: [
                         CustomIconWidget(
                           iconName: 'event',
-                          color: AppTheme.lightTheme.colorScheme.secondary,
+                          color: Theme.of(context).colorScheme.secondary,
                           size: 16,
                         ),
                         SizedBox(width: 2.w),
                         Text(
                           'Internship ends: ${employee["internshipEnd"]}',
-                          style:
-                              AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-                            color: AppTheme.lightTheme.colorScheme.secondary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.secondary,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     ),
@@ -351,12 +344,12 @@ class EmployeeCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildSwipeBackground({required bool isLeft}) {
+  Widget _buildSwipeBackground(BuildContext context, {required bool isLeft}) {
     return Container(
       margin: EdgeInsets.only(bottom: 2.h),
       decoration: BoxDecoration(
         color: isLeft
-            ? AppTheme.lightTheme.colorScheme.primary.withValues(alpha: 0.1)
+            ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
             : AppTheme.errorLight.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
@@ -370,19 +363,19 @@ class EmployeeCardWidget extends StatelessWidget {
               CustomIconWidget(
                 iconName: isLeft ? 'edit' : 'delete',
                 color: isLeft
-                    ? AppTheme.lightTheme.colorScheme.primary
+                    ? Theme.of(context).colorScheme.primary
                     : AppTheme.errorLight,
                 size: 24,
               ),
               SizedBox(height: 0.5.h),
               Text(
                 isLeft ? 'Edit' : 'Remove',
-                style: AppTheme.lightTheme.textTheme.labelSmall?.copyWith(
-                  color: isLeft
-                      ? AppTheme.lightTheme.colorScheme.primary
-                      : AppTheme.errorLight,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: isLeft
+                          ? Theme.of(context).colorScheme.primary
+                          : AppTheme.errorLight,
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ],
           ),
@@ -397,7 +390,7 @@ class EmployeeCardWidget extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.bottomSheetTheme.backgroundColor,
+          color: Theme.of(context).bottomSheetTheme.backgroundColor,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
         padding: EdgeInsets.all(6.w),
@@ -408,16 +401,16 @@ class EmployeeCardWidget extends StatelessWidget {
               width: 12.w,
               height: 0.5.h,
               decoration: BoxDecoration(
-                color: AppTheme.lightTheme.colorScheme.outline,
+                color: Theme.of(context).colorScheme.outline,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
             SizedBox(height: 3.h),
             Text(
               'Quick Actions',
-              style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
             SizedBox(height: 3.h),
             _buildQuickActionTile(
@@ -468,26 +461,26 @@ class EmployeeCardWidget extends StatelessWidget {
       leading: Container(
         padding: EdgeInsets.all(2.w),
         decoration: BoxDecoration(
-          color: AppTheme.lightTheme.colorScheme.primary.withValues(alpha: 0.1),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: CustomIconWidget(
           iconName: icon,
-          color: AppTheme.lightTheme.colorScheme.primary,
+          color: Theme.of(context).colorScheme.primary,
           size: 20,
         ),
       ),
       title: Text(
         title,
-        style: AppTheme.lightTheme.textTheme.titleSmall?.copyWith(
-          fontWeight: FontWeight.w500,
-        ),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
       ),
       subtitle: Text(
         subtitle,
-        style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-          color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
-        ),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
       ),
       onTap: onTap,
       contentPadding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
@@ -523,23 +516,23 @@ class EmployeeCardWidget extends StatelessWidget {
         false;
   }
 
-  Color _getRoleColor(String role) {
+  Color _getRoleColor(BuildContext context, String role) {
     switch (role.toLowerCase()) {
       case 'pharmacist':
       case 'senior pharmacist':
-        return AppTheme.lightTheme.colorScheme.primary;
+        return Theme.of(context).colorScheme.primary;
       case 'pharmacy technician':
-        return AppTheme.lightTheme.colorScheme.secondary;
+        return Theme.of(context).colorScheme.secondary;
       case 'pharmacy assistant':
         return AppTheme.warningLight;
       case 'pharmacy intern':
-        return AppTheme.lightTheme.colorScheme.tertiary;
+        return Theme.of(context).colorScheme.tertiary;
       default:
-        return AppTheme.lightTheme.colorScheme.onSurfaceVariant;
+        return Theme.of(context).colorScheme.onSurfaceVariant;
     }
   }
 
-  Color _getPermissionColor(String permission) {
+  Color _getPermissionColor(BuildContext context, String permission) {
     switch (permission.toLowerCase()) {
       case 'full access':
         return AppTheme.successLight;
@@ -547,9 +540,9 @@ class EmployeeCardWidget extends StatelessWidget {
         return AppTheme.warningLight;
       case 'basic access':
       case 'intern access':
-        return AppTheme.lightTheme.colorScheme.secondary;
+        return Theme.of(context).colorScheme.secondary;
       default:
-        return AppTheme.lightTheme.colorScheme.onSurfaceVariant;
+        return Theme.of(context).colorScheme.onSurfaceVariant;
     }
   }
 }

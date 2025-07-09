@@ -16,6 +16,11 @@ dependencies:
   internet_connection_checker_plus: ^2.7.2
   shared_preferences: ^2.5.3
   sizer: ^2.0.15
+  geolocator: ^14.0.1
+  latlong2: ^0.9.0
+  flutter_map: ^6.1.0
+  nominatim_geocoding: ^0.0.6
+
 
 dev_dependencies:
   flutter_lints: ^4.0.0

@@ -1,10 +1,12 @@
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/features/auth/presentation/pages/signIn_screen.dart';
-import 'package:teriak/features/employee_management/employee_management.dart';
-import 'package:teriak/features/pharmacy/presentation/pages/add_pharmacy.dart';
+import 'package:teriak/features/employee_detail/employee_detail.dart';
+import 'package:teriak/features/employee_management/presentation/pages/employee_management.dart';
+import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
 import 'package:teriak/features/settings/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
+import 'package:teriak/features/template/presentation/pages/template_screen.dart';
 
 class AppRoutes {
   static final List<GetPage> routes = [
@@ -19,8 +21,8 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: AppPages.addPharmacy,
-      page: () => const AddPharmacy(),
+      name: AppPages.pharmacyCompleteRegistration,
+      page: () => const PharmacyCompleteRegistration(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -31,6 +33,16 @@ class AppRoutes {
     GetPage(
       name: AppPages.settings,
       page: () => const Settings(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.employeeDetail,
+      page: () => const EmployeeDetail(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.home,
+      page: () => const HomePage(),
       transition: Transition.fadeIn,
     ),
   ];

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class LoginFormWidget extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -64,7 +63,7 @@ class LoginFormWidget extends StatelessWidget {
                 padding: EdgeInsets.all(3.w),
                 child: CustomIconWidget(
                   iconName: 'person_outline',
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
               ),
@@ -88,7 +87,7 @@ class LoginFormWidget extends StatelessWidget {
                 padding: EdgeInsets.all(3.w),
                 child: CustomIconWidget(
                   iconName: 'lock_outline',
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
               ),
@@ -96,7 +95,7 @@ class LoginFormWidget extends StatelessWidget {
                 onPressed: isLoading ? null : onTogglePasswordVisibility,
                 icon: CustomIconWidget(
                   iconName: isPasswordVisible ? 'visibility_off' : 'visibility',
-                  color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   size: 20,
                 ),
               ),
@@ -107,7 +106,7 @@ class LoginFormWidget extends StatelessWidget {
 
           // Sign In Button
           SizedBox(
-            height: 6.h,
+            height: MediaQuery.sizeOf(context).height / 15,
             child: ElevatedButton(
               onPressed: isLoading ? null : onSignIn,
               child: isLoading
@@ -116,30 +115,32 @@ class LoginFormWidget extends StatelessWidget {
                       children: [
                         SizedBox(
                           width: 20,
-                          height: 20,
+                          height: 18,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              AppTheme.lightTheme.colorScheme.onPrimary,
+                              Theme.of(context).colorScheme.onPrimary,
                             ),
                           ),
                         ),
                         SizedBox(width: 3.w),
                         Text(
                           'Signing In...',
-                          style: AppTheme.lightTheme.textTheme.labelLarge
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge
                               ?.copyWith(
-                            color: AppTheme.lightTheme.colorScheme.onPrimary,
-                          ),
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
                         ),
                       ],
                     )
                   : Text(
                       'Sign In',
-                      style: AppTheme.lightTheme.textTheme.labelLarge?.copyWith(
-                        color: AppTheme.lightTheme.colorScheme.onPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
             ),
           ),
@@ -150,11 +151,11 @@ class LoginFormWidget extends StatelessWidget {
           // Container(
           //   padding: EdgeInsets.all(3.w),
           //   decoration: BoxDecoration(
-          //     color: AppTheme.lightTheme.colorScheme.primaryContainer
+          //     color: Theme.of(context).colorScheme.primaryContainer
           //         .withValues(alpha: 0.1),
           //     borderRadius: BorderRadius.circular(12),
           //     border: Border.all(
-          //       color: AppTheme.lightTheme.colorScheme.primary
+          //       color: Theme.of(context).colorScheme.primary
           //           .withValues(alpha: 0.2),
           //     ),
           //   ),
@@ -165,15 +166,15 @@ class LoginFormWidget extends StatelessWidget {
           //         children: [
           //           CustomIconWidget(
           //             iconName: 'info_outline',
-          //             color: AppTheme.lightTheme.colorScheme.primary,
+          //             color: Theme.of(context).colorScheme.primary,
           //             size: 16,
           //           ),
           //           SizedBox(width: 2.w),
           //           Text(
           //             'Demo Credentials',
           //             style:
-          //                 AppTheme.lightTheme.textTheme.labelMedium?.copyWith(
-          //               color: AppTheme.lightTheme.colorScheme.primary,
+          //                 Theme.of(context).textTheme.labelMedium?.copyWith(
+          //               color: Theme.of(context).colorScheme.primary,
           //               fontWeight: FontWeight.w600,
           //             ),
           //           ),
@@ -182,8 +183,8 @@ class LoginFormWidget extends StatelessWidget {
           //       SizedBox(height: 1.h),
           //       Text(
           //         'admin / admin123\npharmacy_admin / pharma2024\nmanager / manager456',
-          //         style: AppTheme.lightTheme.textTheme.bodySmall?.copyWith(
-          //           color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+          //         style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          //           color: Theme.of(context).colorScheme.onSurfaceVariant,
           //           fontFamily: 'monospace',
           //         ),
           //       ),

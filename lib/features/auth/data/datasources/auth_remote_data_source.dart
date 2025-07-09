@@ -11,26 +11,27 @@ class AuthRemoteDataSource {
 
   Future<AuthModel> getAuth(AuthParams params) async {
     switch (params.authType) {
-      case AuthType.adminLogin:
-        return await _adminLogin(params);
-      case AuthType.logout:
-        return await _logout();
+      case AuthType.mangerLogin:
+        return await _mangerLogin(params);
+      // ignore: unreachable_switch_default
+      default:
+        throw Exception('Invalid auth type: ${params.authType}');
     }
   }
 
-  Future<AuthModel> _adminLogin(AuthParams params) async {
+  Future<AuthModel> _mangerLogin(AuthParams params) async {
+    print('🌐 Sending login request to: ${EndPoints.mangerLogin}');
+    print('📤 Email: ${params.email}, Password: ${params.password}');
+
     final response = await api.post(
-      EndPoints.adminLogin,
+      EndPoints.mangerLogin,
       data: {
         'email': params.email,
         'password': params.password,
       },
     );
-    return AuthModel.fromJson(response);
-  }
 
-  Future<AuthModel> _logout() async {
-    final response = await api.post(EndPoints.logout);
+    print('📥 Response received: $response');
     return AuthModel.fromJson(response);
   }
 }

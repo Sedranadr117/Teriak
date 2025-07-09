@@ -4,7 +4,6 @@ class AuthEntity {
   final String? firstName;
   final String? lastName;
   final String? role;
-  final bool isAuthenticated;
 
   AuthEntity({
     this.token,
@@ -12,6 +11,7 @@ class AuthEntity {
     this.firstName,
     this.lastName,
     this.role,
-    this.isAuthenticated = false,
   });
+
+  bool get isAuthenticated => token != null && token!.isNotEmpty;
 }
