@@ -7,6 +7,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/routes/app_routes.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 import 'package:teriak/core/themes/theme_controller.dart';
 
@@ -44,5 +45,6 @@ class MyApp extends StatelessWidget {
         getPages: AppRoutes.routes,
       ),
     );
+    ////
   }
 }

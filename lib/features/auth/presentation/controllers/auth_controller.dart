@@ -80,8 +80,11 @@ class AuthController extends GetxController {
 
       print('✅ Login result received');
 
+      print('✅ Login result received');
+
       result.fold(
         (failure) {
+          print('❌ Login failed: ${failure.errMessage}');
           print('❌ Login failed: ${failure.errMessage}');
           errorMessage.value = failure.errMessage;
         },
@@ -113,6 +116,7 @@ class AuthController extends GetxController {
         },
       );
     } catch (e) {
+      print('💥 Unexpected error: $e');
       print('💥 Unexpected error: $e');
       errorMessage.value = 'An unexpected error occurred. Please try again.';
     } finally {

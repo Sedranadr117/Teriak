@@ -61,7 +61,12 @@ class HttpConsumer extends ApiConsumer {
       final body = isFormData ? data : json.encode(data);
       print('📄 Request body: $body');
 
+      print('📄 Request body: $body');
+
       final response = await http.post(uri, body: body, headers: headers);
+
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
 
       print('📥 Response status: ${response.statusCode}');
       print('📥 Response body: ${response.body}');
@@ -69,6 +74,7 @@ class HttpConsumer extends ApiConsumer {
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
+      print('💥 HTTP Error: $e');
       print('💥 HTTP Error: $e');
       handleHttpException(e);
       rethrow;
