@@ -4,9 +4,16 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/routes/app_routes.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize CacheHelper
+  final cacheHelper = CacheHelper();
+  await cacheHelper.init();
+
   runApp(
     DevicePreview(
       enabled: true,
@@ -30,5 +37,6 @@ class MyApp extends StatelessWidget {
       initialRoute: AppPages.splash,
       getPages: AppRoutes.routes,
     );
+    ////
   }
 }

@@ -25,6 +25,7 @@ class AuthController extends GetxController {
 
   late final AdminLogin _adminLogin;
   late final Logout _logout;
+  late final NetworkInfoImpl networkInfo;
 
   @override
   void onInit() {
@@ -37,10 +38,11 @@ class AuthController extends GetxController {
     // Initialize dependencies (in a real app, this would be done via dependency injection)
     final httpConsumer = HttpConsumer(baseUrl: EndPoints.baserUrl);
     final cacheHelper = CacheHelper();
-    final networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl(InternetConnection());
 
     final remoteDataSource = AuthRemoteDataSource(api: httpConsumer);
     final localDataSource = AuthLocalDataSource(cache: cacheHelper);
+
     final repository = AuthRepositoryImpl(
       remoteDataSource: remoteDataSource,
       localDataSource: localDataSource,
@@ -67,23 +69,48 @@ class AuthController extends GetxController {
     errorMessage.value = '';
 
     try {
+      print('🔐 Starting login process...');
+      print('📧 Email: ${emailController.text.trim()}');
+      print('🔑 Password: ${passwordController.text.trim()}');
+
+      // Test network connectivity first
+      print('🌐 Testing network connectivity...');
+      final isConnected = await networkInfo.isConnected;
+      print('📡 Network connected: $isConnected');
+
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.';
+        return;
+      }
+
       final result = await _adminLogin(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
+      print('✅ Login result received');
+
       result.fold(
         (failure) {
+          print('❌ Login failed: ${failure.errMessage}');
           errorMessage.value = failure.errMessage;
         },
         (authEntity) {
+          print('✅ Login successful!');
+          print('👤 User: ${authEntity.firstName} ${authEntity.lastName}');
+          print('🎫 Token: ${authEntity.token}');
+          print('🔐 Role: ${authEntity.role}');
+
           currentUser.value = authEntity;
           if (authEntity.isAuthenticated) {
+            print('🚀 Navigating to employee management...');
             Get.offNamed(AppPages.employeeManagement);
           }
         },
       );
     } catch (e) {
+      print('💥 Unexpected error: $e');
       errorMessage.value = 'An unexpected error occurred. Please try again.';
     } finally {
       isLoading.value = false;

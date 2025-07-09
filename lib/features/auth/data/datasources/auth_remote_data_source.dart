@@ -15,10 +15,16 @@ class AuthRemoteDataSource {
         return await _adminLogin(params);
       case AuthType.logout:
         return await _logout();
+      // ignore: unreachable_switch_default
+      default:
+        throw Exception('Invalid auth type: ${params.authType}');
     }
   }
 
   Future<AuthModel> _adminLogin(AuthParams params) async {
+    print('🌐 Sending login request to: ${EndPoints.adminLogin}');
+    print('📤 Email: ${params.email}, Password: ${params.password}');
+
     final response = await api.post(
       EndPoints.adminLogin,
       data: {
@@ -26,6 +32,8 @@ class AuthRemoteDataSource {
         'password': params.password,
       },
     );
+
+    print('📥 Response received: $response');
     return AuthModel.fromJson(response);
   }
 

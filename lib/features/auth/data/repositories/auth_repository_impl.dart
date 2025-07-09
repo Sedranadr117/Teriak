@@ -24,14 +24,14 @@ class AuthRepositoryImpl extends AuthRepository {
       try {
         final remoteAuth = await remoteDataSource.getAuth(params);
         localDataSource.cacheAuth(remoteAuth);
-        return Right(remoteAuth as AuthEntity);
+        return Right(remoteAuth);
       } on ServerException catch (e) {
         return Left(Failure(errMessage: e.errorModel.errorMessage));
       }
     } else {
       try {
         final localAuth = await localDataSource.getLastAuth();
-        return Right(localAuth as AuthEntity);
+        return Right(localAuth);
       } on CacheExeption catch (e) {
         return Left(Failure(errMessage: e.errorMessage));
       }

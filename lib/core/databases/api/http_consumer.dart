@@ -30,14 +30,28 @@ class HttpConsumer extends ApiConsumer {
     try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+
+      print('🌐 Full URL: $uri');
+      print('📤 Request method: POST');
+      print('📦 Request data: $data');
+
       final headers = {
         'Content-Type': isFormData ? 'multipart/form-data' : 'application/json',
       };
+      print('📋 Headers: $headers');
+
       final body = isFormData ? data : json.encode(data);
+      print('📄 Request body: $body');
+
       final response = await http.post(uri, body: body, headers: headers);
+
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
+
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
+      print('💥 HTTP Error: $e');
       handleHttpException(e);
     }
   }
