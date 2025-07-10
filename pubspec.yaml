@@ -14,7 +14,8 @@ dependencies:
   internet_connection_checker_plus: ^2.7.2
   get: ^4.7.2
   google_fonts: ^6.2.1
- 
+  barcode_widget: ^2.0.1
+  
 
 dev_dependencies:
   flutter_test:
