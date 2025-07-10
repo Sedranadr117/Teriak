@@ -5,6 +5,7 @@ import 'package:teriak/features/master_product/presentation/pages/product_detail
 
 class AppRoutes {
   static final List<GetPage> routes = [
+    
     GetPage(
       name: AppPages.allProductPage,
       page: () => const AllProductPage(),
@@ -15,5 +16,6 @@ class AppRoutes {
       page: () => const ProductDetailPage(),
       transition: Transition.fadeIn,
     ),
+
   ];
 }
