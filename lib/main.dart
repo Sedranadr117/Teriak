@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         themeMode: themeController.themeMode,
         locale: Get.deviceLocale,
         translations: AppTranslations(),
-        initialRoute: AppPages.allProductPage,
+        initialRoute: AppPages.splash,
         getPages: AppRoutes.routes,
       ),
     );

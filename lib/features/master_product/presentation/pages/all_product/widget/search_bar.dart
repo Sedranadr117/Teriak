@@ -73,10 +73,10 @@ class _SearchWidgetState extends State<SearchWidget> {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 3 * context.w / 100),
             decoration: BoxDecoration(
-              color: AppColors.appColor2,
+              color: AppColors.primaryLight,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.appColor2,
+                color: AppColors.primaryLight,
                 width: 1,
               ),
             ),
