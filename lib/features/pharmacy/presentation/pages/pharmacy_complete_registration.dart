@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
 import 'package:teriak/features/employee_management/presentation/pages/employee_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/controllers/add_pharmacy_controller.dart';
 import 'widgets/location_input_widget.dart';
@@ -114,7 +114,7 @@ class _PharmacyCompleteRegistrationState
                                               .isManagerFirstNameValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-                                              color: AppTheme.lightTheme
+                                              color: AppTheme.lightTheme(context)
                                                   .colorScheme.secondary,
                                               size: 20,
                                             )
@@ -153,7 +153,7 @@ class _PharmacyCompleteRegistrationState
                                               .isManagerLastNameValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-                                              color: AppTheme.lightTheme
+                                              color: AppTheme.lightTheme(context)
                                                   .colorScheme.secondary,
                                               size: 20,
                                             )
@@ -220,7 +220,7 @@ class _PharmacyCompleteRegistrationState
                                       addPharmacyController.isPhoneValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-                                              color: AppTheme.lightTheme
+                                              color: AppTheme.lightTheme(context)
                                                   .colorScheme.secondary,
                                               size: 20,
                                             )
@@ -321,7 +321,7 @@ class _PharmacyCompleteRegistrationState
                                         addPharmacyController.isEmailValid.value
                                             ? CustomIconWidget(
                                                 iconName: 'check_circle',
-                                                color: AppTheme.lightTheme
+                                                color: AppTheme.lightTheme(context)
                                                     .colorScheme.secondary,
                                                 size: 20,
                                               )
@@ -367,7 +367,7 @@ class _PharmacyCompleteRegistrationState
                                             .isPasswordValid.value
                                         ? CustomIconWidget(
                                             iconName: 'check_circle',
-                                            color: AppTheme.lightTheme
+                                            color: AppTheme.lightTheme(context)
                                                 .colorScheme.secondary,
                                             size: 20,
                                           )

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
-import 'package:teriak/core/themes/assets.dart';
+import 'package:teriak/config/themes/app_assets.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

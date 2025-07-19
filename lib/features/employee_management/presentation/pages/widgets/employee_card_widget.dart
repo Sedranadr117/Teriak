@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
 
 class EmployeeCardWidget extends StatelessWidget {
   final Map<String, dynamic> employee;
@@ -141,7 +142,7 @@ class EmployeeCardWidget extends StatelessWidget {
                             height: 4.w,
                             decoration: BoxDecoration(
                               color: isActive
-                                  ? AppTheme.successLight
+                                  ? AppColors.successLight
                                   : Theme.of(context).colorScheme.outline,
                               shape: BoxShape.circle,
                               border: Border.all(
@@ -167,11 +168,11 @@ class EmployeeCardWidget extends StatelessWidget {
                                 child: Text(
                                   employee["name"] as String,
                                   style: AppTheme
-                                      .lightTheme.textTheme.titleMedium
+                                      .lightTheme(context).textTheme.titleMedium
                                       ?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: AppTheme
-                                        .lightTheme.colorScheme.onSurface,
+                                        .lightTheme(context).colorScheme.onSurface,
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
@@ -183,13 +184,13 @@ class EmployeeCardWidget extends StatelessWidget {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 2.w, vertical: 0.5.h),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.errorLight,
+                                    color: AppColors.errorLight,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     alertCount.toString(),
                                     style: AppTheme
-                                        .lightTheme.textTheme.labelSmall
+                                        .lightTheme(context).textTheme.labelSmall
                                         ?.copyWith(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -237,7 +238,7 @@ class EmployeeCardWidget extends StatelessWidget {
                               CustomIconWidget(
                                 iconName: 'access_time',
                                 color: AppTheme
-                                    .lightTheme.colorScheme.onSurfaceVariant,
+                                    .lightTheme(context).colorScheme.onSurfaceVariant,
                                 size: 14,
                               ),
                               SizedBox(width: 1.w),
@@ -247,7 +248,7 @@ class EmployeeCardWidget extends StatelessWidget {
                                     .textTheme
                                     .bodySmall
                                     ?.copyWith(
-                                      color: AppTheme.lightTheme.colorScheme
+                                      color: AppTheme.lightTheme(context).colorScheme
                                           .onSurfaceVariant,
                                     ),
                               ),
@@ -350,7 +351,7 @@ class EmployeeCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: isLeft
             ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-            : AppTheme.errorLight.withValues(alpha: 0.1),
+            : AppColors.errorLight.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Align(
@@ -364,7 +365,7 @@ class EmployeeCardWidget extends StatelessWidget {
                 iconName: isLeft ? 'edit' : 'delete',
                 color: isLeft
                     ? Theme.of(context).colorScheme.primary
-                    : AppTheme.errorLight,
+                    : AppColors.errorLight,
                 size: 24,
               ),
               SizedBox(height: 0.5.h),
@@ -373,7 +374,7 @@ class EmployeeCardWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: isLeft
                           ? Theme.of(context).colorScheme.primary
-                          : AppTheme.errorLight,
+                          : AppColors.errorLight,
                       fontWeight: FontWeight.w500,
                     ),
               ),
@@ -506,7 +507,7 @@ class EmployeeCardWidget extends StatelessWidget {
               TextButton(
                 onPressed: () => Navigator.pop(context, true),
                 style: TextButton.styleFrom(
-                  foregroundColor: AppTheme.errorLight,
+                  foregroundColor: AppColors.errorLight,
                 ),
                 child: Text('Deactivate'),
               ),
@@ -524,7 +525,7 @@ class EmployeeCardWidget extends StatelessWidget {
       case 'pharmacy technician':
         return Theme.of(context).colorScheme.secondary;
       case 'pharmacy assistant':
-        return AppTheme.warningLight;
+        return AppColors.warningLight;
       case 'pharmacy intern':
         return Theme.of(context).colorScheme.tertiary;
       default:
@@ -535,9 +536,9 @@ class EmployeeCardWidget extends StatelessWidget {
   Color _getPermissionColor(BuildContext context, String permission) {
     switch (permission.toLowerCase()) {
       case 'full access':
-        return AppTheme.successLight;
+        return AppColors.successLight;
       case 'limited access':
-        return AppTheme.warningLight;
+        return AppColors.warningLight;
       case 'basic access':
       case 'intern access':
         return Theme.of(context).colorScheme.secondary;

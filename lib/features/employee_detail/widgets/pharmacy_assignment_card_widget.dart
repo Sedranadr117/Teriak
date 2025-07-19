@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class PharmacyAssignmentCardWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -24,7 +24,7 @@ class PharmacyAssignmentCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -70,7 +70,7 @@ class PharmacyAssignmentCardWidget extends StatelessWidget {
                 Text(
                   'Current Assignment',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textSecondaryLight,
+                        color: AppColors.textSecondaryLight,
                         fontWeight: FontWeight.w500,
                       ),
                 ),

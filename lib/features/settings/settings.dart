@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/themes/theme_controller.dart';
-import 'package:teriak/core/widgets/custom_app_bar.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
+import 'package:teriak/config/themes/theme_controller.dart';
+import 'package:teriak/config/widgets/custom_app_bar.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
 import './widgets/user_profile_header_widget.dart';
@@ -156,13 +156,13 @@ class _SettingsState extends State<Settings> {
                       _showComingSoonDialog(context, 'Login Requirements'),
                   showArrow: true,
                 ),
-                SettingsItemWidget(
+                const SettingsItemWidget(
                   icon: 'enhanced_encryption',
                   title: 'Data Encryption',
                   subtitle: 'Enabled - AES 256-bit encryption',
                   trailing: CustomIconWidget(
                     iconName: 'check_circle',
-                    color: AppTheme.successLight,
+                    color: AppColors.successLight,
                     size: 20,
                   ),
                 ),
@@ -294,8 +294,8 @@ class _SettingsState extends State<Settings> {
               child: ElevatedButton(
                 onPressed: () => _showSignOutDialog(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.errorLight,
-                  foregroundColor: AppTheme.onErrorLight,
+                  backgroundColor: AppColors.errorLight,
+                  foregroundColor: AppColors.onErrorLight,
                   padding: EdgeInsets.symmetric(vertical: 2.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -304,16 +304,16 @@ class _SettingsState extends State<Settings> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomIconWidget(
+                    const CustomIconWidget(
                       iconName: 'logout',
-                      color: AppTheme.onErrorLight,
+                      color: AppColors.onErrorLight,
                       size: 20,
                     ),
                     SizedBox(width: 2.w),
                     Text(
                       'Sign Out',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppTheme.onErrorLight,
+                            color: AppColors.onErrorLight,
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -789,8 +789,8 @@ class _SettingsState extends State<Settings> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.errorLight,
-              foregroundColor: AppTheme.onErrorLight,
+              backgroundColor: AppColors.errorLight,
+              foregroundColor: AppColors.onErrorLight,
             ),
             child: Text('Sign Out'),
           ),

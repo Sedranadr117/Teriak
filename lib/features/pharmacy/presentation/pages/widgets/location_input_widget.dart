@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/widgets/location_picker_widget.dart';
 
 class LocationInputWidget extends StatefulWidget {

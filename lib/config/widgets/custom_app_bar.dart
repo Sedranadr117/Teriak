@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/theme_controller.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/theme_controller.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

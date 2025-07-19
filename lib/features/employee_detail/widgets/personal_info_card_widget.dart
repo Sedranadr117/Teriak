@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class PersonalInfoCardWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -24,7 +23,7 @@ class PersonalInfoCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -92,7 +91,7 @@ class PersonalInfoCardWidget extends StatelessWidget {
       children: [
         CustomIconWidget(
           iconName: iconName,
-          color: AppTheme.textSecondaryLight,
+          color: AppColors.textSecondaryLight,
           size: 18,
         ),
         SizedBox(width: 3.w),
@@ -103,7 +102,7 @@ class PersonalInfoCardWidget extends StatelessWidget {
               Text(
                 label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppTheme.textSecondaryLight,
+                      color: AppColors.textSecondaryLight,
                       fontWeight: FontWeight.w500,
                     ),
               ),

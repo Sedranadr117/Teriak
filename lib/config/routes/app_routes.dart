@@ -7,9 +7,16 @@ import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_re
 import 'package:teriak/features/settings/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
 import 'package:teriak/features/template/presentation/pages/template_screen.dart';
+import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/features/master_product/presentation/pages/product_details/product_details_page.dart';
 
 class AppRoutes {
   static final List<GetPage> routes = [
+    GetPage(
+      name: AppPages.allProductPage,
+      page: () => const AllProductPage(),
+      transition: Transition.fadeIn,
+    ),
     GetPage(
       name: AppPages.splash,
       page: () => const SplashScreen(),
@@ -43,6 +50,11 @@ class AppRoutes {
     GetPage(
       name: AppPages.home,
       page: () => const HomePage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.productDetailPage,
+      page: () => const ProductDetailPage(),
       transition: Transition.fadeIn,
     ),
   ];

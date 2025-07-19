@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class EmployeeFilterWidget extends StatelessWidget {
   final String selectedFilter;

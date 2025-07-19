@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
 
 class AddEmployeeBottomSheet extends StatelessWidget {
   final Function(String) onRoleSelected;
@@ -42,7 +43,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
         'description': 'Support staff for administrative and basic tasks',
         'icon': 'support_agent',
         'permissions': 'Basic Access',
-        'color': AppTheme.warningLight,
+        'color': AppColors.warningLight,
       },
       {
         'title': 'Pharmacy Intern',
@@ -164,7 +165,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                                   Text(
                                     role['title'] as String,
                                     style: AppTheme
-                                        .lightTheme.textTheme.titleMedium
+                                        .lightTheme(context).textTheme.titleMedium
                                         ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -173,7 +174,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                                   Text(
                                     role['description'] as String,
                                     style: AppTheme
-                                        .lightTheme.textTheme.bodySmall
+                                        .lightTheme(context).textTheme.bodySmall
                                         ?.copyWith(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -201,7 +202,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                                     child: Text(
                                       role['permissions'] as String,
                                       style: AppTheme
-                                          .lightTheme.textTheme.labelSmall
+                                          .lightTheme(context).textTheme.labelSmall
                                           ?.copyWith(
                                         color: _getPermissionColor(context,
                                             role['permissions'] as String),
@@ -217,7 +218,7 @@ class AddEmployeeBottomSheet extends StatelessWidget {
                             CustomIconWidget(
                               iconName: 'chevron_right',
                               color: AppTheme
-                                  .lightTheme.colorScheme.onSurfaceVariant,
+                                  .lightTheme(context).colorScheme.onSurfaceVariant,
                               size: 20,
                             ),
                           ],
@@ -256,9 +257,9 @@ class AddEmployeeBottomSheet extends StatelessWidget {
     switch (permission.toLowerCase()) {
       case 'full access':
       case 'full access + management':
-        return AppTheme.successLight;
+        return AppColors.successLight;
       case 'limited access':
-        return AppTheme.warningLight;
+        return AppColors.warningLight;
       case 'basic access':
       case 'intern access':
         return Theme.of(context).colorScheme.secondary;

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_app_bar.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
+import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'widgets/add_employee_bottom_sheet.dart';
 import 'widgets/employee_card_widget.dart';
 import 'widgets/employee_filter_widget.dart';
@@ -599,7 +600,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                 icon: CustomIconWidget(
                   iconName: 'add',
                   color: AppTheme
-                      .lightTheme.elevatedButtonTheme.style?.foregroundColor
+                      .lightTheme(context).elevatedButtonTheme.style?.foregroundColor
                       ?.resolve({}),
                   size: 20,
                 ),
@@ -632,12 +633,12 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text('\${employee["name"]} has been deactivated'),
-                  backgroundColor: AppTheme.warningLight,
+                  backgroundColor: AppColors.warningLight,
                 ),
               );
             },
             style: TextButton.styleFrom(
-              foregroundColor: AppTheme.errorLight,
+              foregroundColor: AppColors.errorLight,
             ),
             child: Text('Deactivate'),
           ),

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class EmployeeHeaderWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -22,7 +21,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -105,8 +104,8 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 height: 8,
                 decoration: BoxDecoration(
                   color: employeeData["status"] == "Active"
-                      ? AppTheme.successLight
-                      : AppTheme.errorLight,
+                      ? AppColors.successLight
+                      : AppColors.errorLight,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -115,8 +114,8 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 employeeData["status"] as String,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: employeeData["status"] == "Active"
-                          ? AppTheme.successLight
-                          : AppTheme.errorLight,
+                          ? AppColors.successLight
+                          : AppColors.errorLight,
                       fontWeight: FontWeight.w500,
                     ),
               ),

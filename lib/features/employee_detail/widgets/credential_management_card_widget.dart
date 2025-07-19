@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class CredentialManagementCardWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -26,7 +25,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -62,7 +61,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppTheme.borderLight,
+                color: AppColors.borderLight,
                 width: 1,
               ),
             ),
@@ -76,7 +75,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
                       children: [
                         CustomIconWidget(
                           iconName: 'account_circle',
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                           size: 18,
                         ),
                         SizedBox(width: 2.w),
@@ -84,7 +83,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
                           'Username',
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppTheme.textSecondaryLight,
+                                    color: AppColors.textSecondaryLight,
                                     fontWeight: FontWeight.w500,
                                   ),
                         ),
@@ -116,7 +115,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppTheme.borderLight,
+                color: AppColors.borderLight,
                 width: 1,
               ),
             ),
@@ -130,7 +129,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
                       children: [
                         CustomIconWidget(
                           iconName: 'lock',
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                           size: 18,
                         ),
                         SizedBox(width: 2.w),
@@ -138,7 +137,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
                           'Password',
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppTheme.textSecondaryLight,
+                                    color: AppColors.textSecondaryLight,
                                     fontWeight: FontWeight.w500,
                                   ),
                         ),
@@ -168,10 +167,10 @@ class CredentialManagementCardWidget extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(3.w),
             decoration: BoxDecoration(
-              color: AppTheme.warningLight.withValues(alpha: 0.1),
+              color: AppColors.warningLight.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppTheme.warningLight.withValues(alpha: 0.3),
+                color: AppColors.warningLight.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -179,7 +178,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
               children: [
                 CustomIconWidget(
                   iconName: 'info',
-                  color: AppTheme.warningLight,
+                  color: AppColors.warningLight,
                   size: 18,
                 ),
                 SizedBox(width: 2.w),
@@ -187,7 +186,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
                   child: Text(
                     'Credential changes require administrator approval and will be logged for security purposes.',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.warningLight,
+                          color: AppColors.warningLight,
                         ),
                   ),
                 ),

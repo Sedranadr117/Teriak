@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class RolePermissionsCardWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -29,7 +28,7 @@ class RolePermissionsCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -62,11 +61,11 @@ class RolePermissionsCardWidget extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
             decoration: BoxDecoration(
               color: isIntern
-                  ? AppTheme.warningLight.withValues(alpha: 0.1)
-                  : AppTheme.successLight.withValues(alpha: 0.1),
+                  ? AppColors.warningLight.withValues(alpha: 0.1)
+                  : AppColors.successLight.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: isIntern ? AppTheme.warningLight : AppTheme.successLight,
+                color: isIntern ? AppColors.warningLight : AppColors.successLight,
                 width: 1,
               ),
             ),
@@ -76,7 +75,7 @@ class RolePermissionsCardWidget extends StatelessWidget {
                 CustomIconWidget(
                   iconName: isIntern ? 'school' : 'work',
                   color:
-                      isIntern ? AppTheme.warningLight : AppTheme.successLight,
+                      isIntern ? AppColors.warningLight : AppColors.successLight,
                   size: 16,
                 ),
                 SizedBox(width: 2.w),
@@ -84,8 +83,8 @@ class RolePermissionsCardWidget extends StatelessWidget {
                   role,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: isIntern
-                            ? AppTheme.warningLight
-                            : AppTheme.successLight,
+                            ? AppColors.warningLight
+                            : AppColors.successLight,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
@@ -99,7 +98,7 @@ class RolePermissionsCardWidget extends StatelessWidget {
             'Access Permissions',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textSecondaryLight,
+                  color: AppColors.textSecondaryLight,
                 ),
           ),
           SizedBox(height: 1.h),
@@ -160,7 +159,7 @@ class RolePermissionsCardWidget extends StatelessWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: AppTheme.borderLight,
+          color: AppColors.borderLight,
           width: 1,
         ),
       ),
@@ -170,7 +169,7 @@ class RolePermissionsCardWidget extends StatelessWidget {
             iconName: details['icon'] as String,
             color: isEnabled
                 ? Theme.of(context).primaryColor
-                : AppTheme.textDisabledLight,
+                : AppColors.textDisabledLight,
             size: 20,
           ),
           SizedBox(width: 3.w),
@@ -183,15 +182,15 @@ class RolePermissionsCardWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                         color: isEnabled
-                            ? AppTheme.textPrimaryLight
-                            : AppTheme.textDisabledLight,
+                            ? AppColors.textPrimaryLight
+                            : AppColors.textDisabledLight,
                       ),
                 ),
                 SizedBox(height: 0.5.h),
                 Text(
                   details['subtitle'] as String,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textSecondaryLight,
+                        color: AppColors.textSecondaryLight,
                       ),
                 ),
               ],

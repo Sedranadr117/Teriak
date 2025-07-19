@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
 
 class ActivityLogCardWidget extends StatelessWidget {
   final List<Map<String, dynamic>> activityLog;
@@ -22,7 +22,7 @@ class ActivityLogCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -76,7 +76,7 @@ class ActivityLogCardWidget extends StatelessWidget {
     switch (action.toLowerCase()) {
       case 'login':
         iconName = 'login';
-        iconColor = AppTheme.successLight;
+        iconColor = AppColors.successLight;
         break;
       case 'permission updated':
         iconName = 'security';
@@ -84,11 +84,11 @@ class ActivityLogCardWidget extends StatelessWidget {
         break;
       case 'password changed':
         iconName = 'vpn_key';
-        iconColor = AppTheme.warningLight;
+        iconColor = AppColors.warningLight;
         break;
       default:
         iconName = 'info';
-        iconColor = AppTheme.textSecondaryLight;
+        iconColor = AppColors.textSecondaryLight;
     }
 
     return Row(
@@ -120,7 +120,7 @@ class ActivityLogCardWidget extends StatelessWidget {
               Container(
                 width: 2,
                 height: 6.h,
-                color: AppTheme.borderLight,
+                color: AppColors.borderLight,
               ),
             ],
           ],
@@ -144,14 +144,14 @@ class ActivityLogCardWidget extends StatelessWidget {
                 Text(
                   details,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textSecondaryLight,
+                        color: AppColors.textSecondaryLight,
                       ),
                 ),
                 SizedBox(height: 0.5.h),
                 Text(
                   _formatTimestamp(timestamp),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppTheme.textDisabledLight,
+                        color: AppColors.textDisabledLight,
                         fontSize: 10.sp,
                       ),
                 ),

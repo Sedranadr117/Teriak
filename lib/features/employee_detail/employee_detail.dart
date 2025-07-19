@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
 
 import './widgets/activity_log_card_widget.dart';
 import './widgets/credential_management_card_widget.dart';
@@ -89,7 +90,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                         : 'radio_button_unchecked',
                     color: isSelected
                         ? Theme.of(context).primaryColor
-                        : AppTheme.textSecondaryLight,
+                        : AppColors.textSecondaryLight,
                     size: 20,
                   ),
                   title: Text(
@@ -200,7 +201,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppTheme.successLight,
+        backgroundColor: AppColors.successLight,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -210,7 +211,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppTheme.errorLight,
+        backgroundColor: AppColors.errorLight,
         behavior: SnackBarBehavior.floating,
       ),
     );

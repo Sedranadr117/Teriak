@@ -1,0 +1,20 @@
+
+final Map<String, String> enUS = {
+"Pharmacy Product": "Pharmacy Product",
+"Search products": "Search products...",
+"Add Product": "Add Product",
+"Trade Name": "Trade Name",
+"Scientific Name": "Scientific Name",
+"Barcode": "Barcode",
+"Product Details": "Product Details",
+"Manufacturer": "Manufacturer",
+"Pharmacological classification": "Pharmacological classification",
+"Product Type": "Product Type",
+"Medical Notes": "Medical Notes",
+"Quantity": "Quantity",
+"Dosage": "Dosage",
+"Form": "Form",
+"Source": "Source",
+"Prescription Required": "Prescription Required",
+"No Prescription": "No Prescription",
+};
