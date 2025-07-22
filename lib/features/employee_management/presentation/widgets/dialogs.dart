@@ -484,4 +484,39 @@ class Dialogs {
                   ]);
             }));
   }
+
+  Future<bool> showDeactivateDialog({
+    required BuildContext context,
+    required String name,
+    required EmployeeController controller,
+    required Map<String, dynamic> employee,
+  }) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Employee'),
+            content: Text(
+              'Are you sure you want to delete $name? They will lose access to all pharmacy systems.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  controller.deleteEmployee(employee['id']);
+                  controller.fetchAllEmployees();
+                  Navigator.pop(context, true);
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.errorLight,
+                ),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
 }

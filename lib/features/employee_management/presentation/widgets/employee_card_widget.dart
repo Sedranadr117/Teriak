@@ -1,27 +1,32 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
+import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
 
 class EmployeeCardWidget extends StatelessWidget {
   final Map<String, dynamic> employee;
   final bool isSelected;
   final VoidCallback onTap;
   final VoidCallback onDeactivatePressed;
+  final EmployeeController controller;
 
-  const EmployeeCardWidget({
-    super.key,
-    required this.employee,
-    required this.isSelected,
-    required this.onTap,
-    required this.onDeactivatePressed,
-  });
+  const EmployeeCardWidget(
+      {super.key,
+      required this.employee,
+      required this.isSelected,
+      required this.onTap,
+      required this.onDeactivatePressed,
+      required this.controller});
 
   @override
   Widget build(BuildContext context) {
     final isActive = employee["status"] == "ACTIVE";
-
+    Dialogs dialogs = Dialogs();
     return Container(
       margin: EdgeInsets.only(bottom: 2.h),
       child: Dismissible(
@@ -35,7 +40,12 @@ class EmployeeCardWidget extends StatelessWidget {
         },
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
-            return await _showDeactivateConfirmation(context);
+            return await dialogs.showDeactivateDialog(
+              context: context,
+              name: employee["firstName"],
+              controller: controller,
+              employee: employee,
+            );
           }
           return null;
         },
@@ -280,32 +290,6 @@ class EmployeeCardWidget extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<bool> _showDeactivateConfirmation(BuildContext context) async {
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Delete Employee'),
-            content: Text(
-              'Are you sure you want to Delete ${employee["firstName"]}? They will lose access to all pharmacy systems.',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppTheme.errorLight,
-                ),
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
   }
 
   Color _getRoleColor(BuildContext context, String role) {

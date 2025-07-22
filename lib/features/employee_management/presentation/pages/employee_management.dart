@@ -4,10 +4,10 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
 import 'package:teriak/core/widgets/custom_app_bar.dart';
 import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
+import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/employee_card_widget.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/employee_filter_widget.dart';
 
@@ -21,7 +21,7 @@ class EmployeeManagement extends StatefulWidget {
 class _EmployeeManagementState extends State<EmployeeManagement>
     with TickerProviderStateMixin {
   final controller = Get.find<EmployeeController>();
-
+  Dialogs dialogs = Dialogs();
   @override
   void initState() {
     super.initState();
@@ -266,9 +266,18 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               controller.fetchAllEmployees();
               print("employee${employee}");
             },
-            onDeactivatePressed: () {
-              _showDeactivateDialog(employee);
+            onDeactivatePressed: () async {
+              final confirmed = await dialogs.showDeactivateDialog(
+                  context: context,
+                  name: employee["firstName"],
+                  controller: controller,
+                  employee: employee);
+              if (confirmed) {
+                controller.deleteEmployee(employee['id']);
+                controller.fetchAllEmployees();
+              }
             },
+            controller: controller,
           );
         },
       ),
@@ -311,34 +320,6 @@ class _EmployeeManagementState extends State<EmployeeManagement>
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showDeactivateDialog(Map<String, dynamic> employee) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Employee'),
-        content: const Text(
-          'Are you sure you want to Delete \${employee["name"]}?  They will lose access to all pharmacy systems.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              controller.deleteEmployee(employee['id']);
-              controller.fetchAllEmployees();
-            },
-            style: TextButton.styleFrom(
-              foregroundColor: AppTheme.errorLight,
-            ),
-            child: const Text('Delete'),
-          ),
-        ],
       ),
     );
   }
