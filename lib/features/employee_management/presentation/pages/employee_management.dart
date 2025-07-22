@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-
+import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 import 'package:teriak/core/widgets/custom_app_bar.dart';
-import 'widgets/add_employee_bottom_sheet.dart';
-import 'widgets/employee_card_widget.dart';
-import 'widgets/employee_filter_widget.dart';
+import 'package:teriak/features/employee_management/data/models/employee_model.dart';
+import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
+import 'package:teriak/features/employee_management/presentation/widgets/employee_card_widget.dart';
+import 'package:teriak/features/employee_management/presentation/widgets/employee_filter_widget.dart';
 
 class EmployeeManagement extends StatefulWidget {
   const EmployeeManagement({super.key});
@@ -17,290 +20,36 @@ class EmployeeManagement extends StatefulWidget {
 
 class _EmployeeManagementState extends State<EmployeeManagement>
     with TickerProviderStateMixin {
-  late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
-  String _selectedFilter = 'All';
-  bool _isLoading = false;
-  final List<int> _selectedEmployees = [];
-
-  // Mock data for employees
-  final List<Map<String, dynamic>> _pharmacyEmployees = [
-    {
-      "id": 1,
-      "name": "Dr. Sarah Johnson",
-      "role": "Pharmacist",
-      "pharmacy": "Downtown Pharmacy",
-      "status": "Active",
-      "lastLogin": "2 hours ago",
-      "permissions": "Full Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
-      "email": "sarah.johnson@tiryaq.com",
-      "phone": "+1 (555) 123-4567",
-      "hasAlerts": true,
-      "alertCount": 2
-    },
-    {
-      "id": 2,
-      "name": "Michael Chen",
-      "role": "Pharmacy Technician",
-      "pharmacy": "Westside Pharmacy",
-      "status": "Active",
-      "lastLogin": "1 day ago",
-      "permissions": "Limited Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
-      "email": "michael.chen@tiryaq.com",
-      "phone": "+1 (555) 234-5678",
-      "hasAlerts": false,
-      "alertCount": 0
-    },
-    {
-      "id": 3,
-      "name": "Emily Rodriguez",
-      "role": "Senior Pharmacist",
-      "pharmacy": "Central Pharmacy",
-      "status": "Active",
-      "lastLogin": "30 minutes ago",
-      "permissions": "Full Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face",
-      "email": "emily.rodriguez@tiryaq.com",
-      "phone": "+1 (555) 345-6789",
-      "hasAlerts": true,
-      "alertCount": 1
-    },
-    {
-      "id": 4,
-      "name": "David Thompson",
-      "role": "Pharmacy Assistant",
-      "pharmacy": "Downtown Pharmacy",
-      "status": "Inactive",
-      "lastLogin": "1 week ago",
-      "permissions": "Basic Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
-      "email": "david.thompson@tiryaq.com",
-      "phone": "+1 (555) 456-7890",
-      "hasAlerts": false,
-      "alertCount": 0
-    }
-  ];
-
-  final List<Map<String, dynamic>> _interns = [
-    {
-      "id": 5,
-      "name": "Jessica Park",
-      "role": "Pharmacy Intern",
-      "pharmacy": "Central Pharmacy",
-      "status": "Active",
-      "lastLogin": "4 hours ago",
-      "permissions": "Intern Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
-      "email": "jessica.park@tiryaq.com",
-      "phone": "+1 (555) 567-8901",
-      "hasAlerts": false,
-      "alertCount": 0,
-      "internshipEnd": "June 2024"
-    },
-    {
-      "id": 6,
-      "name": "Alex Kumar",
-      "role": "Pharmacy Intern",
-      "pharmacy": "Westside Pharmacy",
-      "status": "Active",
-      "lastLogin": "1 hour ago",
-      "permissions": "Intern Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face",
-      "email": "alex.kumar@tiryaq.com",
-      "phone": "+1 (555) 678-9012",
-      "hasAlerts": true,
-      "alertCount": 1,
-      "internshipEnd": "August 2024"
-    },
-    {
-      "id": 7,
-      "name": "Maria Santos",
-      "role": "Pharmacy Intern",
-      "pharmacy": "Downtown Pharmacy",
-      "status": "Active",
-      "lastLogin": "6 hours ago",
-      "permissions": "Intern Access",
-      "profileImage":
-          "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=face",
-      "email": "maria.santos@tiryaq.com",
-      "phone": "+1 (555) 789-0123",
-      "hasAlerts": false,
-      "alertCount": 0,
-      "internshipEnd": "December 2024"
-    }
-  ];
+  final controller = Get.find<EmployeeController>();
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    controller.initTabController(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchAllEmployees();
+    });
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
-    _searchController.dispose();
+    controller.tabController.dispose();
     super.dispose();
-  }
-
-  List<Map<String, dynamic>> _getFilteredEmployees() {
-    List<Map<String, dynamic>> employees =
-        _tabController.index == 0 ? _pharmacyEmployees : _interns;
-
-    if (_searchQuery.isNotEmpty) {
-      employees = employees.where((employee) {
-        return (employee["name"] as String)
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()) ||
-            (employee["pharmacy"] as String)
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()) ||
-            (employee["role"] as String)
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase());
-      }).toList();
-    }
-
-    if (_selectedFilter != 'All') {
-      employees = employees.where((employee) {
-        switch (_selectedFilter) {
-          case 'Active':
-            return employee["status"] == "Active";
-          case 'Inactive':
-            return employee["status"] == "Inactive";
-          case 'With Alerts':
-            return employee["hasAlerts"] == true;
-          default:
-            return true;
-        }
-      }).toList();
-    }
-
-    return employees;
-  }
-
-  Future<void> _refreshEmployees() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    // Simulate API call
-    await Future.delayed(const Duration(seconds: 2));
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  void _showAddEmployeeBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => AddEmployeeBottomSheet(
-        onRoleSelected: (role) {
-          Navigator.pop(context);
-          // Navigate to add employee form with selected role
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Add \$role form would open here'),
-              backgroundColor: Theme.of(context).colorScheme.primary,
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _toggleEmployeeSelection(int employeeId) {
-    setState(() {
-      if (_selectedEmployees.contains(employeeId)) {
-        _selectedEmployees.remove(employeeId);
-      } else {
-        _selectedEmployees.add(employeeId);
-      }
-    });
-  }
-
-  void _clearSelection() {
-    setState(() {
-      _selectedEmployees.clear();
-    });
-  }
-
-  void _showBulkActionsDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Bulk Actions'),
-        content: Text(
-            'Select an action for \${_selectedEmployees.length} selected employees:'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _clearSelection();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Role assignment would be performed here'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-              );
-            },
-            child: Text('Change Roles'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _clearSelection();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Pharmacy transfer would be performed here'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-              );
-            },
-            child: Text('Transfer Pharmacy'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final filteredEmployees = _getFilteredEmployees();
-
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CustomAppBar(
         title: 'Employee Management',
         actions: [
-          if (_selectedEmployees.isNotEmpty)
-            IconButton(
-              onPressed: _showBulkActionsDialog,
-              icon: CustomIconWidget(
-                iconName: 'more_vert',
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
-            ),
           IconButton(
             onPressed: () {
               Navigator.pushNamed(context, '/settings');
+              CacheHelper cacheHelper = CacheHelper();
+
+              print(cacheHelper.getData(key: 'token'));
             },
             icon: CustomIconWidget(
               iconName: 'settings',
@@ -317,10 +66,10 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               // Container(
               //   margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
               //   child: TextField(
-              //     controller: _searchController,
+              //     controller: controller.searchController,
               //     onChanged: (value) {
               //       setState(() {
-              //         _searchQuery = value;
+              //         controller.searchQuery = value;
               //       });
               //     },
               //     decoration: InputDecoration(
@@ -333,12 +82,12 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               //           size: 20,
               //         ),
               //       ),
-              //       suffixIcon: _searchQuery.isNotEmpty
+              //       suffixIcon: controller.searchQuery.isNotEmpty
               //           ? IconButton(
               //               onPressed: () {
-              //                 _searchController.clear();
+              //                 controller.searchController.clear();
               //                 setState(() {
-              //                   _searchQuery = '';
+              //                   controller.searchQuery = '';
               //                 });
               //               },
               //               icon: CustomIconWidget(
@@ -355,24 +104,22 @@ class _EmployeeManagementState extends State<EmployeeManagement>
               // ),
 
               // Filter Widget
-              EmployeeFilterWidget(
-                selectedFilter: _selectedFilter,
-                onFilterChanged: (filter) {
-                  setState(() {
-                    _selectedFilter = filter;
-                  });
-                },
+              Obx(
+                () => EmployeeFilterWidget(
+                  selectedFilter: controller.selectedFilter.value,
+                  onFilterChanged: (filter) {
+                    controller.selectedFilter.value = filter;
+                  },
+                ),
               ),
 
               // Tab Bar
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 4.w),
                 child: TabBar(
-                  controller: _tabController,
+                  controller: controller.tabController,
                   onTap: (index) {
-                    setState(() {
-                      _selectedEmployees.clear();
-                    });
+                    controller.selectedEmployees.clear();
                   },
                   tabs: [
                     Tab(
@@ -381,7 +128,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                         children: [
                           CustomIconWidget(
                             iconName: 'people',
-                            color: _tabController.index == 0
+                            color: controller.tabController.index == 0
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context)
                                     .colorScheme
@@ -389,7 +136,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                             size: 18,
                           ),
                           SizedBox(width: 2.w),
-                          Text('Employees'),
+                          const Text('Employees'),
                         ],
                       ),
                     ),
@@ -399,7 +146,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                         children: [
                           CustomIconWidget(
                             iconName: 'school',
-                            color: _tabController.index == 1
+                            color: controller.tabController.index == 1
                                 ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context)
                                     .colorScheme
@@ -407,7 +154,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                             size: 18,
                           ),
                           SizedBox(width: 2.w),
-                          Text('Interns'),
+                          const Text('Interns'),
                         ],
                       ),
                     ),
@@ -421,7 +168,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
       body: Column(
         children: [
           // Selection Header
-          if (_selectedEmployees.isNotEmpty)
+          if (controller.selectedEmployees.isNotEmpty)
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -438,16 +185,11 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                   ),
                   SizedBox(width: 2.w),
                   Text(
-                    '\${_selectedEmployees.length} selected',
+                    '\${controller.selectedEmployees.length} selected',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.w500,
                         ),
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    onPressed: _clearSelection,
-                    child: Text('Clear'),
                   ),
                 ],
               ),
@@ -456,19 +198,20 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           // Tab Bar View
           Expanded(
             child: TabBarView(
-              controller: _tabController,
+              controller: controller.tabController,
               children: [
                 // Pharmacy Employees Tab
-                _buildEmployeeList(filteredEmployees),
-                // Interns Tab
-                _buildEmployeeList(filteredEmployees),
+                Obx(() => _buildEmployeeList(
+                    controller.getFilteredEmployeesForTab(0))),
+                Obx(() => _buildEmployeeList(
+                    controller.getFilteredEmployeesForTab(1))),
               ],
             ),
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showAddEmployeeBottomSheet,
+        onPressed: () => Get.toNamed(AppPages.addEmployee),
         backgroundColor:
             Theme.of(context).floatingActionButtonTheme.backgroundColor,
         foregroundColor:
@@ -479,7 +222,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           size: 24,
         ),
         label: Text(
-          _tabController.index == 0 ? 'Add Employee' : 'Add Intern',
+          controller.tabController.index == 0 ? 'Add Employee' : 'Add Intern',
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color:
                     Theme.of(context).floatingActionButtonTheme.foregroundColor,
@@ -490,7 +233,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
   }
 
   Widget _buildEmployeeList(List<Map<String, dynamic>> employees) {
-    if (_isLoading) {
+    if (controller.isLoading.value) {
       return Center(
         child: CircularProgressIndicator(
           color: Theme.of(context).colorScheme.primary,
@@ -503,52 +246,25 @@ class _EmployeeManagementState extends State<EmployeeManagement>
     }
 
     return RefreshIndicator(
-      onRefresh: _refreshEmployees,
+      onRefresh: controller.refreshEmployees,
       color: Theme.of(context).colorScheme.primary,
       child: ListView.builder(
         padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
         itemCount: employees.length,
         itemBuilder: (context, index) {
           final employee = employees[index];
-          final isSelected = _selectedEmployees.contains(employee["id"]);
+          final isSelected =
+              controller.selectedEmployees.contains(employee["id"]);
 
           return EmployeeCardWidget(
             employee: employee,
             isSelected: isSelected,
-            onTap: () {
-              if (_selectedEmployees.isNotEmpty) {
-                _toggleEmployeeSelection(employee["id"] as int);
-              } else {
-                Navigator.pushNamed(context, '/employee-detail',
-                    arguments: employee);
-              }
-            },
-            onLongPress: () {
-              _toggleEmployeeSelection(employee["id"] as int);
-            },
-            onEditPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Edit \${employee["name"]} profile'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-              );
-            },
-            onRoleChangePressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Change role for \${employee["name"]}'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-              );
-            },
-            onPermissionsPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Update permissions for \${employee["name"]}'),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-              );
+            onTap: () async {
+              final model = EmployeeModel.fromJson(employee);
+              controller.selectEmployee(model);
+              await Get.toNamed(AppPages.employeeDetail, arguments: employee);
+              controller.fetchAllEmployees();
+              print("employee${employee}");
             },
             onDeactivatePressed: () {
               _showDeactivateDialog(employee);
@@ -560,7 +276,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
   }
 
   Widget _buildEmptyState() {
-    final isInternTab = _tabController.index == 1;
+    final isInternTab = controller.tabController.index == 1;
 
     return Center(
       child: Padding(
@@ -582,7 +298,8 @@ class _EmployeeManagementState extends State<EmployeeManagement>
             ),
             SizedBox(height: 1.h),
             Text(
-              _searchQuery.isNotEmpty || _selectedFilter != 'All'
+              controller.searchQuery.isNotEmpty ||
+                      controller.selectedFilter != 'All'
                   ? 'Try adjusting your search or filters'
                   : isInternTab
                       ? 'Start by inviting your first intern to join the team'
@@ -592,21 +309,6 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
-            SizedBox(height: 4.h),
-            if (_searchQuery.isEmpty && _selectedFilter == 'All')
-              ElevatedButton.icon(
-                onPressed: _showAddEmployeeBottomSheet,
-                icon: CustomIconWidget(
-                  iconName: 'add',
-                  color: AppTheme
-                      .lightTheme.elevatedButtonTheme.style?.foregroundColor
-                      ?.resolve({}),
-                  size: 20,
-                ),
-                label: Text(isInternTab
-                    ? 'Invite First Intern'
-                    : 'Invite First Employee'),
-              ),
           ],
         ),
       ),
@@ -617,29 +319,24 @@ class _EmployeeManagementState extends State<EmployeeManagement>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Deactivate Employee'),
-        content: Text(
-          'Are you sure you want to deactivate \${employee["name"]}? They will lose access to all pharmacy systems.',
+        title: const Text('Delete Employee'),
+        content: const Text(
+          'Are you sure you want to Delete \${employee["name"]}?  They will lose access to all pharmacy systems.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('\${employee["name"]} has been deactivated'),
-                  backgroundColor: AppTheme.warningLight,
-                ),
-              );
+              controller.deleteEmployee(employee['id']);
+              controller.fetchAllEmployees();
             },
             style: TextButton.styleFrom(
               foregroundColor: AppTheme.errorLight,
             ),
-            child: Text('Deactivate'),
+            child: const Text('Delete'),
           ),
         ],
       ),

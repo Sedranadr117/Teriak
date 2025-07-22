@@ -1,0 +1,233 @@
+import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/core/widgets/custom_icon_widget.dart';
+
+class AccountSetupCard extends StatefulWidget {
+  final TextEditingController passwordController;
+
+  const AccountSetupCard({
+    Key? key,
+    required this.passwordController,
+  }) : super(key: key);
+
+  @override
+  State<AccountSetupCard> createState() => _AccountSetupCardState();
+}
+
+class _AccountSetupCardState extends State<AccountSetupCard> {
+  bool _isPasswordVisible = false;
+  String _passwordStrength = '';
+  Color _strengthColor = Colors.grey;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.passwordController.addListener(_checkPasswordStrength);
+  }
+
+  void _checkPasswordStrength() {
+    final password = widget.passwordController.text;
+
+    if (password.isEmpty) {
+      setState(() {
+        _passwordStrength = '';
+        _strengthColor = Colors.grey;
+      });
+      return;
+    }
+
+    int score = 0;
+
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+
+    if (password.contains(RegExp(r'[a-z]'))) score++;
+    if (password.contains(RegExp(r'[A-Z]'))) score++;
+    if (password.contains(RegExp(r'[0-9]'))) score++;
+    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
+
+    setState(() {
+      if (score <= 2) {
+        _passwordStrength = 'Weak';
+        _strengthColor = AppTheme.errorLight;
+      } else if (score <= 4) {
+        _passwordStrength = 'Medium';
+        _strengthColor = AppTheme.warningLight;
+      } else {
+        _passwordStrength = 'Strong';
+        _strengthColor = AppTheme.successLight;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    widget.passwordController.removeListener(_checkPasswordStrength);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(4.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CustomIconWidget(
+                  iconName: 'lock',
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 20,
+                ),
+                SizedBox(width: 2.w),
+                Text(
+                  'Account Setup',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: 4.w),
+            TextFormField(
+              controller: widget.passwordController,
+              obscureText: !_isPasswordVisible,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Create a secure password',
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(3.w),
+                  child: CustomIconWidget(
+                    iconName: 'lock_outline',
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ),
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                  icon: CustomIconWidget(
+                    iconName:
+                        _isPasswordVisible ? 'visibility_off' : 'visibility',
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 20,
+                  ),
+                ),
+              ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Password is required';
+                }
+                if (value.trim().length < 6) {
+                  return 'Password must be at least 6 characters';
+                }
+                return null;
+              },
+            ),
+            if (_passwordStrength.isNotEmpty) ...[
+              SizedBox(height: 2.w),
+              Row(
+                children: [
+                  Text(
+                    'Password Strength: ',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  Text(
+                    _passwordStrength,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: _strengthColor,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 1.w),
+              LinearProgressIndicator(
+                value: _passwordStrength == 'Weak'
+                    ? 0.33
+                    : _passwordStrength == 'Medium'
+                        ? 0.66
+                        : 1.0,
+                backgroundColor: Theme.of(context)
+                    .colorScheme
+                    .outline
+                    .withValues(alpha: 0.3),
+                valueColor: AlwaysStoppedAnimation<Color>(_strengthColor),
+              ),
+            ],
+            SizedBox(height: 3.w),
+            Container(
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Password Requirements:',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                  SizedBox(height: 1.w),
+                  _buildRequirement('At least 6 characters',
+                      widget.passwordController.text.length >= 6),
+                  _buildRequirement(
+                      'Contains uppercase letter',
+                      widget.passwordController.text
+                          .contains(RegExp(r'[A-Z]'))),
+                  _buildRequirement(
+                      'Contains lowercase letter',
+                      widget.passwordController.text
+                          .contains(RegExp(r'[a-z]'))),
+                  _buildRequirement(
+                      'Contains number',
+                      widget.passwordController.text
+                          .contains(RegExp(r'[0-9]'))),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRequirement(String text, bool isMet) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0.5.w),
+      child: Row(
+        children: [
+          CustomIconWidget(
+            iconName: isMet ? 'check_circle' : 'radio_button_unchecked',
+            color: isMet
+                ? AppTheme.successLight
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            size: 16,
+          ),
+          SizedBox(width: 2.w),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: isMet
+                      ? AppTheme.successLight
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+}

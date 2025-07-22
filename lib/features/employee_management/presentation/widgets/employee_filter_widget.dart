@@ -19,7 +19,6 @@ class EmployeeFilterWidget extends StatelessWidget {
       {'label': 'All', 'icon': 'filter_list'},
       {'label': 'Active', 'icon': 'check_circle'},
       {'label': 'Inactive', 'icon': 'cancel'},
-      {'label': 'With Alerts', 'icon': 'warning'},
     ];
 
     return Container(

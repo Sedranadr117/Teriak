@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
@@ -34,7 +35,12 @@ class HttpConsumer extends ApiConsumer {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
       final headers = _getHeaders();
-      final response = await http.get(uri, headers: headers);
+      final response = await http.get(uri, headers: headers).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Request timed out after 30 seconds');
+        },
+      );
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
@@ -61,12 +67,11 @@ class HttpConsumer extends ApiConsumer {
       final body = isFormData ? data : json.encode(data);
       print('📄 Request body: $body');
 
-      print('📄 Request body: $body');
-
-      final response = await http.post(uri, body: body, headers: headers);
-
-      print('📥 Response status: ${response.statusCode}');
-      print('📥 Response body: ${response.body}');
+      final response = await http.post(
+        uri,
+        body: body,
+        headers: headers,
+      );
 
       print('📥 Response status: ${response.statusCode}');
       print('📥 Response body: ${response.body}');
@@ -74,7 +79,6 @@ class HttpConsumer extends ApiConsumer {
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
-      print('💥 HTTP Error: $e');
       print('💥 HTTP Error: $e');
       handleHttpException(e);
       rethrow;
@@ -91,7 +95,13 @@ class HttpConsumer extends ApiConsumer {
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
       final headers = _getHeaders(isFormData: isFormData);
       final body = isFormData ? data : json.encode(data);
-      final response = await http.patch(uri, body: body, headers: headers);
+      final response =
+          await http.patch(uri, body: body, headers: headers).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Request timed out after 30 seconds');
+        },
+      );
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
@@ -120,6 +130,43 @@ class HttpConsumer extends ApiConsumer {
       return json.decode(body);
     } catch (_) {
       return body;
+    }
+  }
+
+  @override
+  Future put(String path,
+      {data,
+      Map<String, dynamic>? queryParameters,
+      bool isFormData = false}) async {
+    try {
+      final uri =
+          Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+
+      print('🌐 Full URL: $uri');
+      print('📤 Request method: PUT');
+      print('📦 Request data: $data');
+
+      final headers = _getHeaders(isFormData: isFormData);
+      print('📋 Headers: $headers');
+
+      final body = isFormData ? data : json.encode(data);
+      print('📄 Request body: $body');
+
+      final response = await http.put(
+        uri,
+        body: body,
+        headers: headers,
+      );
+
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
+
+      handleHttpResponse(response);
+      return _tryDecode(response.body);
+    } catch (e) {
+      print('💥 HTTP Error: $e');
+      handleHttpException(e);
+      rethrow;
     }
   }
 }

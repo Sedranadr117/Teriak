@@ -6,5 +6,8 @@ class AppPages {
   static const String employeeManagement = '/add_employee';
   static const String settings = '/settings';
   static const String employeeDetail = '/employee-detail';
+  static const String addEmployee = '/add-employee';
+  static const String workingHours = '/workingHours';
+
   static const String home = '/home';
 }

@@ -48,10 +48,9 @@ class EmployeeParams {
   final String password;
   final String phoneNumber;
   final String status;
-  final DateTime dateOfHire;
+  final String dateOfHire;
   final int roleId;
-  final WorkTimeParams workStart;
-  final WorkTimeParams workEnd;
+  final List<WorkingHoursRequestParams> workingHoursRequests;
 
   const EmployeeParams(
     this.firstName,
@@ -61,23 +60,44 @@ class EmployeeParams {
     this.status,
     this.dateOfHire,
     this.roleId,
-    this.workStart,
-    this.workEnd,
+    this.workingHoursRequests,
   );
 }
 
-class WorkTimeParams {
-  final int hour;
-  final int minute;
-  final int second;
-  final int nano;
+class WorkingHoursRequestParams {
+  final List<String> daysOfWeek;
+  final List<ShiftParams> shifts;
 
-  const WorkTimeParams(
-    this.hour,
-    this.minute,
-    this.second,
-    this.nano,
+  const WorkingHoursRequestParams(
+    this.daysOfWeek,
+    this.shifts,
   );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'daysOfWeek': daysOfWeek,
+      'shifts': shifts.map((shift) => shift.toJson()).toList(),
+    };
+  }
+}
+
+class ShiftParams {
+  final String startTime;
+  final String endTime;
+  final String description;
+
+  const ShiftParams(
+    this.startTime,
+    this.endTime,
+    this.description,
+  );
+  Map<String, dynamic> toJson() {
+    return {
+      'startTime': startTime,
+      'endTime': endTime,
+      'description': description,
+    };
+  }
 }
 
 enum AuthType {

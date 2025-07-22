@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/core/themes/assets.dart';
 
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
@@ -86,7 +87,7 @@ class UserProfileHeaderWidget extends StatelessWidget {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.w),
                       child: Image.asset(
-                        userData["avatar"] as String,
+                        Assets.assetsImagesJustLogo,
                         width: 20.w,
                         height: 20.w,
                         fit: BoxFit.cover,

@@ -1,12 +1,9 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/routes/app_routes.dart';
-import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 import 'package:teriak/core/themes/theme_controller.dart';
@@ -21,11 +18,14 @@ void main() async {
   Get.put(ThemeController());
 
   runApp(
-    DevicePreview(
-      enabled: true,
-      builder: (context) => Sizer(
-        builder: (context, orientation, deviceType) => MyApp(),
-      ),
+    // DevicePreview(
+    //   enabled: true,
+    //   builder: (context) => Sizer(
+    //     builder: (context, orientation, deviceType) => MyApp(),
+    //   ),
+    // ),
+    Sizer(
+      builder: (context, orientation, deviceType) => MyApp(),
     ),
   );
 }

@@ -3,19 +3,11 @@ import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/pharmacy/data/models/pharmacy_model.dart';
 
-abstract class PharmacyRemoteDataSource {
-  Future<PharmacyModel> addPharmacy(PhaParams params);
-  Future<List<PharmacyModel>> getAllPharmacies();
-  Future<PharmacyModel> getPharmacyById(String id);
-  Future<bool> deletePharmacy(String id);
-}
-
-class PharmacyRemoteDataSourceImpl implements PharmacyRemoteDataSource {
+class PharmacyRemoteDataSource {
   final ApiConsumer api;
 
-  PharmacyRemoteDataSourceImpl({required this.api});
+  PharmacyRemoteDataSource({required this.api});
 
-  @override
   Future<PharmacyModel> addPharmacy(PhaParams params) async {
     final data = <String, dynamic>{};
     data['location'] = params.location ?? '';
@@ -49,21 +41,20 @@ class PharmacyRemoteDataSourceImpl implements PharmacyRemoteDataSource {
   //   return PharmacyModel.fromJson(response);
   // }
 
-  @override
-  Future<bool> deletePharmacy(String id) async {
-    // await api.delete('${EndPoints.deletePharmacy}/$id');
-    return true;
-  }
+  // @override
+  // Future<bool> deletePharmacy(String id) async {
+  //   // await api.delete('${EndPoints.deletePharmacy}/$id');
+  //   return true;
+  // }
 
-  @override
   Future<List<PharmacyModel>> getAllPharmacies() {
     // TODO: implement getAllPharmacies
     throw UnimplementedError();
   }
 
-  @override
-  Future<PharmacyModel> getPharmacyById(String id) {
-    // TODO: implement getPharmacyById
-    throw UnimplementedError();
-  }
+  // @override
+  // Future<PharmacyModel> getPharmacyById(String id) {
+  //   // TODO: implement getPharmacyById
+  //   throw UnimplementedError();
+  // }
 }

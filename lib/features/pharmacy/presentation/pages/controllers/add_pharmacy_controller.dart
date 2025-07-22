@@ -179,7 +179,7 @@ class AddPharmacyController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    final remoteDataSource = PharmacyRemoteDataSourceImpl(api: httpConsumer);
+    final remoteDataSource = PharmacyRemoteDataSource(api: httpConsumer);
 
     final repository = PharmacyRepositoryImpl(
       remoteDataSource: remoteDataSource,
@@ -308,6 +308,7 @@ class AddPharmacyController extends GetxController {
         final cacheHelper = CacheHelper();
         await cacheHelper.saveData(
             key: 'isPharmacyRegistrationComplete', value: true);
+
         Get.offNamed(AppPages.employeeManagement);
 
         // Clear all form fields

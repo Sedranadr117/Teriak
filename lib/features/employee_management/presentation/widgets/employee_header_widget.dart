@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/core/themes/assets.dart';
 
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
@@ -20,7 +21,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppTheme.shadowLight,
             blurRadius: 8,
@@ -30,33 +31,25 @@ class EmployeeHeaderWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Profile Image
-          // Container(
-          //   width: 25.w,
-          //   height: 25.w,
-          //   decoration: BoxDecoration(
-          //     shape: BoxShape.circle,
-          //     border: Border.all(
-          //       color: Theme.of(context).primaryColor,
-          //       width: 3,
-          //     ),
-          //   ),
-          //   child: ClipOval(
-
-          //     child:
-          //      CustomImageWidget(
-          //       imageUrl: employeeData["profileImage"] as String,
-          //       width: 25.w,
-          //       height: 25.w,
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          // ),
+          Container(
+            width: 25.w,
+            height: 25.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Theme.of(context).primaryColor,
+                width: 3,
+              ),
+            ),
+            child: ClipOval(
+              child: Image.asset(Assets.assetsImagesJustLogo),
+            ),
+          ),
           SizedBox(height: 2.h),
 
           // Employee Name
           Text(
-            employeeData["name"] as String,
+            "${employeeData["firstName"] ?? ''} ${employeeData["lastName"] ?? ''}",
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -85,7 +78,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  employeeData["role"] as String,
+                  employeeData["roleName"] ?? '',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w500,
@@ -96,7 +89,6 @@ class EmployeeHeaderWidget extends StatelessWidget {
           ),
           SizedBox(height: 1.h),
 
-          // Status Indicator
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -104,7 +96,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color: employeeData["status"] == "Active"
+                  color: employeeData["status"] == "ACTIVE"
                       ? AppTheme.successLight
                       : AppTheme.errorLight,
                   shape: BoxShape.circle,
@@ -112,9 +104,9 @@ class EmployeeHeaderWidget extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                employeeData["status"] as String,
+                employeeData["status"] ?? '',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: employeeData["status"] == "Active"
+                      color: employeeData["status"] == "ACTIVE"
                           ? AppTheme.successLight
                           : AppTheme.errorLight,
                       fontWeight: FontWeight.w500,

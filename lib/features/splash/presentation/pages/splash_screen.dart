@@ -55,15 +55,22 @@ class _SplashScreenState extends State<SplashScreen>
         Future.delayed(const Duration(milliseconds: 500), () async {
           if (mounted) {
             final cacheHelper = CacheHelper();
-            final token = cacheHelper.getData(key: 'token');
-            final isPharmacyRegistrationComplete = await cacheHelper.getData(
+            final token = await cacheHelper.getData(key: 'token');
+            final isComplete = await cacheHelper.getData(
                     key: 'isPharmacyRegistrationComplete') ??
                 false;
-            (token != null && token is String && token.isNotEmpty)
-                ? (isPharmacyRegistrationComplete
-                    ? Get.toNamed(AppPages.employeeManagement)
-                    : Get.toNamed(AppPages.pharmacyCompleteRegistration))
-                : Get.toNamed(AppPages.signin);
+            print('🧪 Token: $token');
+            print('🧪 isPharmacyRegistrationComplete: $isComplete');
+
+            if (token != null && token is String && token.isNotEmpty) {
+              if (isComplete) {
+                Get.offAllNamed(AppPages.employeeManagement);
+              } else {
+                Get.offAllNamed(AppPages.pharmacyCompleteRegistration);
+              }
+            } else {
+              Get.offAllNamed(AppPages.signin);
+            }
           }
         });
       }

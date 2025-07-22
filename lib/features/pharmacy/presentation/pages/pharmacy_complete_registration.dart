@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/features/employee_management/presentation/pages/employee_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/controllers/add_pharmacy_controller.dart';
 import 'widgets/location_input_widget.dart';
 import 'widgets/pharmacy_form_section_widget.dart';
@@ -38,42 +38,7 @@ class _PharmacyCompleteRegistrationState
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           title: const Text('Add Pharmacy'),
-          leading: IconButton(
-            icon: CustomIconWidget(
-              iconName: 'close',
-              color: Theme.of(context).colorScheme.onSurface,
-              size: 24,
-            ),
-            onPressed: () async {
-              if (await addPharmacyController.onWillPop(context)) {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (BuildContext context) =>
-                        const EmployeeManagement(),
-                  ),
-                );
-              }
-            },
-          ),
-          actions: [
-            Obx(() => TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                    ),
-                    minimumSize: const Size(0, 0),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  onPressed: addPharmacyController.isLoading.value
-                      ? null
-                      : addPharmacyController.saveDraft,
-                  child: const Text(
-                    'Save Draft',
-                  ),
-                )),
-          ],
+          centerTitle: true,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(8.h),
             child: Obx(() => ProgressIndicatorWidget(
@@ -451,6 +416,13 @@ class _PharmacyCompleteRegistrationState
                         onPressed: addPharmacyController.isLoading.value
                             ? null
                             : () async {
+                                final cacheHelper = CacheHelper();
+
+                                var token =
+                                    await cacheHelper.getData(key: 'token');
+
+                                print('11111111111111111Sending token: $token');
+
                                 if (await addPharmacyController
                                     .onWillPop(context)) {
                                   Navigator.pop(context);

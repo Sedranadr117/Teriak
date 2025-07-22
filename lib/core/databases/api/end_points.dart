@@ -5,5 +5,6 @@ class EndPoints {
   // Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
-  static const String addEmployee = "/pharmacy/employees";
+  static const String addEmployee = "employees";
+  static const String roleID = "roles";
 }

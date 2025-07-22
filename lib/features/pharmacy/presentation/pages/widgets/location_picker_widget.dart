@@ -94,6 +94,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               children: [
                 TileLayer(
                   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  userAgentPackageName: 'com.example.teriak',
                 ),
                 MarkerLayer(
                   markers: [
@@ -116,6 +117,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               onPressed: () {
                 print('📍 Selected location: $_currentLatLng');
                 Get.back(result: {
+                  'latLng': _currentLatLng,
                   'address': _currentAddress,
                 });
               },

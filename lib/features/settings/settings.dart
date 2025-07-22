@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
@@ -34,8 +34,7 @@ class _SettingsState extends State<Settings> {
       "name": "Dr. Sarah Johnson",
       "email": "sarah.johnson@tiryaq.com",
       "role": "Pharmacy Administrator",
-      "avatar":
-          "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
+      "avatar": "",
       "pharmacyCount": 3,
       "lastLogin": "2024-01-15 09:30 AM"
     }
@@ -47,7 +46,7 @@ class _SettingsState extends State<Settings> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: CustomAppBar(
+      appBar: const CustomAppBar(
         title: 'Settings',
         showThemeToggle:
             false, // Don't show theme toggle in settings since it's already there
@@ -156,7 +155,7 @@ class _SettingsState extends State<Settings> {
                       _showComingSoonDialog(context, 'Login Requirements'),
                   showArrow: true,
                 ),
-                SettingsItemWidget(
+                const SettingsItemWidget(
                   icon: 'enhanced_encryption',
                   title: 'Data Encryption',
                   subtitle: 'Enabled - AES 256-bit encryption',
@@ -304,7 +303,7 @@ class _SettingsState extends State<Settings> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CustomIconWidget(
+                    const CustomIconWidget(
                       iconName: 'logout',
                       color: AppTheme.onErrorLight,
                       size: 20,
@@ -421,7 +420,7 @@ class _SettingsState extends State<Settings> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -429,23 +428,24 @@ class _SettingsState extends State<Settings> {
                     newPasswordController.text.isEmpty ||
                     confirmPasswordController.text.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Please fill all fields')),
+                    const SnackBar(content: Text('Please fill all fields')),
                   );
                   return;
                 }
                 if (newPasswordController.text !=
                     confirmPasswordController.text) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('New passwords do not match')),
+                    const SnackBar(content: Text('New passwords do not match')),
                   );
                   return;
                 }
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Password changed successfully')),
+                  const SnackBar(
+                      content: Text('Password changed successfully')),
                 );
               },
-              child: Text('Change Password'),
+              child: const Text('Change Password'),
             ),
           ],
         ),
@@ -477,7 +477,7 @@ class _SettingsState extends State<Settings> {
               });
               Navigator.pop(context);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -492,7 +492,7 @@ class _SettingsState extends State<Settings> {
                 ),
               );
             },
-            child: Text('Confirm'),
+            child: const Text('Confirm'),
           ),
         ],
       ),
@@ -524,7 +524,7 @@ class _SettingsState extends State<Settings> {
                         });
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                               content: Text('Language changed to \$language')),
                         );
                       },
@@ -535,7 +535,7 @@ class _SettingsState extends State<Settings> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -558,7 +558,7 @@ class _SettingsState extends State<Settings> {
             mainAxisSize: MainAxisSize.min,
             children: timeouts
                 .map((timeout) => RadioListTile<int>(
-                      title: Text('\$timeout minutes'),
+                      title: const Text('\$timeout minutes'),
                       value: timeout,
                       groupValue: _sessionTimeout,
                       onChanged: (value) {
@@ -567,7 +567,7 @@ class _SettingsState extends State<Settings> {
                         });
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                               content: Text(
                                   'Session timeout set to \$timeout minutes')),
                         );
@@ -579,7 +579,7 @@ class _SettingsState extends State<Settings> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -612,7 +612,7 @@ class _SettingsState extends State<Settings> {
                       onTap: () {
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
+                          const SnackBar(
                               content:
                                   Text('Sync frequency set to \$frequency')),
                         );
@@ -624,7 +624,7 @@ class _SettingsState extends State<Settings> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
         ],
       ),
@@ -697,16 +697,16 @@ class _SettingsState extends State<Settings> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Close'),
+            child: const Text('Close'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Opening email client...')),
+                const SnackBar(content: Text('Opening email client...')),
               );
             },
-            child: Text('Send Email'),
+            child: const Text('Send Email'),
           ),
         ],
       ),
@@ -724,7 +724,7 @@ class _SettingsState extends State<Settings> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircularProgressIndicator(),
+            const CircularProgressIndicator(),
             SizedBox(height: 2.h),
             Text(
               'Checking for updates...',
@@ -736,7 +736,7 @@ class _SettingsState extends State<Settings> {
     );
 
     // Simulate update check
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pop(context);
       showDialog(
         context: context,
@@ -752,7 +752,7 @@ class _SettingsState extends State<Settings> {
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
+              child: const Text('OK'),
             ),
           ],
         ),
@@ -775,24 +775,30 @@ class _SettingsState extends State<Settings> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           ElevatedButton(
             onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.remove('token');
+              CacheHelper cacheHelper = CacheHelper();
+              await cacheHelper.removeData(key: 'token');
+              bool result = await cacheHelper.removeData(
+                  key: 'isPharmacyRegistrationCompletes');
+              await cacheHelper.clearData();
+
+              print("removed phaaaaaaa$result");
+
               // Remove any other user data if needed
 
               Get.offAllNamed(AppPages.signin);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Signed out successfully')),
+                const SnackBar(content: Text('Signed out successfully')),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.errorLight,
               foregroundColor: AppTheme.onErrorLight,
             ),
-            child: Text('Sign Out'),
+            child: const Text('Sign Out'),
           ),
         ],
       ),
@@ -814,7 +820,7 @@ class _SettingsState extends State<Settings> {
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ],
       ),

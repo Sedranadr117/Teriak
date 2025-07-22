@@ -4,7 +4,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/core/widgets/custom_icon_widget.dart';
 import 'package:teriak/core/themes/app_theme.dart';
 
-class PersonalInfoCardWidget extends StatelessWidget {
+class PersonalInfoCardWidget extends StatefulWidget {
   final Map<String, dynamic> employeeData;
   final VoidCallback onEdit;
 
@@ -15,6 +15,11 @@ class PersonalInfoCardWidget extends StatelessWidget {
   });
 
   @override
+  State<PersonalInfoCardWidget> createState() => _PersonalInfoCardWidgetState();
+}
+
+class _PersonalInfoCardWidgetState extends State<PersonalInfoCardWidget> {
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
@@ -22,7 +27,7 @@ class PersonalInfoCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppTheme.shadowLight,
             blurRadius: 8,
@@ -54,7 +59,7 @@ class PersonalInfoCardWidget extends StatelessWidget {
                 ],
               ),
               IconButton(
-                onPressed: onEdit,
+                onPressed: widget.onEdit,
                 icon: CustomIconWidget(
                   iconName: 'edit',
                   color: Theme.of(context).primaryColor,
@@ -65,21 +70,25 @@ class PersonalInfoCardWidget extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
 
-          // Information Fields
           _buildInfoRow(
-              context, 'Full Name', employeeData["name"] as String, 'person'),
+              context,
+              'Full Name',
+              "${widget.employeeData["firstName"] ?? ''} ${widget.employeeData["lastName"] ?? ''}",
+              'person'),
           SizedBox(height: 1.5.h),
-          _buildInfoRow(
-              context, 'Email', employeeData["email"] as String, 'email'),
-          SizedBox(height: 1.5.h),
-          _buildInfoRow(
-              context, 'Phone', employeeData["phone"] as String, 'phone'),
+          _buildInfoRow(context, 'Phone',
+              widget.employeeData["phoneNumber"] ?? '', 'phone'),
           SizedBox(height: 1.5.h),
           _buildInfoRow(
               context,
               'Hire Date',
-              _formatDate(employeeData["hireDate"] as String),
+              _formatDate(widget.employeeData["dateOfHire"] ?? ''),
               'calendar_today'),
+          // Role Badge
+          SizedBox(height: 1.5.h),
+
+          _buildInfoRow(context, 'Role', widget.employeeData["roleName"] ?? '',
+              'security'),
         ],
       ),
     );
@@ -110,15 +119,31 @@ class PersonalInfoCardWidget extends StatelessWidget {
               SizedBox(height: 0.5.h),
               Text(
                 value,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                style: label == 'Role'
+                    ? Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: _getRoleColor(context, value),
+                          fontWeight: FontWeight.w500,
+                        )
+                    : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
               ),
             ],
           ),
         ),
       ],
     );
+  }
+
+  Color _getRoleColor(BuildContext context, String role) {
+    switch (role) {
+      case 'PHARMACY_EMPLOYEE':
+        return Theme.of(context).colorScheme.primary;
+      case 'PHARMACY_TRAINEE':
+        return Theme.of(context).colorScheme.tertiary;
+      default:
+        return Theme.of(context).colorScheme.error;
+    }
   }
 
   String _formatDate(String dateString) {
