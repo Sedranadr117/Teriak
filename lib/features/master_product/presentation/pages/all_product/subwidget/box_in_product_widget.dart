@@ -28,7 +28,9 @@ class _BoxInProductWidgetState extends State<BoxInProductWidget> {
       padding: EdgeInsets.symmetric(
           horizontal: context.w * 0.02, vertical: context.h * 0.01),
       decoration: BoxDecoration(
-        color: AppColors.surfaceLight,
+        color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.cardDark
+              : AppColors.cardLight,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(

@@ -108,21 +108,22 @@ class ProductWidget extends StatelessWidget {
                               : AppColors.primaryVariantLight),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: Text(
-                      productSource,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    child: Text(productSource,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelSmall /*?.copyWith(
                             color: productSource == 'Central'
                                 ? (Theme.of(context).brightness ==
                                         Brightness.dark
-                                    ? AppColors.primaryDark
-                                    : AppColors.primaryLight)
+                                    ? Colors.white
+                                    : Colors.white)
                                 : (Theme.of(context).brightness ==
                                         Brightness.dark
                                     ? AppColors.primaryVariantDark
                                     : AppColors.primaryVariantLight),
                             fontWeight: FontWeight.w500,
-                          ),
-                    ),
+                          ),*/
+                        ),
                   ),
                 ],
               ),
@@ -165,11 +166,11 @@ class ProductWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: prescriptionRequired
                           ? (Theme.of(context).brightness == Brightness.dark
-                              ? AppColors.warningDark
-                              : AppColors.warningLight)
+                              ? AppColors.warningDark.withValues(alpha: 0.1)
+                              : AppColors.warningLight).withValues(alpha: 0.1)
                           : (Theme.of(context).brightness == Brightness.dark
-                              ? AppColors.successDark
-                              : AppColors.successLight),
+                              ? AppColors.successDark.withValues(alpha: 0.1)
+                              : AppColors.successLight.withValues(alpha: 0.1)),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
                         color: prescriptionRequired
@@ -187,34 +188,21 @@ class ProductWidget extends StatelessWidget {
                       children: [
                         CustomIconWidget(
                           iconName: prescriptionRequired ? 'lock' : 'lock_open',
-                          color: prescriptionRequired
-                              ? (Theme.of(context).brightness == Brightness.dark
-                                  ? AppColors.warningDark
-                                  : AppColors.warningLight)
-                              : (Theme.of(context).brightness == Brightness.dark
-                                  ? AppColors.successDark
-                                  : AppColors.successLight),
+                          color: AppColors.textPrimaryLight,
                           size: 16,
                         ),
                         SizedBox(width: context.w * 0.01),
                         Text(
-                          prescriptionRequired
-                              ? 'Prescription Required'.tr
-                              : 'No Prescription'.tr,
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: prescriptionRequired
-                                        ? (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? AppColors.warningDark
-                                            : AppColors.warningLight)
-                                        : (Theme.of(context).brightness ==
-                                                Brightness.dark
-                                            ? AppColors.successDark
-                                            : AppColors.successLight),
+                            prescriptionRequired
+                                ? 'Prescription Required'.tr
+                                : 'No Prescription'.tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall ?.copyWith(
+                                   color: AppColors.textPrimaryLight,
                                     fontWeight: FontWeight.w500,
-                                  ),
-                        ),
+                                  )
+                            ),
                       ],
                     ),
                   ),

@@ -73,25 +73,25 @@ class UserProfileHeaderWidget extends StatelessWidget {
             Row(
               children: [
                 // User Avatar
-                Container(
-                  width: 20.w,
-                  height: 20.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.w),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.onPrimary,
-                      width: 3,
-                    ),
-                  ),
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.w),
-                      child: Image.asset(
-                        userData["avatar"] as String,
-                        width: 20.w,
-                        height: 20.w,
-                        fit: BoxFit.cover,
-                      )),
-                ),
+                // Container(
+                //   width: 20.w,
+                //   height: 20.w,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(10.w),
+                //     border: Border.all(
+                //       color: Theme.of(context).colorScheme.onPrimary,
+                //       width: 3,
+                //     ),
+                //   ),
+                //   child: ClipRRect(
+                //       borderRadius: BorderRadius.circular(10.w),
+                //       child: Image.asset(
+                //         userData["avatar"] as String,
+                //         width: 20.w,
+                //         height: 20.w,
+                //         fit: BoxFit.cover,
+                //       )),
+                // ),
 
                 SizedBox(width: 4.w),
 

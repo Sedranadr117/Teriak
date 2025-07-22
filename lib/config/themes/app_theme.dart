@@ -575,7 +575,7 @@ class AppTheme {
       labelMedium:
           _localizedFont(12, FontWeight.w500, textPrimary, letterSpacing: 0.5),
       labelSmall:
-          _localizedFont(11, FontWeight.w500, textDisabled, letterSpacing: 0.5),
+          _localizedFont(11, FontWeight.w500, textPrimary, letterSpacing: 0.5),
     );
   }
 

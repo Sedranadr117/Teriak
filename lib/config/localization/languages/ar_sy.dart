@@ -16,4 +16,6 @@ final Map<String, String> arSY = {
   "Source": "مصدر المنتج",
   "Prescription Required": "يتطلب وصفة طبية",
   "No Prescription": "بدون وصفة",
+  "Show Barcodes": "عرض الباركود",
+"Hide Barcodes": "اخفاء الباركود",
 };

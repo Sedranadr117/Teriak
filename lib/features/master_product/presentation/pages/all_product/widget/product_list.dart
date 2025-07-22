@@ -24,7 +24,7 @@ class _ProductListState extends State<ProductList> {
       "prescriptionRequired": true,
       "drugForm": "Tablets",
       "medicalNotes": "you should eat before",
-      "barcode": "12812948",
+      "barcodes": ["1234567890", "9876543210"],
       "manufacturer": "Advanced Pharmaceuticals",
       "classification": "Analgesic & Anti-inflammatory",
       "productType": "Pain Relief Medication"
@@ -38,6 +38,11 @@ class _ProductListState extends State<ProductList> {
       "dosageUnit": "mg",
       "prescriptionRequired": false,
       "drugForm": "Tablets",
+      "medicalNotes": "you should eat before",
+      "barcodes": ["1234567890", "9876543210"],
+      "manufacturer": "Advanced Pharmaceuticals",
+      "classification": "Analgesic & Anti-inflammatory",
+      "productType": "Pain Relief Medication"
     },
   ];
   @override

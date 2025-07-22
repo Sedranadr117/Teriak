@@ -17,4 +17,6 @@ final Map<String, String> enUS = {
 "Source": "Source",
 "Prescription Required": "Prescription Required",
 "No Prescription": "No Prescription",
+"Show Barcodes": "Show Barcodes",
+"Hide Barcodes": "Hide Barcodes",
 };

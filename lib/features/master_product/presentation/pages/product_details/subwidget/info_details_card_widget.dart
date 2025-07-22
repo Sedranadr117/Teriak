@@ -22,7 +22,9 @@ class InfoDetailsCardWidget extends StatelessWidget {
       ),
       padding: EdgeInsets.all(context.w * 0.04),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.cardDark
+              : AppColors.cardLight,
         borderRadius: BorderRadius.circular(12),
         boxShadow: const [
           BoxShadow(
@@ -40,7 +42,10 @@ class InfoDetailsCardWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: context.h * 0.02,
               fontWeight: FontWeight.w700,
-              color: AppColors.primaryLight,
+              color:Theme.of(context).brightness == Brightness.dark
+              ? AppColors.appColor4
+              : AppColors.primaryLight,
+        
             ),
           ),
           SizedBox(height: context.w * 0.02),

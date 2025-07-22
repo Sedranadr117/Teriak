@@ -15,19 +15,19 @@ class _AddProductButtonState extends State<AddProductButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-        onPressed: () {},
-        label: Text(
-          'Add Product'.tr,
-          style: Theme.of(context).textTheme.labelMedium/*?.copyWith(
-                color: AppColors.onPrimaryLight,
-                fontWeight: FontWeight.w600,
-              ),*/
-        ),
-        icon: const CustomIconWidget(
-          iconName: 'add',
-          color: AppColors.onPrimaryLight,
-          size: 24,
-        ),
-      );
+      onPressed: () {},
+      label: Text(
+        'Add Product'.tr,
+        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: AppColors.onPrimaryLight,
+              fontWeight: FontWeight.w600,
+            ),
+      ),
+      icon: const CustomIconWidget(
+        iconName: 'add',
+        color: AppColors.onPrimaryLight,
+        size: 24,
+      ),
+    );
   }
 }

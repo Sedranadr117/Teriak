@@ -47,14 +47,22 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
             padding: EdgeInsets.symmetric(
                 horizontal: context.w * 0.03, vertical: context.w * 0.01),
             decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.warningDark
-                  : AppColors.warningLight,
+              color: widget.drugData['prescriptionRequired']
+                  ? (Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.warningDark.withValues(alpha: 0.1)
+                      : AppColors.warningLight.withValues(alpha: 0.1))
+                  : (Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.successDark.withValues(alpha: 0.1)
+                      : AppColors.successLight.withValues(alpha: 0.1)),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? AppColors.warningDark
-                    : AppColors.warningLight,
+                color: widget.drugData['prescriptionRequired']
+                    ? (Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.warningDark
+                        : AppColors.warningLight)
+                    : (Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.successDark
+                        : AppColors.successLight),
                 width: 1,
               ),
             ),
@@ -65,9 +73,7 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
                   iconName: widget.drugData['prescriptionRequired']
                       ? 'lock'
                       : 'lock_open',
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? AppColors.warningDark
-                      : AppColors.warningLight,
+                  color: AppColors.textPrimaryLight,
                   size: 16,
                 ),
                 //SizedBox(width: context.w * 0.01),
@@ -75,13 +81,14 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
                   widget.drugData['prescriptionRequired']
                       ? 'Prescription Required'.tr
                       : 'No Prescription'.tr,
-                  style: TextStyle(
-                    fontSize: context.h * 0.011,
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.warningDark
-                        : AppColors.warningLight,
-                  ),
+                  style:Theme.of(context)
+                                .textTheme
+                                .labelSmall ?.copyWith(
+                              
+                                   color: AppColors.textPrimaryLight,
+                                    fontWeight: FontWeight.w500,
+                                  )
+                  
                 ),
               ],
             ),
@@ -141,7 +148,7 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
               color: Theme.of(context).brightness == Brightness.dark
                   ? AppColors.surfaceDark
                   : AppColors.surfaceLight,
-              borderRadius: BorderRadius.circular(8),
+              //borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [

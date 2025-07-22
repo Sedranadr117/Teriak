@@ -11,6 +11,7 @@ import 'package:teriak/config/widgets/custom_app_bar.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
 import './widgets/user_profile_header_widget.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -21,6 +22,7 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final ThemeController _themeController = Get.find<ThemeController>();
+  final LocaleController _localeController = Get.find<LocaleController>();
   bool _biometricEnabled = false;
   bool _notificationsEnabled = true;
   bool _offlineStorageEnabled = true;
@@ -49,6 +51,13 @@ class _SettingsState extends State<Settings> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CustomAppBar(
         title: 'Settings',
+        actions: [
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(AppPages.allProductPage);
+              },
+              child: CustomIconWidget(iconName: "add"))
+        ],
         showThemeToggle:
             false, // Don't show theme toggle in settings since it's already there
       ),
@@ -175,13 +184,14 @@ class _SettingsState extends State<Settings> {
             SettingsSectionWidget(
               title: 'App Configuration',
               children: [
-                SettingsItemWidget(
-                  icon: 'language',
-                  title: 'Language',
-                  subtitle: _selectedLanguage,
-                  onTap: () => _showLanguageDialog(context),
-                  showArrow: true,
-                ),
+                Obx(() => SettingsItemWidget(
+                      icon: 'language',
+                      title: 'Language',
+                      subtitle:
+                          _localeController.isArabic ? 'العربية' : 'English',
+                      onTap: () => _showLanguageDialog(context),
+                      showArrow: true,
+                    )),
                 Obx(() => SettingsItemWidget(
                       icon: 'palette',
                       title: 'Theme',
@@ -500,8 +510,10 @@ class _SettingsState extends State<Settings> {
   }
 
   void _showLanguageDialog(BuildContext context) {
-    final languages = ['English', 'Arabic', 'French', 'Spanish', 'German'];
-
+    final languages = [
+      {'label': 'English', 'code': 'en_US'},
+      {'label': 'العربية', 'code': 'ar_SY'},
+    ];
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -514,21 +526,22 @@ class _SettingsState extends State<Settings> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: languages
-                .map((language) => RadioListTile<String>(
-                      title: Text(language),
-                      value: language,
-                      groupValue: _selectedLanguage,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedLanguage = value!;
-                        });
+                .map((lang) => Obx(() => RadioListTile<String>(
+                      title: Text(lang['label']!),
+                      value: lang['code']!,
+                      groupValue:
+                          _localeController.isArabic ? 'ar_SY' : 'en_US',
+                      onChanged: (value) async {
+                        await _localeController.changeLocale(value!);
                         Navigator.pop(context);
+                        setState(() {});
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                              content: Text('Language changed to \$language')),
+                              content:
+                                  Text('Language changed to ${lang['label']}')),
                         );
                       },
-                    ))
+                    )))
                 .toList(),
           ),
         ),

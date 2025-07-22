@@ -25,7 +25,9 @@ class _SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? AppColors.backgroundDark
+          : AppColors.backgroundLight,
       padding: EdgeInsets.symmetric(
           horizontal: 4 * context.w / 100, vertical: 2 * context.h / 100),
       child: Row(
@@ -33,10 +35,14 @@ class _SearchWidgetState extends State<SearchWidget> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.surfaceLight,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.backgroundDark
+                    : AppColors.backgroundLight,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.borderLight,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.backgroundDark
+                      : AppColors.backgroundLight,
                   width: 1,
                 ),
               ),
@@ -44,12 +50,11 @@ class _SearchWidgetState extends State<SearchWidget> {
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search products'.tr,
-                  hintStyle: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      /*?.copyWith(
+                  hintStyle: Theme.of(context).textTheme.bodyMedium
+                  /*?.copyWith(
                         color: AppColors.textSecondaryLight,
-                      ),*/,
+                      ),*/
+                  ,
                   prefixIcon: Padding(
                     padding: EdgeInsets.all(3 * context.w / 100),
                     child: const CustomIconWidget(
@@ -88,27 +93,39 @@ class _SearchWidgetState extends State<SearchWidget> {
                   color: AppColors.onPrimaryLight,
                   size: 20,
                 ),
-                style:
-                    Theme.of(context).textTheme.bodySmall/*?.copyWith(
-                          color: AppColors.onPrimaryLight,
-                          fontWeight: FontWeight.w500,
-                        ),*/,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: AppColors.textPrimaryLight,
+                      fontWeight: FontWeight.w500,
+                    ),
                 dropdownColor: Colors.white,
                 items: _searchFilterOptions.map((option) {
                   return DropdownMenuItem<String>(
                     value: option['value'],
-                    child: Text(
-                      option['label']!.tr,
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium
-                          /*?.copyWith(
-                            color: AppColors.onPrimaryLight,
+                    child: DefaultTextStyle(
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                            color: AppColors
+                                .textPrimaryLight, // ✅ لون العناصر داخل القائمة
                             fontWeight: FontWeight.w500,
-                          ),*/
+                          ),
+                      child: Text(option['label']!.tr),
                     ),
                   );
                 }).toList(),
+                selectedItemBuilder: (BuildContext context) {
+                  return _searchFilterOptions.map((option) {
+                    return Align(
+                      alignment: Alignment.centerLeft, // أو حسب محاذاتك الأصلية
+                      child: Text(
+                        option['label']!.tr,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: AppColors
+                                  .textPrimaryDark, // ✅ أبيض للعنصر الظاهر
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    );
+                  }).toList();
+                },
                 onChanged: (value) {
                   if (value != null) {
                     setState(() {

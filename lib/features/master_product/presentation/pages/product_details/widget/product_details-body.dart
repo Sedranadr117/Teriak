@@ -1,9 +1,7 @@
-import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
-import 'package:teriak/config/extensions/responsive.dart';
 import 'package:teriak/config/extensions/string.dart';
-import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/features/master_product/presentation/pages/product_details/subwidget/barcodes_widget.dart';
 import 'package:teriak/features/master_product/presentation/pages/product_details/subwidget/info_details_card_widget.dart'
     show InfoDetailsCardWidget;
 
@@ -56,70 +54,17 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
                 ),*/
               ),
         ),
-        if (!(widget.drugData["barcode"] as String).isNullOrEmpty())
-          InfoDetailsCardWidget(
-            title: "Barcode",
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(context.w * 0.04),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.cardDark
-                        : AppColors.cardLight,
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? AppColors.borderDark
-                          : AppColors.borderLight,
-                      width: 1,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: context.h * 0.11,
-                        width: double.infinity,
-                        child: BarcodeWidget(
-                            barcode: Barcode.code128(),
-                            data: widget.drugData["barcode"] as String,
-                            drawText: true,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall /*?.copyWith(
-                                    fontSize: context.h * 0.015,
-                                    color: AppColors.onSurfaceLight,
-                                  ),*/
-                            ),
-                      ),
-                      /* SizedBox(height: context.w * 0.02),
-                                Text(
-                                  "Long press to copy barcode",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        fontStyle: FontStyle.italic,
-                                        color: AppColors.textSecondaryLight,
-                                      ),
-                                ),*/
-                    ],
-                  ),
-                ),
-                SizedBox(height: context.w * 0.03),
-                Text("Barcode: ${widget.drugData["barcode"]}",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge /*?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.onSurfaceLight,
-                      ),*/
-                    ),
-              ],
-            ),
-          ),
+        // تعديل: عرض قائمة باركودات مع إمكانية الطي/الفتح
+        Builder(
+          builder: (context) {
+            final List<String> barcodes =
+                (widget.drugData["barcodes"] as List<dynamic>?)
+                        ?.cast<String>() ??
+                    [];
+            if (barcodes.isEmpty) return SizedBox.shrink();
+            return BarcodeExpandableList(barcodes: barcodes);
+          },
+        ),
         if (!(widget.drugData["medicalNotes"] as String).isNullOrEmpty())
           InfoDetailsCardWidget(
             title: "Medical Notes".tr,
@@ -136,3 +81,8 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
     );
   }
 }
+
+
+
+
+

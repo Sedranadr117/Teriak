@@ -43,7 +43,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 15, left: 15),
+            padding: EdgeInsets.only(right: 0, left: 5),
             child: CustomIconWidget(
               iconName: 'edit',
               color: Theme.of(context).brightness == Brightness.dark
@@ -51,6 +51,13 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   : AppColors.primaryLight,
               size: 20,
             ),
+          ),
+          CustomIconWidget(
+            iconName: 'delete',
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.errorDark
+                : AppColors.errorLight,
+            size: 22,
           ),
         ],
       ),

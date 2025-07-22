@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teriak/config/themes/app_colors.dart';
-import 'package:teriak/config/themes/app_theme.dart';
+
 import 'package:teriak/features/master_product/presentation/pages/all_product/widget/add_product_button.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/widget/product_list.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/widget/search_bar.dart';
