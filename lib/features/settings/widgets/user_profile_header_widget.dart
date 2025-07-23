@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/assets.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_assets.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class UserProfileHeaderWidget extends StatelessWidget {
   final Map<String, dynamic> userData;
@@ -74,6 +73,25 @@ class UserProfileHeaderWidget extends StatelessWidget {
             Row(
               children: [
                 // User Avatar
+                // Container(
+                //   width: 20.w,
+                //   height: 20.w,
+                //   decoration: BoxDecoration(
+                //     borderRadius: BorderRadius.circular(10.w),
+                //     border: Border.all(
+                //       color: Theme.of(context).colorScheme.onPrimary,
+                //       width: 3,
+                //     ),
+                //   ),
+                //   child: ClipRRect(
+                //       borderRadius: BorderRadius.circular(10.w),
+                //       child: Image.asset(
+                //         userData["avatar"] as String,
+                //         width: 20.w,
+                //         height: 20.w,
+                //         fit: BoxFit.cover,
+                //       )),
+                // ),
                 Container(
                   width: 20.w,
                   height: 20.w,

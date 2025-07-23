@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/core/themes/app_theme.dart';
 import 'package:teriak/features/employee_management/data/datasources/employee_remote_data_source.dart';
 import 'package:teriak/features/employee_management/data/models/role_id_model.dart';
 import 'package:teriak/features/employee_management/data/repositories/employee_repository_impl.dart';
@@ -55,13 +55,13 @@ class EmployeeController extends GetxController {
   late final DeleteEmployee _deleteEmployee;
 
   final List<String> daysOfWeek = [
-    'MONDAY',
-    'TUESDAY',
-    'WEDNESDAY',
-    'THURSDAY',
-    'FRIDAY',
-    'SATURDAY',
-    'SUNDAY',
+    'MONDAY'.tr,
+    'TUESDAY'.tr,
+    'WEDNESDAY'.tr,
+    'THURSDAY'.tr,
+    'FRIDAY'.tr,
+    'SATURDAY'.tr,
+    'SUNDAY'.tr,
   ];
 
   final RxList<String> selectedDays = <String>[].obs;
@@ -123,22 +123,24 @@ class EmployeeController extends GetxController {
 
   void saveWorkingHours(BuildContext context) {
     if (selectedDays.isEmpty) {
-      Get.snackbar('Error', 'Please select at least one working day');
+      Get.snackbar('Error'.tr, 'Please select at least one working day'.tr);
       return;
     }
 
     if (shifts.isEmpty) {
-      Get.snackbar('Error', 'Please add at least one shift');
+      Get.snackbar('Error'.tr, 'Please add at least one shift'.tr);
       return;
     }
 
     if (hasShiftConflicts()) {
-      Get.snackbar('Warning', 'Shift conflicts detected. Please resolve them.');
+      Get.snackbar(
+          'Warning'.tr, 'Shift conflicts detected. Please resolve them.'.tr);
       return;
     }
 
     if (employee.value == null || employee.value?.id == null) {
-      Get.snackbar('Error', 'No employee selected to assign working hours.');
+      Get.snackbar(
+          'Error'.tr, 'No employee selected to assign working hours.'.tr);
       return;
     }
 
@@ -206,7 +208,7 @@ class EmployeeController extends GetxController {
       final result = await _getAllRoles();
       result.fold((failure) {
         errorMessage.value = failure.errMessage;
-        Get.snackbar('Error', errorMessage.value);
+        Get.snackbar('Error'.tr, errorMessage.value);
       }, (roleList) {
         myRoles
             .assignAll(roleList.map((e) => RoleModel.fromEntity(e)).toList());
@@ -214,7 +216,8 @@ class EmployeeController extends GetxController {
       });
     } catch (e) {
       print('❌ Unexpected error while fetching roles: $e');
-      Get.snackbar('Error', 'Unexpected error occurred while fetching roles');
+      Get.snackbar(
+          'Error'.tr, 'Unexpected error occurred while fetching roles'.tr);
     } finally {
       isLoading.value = false;
     }
@@ -232,8 +235,8 @@ class EmployeeController extends GetxController {
       final isConnected = await networkInfo.isConnected;
       if (!isConnected) {
         errorMessage.value =
-            'No internet connection. Please check your network.';
-        Get.snackbar('Error', errorMessage.value);
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
         return;
       }
 
@@ -266,11 +269,11 @@ class EmployeeController extends GetxController {
       await result.fold((failure) {
         print('❌ Employee addition failed: ${failure.errMessage}');
         errorMessage.value = failure.errMessage;
-        Get.snackbar('Error', errorMessage.value);
+        Get.snackbar('Error'.tr, errorMessage.value);
       }, (addedEmployee) async {
         print('✅ Employee added successfully!');
         employee.value = addedEmployee;
-        Get.snackbar('Success', 'Employee added successfully!');
+        Get.snackbar('Success'.tr, 'Employee added successfully!'.tr);
         Get.offNamed(AppPages.employeeManagement);
         firstNameController.clear();
         lastNameController.clear();
@@ -285,8 +288,8 @@ class EmployeeController extends GetxController {
       });
     } catch (e) {
       print('💥 Unexpected error: $e');
-      errorMessage.value = 'An unexpected error occurred. Please try again.';
-      Get.snackbar('Error', errorMessage.value);
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
     } finally {
       isLoading.value = false;
     }
@@ -306,35 +309,21 @@ class EmployeeController extends GetxController {
           (failure) {
             print(
                 '❌ Error adding working hours for employee $employeeId: ${failure.errMessage}');
-            Get.snackbar('Error', 'Failed to add working hours for employee.');
+            Get.snackbar(
+                'Error'.tr, 'Failed to add working hours for employee.'.tr);
           },
           (_) {
             Get.back();
             print('✅ Working hours added for employee $employeeId');
-            Get.snackbar('Success', 'Working hours added successfully!');
+            Get.snackbar('Success'.tr, 'Working hours added successfully!'.tr);
           },
         );
       }
     } catch (e) {
       print('❌ Exception adding working hours for employee $employeeId: $e');
-      Get.snackbar('Error', 'Failed to add working hours for employee.');
+      Get.snackbar('Error'.tr, 'Failed to add working hours for employee.'.tr);
     } finally {
       isLoading.value = false;
-    }
-  }
-
-  Color getPermissionColor(BuildContext context, String permission) {
-    switch (permission.toLowerCase()) {
-      case 'full access':
-      case 'full access + management':
-        return AppTheme.successLight;
-      case 'limited access':
-        return AppTheme.warningLight;
-      case 'basic access':
-      case 'intern access':
-        return Theme.of(context).colorScheme.secondary;
-      default:
-        return Theme.of(context).colorScheme.onSurfaceVariant;
     }
   }
 
@@ -350,9 +339,10 @@ class EmployeeController extends GetxController {
     return employees
         .where((e) => e.roleName == role)
         .where((e) {
-          if (selectedFilter.value == 'All') return true;
-          if (selectedFilter.value == 'Active') return e.status == 'ACTIVE';
-          if (selectedFilter.value == 'Inactive') return e.status == 'INACTIVE';
+          if (selectedFilter.value == 'All'.tr) return true;
+          if (selectedFilter.value == 'Active'.tr) return e.status == 'ACTIVE';
+          if (selectedFilter.value == 'Inactive'.tr)
+            return e.status == 'INACTIVE';
 
           return true;
         })
@@ -392,7 +382,7 @@ class EmployeeController extends GetxController {
     if (selectedDays.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please select at least one working day'),
+          content: Text('Please select at least one working day'.tr),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -402,7 +392,7 @@ class EmployeeController extends GetxController {
     if (shifts.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Please add at least one shift'),
+          content: Text('Please add at least one shift'.tr),
           backgroundColor: Theme.of(context).colorScheme.error,
         ),
       );
@@ -411,9 +401,9 @@ class EmployeeController extends GetxController {
 
     if (hasShiftConflicts()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please resolve shift conflicts before saving'),
-          backgroundColor: AppTheme.warningLight,
+        SnackBar(
+          content: Text('Please resolve shift conflicts before saving'.tr),
+          backgroundColor: AppColors.warningLight,
         ),
       );
       return;
@@ -426,9 +416,9 @@ class EmployeeController extends GetxController {
     isLoading.value = false;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Working hours saved successfully'),
-        backgroundColor: AppTheme.successLight,
+      SnackBar(
+        content: Text('Working hours saved successfully'.tr),
+        backgroundColor: AppColors.successLight,
       ),
     );
   }
@@ -442,7 +432,7 @@ class EmployeeController extends GetxController {
       result.fold((failure) {
         print('❌ Error fetching employees: ${failure.errMessage}');
         errorMessage.value = failure.errMessage;
-        Get.snackbar('Error', errorMessage.value);
+        Get.snackbar('Error'.tr, errorMessage.value);
       }, (employeeList) {
         print('✅ Employees fetched: ${employeeList.length}');
         for (var emp in employeeList) {
@@ -452,8 +442,8 @@ class EmployeeController extends GetxController {
       });
     } catch (e) {
       print('💥 Unexpected error while fetching employees: $e');
-      errorMessage.value = 'Unexpected error occurred while fetching employees';
-      Get.snackbar('Error', errorMessage.value);
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
     } finally {
       isLoading.value = false;
     }
@@ -479,20 +469,20 @@ class EmployeeController extends GetxController {
       result.fold(
         (failure) {
           errorMessage.value = failure.errMessage;
-          Get.snackbar('Error', failure.errMessage);
+          Get.snackbar('Error'.tr, failure.errMessage);
         },
         (updatedEmployee) {
           employee.value = updatedEmployee;
           Future.delayed(Duration(milliseconds: 100), () {
-            Get.snackbar('Success', 'Employee updated successfully!');
+            Get.snackbar('Success'.tr, 'Employee updated successfully!'.tr);
           });
           // Get.back();
         },
       );
     } catch (e) {
       print('❌ Error editing employee: $e');
-      errorMessage.value = 'Failed to update employee.';
-      Get.snackbar('Error', errorMessage.value);
+      errorMessage.value = 'Failed to update employee.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
     } finally {
       isLoading.value = false;
     }
@@ -506,17 +496,17 @@ class EmployeeController extends GetxController {
       result.fold(
         (failure) {
           errorMessage.value = failure.errMessage;
-          Get.snackbar('Error', failure.errMessage);
+          Get.snackbar('Error'.tr, failure.errMessage);
         },
         (_) {
-          Get.snackbar('Success', 'Employee deleted successfully!');
+          Get.snackbar('Success'.tr, 'Employee deleted successfully!'.tr);
           fetchAllEmployees();
         },
       );
     } catch (e) {
       print('❌ Error deleting employee: $e');
-      errorMessage.value = 'Failed to delete employee.';
-      Get.snackbar('Error', errorMessage.value);
+      errorMessage.value = 'Failed to delete employee.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
     } finally {
       isLoading.value = false;
     }

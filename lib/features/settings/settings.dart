@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/themes/theme_controller.dart';
+import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/themes/theme_controller.dart';
-import 'package:teriak/core/widgets/custom_app_bar.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
 import './widgets/user_profile_header_widget.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -21,11 +22,12 @@ class Settings extends StatefulWidget {
 
 class _SettingsState extends State<Settings> {
   final ThemeController _themeController = Get.find<ThemeController>();
+  final LocaleController _localeController = Get.find<LocaleController>();
   bool _biometricEnabled = false;
   bool _notificationsEnabled = true;
   bool _offlineStorageEnabled = true;
   bool _developerOptionsEnabled = false;
-  String _selectedLanguage = 'English';
+  //String _selectedLanguage = 'English';
   int _sessionTimeout = 30;
 
   final List<Map<String, dynamic>> _mockUserData = [
@@ -46,8 +48,15 @@ class _SettingsState extends State<Settings> {
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: const CustomAppBar(
+      appBar: CustomAppBar(
         title: 'Settings',
+        actions: [
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(AppPages.allProductPage);
+              },
+              child: CustomIconWidget(iconName: "add"))
+        ],
         showThemeToggle:
             false, // Don't show theme toggle in settings since it's already there
       ),
@@ -161,7 +170,7 @@ class _SettingsState extends State<Settings> {
                   subtitle: 'Enabled - AES 256-bit encryption',
                   trailing: CustomIconWidget(
                     iconName: 'check_circle',
-                    color: AppTheme.successLight,
+                    color: AppColors.successLight,
                     size: 20,
                   ),
                 ),
@@ -174,13 +183,14 @@ class _SettingsState extends State<Settings> {
             SettingsSectionWidget(
               title: 'App Configuration',
               children: [
-                SettingsItemWidget(
-                  icon: 'language',
-                  title: 'Language',
-                  subtitle: _selectedLanguage,
-                  onTap: () => _showLanguageDialog(context),
-                  showArrow: true,
-                ),
+                Obx(() => SettingsItemWidget(
+                      icon: 'language',
+                      title: 'Language',
+                      subtitle:
+                          _localeController.isArabic ? 'العربية' : 'English',
+                      onTap: () => _showLanguageDialog(context),
+                      showArrow: true,
+                    )),
                 Obx(() => SettingsItemWidget(
                       icon: 'palette',
                       title: 'Theme',
@@ -293,8 +303,8 @@ class _SettingsState extends State<Settings> {
               child: ElevatedButton(
                 onPressed: () => _showSignOutDialog(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.errorLight,
-                  foregroundColor: AppTheme.onErrorLight,
+                  backgroundColor: AppColors.errorLight,
+                  foregroundColor: AppColors.onErrorLight,
                   padding: EdgeInsets.symmetric(vertical: 2.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -305,14 +315,14 @@ class _SettingsState extends State<Settings> {
                   children: [
                     const CustomIconWidget(
                       iconName: 'logout',
-                      color: AppTheme.onErrorLight,
+                      color: AppColors.onErrorLight,
                       size: 20,
                     ),
                     SizedBox(width: 2.w),
                     Text(
                       'Sign Out',
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppTheme.onErrorLight,
+                            color: AppColors.onErrorLight,
                             fontWeight: FontWeight.w600,
                           ),
                     ),
@@ -500,8 +510,10 @@ class _SettingsState extends State<Settings> {
   }
 
   void _showLanguageDialog(BuildContext context) {
-    final languages = ['English', 'Arabic', 'French', 'Spanish', 'German'];
-
+    final languages = [
+      {'label': 'English', 'code': 'en_US'},
+      {'label': 'العربية', 'code': 'ar_SY'},
+    ];
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -514,21 +526,21 @@ class _SettingsState extends State<Settings> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: languages
-                .map((language) => RadioListTile<String>(
-                      title: Text(language),
-                      value: language,
-                      groupValue: _selectedLanguage,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedLanguage = value!;
-                        });
+                .map((lang) => Obx(() => RadioListTile<String>(
+                      title: Text(lang['label']!),
+                      value: lang['code']!,
+                      groupValue:
+                          _localeController.isArabic ? 'ar_SY' : 'en_US',
+                      onChanged: (value) async {
+                        await _localeController.changeLocale(value!);
                         Navigator.pop(context);
+                        setState(() {});
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Language changed to \$language')),
                         );
                       },
-                    ))
+                    )))
                 .toList(),
           ),
         ),
@@ -752,7 +764,7 @@ class _SettingsState extends State<Settings> {
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+              child: Text('OK'.tr),
             ),
           ],
         ),
@@ -795,8 +807,8 @@ class _SettingsState extends State<Settings> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.errorLight,
-              foregroundColor: AppTheme.onErrorLight,
+              backgroundColor: AppColors.errorLight,
+              foregroundColor: AppColors.onErrorLight,
             ),
             child: const Text('Sign Out'),
           ),
@@ -820,7 +832,7 @@ class _SettingsState extends State<Settings> {
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            child: Text('OK'.tr),
           ),
         ],
       ),

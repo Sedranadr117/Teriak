@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class CredentialManagementCardWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -27,7 +28,7 @@ class CredentialManagementCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -44,14 +45,14 @@ class CredentialManagementCardWidget extends StatelessWidget {
                 children: [
                   const CustomIconWidget(
                     iconName: 'account_circle',
-                    color: AppTheme.textSecondaryLight,
+                    color: AppColors.textSecondaryLight,
                     size: 18,
                   ),
                   SizedBox(width: 2.w),
                   Text(
-                    'Username',
+                    'Username'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                           fontWeight: FontWeight.w500,
                         ),
                   ),
@@ -78,14 +79,14 @@ class CredentialManagementCardWidget extends StatelessWidget {
                 children: [
                   const CustomIconWidget(
                     iconName: 'lock',
-                    color: AppTheme.textSecondaryLight,
+                    color: AppColors.textSecondaryLight,
                     size: 18,
                   ),
                   SizedBox(width: 2.w),
                   Text(
-                    'Password',
+                    'Password'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                           fontWeight: FontWeight.w500,
                         ),
                   ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class CredentialManagementCardWidget extends StatefulWidget {
   final Map<String, dynamic> employeeData;
@@ -33,7 +33,7 @@ class _CredentialManagementCardWidgetState
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -52,7 +52,7 @@ class _CredentialManagementCardWidgetState
               ),
               SizedBox(width: 2.w),
               Text(
-                'Credential Management',
+                'Credential Management'.tr,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -69,7 +69,7 @@ class _CredentialManagementCardWidgetState
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppTheme.borderLight,
+                color: AppColors.borderLight,
                 width: 1,
               ),
             ),
@@ -83,15 +83,15 @@ class _CredentialManagementCardWidgetState
                       children: [
                         const CustomIconWidget(
                           iconName: 'lock',
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                           size: 18,
                         ),
                         SizedBox(width: 2.w),
                         Text(
-                          'Password',
+                          'Password'.tr,
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: AppTheme.textSecondaryLight,
+                                    color: AppColors.textSecondaryLight,
                                     fontWeight: FontWeight.w500,
                                   ),
                         ),
@@ -101,7 +101,7 @@ class _CredentialManagementCardWidgetState
                       children: [
                         TextButton(
                           onPressed: widget.onResetPassword,
-                          child: const Text('Reset'),
+                          child: Text('Reset'.tr),
                         ),
                       ],
                     ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/features/pharmacy/presentation/pages/widgets/location_picker_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/pharmacy/presentation/widgets/location_picker_widget.dart';
 
 class LocationInputWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -33,8 +33,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           controller: widget.controller,
           focusNode: widget.focusNode,
           decoration: InputDecoration(
-            labelText: 'Pick your pharmacy location ',
-            hintText: 'Enter pharmacy address or use GPS',
+            labelText: 'Pick your pharmacy location'.tr,
+            hintText: 'Enter pharmacy address or use GPS'.tr,
             prefixIcon: Padding(
               padding: EdgeInsets.all(3.w),
               child: CustomIconWidget(
@@ -90,10 +90,10 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           },
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Location address is required';
+              return 'Location address is required'.tr;
             }
             if (value.trim().length < 10) {
-              return 'Please enter a complete address';
+              return 'Please enter a complete address'.tr;
             }
             return null;
           },

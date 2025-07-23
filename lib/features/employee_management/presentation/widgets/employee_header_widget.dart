@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/assets.dart';
+import 'package:teriak/config/themes/app_assets.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
 class EmployeeHeaderWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -23,7 +24,7 @@ class EmployeeHeaderWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -78,7 +79,9 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  employeeData["roleName"] ?? '',
+                  employeeData["roleName"] == 'PHARMACY_TRAINEE'
+                      ? 'Pharmacy Intern'.tr
+                      : 'Pharmacist'.tr,
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.w500,
@@ -97,18 +100,20 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 height: 8,
                 decoration: BoxDecoration(
                   color: employeeData["status"] == "ACTIVE"
-                      ? AppTheme.successLight
-                      : AppTheme.errorLight,
+                      ? AppColors.successLight
+                      : AppColors.errorLight,
                   shape: BoxShape.circle,
                 ),
               ),
               SizedBox(width: 2.w),
               Text(
-                employeeData["status"] ?? '',
+                employeeData["status"] == 'ACTIVE'
+                    ? 'ACTIVE'.tr
+                    : 'INACTIVE'.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: employeeData["status"] == "ACTIVE"
-                          ? AppTheme.successLight
-                          : AppTheme.errorLight,
+                          ? AppColors.successLight
+                          : AppColors.errorLight,
                       fontWeight: FontWeight.w500,
                     ),
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
 class DaySelectionCardWidget extends StatelessWidget {
   final String day;
@@ -31,7 +31,7 @@ class DaySelectionCardWidget extends StatelessWidget {
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).colorScheme.primary
-                : AppTheme.borderLight,
+                : AppColors.borderLight,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
@@ -47,7 +47,7 @@ class DaySelectionCardWidget extends StatelessWidget {
                 ]
               : [
                   BoxShadow(
-                    color: AppTheme.shadowLight,
+                    color: AppColors.shadowLight,
                     blurRadius: 2,
                     offset: Offset(0, 1),
                   ),
@@ -76,7 +76,7 @@ class DaySelectionCardWidget extends StatelessWidget {
                 height: 5.w,
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: AppTheme.borderLight,
+                    color: AppColors.borderLight,
                     width: 2,
                   ),
                   shape: BoxShape.circle,
@@ -84,23 +84,23 @@ class DaySelectionCardWidget extends StatelessWidget {
               ),
             SizedBox(height: 1.h),
             Text(
-              day.substring(0, 3),
+              day,
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
                     color: isSelected
                         ? Theme.of(context).colorScheme.primary
-                        : AppTheme.textPrimaryLight,
+                        : AppColors.textPrimaryLight,
                   ),
             ),
             SizedBox(height: 0.5.h),
             Text(
               day,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 10.sp,
+                    fontSize: 8.sp,
                     color: isSelected
                         ? Theme.of(context).colorScheme.primary
-                        : AppTheme.textSecondaryLight,
+                        : AppColors.textSecondaryLight,
                   ),
               textAlign: TextAlign.center,
             ),

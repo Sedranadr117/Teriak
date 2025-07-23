@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/widgets/custom_app_bar.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
@@ -42,7 +42,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CustomAppBar(
-        title: 'Employee Management',
+        title: 'Employee Management'.tr,
         actions: [
           IconButton(
             onPressed: () {
@@ -136,7 +136,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                             size: 18,
                           ),
                           SizedBox(width: 2.w),
-                          const Text('Employees'),
+                          Text('Employees'.tr),
                         ],
                       ),
                     ),
@@ -154,7 +154,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                             size: 18,
                           ),
                           SizedBox(width: 2.w),
-                          const Text('Interns'),
+                          Text('Interns'.tr),
                         ],
                       ),
                     ),
@@ -167,34 +167,6 @@ class _EmployeeManagementState extends State<EmployeeManagement>
       ),
       body: Column(
         children: [
-          // Selection Header
-          if (controller.selectedEmployees.isNotEmpty)
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-              color: Theme.of(context)
-                  .colorScheme
-                  .primaryContainer
-                  .withValues(alpha: 0.1),
-              child: Row(
-                children: [
-                  CustomIconWidget(
-                    iconName: 'check_circle',
-                    color: Theme.of(context).colorScheme.primary,
-                    size: 20,
-                  ),
-                  SizedBox(width: 2.w),
-                  Text(
-                    '\${controller.selectedEmployees.length} selected',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                ],
-              ),
-            ),
-
           // Tab Bar View
           Expanded(
             child: TabBarView(
@@ -222,7 +194,9 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           size: 24,
         ),
         label: Text(
-          controller.tabController.index == 0 ? 'Add Employee' : 'Add Intern',
+          controller.tabController.index == 0
+              ? 'Add Employee'.tr
+              : 'Add Intern'.tr,
           style: Theme.of(context).textTheme.labelLarge?.copyWith(
                 color:
                     Theme.of(context).floatingActionButtonTheme.foregroundColor,
@@ -300,24 +274,12 @@ class _EmployeeManagementState extends State<EmployeeManagement>
             ),
             SizedBox(height: 3.h),
             Text(
-              isInternTab ? 'No Interns Found' : 'No Employees Found',
+              isInternTab ? 'No Interns Found'.tr : 'No Employees Found'.tr,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
             ),
             SizedBox(height: 1.h),
-            Text(
-              controller.searchQuery.isNotEmpty ||
-                      controller.selectedFilter != 'All'
-                  ? 'Try adjusting your search or filters'
-                  : isInternTab
-                      ? 'Start by inviting your first intern to join the team'
-                      : 'Start by inviting your first employee to join the team',
-              textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
           ],
         ),
       ),

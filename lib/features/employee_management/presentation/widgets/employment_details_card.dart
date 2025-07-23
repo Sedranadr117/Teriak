@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class EmploymentDetailsCard extends StatelessWidget {
   final DateTime? dateOfHire;
@@ -38,7 +39,7 @@ class EmploymentDetailsCard extends StatelessWidget {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  'Employment Details',
+                  'Employment Details'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -72,7 +73,7 @@ class EmploymentDetailsCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Date of Hire',
+                            'Date of Hire'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelMedium
@@ -86,7 +87,7 @@ class EmploymentDetailsCard extends StatelessWidget {
                           Text(
                             dateOfHire != null
                                 ? _formatDate(dateOfHire)
-                                : 'Select date of hire',
+                                : 'Select date of hire'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge
@@ -138,7 +139,7 @@ class EmploymentDetailsCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Role',
+                            'Role'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelMedium
@@ -152,7 +153,7 @@ class EmploymentDetailsCard extends StatelessWidget {
                           Text(
                             selectedRole.isNotEmpty
                                 ? selectedRole
-                                : 'Select employee role',
+                                : 'Select employee role'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge
@@ -197,7 +198,8 @@ class EmploymentDetailsCard extends StatelessWidget {
                   SizedBox(width: 2.w),
                   Expanded(
                     child: Text(
-                      'You can add working hours to  employee from management details.',
+                      'You can add working hours to  employee from management details.'
+                          .tr,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),

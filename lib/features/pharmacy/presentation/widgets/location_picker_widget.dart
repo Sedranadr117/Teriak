@@ -29,7 +29,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Location permission denied")),
+        SnackBar(content: Text("Location permission denied".tr)),
       );
       return;
     }
@@ -76,7 +76,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pick your pharmacy location')),
+      appBar: AppBar(title: Text('Pick your pharmacy location'.tr)),
       body: _currentLatLng == null
           ? const Center(child: CircularProgressIndicator())
           : FlutterMap(
@@ -121,7 +121,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   'address': _currentAddress,
                 });
               },
-              label: const Text("Confirm"),
+              label: Text("Confirm".tr),
               icon: const Icon(Icons.check),
             )
           : null,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class LoginFormWidget extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -24,20 +25,20 @@ class LoginFormWidget extends StatelessWidget {
 
   String? _validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
+      return 'Email is required'.tr;
     }
     if (value.trim().length < 3) {
-      return 'Email must be at least 10 characters';
+      return 'Email must be at least 10 characters'.tr;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return 'Password is required'.tr;
     }
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return 'Password must be at least 6 characters'.tr;
     }
     return null;
   }
@@ -57,8 +58,8 @@ class LoginFormWidget extends StatelessWidget {
             textInputAction: TextInputAction.next,
             validator: _validateEmail,
             decoration: InputDecoration(
-              labelText: 'E-mail',
-              hintText: 'Enter your email',
+              labelText: 'E-mail'.tr,
+              hintText: 'Enter your email'.tr,
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
                 child: CustomIconWidget(
@@ -81,8 +82,8 @@ class LoginFormWidget extends StatelessWidget {
             validator: _validatePassword,
             onFieldSubmitted: (_) => onSignIn(),
             decoration: InputDecoration(
-              labelText: 'Password',
-              hintText: 'Enter your password',
+              labelText: 'Password'.tr,
+              hintText: 'Enter your password'.tr,
               prefixIcon: Padding(
                 padding: EdgeInsets.all(3.w),
                 child: CustomIconWidget(
@@ -125,7 +126,7 @@ class LoginFormWidget extends StatelessWidget {
                         ),
                         SizedBox(width: 3.w),
                         Text(
-                          'Signing In...',
+                          'Signing In...'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge
@@ -136,7 +137,7 @@ class LoginFormWidget extends StatelessWidget {
                       ],
                     )
                   : Text(
-                      'Sign In',
+                      'Sign In'.tr,
                       style: Theme.of(context).textTheme.labelLarge?.copyWith(
                             color: Theme.of(context).colorScheme.onPrimary,
                             fontWeight: FontWeight.w600,

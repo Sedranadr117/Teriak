@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
 class Dialogs {
   void showCredentialUpdateDialog(
@@ -14,7 +15,7 @@ class Dialogs {
   ) {
     final TextEditingController passwordController = TextEditingController();
     final TextEditingController confirmController = TextEditingController();
-    bool _obscurePassword = true;
+    bool obscurePassword = true;
 
     showDialog(
       context: context,
@@ -22,7 +23,7 @@ class Dialogs {
         return StatefulBuilder(builder: (context, localSetState) {
           return AlertDialog(
             title: Text(
-              'Reset Password',
+              'Reset Password'.tr,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             content: Column(
@@ -34,19 +35,19 @@ class Dialogs {
                       controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: 'New Password',
-                        hintText: 'Enter new password',
+                        labelText: 'New Password'.tr,
+                        hintText: 'Enter new password'.tr,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword
+                            obscurePassword
                                 ? Icons.visibility_off
                                 : Icons.visibility,
-                            color: AppTheme.textSecondaryLight,
+                            color: AppColors.textSecondaryLight,
                             size: 20,
                           ),
                           onPressed: () {
                             localSetState(() {
-                              _obscurePassword = !_obscurePassword;
+                              obscurePassword = !obscurePassword;
                             });
                           },
                         ),
@@ -58,18 +59,18 @@ class Dialogs {
                 TextField(
                   controller: confirmController,
                   decoration: InputDecoration(
-                    labelText: 'Confirm Password',
-                    hintText: 'Confirm new password',
+                    labelText: 'Confirm Password'.tr,
+                    hintText: 'Confirm new password'.tr,
                     suffixIcon: IconButton(
                       icon: CustomIconWidget(
                         iconName:
-                            _obscurePassword ? 'visibility_off' : 'visibility',
+                            obscurePassword ? 'visibility_off' : 'visibility',
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         size: 20,
                       ),
                       onPressed: () {
                         localSetState(() {
-                          _obscurePassword = !_obscurePassword;
+                          obscurePassword = !obscurePassword;
                         });
                       },
                     ),
@@ -80,7 +81,7 @@ class Dialogs {
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
+                child: Text('Cancel'.tr),
               ),
               ElevatedButton(
                 onPressed: () async {
@@ -108,7 +109,7 @@ class Dialogs {
                     Navigator.of(context).pop();
                   }
                 },
-                child: const Text('Update'),
+                child: Text('Update'.tr),
               ),
             ],
           );
@@ -121,7 +122,7 @@ class Dialogs {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppTheme.successLight,
+        backgroundColor: AppColors.successLight,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -131,7 +132,7 @@ class Dialogs {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppTheme.errorLight,
+        backgroundColor: AppColors.errorLight,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -162,23 +163,21 @@ class Dialogs {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-                title: const Text('Edit Personal Info'),
+                title: Text('Edit Personal Info'.tr),
                 content: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TextField(
                         controller: firstNameController,
-                        decoration:
-                            const InputDecoration(labelText: 'First Name'),
+                        decoration: InputDecoration(labelText: 'First Name'.tr),
                       ),
                       SizedBox(
                         height: 2.h,
                       ),
                       TextField(
                         controller: lastNameController,
-                        decoration:
-                            const InputDecoration(labelText: 'Last Name'),
+                        decoration: InputDecoration(labelText: 'Last Name'.tr),
                       ),
                       SizedBox(
                         height: 2.h,
@@ -186,7 +185,7 @@ class Dialogs {
                       TextField(
                         controller: phoneController,
                         decoration:
-                            const InputDecoration(labelText: 'Phone Number'),
+                            InputDecoration(labelText: 'Phone Number'.tr),
                       ),
                       SizedBox(
                         height: 2.h,
@@ -233,7 +232,7 @@ class Dialogs {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Date of Hire',
+                                      'Date of Hire'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelMedium
@@ -247,7 +246,7 @@ class Dialogs {
                                     Text(
                                       selectedDate != null
                                           ? _formatDate(selectedDate)
-                                          : 'Select date of hire',
+                                          : 'Select date of hire'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyLarge
@@ -307,14 +306,14 @@ class Dialogs {
                                     value: selectedRoleId,
                                     isExpanded: true,
                                     underline: const SizedBox(),
-                                    items: const [
+                                    items: [
                                       DropdownMenuItem(
                                         value: 3,
-                                        child: Text('Pharmacist'),
+                                        child: Text('Pharmacist'.tr),
                                       ),
                                       DropdownMenuItem(
                                         value: 4,
-                                        child: Text('Pharmacy Intern'),
+                                        child: Text('Pharmacy Intern'.tr),
                                       ),
                                     ],
                                     onChanged: (value) {
@@ -337,10 +336,10 @@ class Dialogs {
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
+                    child: Text('Cancel'.tr),
                   ),
                   ElevatedButton(
-                      child: const Text('Confirm'),
+                      child: Text('Confirm'.tr),
                       onPressed: () {
                         final params = EmployeeParams(
                           firstNameController.text,
@@ -441,20 +440,20 @@ class Dialogs {
         builder: (context) => StatefulBuilder(builder: (context, setState) {
               return AlertDialog(
                   title: Text(
-                    'Change Status',
-                    style: AppTheme.lightTheme.textTheme.titleLarge,
+                    'Change Status'.tr,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   content: Text(
-                    'Are you sure you want to change the status of ${employeeData['firstName']} ${employeeData['lastName']}?',
-                    style: AppTheme.lightTheme.textTheme.bodyMedium,
+                    '${'Are you sure you want to change the status of'.tr} ${employeeData['firstName']} ${employeeData['lastName']}${'?'.tr} ',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   actions: [
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Cancel'),
+                      child: Text('Cancel'.tr),
                     ),
                     ElevatedButton(
-                        child: const Text('Confirm'),
+                        child: Text('Confirm'.tr),
                         onPressed: () {
                           final newStatus = employeeData['status'] == 'ACTIVE'
                               ? 'INACTIVE'
@@ -494,14 +493,16 @@ class Dialogs {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Delete Employee'),
+            title: Text('Delete Employee'.tr),
             content: Text(
-              'Are you sure you want to delete $name? They will lose access to all pharmacy systems.',
+              'Are you sure you want to delete $name? They will lose access to all pharmacy systems.'
+                  .tr
+                  .tr,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
-                child: const Text('Cancel'),
+                child: Text('Cancel'.tr),
               ),
               TextButton(
                 onPressed: () {
@@ -510,9 +511,9 @@ class Dialogs {
                   Navigator.pop(context, true);
                 },
                 style: TextButton.styleFrom(
-                  foregroundColor: AppTheme.errorLight,
+                  foregroundColor: AppColors.errorLight,
                 ),
-                child: const Text('Delete'),
+                child: Text('Delete'.tr),
               ),
             ],
           ),

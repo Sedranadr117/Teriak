@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/features/pharmacy/presentation/pages/controllers/add_pharmacy_controller.dart';
-import 'widgets/location_input_widget.dart';
-import 'widgets/pharmacy_form_section_widget.dart';
-import 'widgets/progress_indicator_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/pharmacy/presentation/controllers/add_pharmacy_controller.dart';
+import '../widgets/location_input_widget.dart';
+import '../widgets/pharmacy_form_section_widget.dart';
+import '../widgets/progress_indicator_widget.dart';
 
 class PharmacyCompleteRegistration extends StatefulWidget {
   const PharmacyCompleteRegistration({super.key});
@@ -37,7 +35,7 @@ class _PharmacyCompleteRegistrationState
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text('Add Pharmacy'),
+          title: Text('Add Pharmacy'.tr),
           centerTitle: true,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(8.h),
@@ -60,7 +58,7 @@ class _PharmacyCompleteRegistrationState
                     children: [
                       // Basic Information Section
                       PharmacyFormSectionWidget(
-                        title: 'Basic Information',
+                        title: 'Basic Information'.tr,
                         isExpanded: true,
                         children: [
                           Column(
@@ -71,16 +69,17 @@ class _PharmacyCompleteRegistrationState
                                     focusNode: addPharmacyController
                                         .managerFirstNameFocus,
                                     decoration: InputDecoration(
-                                      labelText: 'First Name *',
-                                      hintText: 'Enter manager first name',
+                                      labelText: 'First Name'.tr,
+                                      hintText: 'Enter manager first name'.tr,
                                       counterText:
                                           '${addPharmacyController.managerFirstNameController.text.length}/50',
                                       suffixIcon: addPharmacyController
                                               .isManagerFirstNameValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-                                              color: AppTheme.lightTheme
-                                                  .colorScheme.secondary,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
                                               size: 20,
                                             )
                                           : null,
@@ -95,10 +94,11 @@ class _PharmacyCompleteRegistrationState
                                     validator: (value) {
                                       if (value == null ||
                                           value.trim().isEmpty) {
-                                        return 'First name is required';
+                                        return 'First name is required'.tr;
                                       }
                                       if (value.trim().length < 3) {
-                                        return 'First name must be at least 3 characters';
+                                        return 'First name must be at least 3 characters'
+                                            .tr;
                                       }
                                       return null;
                                     },
@@ -110,16 +110,17 @@ class _PharmacyCompleteRegistrationState
                                     focusNode: addPharmacyController
                                         .managerLastNameFocus,
                                     decoration: InputDecoration(
-                                      labelText: 'Last Name *',
-                                      hintText: 'Enter manager last name',
+                                      labelText: 'Last Name'.tr,
+                                      hintText: 'Enter manager last name'.tr,
                                       counterText:
                                           '${addPharmacyController.managerLastNameController.text.length}/50',
                                       suffixIcon: addPharmacyController
                                               .isManagerLastNameValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-                                              color: AppTheme.lightTheme
-                                                  .colorScheme.secondary,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
                                               size: 20,
                                             )
                                           : null,
@@ -133,10 +134,11 @@ class _PharmacyCompleteRegistrationState
                                     validator: (value) {
                                       if (value == null ||
                                           value.trim().isEmpty) {
-                                        return 'Last name is required';
+                                        return 'Last name is required'.tr;
                                       }
                                       if (value.trim().length < 3) {
-                                        return 'Last name must be at least 3 characters';
+                                        return 'Last name must be at least 3 characters'
+                                            .tr;
                                       }
                                       return null;
                                     },
@@ -162,7 +164,7 @@ class _PharmacyCompleteRegistrationState
 
                       // Contact Details Section
                       PharmacyFormSectionWidget(
-                        title: 'Contact Details',
+                        title: 'Contact Details'.tr,
                         isExpanded: true,
                         children: [
                           Obx(() => TextFormField(
@@ -170,7 +172,7 @@ class _PharmacyCompleteRegistrationState
                                     addPharmacyController.phoneController,
                                 focusNode: addPharmacyController.phoneFocus,
                                 decoration: InputDecoration(
-                                  labelText: 'Phone Number *',
+                                  labelText: 'Phone Number'.tr,
                                   hintText: '09xxxxxxxx',
                                   prefixIcon: Padding(
                                     padding: EdgeInsets.all(3.w),
@@ -185,8 +187,9 @@ class _PharmacyCompleteRegistrationState
                                       addPharmacyController.isPhoneValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-                                              color: AppTheme.lightTheme
-                                                  .colorScheme.secondary,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary,
                                               size: 20,
                                             )
                                           : null,
@@ -195,10 +198,11 @@ class _PharmacyCompleteRegistrationState
                                 textInputAction: TextInputAction.next,
                                 validator: (value) {
                                   if (value == null || value.trim().isEmpty) {
-                                    return 'Phone number is required';
+                                    return 'Phone number is required'.tr;
                                   }
                                   if (value.trim().length < 10) {
-                                    return 'Please enter a valid phone number';
+                                    return 'Please enter a valid phone number'
+                                        .tr;
                                   }
                                   return null;
                                 },
@@ -206,7 +210,7 @@ class _PharmacyCompleteRegistrationState
                         ],
                       ),
                       PharmacyFormSectionWidget(
-                        title: 'Opening Hours',
+                        title: 'Opening Hours'.tr,
                         isExpanded: true,
                         children: [
                           Obx(() => Row(
@@ -219,8 +223,9 @@ class _PharmacyCompleteRegistrationState
                                           addPharmacyController.pickTime(
                                               isOpening: true,
                                               context: context),
-                                      child: Text(
-                                          'From: ${addPharmacyController.formatTime(addPharmacyController.openingTime.value)}'),
+                                      child: Text('From:'.tr +
+                                          ' ${addPharmacyController.formatTime(addPharmacyController.openingTime.value)}'
+                                              .tr),
                                     ),
                                   ),
                                   SizedBox(width: 2.w),
@@ -230,8 +235,9 @@ class _PharmacyCompleteRegistrationState
                                           addPharmacyController.pickTime(
                                               isOpening: false,
                                               context: context),
-                                      child: Text(
-                                          'To: ${addPharmacyController.formatTime(addPharmacyController.closingTime.value)}'),
+                                      child: Text('To:'.tr +
+                                          ' ${addPharmacyController.formatTime(addPharmacyController.closingTime.value)}'
+                                              .tr),
                                     ),
                                   ),
                                 ],
@@ -251,7 +257,9 @@ class _PharmacyCompleteRegistrationState
                                                     .closingTime.value ==
                                                 null
                                         ? 'Please select both opening and closing times'
-                                        : 'Closing time must be after opening time',
+                                            .tr
+                                        : 'Closing time must be after opening time'
+                                            .tr,
                                     style: TextStyle(
                                         color: Colors.red, fontSize: 12),
                                   ),
@@ -262,7 +270,7 @@ class _PharmacyCompleteRegistrationState
                       SizedBox(height: 3.h),
 
                       PharmacyFormSectionWidget(
-                          title: 'Credential Management',
+                          title: 'Credential Management'.tr,
                           isExpanded: true,
                           children: [
                             Obx(() => TextFormField(
@@ -270,8 +278,8 @@ class _PharmacyCompleteRegistrationState
                                       addPharmacyController.emailController,
                                   focusNode: addPharmacyController.emailFocus,
                                   decoration: InputDecoration(
-                                    labelText: 'Pharmacy Email *',
-                                    hintText: 'Enter Pharmacy email',
+                                    labelText: 'Pharmacy Email'.tr,
+                                    hintText: 'Enter Pharmacy email'.tr,
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.all(3.w),
                                       child: CustomIconWidget(
@@ -286,8 +294,9 @@ class _PharmacyCompleteRegistrationState
                                         addPharmacyController.isEmailValid.value
                                             ? CustomIconWidget(
                                                 iconName: 'check_circle',
-                                                color: AppTheme.lightTheme
-                                                    .colorScheme.secondary,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
                                                 size: 20,
                                               )
                                             : null,
@@ -299,12 +308,12 @@ class _PharmacyCompleteRegistrationState
                                   },
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Email is required';
+                                      return 'Email is required'.tr;
                                     }
                                     if (!RegExp(
                                             r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
                                         .hasMatch(value.trim())) {
-                                      return 'Please enter a valid email';
+                                      return 'Please enter a valid email'.tr;
                                     }
                                     return null;
                                   },
@@ -316,8 +325,8 @@ class _PharmacyCompleteRegistrationState
                                   focusNode:
                                       addPharmacyController.passwordFocus,
                                   decoration: InputDecoration(
-                                    labelText: 'New Password *',
-                                    hintText: 'Enter a new password',
+                                    labelText: 'New Password'.tr,
+                                    hintText: 'Enter a new password'.tr,
                                     prefixIcon: Padding(
                                       padding: EdgeInsets.all(3.w),
                                       child: CustomIconWidget(
@@ -332,8 +341,9 @@ class _PharmacyCompleteRegistrationState
                                             .isPasswordValid.value
                                         ? CustomIconWidget(
                                             iconName: 'check_circle',
-                                            color: AppTheme.lightTheme
-                                                .colorScheme.secondary,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary,
                                             size: 20,
                                           )
                                         : null,
@@ -343,10 +353,12 @@ class _PharmacyCompleteRegistrationState
                                   textInputAction: TextInputAction.done,
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Password is required';
+                                      return 'Password is required'.tr;
                                     }
                                     if (value.trim().length < 6) {
-                                      return 'Password must be at least 6 characters';
+                                      return 'Password must be at least 6 characters'
+                                          .tr
+                                          .tr;
                                     }
                                     return null;
                                   },
@@ -405,7 +417,7 @@ class _PharmacyCompleteRegistrationState
                                   ),
                                 ),
                               )
-                            : const Text('Add Pharmacy'),
+                            : Text('Add Pharmacy'.tr),
                       ),
                     )),
                 SizedBox(height: 2.h),
@@ -428,7 +440,7 @@ class _PharmacyCompleteRegistrationState
                                   Navigator.pop(context);
                                 }
                               },
-                        child: const Text('Cancel'),
+                        child: Text('Cancel'.tr),
                       ),
                     )),
               ],

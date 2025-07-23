@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class ShiftCardWidget extends StatelessWidget {
   final Map<String, dynamic> shift;
@@ -49,15 +50,15 @@ class ShiftCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           border: hasConflict
               ? Border.all(
-                  color: AppTheme.warningLight,
+                  color: AppColors.warningLight,
                   width: 2,
                 )
               : null,
           boxShadow: [
             BoxShadow(
               color: hasConflict
-                  ? AppTheme.warningLight.withValues(alpha: 0.2)
-                  : AppTheme.shadowLight,
+                  ? AppColors.warningLight.withValues(alpha: 0.2)
+                  : AppColors.shadowLight,
               blurRadius: hasConflict ? 8 : 4,
               offset: Offset(0, 2),
             ),
@@ -75,7 +76,7 @@ class ShiftCardWidget extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
                     decoration: BoxDecoration(
-                      color: AppTheme.warningLight.withValues(alpha: 0.1),
+                      color: AppColors.warningLight.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Row(
@@ -83,17 +84,17 @@ class ShiftCardWidget extends StatelessWidget {
                       children: [
                         CustomIconWidget(
                           iconName: 'warning',
-                          color: AppTheme.warningLight,
+                          color: AppColors.warningLight,
                           size: 12,
                         ),
                         SizedBox(width: 1.w),
                         Text(
-                          'Conflict',
+                          'Conflict'.tr,
                           style:
                               Theme.of(context).textTheme.labelSmall?.copyWith(
                                     fontSize: 10.sp,
                                     fontWeight: FontWeight.w500,
-                                    color: AppTheme.warningLight,
+                                    color: AppColors.warningLight,
                                   ),
                         ),
                       ],
@@ -109,7 +110,7 @@ class ShiftCardWidget extends StatelessWidget {
                     padding: EdgeInsets.all(1.w),
                     child: CustomIconWidget(
                       iconName: 'more_vert',
-                      color: AppTheme.textSecondaryLight,
+                      color: AppColors.textSecondaryLight,
                       size: 20,
                     ),
                   ),
@@ -145,7 +146,7 @@ class ShiftCardWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text(
-                      'Overnight',
+                      'Overnight'.tr,
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                             fontSize: 9.sp,
                             fontWeight: FontWeight.w500,
@@ -164,7 +165,7 @@ class ShiftCardWidget extends StatelessWidget {
                 children: [
                   CustomIconWidget(
                     iconName: 'description',
-                    color: AppTheme.textSecondaryLight,
+                    color: AppColors.textSecondaryLight,
                     size: 16,
                   ),
                   SizedBox(width: 2.w),
@@ -173,7 +174,7 @@ class ShiftCardWidget extends StatelessWidget {
                       shift['description'].toString(),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontSize: 12.sp,
-                            color: AppTheme.textSecondaryLight,
+                            color: AppColors.textSecondaryLight,
                           ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -206,7 +207,7 @@ class ShiftCardWidget extends StatelessWidget {
                 height: 0.5.h,
                 margin: EdgeInsets.only(top: 2.h),
                 decoration: BoxDecoration(
-                  color: AppTheme.borderLight,
+                  color: AppColors.borderLight,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -214,7 +215,7 @@ class ShiftCardWidget extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 4.w),
                 child: Text(
-                  'Shift Options',
+                  'Shift Options'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
@@ -228,7 +229,7 @@ class ShiftCardWidget extends StatelessWidget {
                   size: 24,
                 ),
                 title: Text(
-                  'Delete Shift',
+                  'Delete Shift'.tr,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontSize: 14.sp,
                         color: Theme.of(context).colorScheme.error,

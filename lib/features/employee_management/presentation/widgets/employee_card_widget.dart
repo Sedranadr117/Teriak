@@ -1,10 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
 
@@ -123,7 +121,7 @@ class EmployeeCardWidget extends StatelessWidget {
                             height: 4.w,
                             decoration: BoxDecoration(
                               color: isActive
-                                  ? AppTheme.successLight
+                                  ? AppColors.successLight
                                   : Theme.of(context).colorScheme.outline,
                               shape: BoxShape.circle,
                               border: Border.all(
@@ -163,7 +161,9 @@ class EmployeeCardWidget extends StatelessWidget {
                           // Role
                           if (employee["roleName"] != null)
                             Text(
-                              employee["roleName"],
+                              employee["roleName"] == 'PHARMACY_TRAINEE'
+                                  ? 'Pharmacy Intern'.tr
+                                  : 'Pharmacist'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium
@@ -194,7 +194,7 @@ class EmployeeCardWidget extends StatelessWidget {
                           if (employee["dateOfHire"] != null) ...[
                             SizedBox(height: 0.3.h),
                             Text(
-                              ' Hired: ${employee["dateOfHire"]}',
+                              '${'Hired:'.tr} ${employee["dateOfHire"]}',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelSmall
@@ -258,7 +258,7 @@ class EmployeeCardWidget extends StatelessWidget {
       decoration: BoxDecoration(
         color: isLeft
             ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-            : AppTheme.errorLight.withValues(alpha: 0.1),
+            : AppColors.errorLight.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Align(
@@ -272,16 +272,16 @@ class EmployeeCardWidget extends StatelessWidget {
                 iconName: 'delete',
                 color: isLeft
                     ? Theme.of(context).colorScheme.primary
-                    : AppTheme.errorLight,
+                    : AppColors.errorLight,
                 size: 24,
               ),
               SizedBox(height: 0.5.h),
               Text(
-                'Remove',
+                'Remove'.tr,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: isLeft
                           ? Theme.of(context).colorScheme.primary
-                          : AppTheme.errorLight,
+                          : AppColors.errorLight,
                       fontWeight: FontWeight.w500,
                     ),
               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class PersonalInformationCard extends StatelessWidget {
   final TextEditingController firstNameController;
@@ -32,7 +33,7 @@ class PersonalInformationCard extends StatelessWidget {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  'Personal Information',
+                  'Personal Information'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -43,8 +44,8 @@ class PersonalInformationCard extends StatelessWidget {
             TextFormField(
               controller: firstNameController,
               decoration: InputDecoration(
-                labelText: 'First Name',
-                hintText: 'Enter first name',
+                labelText: 'First Name'.tr,
+                hintText: 'Enter first name'.tr,
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(3.w),
                   child: CustomIconWidget(
@@ -57,10 +58,10 @@ class PersonalInformationCard extends StatelessWidget {
               textCapitalization: TextCapitalization.words,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'First name is required';
+                  return 'First name is required'.tr;
                 }
                 if (value.trim().length < 2) {
-                  return 'First name must be at least 2 characters';
+                  return 'First name must be at least 2 characters'.tr;
                 }
                 return null;
               },
@@ -69,8 +70,8 @@ class PersonalInformationCard extends StatelessWidget {
             TextFormField(
               controller: lastNameController,
               decoration: InputDecoration(
-                labelText: 'Last Name',
-                hintText: 'Enter last name',
+                labelText: 'Last Name'.tr,
+                hintText: 'Enter last name'.tr,
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(3.w),
                   child: CustomIconWidget(
@@ -83,10 +84,10 @@ class PersonalInformationCard extends StatelessWidget {
               textCapitalization: TextCapitalization.words,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Last name is required';
+                  return 'Last name is required'.tr;
                 }
                 if (value.trim().length < 2) {
-                  return 'Last name must be at least 2 characters';
+                  return 'Last name must be at least 2 characters'.tr;
                 }
                 return null;
               },
@@ -95,7 +96,7 @@ class PersonalInformationCard extends StatelessWidget {
             TextFormField(
               controller: phoneController,
               decoration: InputDecoration(
-                labelText: 'Phone Number',
+                labelText: 'Phone Number'.tr,
                 hintText: '09xxxxxxxx',
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(3.w),
@@ -112,10 +113,10 @@ class PersonalInformationCard extends StatelessWidget {
               ],
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Phone number is required';
+                  return 'Phone number is required'.tr;
                 }
                 if (value.trim().length < 10) {
-                  return 'Please enter a valid phone number';
+                  return 'Please enter a valid phone number'.tr;
                 }
                 return null;
               },

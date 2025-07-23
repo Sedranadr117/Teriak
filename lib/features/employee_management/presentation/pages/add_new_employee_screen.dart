@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/account_setup_card.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/employment_details_card.dart';
@@ -24,7 +24,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text('Add Employee'),
+          title: Text('Add Employee'.tr),
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
             icon: CustomIconWidget(
@@ -60,9 +60,9 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                       controller.dateOfHireController.text)
                                   : null,
                           selectedRole: controller.selectedRoleId.value == 3
-                              ? 'Pharmacist'
+                              ? 'Pharmacist'.tr
                               : controller.selectedRoleId.value == 4
-                                  ? 'Pharmacy Intern'
+                                  ? 'Pharmacy Intern'.tr
                                   : '',
                           onDateTap: () async {
                             DateTime? picked = await showDatePicker(
@@ -91,14 +91,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                     shrinkWrap: true,
                                     children: [
                                       ListTile(
-                                        title: const Text('Pharmacist'),
+                                        title: Text('Pharmacist'.tr),
                                         onTap: () => Navigator.pop(context, 3),
                                         selected:
                                             controller.selectedRoleId.value ==
                                                 3,
                                       ),
                                       ListTile(
-                                        title: const Text('Pharmacy Intern'),
+                                        title: Text('Pharmacy Intern'.tr),
                                         onTap: () => Navigator.pop(context, 4),
                                         selected:
                                             controller.selectedRoleId.value ==
@@ -168,7 +168,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                     ),
                                   ),
                                 )
-                              : const Text('Save Employee'),
+                              : Text('Save Employee'.tr),
                         )),
                   ),
                 ),

@@ -63,7 +63,6 @@ class AddPharmacyController extends GetxController {
     super.onInit();
     _initializeDependencies();
     setupFormListeners();
-    loadDraftData();
   }
 
   String formatTime(TimeOfDay? time) {
@@ -140,33 +139,8 @@ class AddPharmacyController extends GetxController {
 
   double getProgress() {
     int step = getCurrentStep();
-    int totalSteps = 7; // Number of actual steps (without Complete)
+    int totalSteps = 7;
     return step / totalSteps;
-  }
-
-  void loadDraftData() {
-    // Mock loading draft data from local storage
-    // In real implementation, use SharedPreferences or secure storage
-  }
-  Future<void> saveDraft() async {
-    isLoading.value = true;
-
-    try {
-      await Future.delayed(const Duration(seconds: 1));
-      isDraftSaved.value = true;
-
-      Get.snackbar(
-        'Success',
-        'Draft saved successfully',
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to save draft',
-      );
-    } finally {
-      isLoading.value = false;
-    }
   }
 
   void togglePasswordVisibility() {
@@ -201,17 +175,17 @@ class AddPharmacyController extends GetxController {
       return await showDialog<bool>(
             context: context!,
             builder: (context) => AlertDialog(
-              title: const Text('Discard Changes?'),
-              content: const Text(
-                  'You have unsaved changes. Do you want to discard them?'),
+              title: Text('Discard Changes?'.tr),
+              content: Text(
+                  'You have unsaved changes. Do you want to discard them?'.tr),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text('Cancel'),
+                  child: Text('Cancel'.tr),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
-                  child: const Text('Discard'),
+                  child: Text('Discard'.tr),
                 ),
               ],
             ),
@@ -231,7 +205,7 @@ class AddPharmacyController extends GetxController {
       print('📡 Network connected: $isConnected');
       if (!isConnected) {
         errorMessage.value =
-            'No internet connection. Please check your network.';
+            'No internet connection. Please check your network.'.tr;
         return;
       }
       String openingHoursString = '';
@@ -241,18 +215,18 @@ class AddPharmacyController extends GetxController {
         openingHoursString = '$openingFormatted - $closingFormatted';
       }
       if (emailController.text.trim().isEmpty) {
-        errorMessage.value = 'Email is required';
+        errorMessage.value = 'Email is required'.tr;
         Get.snackbar(
-          'Error',
+          'Error'.tr,
           errorMessage.value,
         );
         return;
       }
 
       if (openingTime.value == null || closingTime.value == null) {
-        errorMessage.value = 'Please select both opening and closing times';
+        errorMessage.value = 'Please select both opening and closing times'.tr;
         Get.snackbar(
-          'Error',
+          'Error'.tr,
           errorMessage.value,
         );
         return;
@@ -281,22 +255,12 @@ class AddPharmacyController extends GetxController {
       result.fold((failure) {
         print('❌ Pharmacy addition failed: ${failure.errMessage}');
         // Show more specific error messages
-        if (failure.errMessage.contains('400')) {
-          errorMessage.value =
-              'Invalid data provided. Please check all required fields.';
-        } else if (failure.errMessage.contains('401')) {
-          errorMessage.value = 'Unauthorized. Please login again.';
-        } else if (failure.errMessage.contains('403')) {
-          errorMessage.value = 'Access denied.';
-        } else if (failure.errMessage.contains('500')) {
-          errorMessage.value = 'Server error. Please try again later.';
-        } else {
-          errorMessage.value = 'Failed to add pharmacy: ${failure.errMessage}';
-        }
+
+        errorMessage.value = 'Failed to add pharmacy: ${failure.errMessage}'.tr;
 
         // Show error snackbar
         Get.snackbar(
-          'Error',
+          'Error'.tr,
           errorMessage.value,
         );
       }, (addedPharmacy) async {
@@ -324,11 +288,11 @@ class AddPharmacyController extends GetxController {
       });
     } catch (e) {
       print('💥 Unexpected error: $e');
-      errorMessage.value = 'An unexpected error occurred. Please try again.';
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
 
       // Show error snackbar
       Get.snackbar(
-        'Error',
+        'Error'.tr,
         errorMessage.value,
       );
     } finally {

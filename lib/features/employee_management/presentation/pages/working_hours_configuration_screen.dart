@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
@@ -59,7 +59,7 @@ class _WorkingHoursConfigurationScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Working Hours',
+              'Working Hours'.tr,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Theme.of(context).colorScheme.onPrimary,
                     fontSize: 18.sp,
@@ -73,7 +73,7 @@ class _WorkingHoursConfigurationScreenState
               padding: EdgeInsets.only(right: 4.w),
               child: const CustomIconWidget(
                 iconName: 'warning',
-                color: AppTheme.warningLight,
+                color: AppColors.warningLight,
                 size: 24,
               ),
             ),
@@ -88,10 +88,8 @@ class _WorkingHoursConfigurationScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(width: 5.w),
-
                   Text(
-                    'Working Days',
+                    'Working Days'.tr,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.w600,
@@ -99,14 +97,13 @@ class _WorkingHoursConfigurationScreenState
                   ),
                   SizedBox(height: 1.h),
                   Text(
-                    'Select the days this employee will work',
+                    'Select the days this employee will work'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontSize: 12.sp,
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                         ),
                   ),
                   SizedBox(height: 2.h),
-
                   Obx(
                     () => Wrap(
                       spacing: 2.w,
@@ -129,7 +126,7 @@ class _WorkingHoursConfigurationScreenState
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Shifts Schedule',
+                        'Shifts Schedule'.tr,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
@@ -142,7 +139,7 @@ class _WorkingHoursConfigurationScreenState
                             style:
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
                                       fontSize: 12.sp,
-                                      color: AppTheme.textSecondaryLight,
+                                      color: AppColors.textSecondaryLight,
                                     ),
                           ),
                         ),
@@ -165,29 +162,30 @@ class _WorkingHoursConfigurationScreenState
                       padding: EdgeInsets.all(3.w),
                       margin: EdgeInsets.only(bottom: 2.h),
                       decoration: BoxDecoration(
-                        color: AppTheme.warningLight.withValues(alpha: 0.1),
+                        color: AppColors.warningLight.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: AppTheme.warningLight.withValues(alpha: 0.3),
+                          color: AppColors.warningLight.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
                         children: [
                           const CustomIconWidget(
                             iconName: 'warning',
-                            color: AppTheme.warningLight,
+                            color: AppColors.warningLight,
                             size: 20,
                           ),
                           SizedBox(width: 2.w),
                           Expanded(
                             child: Text(
-                              'Shift conflicts detected. Please review overlapping time slots.',
+                              'Shift conflicts detected. Please review overlapping time slots.'
+                                  .tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
                                     fontSize: 12.sp,
-                                    color: AppTheme.warningLight,
+                                    color: AppColors.warningLight,
                                   ),
                             ),
                           ),
@@ -203,36 +201,37 @@ class _WorkingHoursConfigurationScreenState
                           color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: AppTheme.borderLight.withValues(alpha: 0.5),
+                            color: AppColors.borderLight.withValues(alpha: 0.5),
                           ),
                         ),
                         child: Column(
                           children: [
                             const CustomIconWidget(
                               iconName: 'schedule',
-                              color: AppTheme.textSecondaryLight,
+                              color: AppColors.textSecondaryLight,
                               size: 48,
                             ),
                             SizedBox(height: 2.h),
                             Text(
-                              'No shifts scheduled',
+                              'No shifts scheduled'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium
                                   ?.copyWith(
                                     fontSize: 16.sp,
-                                    color: AppTheme.textSecondaryLight,
+                                    color: AppColors.textSecondaryLight,
                                   ),
                             ),
                             SizedBox(height: 1.h),
                             Text(
-                              'Add your first shift to get started with scheduling',
+                              'Add your first shift to get started with scheduling'
+                                  .tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall
                                   ?.copyWith(
                                     fontSize: 12.sp,
-                                    color: AppTheme.textSecondaryLight,
+                                    color: AppColors.textSecondaryLight,
                                   ),
                               textAlign: TextAlign.center,
                             ),
@@ -275,7 +274,7 @@ class _WorkingHoursConfigurationScreenState
               color: Theme.of(context).colorScheme.surface,
               boxShadow: const [
                 BoxShadow(
-                  color: AppTheme.shadowLight,
+                  color: AppColors.shadowLight,
                   blurRadius: 8,
                   offset: Offset(0, -2),
                 ),
@@ -352,8 +351,8 @@ class _WorkingHoursConfigurationScreenState
                             (controller.employee.value?.workingHoursRequests
                                         .isNotEmpty ??
                                     false)
-                                ? 'Edit Schedule'
-                                : 'Save Schedule',
+                                ? 'Edit Schedule'.tr
+                                : 'Save Schedule'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium

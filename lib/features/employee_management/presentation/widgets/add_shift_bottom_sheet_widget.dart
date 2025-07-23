@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 
 class AddShiftBottomSheetWidget extends StatefulWidget {
   final ShiftParams? existingShift;
@@ -165,7 +166,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                       width: 12.w,
                       height: 0.5.h,
                       decoration: BoxDecoration(
-                        color: AppTheme.borderLight,
+                        color: AppColors.borderLight,
                         borderRadius: BorderRadius.circular(2),
                       ),
                     ),
@@ -183,7 +184,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                       ),
                       SizedBox(width: 3.w),
                       Text(
-                        isEditing ? 'Edit Shift' : 'Add New Shift',
+                        isEditing ? 'Edit Shift'.tr : 'Add New Shift'.tr,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
@@ -203,7 +204,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Start Time',
+                              'Start Time'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium
@@ -220,7 +221,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                                 padding: EdgeInsets.all(4.w),
                                 decoration: BoxDecoration(
                                   border:
-                                      Border.all(color: AppTheme.borderLight),
+                                      Border.all(color: AppColors.borderLight),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -235,14 +236,14 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                                     Text(
                                       startTime != null
                                           ? _formatTimeDisplay(startTime!)
-                                          : 'Select time',
+                                          : 'Select time'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium
                                           ?.copyWith(
                                             color: startTime != null
-                                                ? AppTheme.textPrimaryLight
-                                                : AppTheme.textSecondaryLight,
+                                                ? AppColors.textPrimaryLight
+                                                : AppColors.textSecondaryLight,
                                           ),
                                     ),
                                   ],
@@ -261,7 +262,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'End Time',
+                              'End Time'.tr,
                               style: Theme.of(context)
                                   .textTheme
                                   .titleMedium
@@ -278,7 +279,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                                 padding: EdgeInsets.all(4.w),
                                 decoration: BoxDecoration(
                                   border:
-                                      Border.all(color: AppTheme.borderLight),
+                                      Border.all(color: AppColors.borderLight),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
@@ -293,14 +294,14 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                                     Text(
                                       endTime != null
                                           ? _formatTimeDisplay(endTime!)
-                                          : 'Select time',
+                                          : 'Select time'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium
                                           ?.copyWith(
                                             color: endTime != null
-                                                ? AppTheme.textPrimaryLight
-                                                : AppTheme.textSecondaryLight,
+                                                ? AppColors.textPrimaryLight
+                                                : AppColors.textSecondaryLight,
                                           ),
                                     ),
                                   ],
@@ -388,7 +389,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                           ),
                           SizedBox(width: 2.w),
                           Text(
-                            'Start and end times cannot be the same',
+                            'Start and end times cannot be the same'.tr,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodySmall
@@ -406,7 +407,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
 
                   // Description
                   Text(
-                    'Description (Optional)',
+                    'Description (Optional)'.tr,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
@@ -418,12 +419,12 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                     controller: _descriptionController,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: 'Enter shift description...',
+                      hintText: 'Enter shift description...'.tr,
                       prefixIcon: Padding(
                         padding: EdgeInsets.all(3.w),
                         child: CustomIconWidget(
                           iconName: 'description',
-                          color: AppTheme.textSecondaryLight,
+                          color: AppColors.textSecondaryLight,
                           size: 20,
                         ),
                       ),
@@ -439,7 +440,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                       Expanded(
                         child: OutlinedButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel'),
+                          child: Text('Cancel'.tr),
                         ),
                       ),
                       SizedBox(width: 4.w),
@@ -450,7 +451,8 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                                   _isValidTimeRange())
                               ? _saveShift
                               : null,
-                          child: Text(isEditing ? 'Update Shift' : 'Add Shift'),
+                          child: Text(
+                              isEditing ? 'Update Shift'.tr : 'Add Shift'.tr),
                         ),
                       ),
                     ],

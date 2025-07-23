@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class EmployeeFilterWidget extends StatelessWidget {
   final String selectedFilter;
@@ -16,9 +17,9 @@ class EmployeeFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filters = [
-      {'label': 'All', 'icon': 'filter_list'},
-      {'label': 'Active', 'icon': 'check_circle'},
-      {'label': 'Inactive', 'icon': 'cancel'},
+      {'label': 'All'.tr, 'icon': 'filter_list'},
+      {'label': 'Active'.tr, 'icon': 'check_circle'},
+      {'label': 'Inactive'.tr, 'icon': 'cancel'},
     ];
 
     return Container(

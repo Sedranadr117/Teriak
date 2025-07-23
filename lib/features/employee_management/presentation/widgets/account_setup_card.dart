@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class AccountSetupCard extends StatefulWidget {
   final TextEditingController passwordController;
@@ -50,13 +51,13 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
     setState(() {
       if (score <= 2) {
         _passwordStrength = 'Weak';
-        _strengthColor = AppTheme.errorLight;
+        _strengthColor = AppColors.errorLight;
       } else if (score <= 4) {
         _passwordStrength = 'Medium';
-        _strengthColor = AppTheme.warningLight;
+        _strengthColor = AppColors.warningLight;
       } else {
         _passwordStrength = 'Strong';
-        _strengthColor = AppTheme.successLight;
+        _strengthColor = AppColors.successLight;
       }
     });
   }
@@ -84,7 +85,7 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  'Account Setup',
+                  'Account Setup'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -96,8 +97,8 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
               controller: widget.passwordController,
               obscureText: !_isPasswordVisible,
               decoration: InputDecoration(
-                labelText: 'Password',
-                hintText: 'Create a secure password',
+                labelText: 'Password'.tr,
+                hintText: 'Create a secure password'.tr,
                 prefixIcon: Padding(
                   padding: EdgeInsets.all(3.w),
                   child: CustomIconWidget(
@@ -122,10 +123,10 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Password is required';
+                  return 'Password is required'.tr;
                 }
                 if (value.trim().length < 6) {
-                  return 'Password must be at least 6 characters';
+                  return 'Password must be at least 6 characters'.tr;
                 }
                 return null;
               },
@@ -135,7 +136,7 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
               Row(
                 children: [
                   Text(
-                    'Password Strength: ',
+                    'Password Strength: '.tr,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   Text(
@@ -149,9 +150,9 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
               ),
               SizedBox(height: 1.w),
               LinearProgressIndicator(
-                value: _passwordStrength == 'Weak'
+                value: _passwordStrength == 'Weak'.tr
                     ? 0.33
-                    : _passwordStrength == 'Medium'
+                    : _passwordStrength == 'Medium'.tr
                         ? 0.66
                         : 1.0,
                 backgroundColor: Theme.of(context)
@@ -175,25 +176,25 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Password Requirements:',
+                    'Password Requirements:'.tr,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.primary,
                         ),
                   ),
                   SizedBox(height: 1.w),
-                  _buildRequirement('At least 6 characters',
+                  _buildRequirement('At least 6 characters'.tr,
                       widget.passwordController.text.length >= 6),
                   _buildRequirement(
-                      'Contains uppercase letter',
+                      'Contains uppercase letter'.tr,
                       widget.passwordController.text
                           .contains(RegExp(r'[A-Z]'))),
                   _buildRequirement(
-                      'Contains lowercase letter',
+                      'Contains lowercase letter'.tr,
                       widget.passwordController.text
                           .contains(RegExp(r'[a-z]'))),
                   _buildRequirement(
-                      'Contains number',
+                      'Contains number'.tr,
                       widget.passwordController.text
                           .contains(RegExp(r'[0-9]'))),
                 ],
@@ -213,7 +214,7 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
           CustomIconWidget(
             iconName: isMet ? 'check_circle' : 'radio_button_unchecked',
             color: isMet
-                ? AppTheme.successLight
+                ? AppColors.successLight
                 : Theme.of(context).colorScheme.onSurfaceVariant,
             size: 16,
           ),
@@ -222,7 +223,7 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
             text,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                   color: isMet
-                      ? AppTheme.successLight
+                      ? AppColors.successLight
                       : Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),

@@ -69,7 +69,7 @@ class AuthController extends GetxController {
 
       if (!isConnected) {
         errorMessage.value =
-            'No internet connection. Please check your network.';
+            'No internet connection. Please check your network.'.tr;
         return;
       }
 
@@ -110,15 +110,15 @@ class AuthController extends GetxController {
             }
           } else {
             print('⛔️ Not authenticated, will not navigate!');
-            errorMessage.value = 'بيانات الدخول غير صحيحة';
+            errorMessage.value = 'Email or Password is wrong'.tr;
           }
         },
       );
     } catch (e) {
       print('💥 Unexpected error: $e');
-      errorMessage.value = 'An unexpected error occurred. Please try again.';
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       if (e.toString().contains('UnknownException')) {
-        errorMessage.value = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+        errorMessage.value = 'Email or Password is wrong'.tr;
       }
     } finally {
       isLoading.value = false;

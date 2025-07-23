@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class StatusManagementCard extends StatelessWidget {
   final bool isActive;
@@ -30,7 +31,7 @@ class StatusManagementCard extends StatelessWidget {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  'Status Management',
+                  'Status Management'.tr,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -42,13 +43,13 @@ class StatusManagementCard extends StatelessWidget {
               padding: EdgeInsets.all(4.w),
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppTheme.successLight.withValues(alpha: 0.1)
-                    : AppTheme.warningLight.withValues(alpha: 0.1),
+                    ? AppColors.successLight.withValues(alpha: 0.1)
+                    : AppColors.warningLight.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isActive
-                      ? AppTheme.successLight.withValues(alpha: 0.3)
-                      : AppTheme.warningLight.withValues(alpha: 0.3),
+                      ? AppColors.successLight.withValues(alpha: 0.3)
+                      : AppColors.warningLight.withValues(alpha: 0.3),
                   width: 1,
                 ),
               ),
@@ -58,8 +59,8 @@ class StatusManagementCard extends StatelessWidget {
                     padding: EdgeInsets.all(2.w),
                     decoration: BoxDecoration(
                       color: isActive
-                          ? AppTheme.successLight
-                          : AppTheme.warningLight,
+                          ? AppColors.successLight
+                          : AppColors.warningLight,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: CustomIconWidget(
@@ -74,7 +75,7 @@ class StatusManagementCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Employee Status',
+                          'Employee Status'.tr,
                           style:
                               Theme.of(context).textTheme.labelMedium?.copyWith(
                                     color: Theme.of(context)
@@ -84,12 +85,12 @@ class StatusManagementCard extends StatelessWidget {
                         ),
                         SizedBox(height: 0.5.w),
                         Text(
-                          isActive ? 'ACTIVE' : 'INACTIVE',
+                          isActive ? 'ACTIVE'.tr : 'INACTIVE'.tr,
                           style:
                               Theme.of(context).textTheme.titleSmall?.copyWith(
                                     color: isActive
-                                        ? AppTheme.successLight
-                                        : AppTheme.warningLight,
+                                        ? AppColors.successLight
+                                        : AppColors.warningLight,
                                     fontWeight: FontWeight.w600,
                                   ),
                         ),
@@ -97,7 +98,8 @@ class StatusManagementCard extends StatelessWidget {
                         Text(
                           isActive
                               ? 'Employee can access systems and perform duties'
-                              : 'Employee access is restricted',
+                                  .tr
+                              : 'Employee access is restricted'.tr,
                           style:
                               Theme.of(context).textTheme.bodySmall?.copyWith(
                                     color: Theme.of(context)
@@ -111,10 +113,10 @@ class StatusManagementCard extends StatelessWidget {
                   Switch(
                     value: isActive,
                     onChanged: onStatusChanged,
-                    activeColor: AppTheme.successLight,
-                    inactiveThumbColor: AppTheme.warningLight,
+                    activeColor: AppColors.successLight,
+                    inactiveThumbColor: AppColors.warningLight,
                     inactiveTrackColor:
-                        AppTheme.warningLight.withValues(alpha: 0.3),
+                        AppColors.warningLight.withValues(alpha: 0.3),
                   ),
                 ],
               ),
@@ -139,7 +141,8 @@ class StatusManagementCard extends StatelessWidget {
                   SizedBox(width: 2.w),
                   Expanded(
                     child: Text(
-                      'Status can be changed later from the employee Details.',
+                      'Status can be changed later from the employee Details.'
+                          .tr,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             color: Theme.of(context).colorScheme.primary,
                           ),

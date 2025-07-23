@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
-import 'package:teriak/core/themes/app_theme.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
@@ -44,7 +44,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Employee Details'),
+        title: Text('Employee Details'.tr),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: CustomIconWidget(
@@ -77,7 +77,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                           'status': controller.employee.value!.status,
                           'dateOfHire': controller.employee.value!.dateOfHire,
                           'roleId': controller.employee.value!.roleId,
-                          'roleName': controller.employee.value!.roleName,
+                          'roleName': controller.employee.value!.roleName.tr,
                           'workingHours': controller
                               .employee.value!.workingHoursRequests
                               .map((e) =>
@@ -123,7 +123,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: const [
                           BoxShadow(
-                            color: AppTheme.shadowLight,
+                            color: AppColors.shadowLight,
                             blurRadius: 8,
                             offset: Offset(0, 2),
                           ),
@@ -144,7 +144,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                                     ),
                                     SizedBox(width: 2.w),
                                     Text(
-                                      'Working Hours',
+                                      'Working Hours'.tr,
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleMedium
@@ -160,7 +160,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 10),
                                   child: Text(
-                                    'Configure working schedule',
+                                    'Configure working schedule'.tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge

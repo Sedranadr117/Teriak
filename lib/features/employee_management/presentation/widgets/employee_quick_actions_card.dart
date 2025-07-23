@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class EmployeeQuickActionsCard extends StatelessWidget {
   final VoidCallback? onChangeStatus;
@@ -19,7 +20,7 @@ class EmployeeQuickActionsCard extends StatelessWidget {
           width: double.infinity,
           child: _buildActionButton(
               icon: 'swap_horiz',
-              label: 'Change Status',
+              label: 'Change Status'.tr,
               onPressed: onChangeStatus,
               backgroundColor:
                   Theme.of(context).colorScheme.surfaceContainerHighest,

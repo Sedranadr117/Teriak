@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/themes/app_theme.dart';
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 class EmployeeWorkingHoursCard extends StatelessWidget {
   final Map<String, dynamic> employee;
   final VoidCallback? onViewFullSchedule;
 
   const EmployeeWorkingHoursCard({
-    Key? key,
+    super.key,
     required this.employee,
     this.onViewFullSchedule,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +25,9 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: AppTheme.shadowLight,
+            color: AppColors.shadowLight,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),
@@ -45,7 +46,7 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
               ),
               SizedBox(width: 2.w),
               Text(
-                'Working Hours',
+                'Working Hours'.tr,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -57,8 +58,7 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
           if (workingHoursRequests != null &&
               workingHoursRequests.isNotEmpty) ...[
             ...workingHoursRequests
-                .map((wh) => _buildWorkingHoursSection(wh, context))
-                .toList(),
+                .map((wh) => _buildWorkingHoursSection(wh, context)),
             SizedBox(height: 4.w),
           ] else ...[
             Center(
@@ -71,7 +71,7 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
                   ),
                   SizedBox(height: 2.w),
                   Text(
-                    'No schedule configured',
+                    'No schedule configured'.tr,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -86,7 +86,7 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
           Center(
             child: OutlinedButton(
               onPressed: onViewFullSchedule,
-              child: Text('View Full Schedule'),
+              child: Text('View Full Schedule'.tr),
             ),
           ),
         ],
@@ -115,7 +115,7 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
           Row(
             children: [
               Text(
-                'Days: ',
+                'Days: '.tr,
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -160,7 +160,7 @@ class EmployeeWorkingHoursCard extends StatelessWidget {
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

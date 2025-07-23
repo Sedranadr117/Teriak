@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:teriak/core/widgets/custom_icon_widget.dart';
 
 class ProgressIndicatorWidget extends StatelessWidget {
   final double progress;
@@ -16,11 +15,11 @@ class ProgressIndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final steps = [
-      'Basic Info',
-      'Contact',
-      'Opening Hours',
-      'Manage Password',
-      'Complete',
+      'Basic Info'.tr,
+      'Contact'.tr,
+      'Opening Hours'.tr,
+      'Manage Password'.tr,
+      'Complete'.tr,
     ];
     List<Widget> buildSteps(BuildContext context, double progress) {
       final totalSteps = steps.length - 1;
@@ -47,37 +46,10 @@ class ProgressIndicatorWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Form Progress',
+                'Form Progress'.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
-              ),
-              Row(
-                children: [
-                  if (isDraftSaved) ...[
-                    CustomIconWidget(
-                      iconName: 'cloud_done',
-                      color: Theme.of(context).colorScheme.secondary,
-                      size: 16,
-                    ),
-                    SizedBox(width: 1.w),
-                    Text(
-                      'Draft Saved',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                    SizedBox(width: 3.w),
-                  ],
-                  Text(
-                    '${(progress * 100).toInt()}%',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                  ),
-                ],
               ),
             ],
           ),
