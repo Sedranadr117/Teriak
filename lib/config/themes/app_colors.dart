@@ -5,6 +5,7 @@ class AppColors {
   static const Color appColor2 = Color(0xFF0b3c6a);
   static const Color appColor4 = Color(0xff9ecbf5);
 
+   // Primary & secondary colors
   static const Color primaryLight = Color(0xff10599d);
   static const Color primaryVariantLight = Color(0xFF5da8ee);
   static const Color secondaryLight = Color(0xFF9ecbf5);
@@ -69,6 +70,4 @@ class AppColors {
   static const Color onErrorDark = Color(0xFFFFFFFF);
 
   static const Color shadowDark = Color(0x1A000000);
-
-  static var primary;
 }

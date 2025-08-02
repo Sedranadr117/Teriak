@@ -1,6 +1,3 @@
-import 'package:teriak/config/localization/locale_controller.dart';
-import 'package:teriak/main.dart';
-
 class EndPoints {
   static const String baserUrl = "http://159.198.75.161:13000/api/v1/";
   
@@ -11,8 +8,6 @@ class EndPoints {
   static const String mangerLogin = "pharmacy/login";
   static const String addEmployee = "employees";
   static const String roleID = "roles";
-
-  static const String addEmployee = "/pharmacy/employees";
   static String product = "search/all-products";
   static String pharmacyProduct = "pharmacy_products";
   static String masterProductDetails = "master_products";

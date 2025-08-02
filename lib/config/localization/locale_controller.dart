@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
-import 'package:teriak/features/master_product/presentation/controller/get_allProduct_controller.dart';
 
 class LocaleController extends GetxController {
   static LocaleController get to => Get.find();

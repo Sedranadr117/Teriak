@@ -17,8 +17,6 @@ import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
 import 'package:teriak/features/template/presentation/pages/template_screen.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/product_details/presentation/pages/product_details/product_details_page.dart';
-import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
-import 'package:teriak/features/master_product/presentation/pages/product_details/product_details_page.dart';
 
 class AppRoutes {
   static final List<GetPage> routes = [

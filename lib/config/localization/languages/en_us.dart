@@ -245,7 +245,6 @@ final Map<String, String> enUS = {
   "Location address is required": "Location address is required",
   "Please enter a complete address": "Please enter a complete address",
   "Location permission denied": "Location permission denied",
-  "Basic Info": "Basic Info",
   "Contact": "Contact",
   "Opening Hours": "Opening Hours",
   "Manage Password": "Manage Password",

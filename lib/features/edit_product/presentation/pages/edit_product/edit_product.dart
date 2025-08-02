@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/add_product/presentation/pages/add_product/widgets/save_product_button.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
 import 'package:teriak/features/bottom_sheet_management/multi_bottom_sheet.dart';

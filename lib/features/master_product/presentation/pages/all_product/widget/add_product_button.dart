@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-import 'package:get/get_utils/get_utils.dart';
-import 'package:teriak/config/themes/app_colors.dart';
-import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/config/themes/app_theme.dart';
-=======
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/master_product/presentation/controller/get_allProduct_controller.dart';
->>>>>>> products
 
 class AddProductButton extends StatefulWidget {
   const AddProductButton({super.key});
@@ -20,12 +13,6 @@ class AddProductButton extends StatefulWidget {
 }
 
 class _AddProductButtonState extends State<AddProductButton> {
-<<<<<<< HEAD
-  @override
-  Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
-      onPressed: () {},
-=======
   final allController = Get.find<GetAllProductController>();
   @override
   Widget build(BuildContext context) {
@@ -33,7 +20,6 @@ class _AddProductButtonState extends State<AddProductButton> {
       onPressed: ()  {
          Get.toNamed(AppPages.addProductPage);
       },
->>>>>>> products
       label: Text(
         'Add Product'.tr,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(

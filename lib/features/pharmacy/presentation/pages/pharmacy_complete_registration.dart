@@ -2,19 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-<<<<<<< HEAD
 import 'package:teriak/features/pharmacy/presentation/controllers/add_pharmacy_controller.dart';
 import '../widgets/location_input_widget.dart';
 import '../widgets/pharmacy_form_section_widget.dart';
 import '../widgets/progress_indicator_widget.dart';
-=======
-import 'package:teriak/config/themes/app_theme.dart';
-import 'package:teriak/features/employee_management/presentation/pages/employee_management.dart';
-import 'package:teriak/features/pharmacy/presentation/pages/controllers/add_pharmacy_controller.dart';
-import 'widgets/location_input_widget.dart';
-import 'widgets/pharmacy_form_section_widget.dart';
-import 'widgets/progress_indicator_widget.dart';
->>>>>>> products
 
 class PharmacyCompleteRegistration extends StatefulWidget {
   const PharmacyCompleteRegistration({super.key});
@@ -85,14 +76,9 @@ class _PharmacyCompleteRegistrationState
                                               .isManagerFirstNameValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-<<<<<<< HEAD
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .secondary,
-=======
-                                              color: AppTheme.lightTheme(context)
-                                                  .colorScheme.secondary,
->>>>>>> products
                                               size: 20,
                                             )
                                           : null,
@@ -131,14 +117,9 @@ class _PharmacyCompleteRegistrationState
                                               .isManagerLastNameValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-<<<<<<< HEAD
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .secondary,
-=======
-                                              color: AppTheme.lightTheme(context)
-                                                  .colorScheme.secondary,
->>>>>>> products
                                               size: 20,
                                             )
                                           : null,
@@ -205,14 +186,9 @@ class _PharmacyCompleteRegistrationState
                                       addPharmacyController.isPhoneValid.value
                                           ? CustomIconWidget(
                                               iconName: 'check_circle',
-<<<<<<< HEAD
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .secondary,
-=======
-                                              color: AppTheme.lightTheme(context)
-                                                  .colorScheme.secondary,
->>>>>>> products
                                               size: 20,
                                             )
                                           : null,
@@ -317,14 +293,9 @@ class _PharmacyCompleteRegistrationState
                                         addPharmacyController.isEmailValid.value
                                             ? CustomIconWidget(
                                                 iconName: 'check_circle',
-<<<<<<< HEAD
                                                 color: Theme.of(context)
                                                     .colorScheme
                                                     .secondary,
-=======
-                                                color: AppTheme.lightTheme(context)
-                                                    .colorScheme.secondary,
->>>>>>> products
                                                 size: 20,
                                               )
                                             : null,
@@ -369,14 +340,9 @@ class _PharmacyCompleteRegistrationState
                                             .isPasswordValid.value
                                         ? CustomIconWidget(
                                             iconName: 'check_circle',
-<<<<<<< HEAD
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .secondary,
-=======
-                                            color: AppTheme.lightTheme(context)
-                                                .colorScheme.secondary,
->>>>>>> products
                                             size: 20,
                                           )
                                         : null,

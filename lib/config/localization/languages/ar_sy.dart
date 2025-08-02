@@ -244,7 +244,6 @@ final Map<String, String> arSY = {
   "Location address is required": "عنوان الموقع مطلوب",
   "Please enter a complete address": "يرجى إدخال عنوان كامل",
   "Location permission denied": "تم رفض إذن الموقع",
-  "Basic Info": "معلومات أساسية",
   "Contact": "التواصل",
   "Opening Hours": "ساعات العمل",
   "Manage Password": "إدارة كلمة المرور",

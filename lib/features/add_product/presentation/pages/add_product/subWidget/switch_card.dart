@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:teriak/config/extensions/responsive.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
+// ignore: must_be_immutable
 class SwitchCard extends StatefulWidget {
    void Function(bool)? onChanged;
    bool value;

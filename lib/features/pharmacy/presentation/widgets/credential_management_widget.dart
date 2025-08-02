@@ -4,10 +4,6 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 
 import 'package:teriak/config/themes/app_icon.dart';
-<<<<<<< HEAD:lib/features/pharmacy/presentation/widgets/credential_management_widget.dart
-=======
-import 'package:teriak/config/themes/app_theme.dart';
->>>>>>> products:lib/features/pharmacy/presentation/pages/widgets/credential_management_widget.dart
 
 class CredentialManagementCardWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;

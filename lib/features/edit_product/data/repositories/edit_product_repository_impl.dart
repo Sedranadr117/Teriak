@@ -1,6 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:teriak/features/master_product/domain/entities/product_entity.dart';
-
 import '../../../../../core/connection/network_info.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../../core/errors/failure.dart';

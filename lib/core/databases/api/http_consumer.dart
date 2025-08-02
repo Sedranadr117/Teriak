@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';

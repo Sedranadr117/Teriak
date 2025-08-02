@@ -1,4 +1,3 @@
-import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/features/master_product/data/models/product_model.dart';
 
 import '../../../../../core/databases/api/api_consumer.dart';
