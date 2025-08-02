@@ -110,7 +110,7 @@ class _WorkingHoursConfigurationScreenState
                       runSpacing: 1.h,
                       children: controller.daysOfWeek
                           .map((day) => DaySelectionCardWidget(
-                                day: day,
+                                day: day.tr,
                                 isSelected:
                                     controller.selectedDays.contains(day),
                                 onTap: () => controller.toggleDaySelection(day),
@@ -321,7 +321,6 @@ class _WorkingHoursConfigurationScreenState
                               controller.employee.value!.id,
                               work,
                             );
-                            print(controller.daysOfWeek);
                             print(work);
                           }
                           print(

@@ -1,5 +1,5 @@
 class AppPages {
-    static const String splash = '/';
+  static const String splash = '/';
   static const String signin = '/signin';
   static const String pharmacyCompleteRegistration =
       '/parmacy_complete_registration';
@@ -8,8 +8,11 @@ class AppPages {
   static const String employeeDetail = '/employee-detail';
   static const String addEmployee = '/add-employee';
   static const String workingHours = '/workingHours';
-
+  static const String productSearch = '/product_search';
+  static const String curr = '/product_search';
+  static const String inventoryManagement = '/inventory-management';
   static const String home = '/home';
   static const String allProductPage = '/master-product-screen';
   static const String productDetailPage = '/master-product_details-screen';
+  static const String multiSales = '/multi-sales-screen';
 }

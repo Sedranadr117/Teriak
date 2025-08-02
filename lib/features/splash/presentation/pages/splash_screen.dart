@@ -64,6 +64,7 @@ class _SplashScreenState extends State<SplashScreen>
 
             if (token != null && token is String && token.isNotEmpty) {
               if (isComplete) {
+                //   Get.offAllNamed(AppPages.multiSales);
                 Get.offAllNamed(AppPages.employeeManagement);
               } else {
                 Get.offAllNamed(AppPages.pharmacyCompleteRegistration);

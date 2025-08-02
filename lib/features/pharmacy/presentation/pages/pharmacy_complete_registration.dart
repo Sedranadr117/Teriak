@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/pharmacy/presentation/controllers/add_pharmacy_controller.dart';
 import '../widgets/location_input_widget.dart';
@@ -231,8 +230,8 @@ class _PharmacyCompleteRegistrationState
                                   SizedBox(width: 2.w),
                                   Expanded(
                                     child: OutlinedButton(
-                                      onPressed: () =>
-                                          addPharmacyController.pickTime(
+                                      onPressed: () async =>
+                                          await addPharmacyController.pickTime(
                                               isOpening: false,
                                               context: context),
                                       child: Text('To:'.tr +
@@ -428,13 +427,6 @@ class _PharmacyCompleteRegistrationState
                         onPressed: addPharmacyController.isLoading.value
                             ? null
                             : () async {
-                                final cacheHelper = CacheHelper();
-
-                                var token =
-                                    await cacheHelper.getData(key: 'token');
-
-                                print('11111111111111111Sending token: $token');
-
                                 if (await addPharmacyController
                                     .onWillPop(context)) {
                                   Navigator.pop(context);

@@ -97,6 +97,9 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
 
   void _selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay? picked = await showTimePicker(
+      helpText: 'Select time'.tr,
+      cancelText: 'Cancel'.tr,
+      confirmText: 'OK'.tr,
       context: context,
       initialTime: isStartTime
           ? (startTime ?? TimeOfDay.now())

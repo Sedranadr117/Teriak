@@ -5,16 +5,6 @@ import '../../../../../core/params/params.dart';
 import '../entities/auth_entity.dart';
 import '../repositories/auth_repository.dart';
 
-class GetAuth {
-  final AuthRepository repository;
-
-  GetAuth({required this.repository});
-
-  Future<Either<Failure, AuthEntity>> call({required AuthParams params}) {
-    return repository.getAuth(params: params);
-  }
-}
-
 class mangerLogin {
   final AuthRepository repository;
 

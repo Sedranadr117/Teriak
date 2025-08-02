@@ -45,6 +45,16 @@ class _EmployeeManagementState extends State<EmployeeManagement>
         title: 'Employee Management'.tr,
         actions: [
           IconButton(
+              onPressed: () {
+                Get.toNamed(AppPages.multiSales);
+              },
+              icon: CustomIconWidget(iconName: 'add')),
+          IconButton(
+              onPressed: () {
+                Get.toNamed(AppPages.inventoryManagement);
+              },
+              icon: CustomIconWidget(iconName: 'abc')),
+          IconButton(
             onPressed: () {
               Navigator.pushNamed(context, '/settings');
               CacheHelper cacheHelper = CacheHelper();

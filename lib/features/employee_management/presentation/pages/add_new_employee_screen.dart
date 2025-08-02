@@ -65,22 +65,14 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                   ? 'Pharmacy Intern'.tr
                                   : '',
                           onDateTap: () async {
-                            DateTime? picked = await showDatePicker(
-                              context: context,
-                              initialDate: controller
-                                      .dateOfHireController.text.isNotEmpty
-                                  ? DateTime.parse(
-                                      controller.dateOfHireController.text)
-                                  : DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
-                            if (picked != null) {
-                              setState(() {
-                                controller.dateOfHireController.text =
-                                    picked.toIso8601String().split('T')[0];
-                              });
-                            }
+                            await controller.datePicker(
+                                initialDate: controller
+                                        .dateOfHireController.text.isNotEmpty
+                                    ? DateTime.parse(
+                                        controller.dateOfHireController.text)
+                                    : DateTime.now(),
+                                context: context);
+                            setState(() {});
                           },
                           onRoleTap: () async {
                             int? selected = await showModalBottomSheet<int>(

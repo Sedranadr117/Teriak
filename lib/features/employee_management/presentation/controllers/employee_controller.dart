@@ -55,13 +55,13 @@ class EmployeeController extends GetxController {
   late final DeleteEmployee _deleteEmployee;
 
   final List<String> daysOfWeek = [
-    'MONDAY'.tr,
-    'TUESDAY'.tr,
-    'WEDNESDAY'.tr,
-    'THURSDAY'.tr,
-    'FRIDAY'.tr,
-    'SATURDAY'.tr,
-    'SUNDAY'.tr,
+    'MONDAY',
+    'TUESDAY',
+    'WEDNESDAY',
+    'THURSDAY',
+    'FRIDAY',
+    'SATURDAY',
+    'SUNDAY',
   ];
 
   final RxList<String> selectedDays = <String>[].obs;
@@ -163,6 +163,22 @@ class EmployeeController extends GetxController {
     }
     lastSelectedEmployeeId = newEmployee.id;
     employee.value = newEmployee;
+  }
+
+  Future<void> datePicker(
+      {DateTime? initialDate, BuildContext? context}) async {
+    DateTime? picked = await showDatePicker(
+      helpText: 'Select date of hire'.tr,
+      cancelText: 'Cancel'.tr,
+      confirmText: 'OK'.tr,
+      context: context!,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      dateOfHireController.text = picked.toIso8601String().split('T')[0];
+    }
   }
 
   @override
@@ -343,7 +359,6 @@ class EmployeeController extends GetxController {
           if (selectedFilter.value == 'Active'.tr) return e.status == 'ACTIVE';
           if (selectedFilter.value == 'Inactive'.tr)
             return e.status == 'INACTIVE';
-
           return true;
         })
         .map((e) => {

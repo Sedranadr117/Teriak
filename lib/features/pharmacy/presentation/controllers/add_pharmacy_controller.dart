@@ -84,9 +84,11 @@ class AddPharmacyController extends GetxController {
   Future<void> pickTime(
       {required bool isOpening, BuildContext? context}) async {
     final picked = await showTimePicker(
-      context: context!,
-      initialTime: TimeOfDay.now(),
-    );
+        context: context!,
+        initialTime: TimeOfDay.now(),
+        helpText: 'Select time'.tr,
+        cancelText: 'Cancel'.tr,
+        confirmText: 'OK'.tr);
     if (picked != null) {
       if (isOpening) {
         openingTime.value = picked;

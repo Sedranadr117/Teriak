@@ -192,18 +192,17 @@ class Dialogs {
                       ),
                       GestureDetector(
                         onTap: () async {
-                          DateTime initialDate = selectedDate ?? DateTime.now();
-                          DateTime? picked = await showDatePicker(
+                          await controller.datePicker(
+                            initialDate: selectedDate ?? DateTime.now(),
                             context: context,
-                            initialDate: initialDate,
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100),
                           );
-                          if (picked != null) {
-                            setState(() {
-                              selectedDate = picked;
-                            });
+
+                          if (controller.dateOfHireController.text.isNotEmpty) {
+                            selectedDate = DateTime.tryParse(
+                                controller.dateOfHireController.text);
                           }
+
+                          setState(() {});
                         },
                         child: Container(
                           width: double.infinity,
@@ -354,6 +353,8 @@ class Dialogs {
                           selectedRoleId,
                           employeeData['workingHoursRequests'] ?? [],
                         );
+                        setState(() {});
+
                         controller.editEmployee(employeeData['id'], params);
 
                         _refreshEmployeeDataFromController(
