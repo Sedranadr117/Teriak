@@ -377,7 +377,7 @@ class EmployeeController extends GetxController {
   Future<void> refreshEmployees() async {
     isLoading.value = true;
     await Future.delayed(const Duration(seconds: 2));
-
+    fetchAllEmployees();
     isLoading.value = false;
   }
 

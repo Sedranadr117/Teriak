@@ -10,6 +10,8 @@ import 'package:teriak/features/employee_management/presentation/pages/employee_
 import 'package:teriak/features/add_product/presentation/pages/add_product/add_product.dart';
 import 'package:teriak/features/edit_product/presentation/pages/edit_product/edit_product.dart';
 import 'package:teriak/features/employee_management/presentation/pages/working_hours_configuration_screen.dart';
+import 'package:teriak/features/indebted_management/presentation/pages/add_new_indebted_customer.dart';
+import 'package:teriak/features/indebted_management/presentation/pages/indebted_customers_management.dart';
 import 'package:teriak/features/inventory_management/inventory_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
 import 'package:teriak/features/settings/settings.dart';
@@ -50,6 +52,16 @@ class AppRoutes {
     GetPage(
       name: AppPages.productSearch,
       page: () => const ProductSearchScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.addNewIndebtedCustomer,
+      page: () => const AddNewIndebtedCustomer(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.indebtedManagement,
+      page: () => const IndebtedCustomersManagement(),
       transition: Transition.fadeIn,
     ),
     GetPage(

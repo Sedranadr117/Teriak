@@ -9,6 +9,7 @@ class EndPoints {
   // Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
+
   static const String addEmployee = "employees";
   static const String roleID = "roles";
 
@@ -38,5 +39,11 @@ class ApiKeys {
   static const String manufacturer = "manufacturer";
   static const String notes = "notes";
   static const String categories = "categories";
+  
+   static const String createSale = 'sales';
+  static const String cancelSale = 'cancel';
 }
+
+
+ 
 
