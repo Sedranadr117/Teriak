@@ -4,7 +4,11 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
+<<<<<<< HEAD:lib/features/employee_management/presentation/widgets/personal_info_card_widget.dart
 class PersonalInfoCardWidget extends StatefulWidget {
+=======
+class PersonalInfoCardWidget extends StatelessWidget {
+>>>>>>> products:lib/features/employee_detail/widgets/personal_info_card_widget.dart
   final Map<String, dynamic> employeeData;
   final VoidCallback onEdit;
 

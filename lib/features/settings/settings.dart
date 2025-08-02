@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
+import 'package:teriak/config/themes/theme_controller.dart';
+import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
@@ -50,6 +55,13 @@ class _SettingsState extends State<Settings> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: CustomAppBar(
         title: 'Settings',
+        actions: [
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(AppPages.allProductPage);
+              },
+              child: CustomIconWidget(iconName: "add"))
+        ],
         actions: [
           GestureDetector(
               onTap: () {
@@ -192,6 +204,14 @@ class _SettingsState extends State<Settings> {
                       showArrow: true,
                     )),
                 Obx(() => SettingsItemWidget(
+                      icon: 'language',
+                      title: 'Language',
+                      subtitle:
+                          _localeController.isArabic ? 'العربية' : 'English',
+                      onTap: () => _showLanguageDialog(context),
+                      showArrow: true,
+                    )),
+                Obx(() => SettingsItemWidget(
                       icon: 'palette',
                       title: 'Theme',
                       subtitle: _themeController.isDarkMode ? 'Dark' : 'Light',
@@ -305,6 +325,8 @@ class _SettingsState extends State<Settings> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.errorLight,
                   foregroundColor: AppColors.onErrorLight,
+                  backgroundColor: AppColors.errorLight,
+                  foregroundColor: AppColors.onErrorLight,
                   padding: EdgeInsets.symmetric(vertical: 2.h),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -314,7 +336,9 @@ class _SettingsState extends State<Settings> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const CustomIconWidget(
+                    const CustomIconWidget(
                       iconName: 'logout',
+                      color: AppColors.onErrorLight,
                       color: AppColors.onErrorLight,
                       size: 20,
                     ),
@@ -533,13 +557,22 @@ class _SettingsState extends State<Settings> {
                           _localeController.isArabic ? 'ar_SY' : 'en_US',
                       onChanged: (value) async {
                         await _localeController.changeLocale(value!);
+                .map((lang) => Obx(() => RadioListTile<String>(
+                      title: Text(lang['label']!),
+                      value: lang['code']!,
+                      groupValue:
+                          _localeController.isArabic ? 'ar_SY' : 'en_US',
+                      onChanged: (value) async {
+                        await _localeController.changeLocale(value!);
                         Navigator.pop(context);
+                        setState(() {});
                         setState(() {});
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                               content: Text('Language changed to \$language')),
                         );
                       },
+                    )))
                     )))
                 .toList(),
           ),

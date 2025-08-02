@@ -3,7 +3,11 @@ import 'package:get/get.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+<<<<<<< HEAD:lib/features/pharmacy/presentation/widgets/location_input_widget.dart
 import 'package:teriak/features/pharmacy/presentation/widgets/location_picker_widget.dart';
+=======
+import 'package:teriak/features/pharmacy/presentation/pages/widgets/location_picker_widget.dart';
+>>>>>>> products:lib/features/pharmacy/presentation/pages/widgets/location_input_widget.dart
 
 class LocationInputWidget extends StatefulWidget {
   final TextEditingController controller;

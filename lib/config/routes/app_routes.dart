@@ -7,12 +7,16 @@ import 'package:teriak/features/employee_management/presentation/pages/employee_
 import 'package:teriak/features/employee_management/presentation/bindinga/employee_management_binding.dart';
 import 'package:teriak/features/employee_management/presentation/pages/add_new_employee_screen.dart';
 import 'package:teriak/features/employee_management/presentation/pages/employee_management.dart';
+import 'package:teriak/features/add_product/presentation/pages/add_product/add_product.dart';
+import 'package:teriak/features/edit_product/presentation/pages/edit_product/edit_product.dart';
 import 'package:teriak/features/employee_management/presentation/pages/working_hours_configuration_screen.dart';
 import 'package:teriak/features/inventory_management/inventory_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
 import 'package:teriak/features/settings/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
 import 'package:teriak/features/template/presentation/pages/template_screen.dart';
+import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/features/product_details/presentation/pages/product_details/product_details_page.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/master_product/presentation/pages/product_details/product_details_page.dart';
 
@@ -87,6 +91,16 @@ class AppRoutes {
     GetPage(
       name: AppPages.productDetailPage,
       page: () => const ProductDetailPage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.addProductPage,
+      page: () => AddProductPage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.editProductPage,
+      page: () =>  EditProductPage(),
       transition: Transition.fadeIn,
     ),
   ];

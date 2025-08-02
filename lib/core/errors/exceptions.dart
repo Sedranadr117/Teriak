@@ -9,10 +9,9 @@ class ServerException implements Exception {
   ServerException(this.errorModel);
 }
 
-//!CacheExeption
-class CacheExeption implements Exception {
+class CacheException implements Exception {
   final String errorMessage;
-  CacheExeption({required this.errorMessage});
+  CacheException({required this.errorMessage});
 }
 
 class BadCertificateException extends ServerException {
@@ -62,6 +61,10 @@ class CancelException extends ServerException {
 class UnknownException extends ServerException {
   UnknownException(super.errorModel);
 }
+class ConflictException extends ServerException {
+  ConflictException(super.errorModel);
+}
+
 
 void handleHttpException(Object e) {
   if (e is HttpException) {
@@ -88,6 +91,8 @@ void handleHttpResponse(http.Response response) {
     throw NotFoundException(errorModel);
   } else if (status == 500) {
     throw ServerException(errorModel);
+  } else if (status == 409) {
+    throw ConflictException(errorModel);
   } else {
     throw UnknownException(errorModel);
   }

@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:sizer/sizer.dart';
 
+<<<<<<< HEAD:lib/features/pharmacy/presentation/widgets/progress_indicator_widget.dart
+=======
+import 'package:teriak/config/themes/app_icon.dart';
+
+>>>>>>> products:lib/features/pharmacy/presentation/pages/widgets/progress_indicator_widget.dart
 class ProgressIndicatorWidget extends StatelessWidget {
   final double progress;
   final bool isDraftSaved;

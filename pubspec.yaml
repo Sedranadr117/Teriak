@@ -24,11 +24,21 @@ dependencies:
   permission_handler: ^12.0.1
   shared_preferences: ^2.5.3
   sizer: ^2.0.15
+<<<<<<< HEAD
 
 flutter_icons:
   android: true
   ios: true
   image_path: "assets/images/just_logo.png"
+=======
+  geolocator: ^14.0.1
+  latlong2: ^0.9.0
+  flutter_map: ^6.1.0
+  nominatim_geocoding: ^0.0.6
+  mobile_scanner: ^7.0.1
+  barcode_widget: ^2.0.1
+  
+>>>>>>> products
 
 dev_dependencies:
   flutter_lints: ^4.0.0

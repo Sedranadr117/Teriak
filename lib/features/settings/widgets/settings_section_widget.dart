@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_theme.dart';
 
 class SettingsSectionWidget extends StatelessWidget {
   final String title;
@@ -34,7 +35,9 @@ class SettingsSectionWidget extends StatelessWidget {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               boxShadow: const [
+              boxShadow: const [
                 BoxShadow(
+                  color: AppColors.shadowLight,
                   color: AppColors.shadowLight,
                   blurRadius: 8,
                   offset: Offset(0, 2),

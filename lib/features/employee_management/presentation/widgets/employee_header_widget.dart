@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:sizer/sizer.dart';
+<<<<<<< HEAD:lib/features/employee_management/presentation/widgets/employee_header_widget.dart
 import 'package:teriak/config/themes/app_assets.dart';
 
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+=======
+import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+>>>>>>> products:lib/features/employee_detail/widgets/employee_header_widget.dart
 
 class EmployeeHeaderWidget extends StatelessWidget {
   final Map<String, dynamic> employeeData;
@@ -99,7 +104,11 @@ class EmployeeHeaderWidget extends StatelessWidget {
                 width: 8,
                 height: 8,
                 decoration: BoxDecoration(
+<<<<<<< HEAD:lib/features/employee_management/presentation/widgets/employee_header_widget.dart
                   color: employeeData["status"] == "ACTIVE"
+=======
+                  color: employeeData["status"] == "Active"
+>>>>>>> products:lib/features/employee_detail/widgets/employee_header_widget.dart
                       ? AppColors.successLight
                       : AppColors.errorLight,
                   shape: BoxShape.circle,
@@ -111,7 +120,11 @@ class EmployeeHeaderWidget extends StatelessWidget {
                     ? 'ACTIVE'.tr
                     : 'INACTIVE'.tr,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
+<<<<<<< HEAD:lib/features/employee_management/presentation/widgets/employee_header_widget.dart
                       color: employeeData["status"] == "ACTIVE"
+=======
+                      color: employeeData["status"] == "Active"
+>>>>>>> products:lib/features/employee_detail/widgets/employee_header_widget.dart
                           ? AppColors.successLight
                           : AppColors.errorLight,
                       fontWeight: FontWeight.w500,

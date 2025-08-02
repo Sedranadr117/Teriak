@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
-import '../entities/template_entitiy.dart';
+import '../entities/template_entity.dart';
 import '../repositories/template_repository.dart';
 
 class GetTemplate {

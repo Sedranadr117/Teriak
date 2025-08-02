@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:teriak/core/connection/network_info.dart';
-import 'package:teriak/core/errors/expentions.dart';
+import 'package:teriak/core/errors/exceptions.dart';
 import 'package:teriak/core/errors/failure.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/pharmacy/data/datasources/pharmacy_remote_data_source.dart';

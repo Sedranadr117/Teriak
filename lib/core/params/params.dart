@@ -104,3 +104,81 @@ enum AuthType {
   mangerLogin,
   logout,
 }
+
+class ProductDetailsParams {
+  final int id;
+  String? type;
+  final String languageCode;
+  ProductDetailsParams(
+      {required this.id, required this.languageCode, this.type});
+  Map<String, dynamic> toMap() {
+    return {
+      'lang': languageCode,
+    };
+  }
+}
+
+class SearchProductParams {
+  final String keyword;
+  final String languageCode;
+
+  const SearchProductParams(
+      {required this.keyword, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'keyword': keyword,
+      'languageCode': languageCode,
+    };
+  }
+}
+
+class AllProductParams {
+  final String languageCode;
+
+  const AllProductParams({required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'languageCode': languageCode,
+    };
+  }
+}
+
+class ProductDataParams {
+  final String languageCode;
+  final String type;
+
+  const ProductDataParams({required this.languageCode, required this.type});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'lang': languageCode,
+    };
+  }
+}
+
+class AddProductParams {
+  final String languageCode;
+
+  const AddProductParams({required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'lang': languageCode,
+    };
+  }
+}
+
+class EditProductParams {
+  final String languageCode;
+  final int id;
+  
+  const EditProductParams({required this.id, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'lang': languageCode,
+    };
+  }
+}

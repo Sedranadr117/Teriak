@@ -3,10 +3,18 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:teriak/config/extensions/responsive.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+<<<<<<< HEAD
 import 'package:teriak/features/master_product/presentation/pages/all_product/subwidget/box_in_product_widget.dart';
 
 class ProductWidget extends StatelessWidget {
   final Map<String, dynamic> drug;
+=======
+import 'package:teriak/features/master_product/domain/entities/product_entity.dart';
+import 'package:teriak/features/master_product/presentation/pages/all_product/subwidget/box_in_product_widget.dart';
+
+class ProductWidget extends StatelessWidget {
+  final ProductEntity drug;
+>>>>>>> products
   final VoidCallback onTap;
 
   const ProductWidget({
@@ -18,6 +26,7 @@ class ProductWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool prescriptionRequired =
+<<<<<<< HEAD
         drug['prescriptionRequired'] as bool? ?? false;
     final String productSource = drug['productSource'] as String? ?? '';
     final String tradeName = drug['tradeName'] as String? ?? '';
@@ -26,6 +35,16 @@ class ProductWidget extends StatelessWidget {
     final String dosageUnit = drug['dosageUnit'] ?? '';
     final String drugForm = drug['drugForm'] ?? '';
     final String drugQuantity = drug['drugQuantity'] ?? '';
+=======
+        drug.requiresPrescription as bool? ?? false;
+    final String productSource = drug.productType;
+    final String tradeName = drug.tradeName as String? ?? '';
+    final String scientificName = drug.scientificName as String? ?? '';
+    final String dosageSize = drug.concentration as String? ?? '';
+
+    final String drugForm = drug.form as String? ?? '';
+    final String drugQuantity = drug.size as String? ?? '';
+>>>>>>> products
 
     return GestureDetector(
       onTap: onTap,
@@ -36,7 +55,11 @@ class ProductWidget extends StatelessWidget {
               : AppColors.cardLight,
           border: Border(
             left: BorderSide(
+<<<<<<< HEAD
               color: productSource == "Central"
+=======
+              color: productSource == "Master"
+>>>>>>> products
                   ? (Theme.of(context).brightness == Brightness.dark
                       ? AppColors.primaryDark
                       : AppColors.primaryLight)
@@ -99,7 +122,11 @@ class ProductWidget extends StatelessWidget {
                         horizontal: context.w * 0.02,
                         vertical: context.h * 0.005),
                     decoration: BoxDecoration(
+<<<<<<< HEAD
                       color: productSource == 'Central'
+=======
+                      color: productSource == 'Master'
+>>>>>>> products
                           ? (Theme.of(context).brightness == Brightness.dark
                               ? AppColors.primaryDark
                               : AppColors.primaryLight)
@@ -142,7 +169,11 @@ class ProductWidget extends StatelessWidget {
                     child: BoxInProductWidget(
                       icon: 'fitness_center',
                       label: 'Dosage'.tr,
+<<<<<<< HEAD
                       value: '$dosageSize$dosageUnit',
+=======
+                      value:dosageSize,
+>>>>>>> products
                     ),
                   ),
                   SizedBox(width: context.w * 0.02),
@@ -166,8 +197,14 @@ class ProductWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: prescriptionRequired
                           ? (Theme.of(context).brightness == Brightness.dark
+<<<<<<< HEAD
                               ? AppColors.warningDark.withValues(alpha: 0.1)
                               : AppColors.warningLight).withValues(alpha: 0.1)
+=======
+                                  ? AppColors.warningDark.withValues(alpha: 0.1)
+                                  : AppColors.warningLight)
+                              .withValues(alpha: 0.1)
+>>>>>>> products
                           : (Theme.of(context).brightness == Brightness.dark
                               ? AppColors.successDark.withValues(alpha: 0.1)
                               : AppColors.successLight.withValues(alpha: 0.1)),
@@ -198,11 +235,19 @@ class ProductWidget extends StatelessWidget {
                                 : 'No Prescription'.tr,
                             style: Theme.of(context)
                                 .textTheme
+<<<<<<< HEAD
                                 .labelSmall ?.copyWith(
                                    color: AppColors.textPrimaryLight,
                                     fontWeight: FontWeight.w500,
                                   )
                             ),
+=======
+                                .labelSmall
+                                ?.copyWith(
+                                  color: AppColors.textPrimaryLight,
+                                  fontWeight: FontWeight.w500,
+                                )),
+>>>>>>> products
                       ],
                     ),
                   ),

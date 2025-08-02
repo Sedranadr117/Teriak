@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+<<<<<<< HEAD
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
@@ -10,6 +11,16 @@ import 'package:teriak/features/employee_management/presentation/controllers/emp
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/employee_card_widget.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/employee_filter_widget.dart';
+=======
+import 'package:teriak/config/themes/app_colors.dart';
+
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/app_theme.dart';
+import 'package:teriak/config/widgets/custom_app_bar.dart';
+import 'widgets/add_employee_bottom_sheet.dart';
+import 'widgets/employee_card_widget.dart';
+import 'widgets/employee_filter_widget.dart';
+>>>>>>> products
 
 class EmployeeManagement extends StatefulWidget {
   const EmployeeManagement({super.key});
@@ -290,9 +301,74 @@ class _EmployeeManagementState extends State<EmployeeManagement>
                   ),
             ),
             SizedBox(height: 1.h),
+<<<<<<< HEAD
+=======
+            Text(
+              _searchQuery.isNotEmpty || _selectedFilter != 'All'
+                  ? 'Try adjusting your search or filters'
+                  : isInternTab
+                      ? 'Start by inviting your first intern to join the team'
+                      : 'Start by inviting your first employee to join the team',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+            ),
+            SizedBox(height: 4.h),
+            if (_searchQuery.isEmpty && _selectedFilter == 'All')
+              ElevatedButton.icon(
+                onPressed: _showAddEmployeeBottomSheet,
+                icon: CustomIconWidget(
+                  iconName: 'add',
+                  color: AppTheme
+                      .lightTheme(context).elevatedButtonTheme.style?.foregroundColor
+                      ?.resolve({}),
+                  size: 20,
+                ),
+                label: Text(isInternTab
+                    ? 'Invite First Intern'
+                    : 'Invite First Employee'),
+              ),
+>>>>>>> products
           ],
         ),
       ),
     );
   }
+<<<<<<< HEAD
+=======
+
+  void _showDeactivateDialog(Map<String, dynamic> employee) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Deactivate Employee'),
+        content: Text(
+          'Are you sure you want to deactivate \${employee["name"]}? They will lose access to all pharmacy systems.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('\${employee["name"]} has been deactivated'),
+                  backgroundColor: AppColors.warningLight,
+                ),
+              );
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: AppColors.errorLight,
+            ),
+            child: Text('Deactivate'),
+          ),
+        ],
+      ),
+    );
+  }
+>>>>>>> products
 }
