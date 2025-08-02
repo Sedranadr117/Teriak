@@ -98,7 +98,6 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildTab(BuildContext context, TabItem tab) {
-
     return Tab(
       height: 48,
       child: Container(

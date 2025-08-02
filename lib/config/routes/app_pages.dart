@@ -17,4 +17,6 @@ class AppPages {
   static const String addProductPage = '/add_product';
   static const String editProductPage = '/edit_product';
   static const String multiSales = '/multi-sales-screen';
+  static const String indebtedManagement = '/indebted-management';
+  static const String addNewIndebtedCustomer = '/add-newIndebtedCustomer';
 }
