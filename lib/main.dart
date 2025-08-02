@@ -11,8 +11,11 @@ import 'package:teriak/config/routes/app_routes.dart';
 import 'package:teriak/config/themes/app_theme.dart';
 import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+  
 
 void main() async {
+  
+
   WidgetsFlutterBinding.ensureInitialized();
 
   final cacheHelper = CacheHelper();

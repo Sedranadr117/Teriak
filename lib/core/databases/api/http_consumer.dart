@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
-import 'package:teriak/core/errors/expentions.dart';
+import 'package:teriak/core/errors/exceptions.dart';
 
 class HttpConsumer extends ApiConsumer {
   final String baseUrl;
@@ -38,7 +39,12 @@ class HttpConsumer extends ApiConsumer {
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
-      handleHttpException(e);
+      print('💥 HTTP Error: $e');
+      if (e is HttpException) {
+        handleHttpException(e);
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -75,27 +81,37 @@ class HttpConsumer extends ApiConsumer {
       return _tryDecode(response.body);
     } catch (e) {
       print('💥 HTTP Error: $e');
-      print('💥 HTTP Error: $e');
-      handleHttpException(e);
-      rethrow;
+      if (e is HttpException) {
+        handleHttpException(e);
+      } else {
+        rethrow;
+      }
     }
   }
 
   @override
-  Future<dynamic> patch(String path,
+  Future<dynamic> put(String path,
       {dynamic data,
       Map<String, dynamic>? queryParameters,
       bool isFormData = false}) async {
     try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+      print('🌐 Full URL: $uri');
       final headers = _getHeaders(isFormData: isFormData);
       final body = isFormData ? data : json.encode(data);
-      final response = await http.patch(uri, body: body, headers: headers);
+      final response = await http.put(uri, body: body, headers: headers);
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
-      handleHttpException(e);
+      print('💥 HTTP Error: $e');
+      if (e is HttpException) {
+        handleHttpException(e);
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -111,7 +127,12 @@ class HttpConsumer extends ApiConsumer {
       handleHttpResponse(response);
       return _tryDecode(response.body);
     } catch (e) {
-      handleHttpException(e);
+      print('💥 HTTP Error: $e');
+      if (e is HttpException) {
+        handleHttpException(e);
+      } else {
+        rethrow;
+      }
     }
   }
 

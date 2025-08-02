@@ -9,4 +9,6 @@ class AppPages {
   static const String home = '/home';
   static const String allProductPage = '/master-product-screen';
   static const String productDetailPage = '/master-product_details-screen';
+  static const String addProductPage = '/add_product';
+  static const String editProductPage = '/edit_product';
 }

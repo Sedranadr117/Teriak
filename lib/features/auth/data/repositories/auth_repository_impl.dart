@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:teriak/features/auth/data/datasources/auth_remote_data_source.dart';
 
 import '../../../../../core/connection/network_info.dart';
-import '../../../../../core/errors/expentions.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
 import '../../domain/entities/auth_entity.dart';
