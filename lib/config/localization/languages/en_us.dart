@@ -2,6 +2,7 @@
 final Map<String, String> enUS = {
   "Pharmacy Product": "Pharmacy Product",
 "Search products": "Search products...",
+"Search suppliers": "Search suppliers...",
 "Add Product": "Add Product",
 "Edit Product": "Edit Product",
 "Trade Name": "Trade Name",

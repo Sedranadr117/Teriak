@@ -72,7 +72,6 @@ class _EditProductPageState extends State<EditProductPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 8),
-
                     BasicInformationSection(
                       arabicTradeNameController:
                           editController.arabicTradeNameController,
@@ -90,7 +89,6 @@ class _EditProductPageState extends State<EditProductPage> {
                         });
                       },
                     ),
-
                     Obx(
                       () => BarcodeManagementSection(
                         barcodes: editController.barcodes.toList(),
@@ -115,7 +113,6 @@ class _EditProductPageState extends State<EditProductPage> {
                         },
                       ),
                     ),
-
                     AdditionalInformationSection(
                       dosageController: editController.dosageController,
                       notesController: editController.notesController,
@@ -209,17 +206,14 @@ class _EditProductPageState extends State<EditProductPage> {
                         });
                       },
                     ),
-
                     const SizedBox(height: 100),
                   ],
                 ),
               ),
             ),
-
             SaveProductButton(
               isFormValid: editController.isFormValid,
               onTap: () async {
-             
                 FocusScope.of(context).unfocus();
                 await editController.editProduct(product.id);
               },

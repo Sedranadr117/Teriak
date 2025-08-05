@@ -1,6 +1,7 @@
 class EndPoints {
   static const String baserUrl = "http://159.198.75.161:13000/api/v1/";
-  
+  static const String baserUrl1 = "http://159.198.75.161:13000/api/";
+
   static const String template = "template/";
 
   // Auth endpoints
@@ -17,10 +18,18 @@ class EndPoints {
   static String type = "types";
   static String manufacturers = "manufacturers";
   static String categories = "categories";
+  static String suppliers = "suppliers";
+  static String searchSuppliers = "suppliers/search";
+  static String purchaseOrders = "purchase-orders";
+  static String purchaseInvoices = "purchase-invoices";
 }
+
 class ApiKeys {
+  // Common
   static const String id = "id";
   static const String name = "name";
+
+  // Product
   static const String tradeName = "tradeName";
   static const String scientificName = "scientificName";
   static const String barcode = "barcode";
@@ -34,11 +43,26 @@ class ApiKeys {
   static const String manufacturer = "manufacturer";
   static const String notes = "notes";
   static const String categories = "categories";
-  
-   static const String createSale = 'sales';
+
+  // Supplier
+  static const String phone = "phone";
+  static const String address = "address";
+  static const String preferredCurrency = "preferredCurrency";
+
+  // Orders
+
+  static const String supplierName = "supplierName";
+  static const String total = "total";
+  static const String status = "status";
+  static const String currency = "currency";
+  static const String items = "items";
+  static const String productItemId = "productId";
+  static const String productItemName = "productName";
+  static const String productItemType = "productType";
+  static const String productItemQuantity = "quantity";
+  static const String productItemPrice = "price";
+
+  // Sales
+  static const String createSale = 'sales';
   static const String cancelSale = 'cancel';
 }
-
-
- 
-

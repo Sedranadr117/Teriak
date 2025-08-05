@@ -14,8 +14,16 @@ import 'package:teriak/features/indebted_management/presentation/pages/add_new_i
 import 'package:teriak/features/indebted_management/presentation/pages/indebted_customers_management.dart';
 import 'package:teriak/features/inventory_management/inventory_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
+import 'package:teriak/features/purchase/add_purchase_order/presentation/pages/create_purchase_order.dart';
+import 'package:teriak/features/purchase/all_purchase_orders/presentation/pages/purchase_order_list.dart';
+import 'package:teriak/features/purchase/edit_purchase_order/presentation/pages/edit_purchase_order.dart';
+import 'package:teriak/features/purchase/purchase_order_deatails/presentation/pages/purchase_order_detail.dart';
 import 'package:teriak/features/settings/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
+import 'package:teriak/features/suppliers/add_supplier/presentation/pages/add_supplier_screen.dart';
+import 'package:teriak/features/suppliers/all_supplier/presentation/pages/supplier_list_screen.dart';
+import 'package:teriak/features/suppliers/details_supplier/presentation/pages/supplier_detail_screen.dart';
+import 'package:teriak/features/suppliers/edit_supplier/presentation/pages/edit_supplier_screen.dart';
 import 'package:teriak/features/template/presentation/pages/template_screen.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/product_details/presentation/pages/product_details/product_details_page.dart';
@@ -113,5 +121,48 @@ class AppRoutes {
       page: () =>  EditProductPage(),
       transition: Transition.fadeIn,
     ),
+    GetPage(
+      name: AppPages.editSupplier,
+      page: () =>  EditSupplierScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.addSupplier,
+      page: () =>  AddSupplierScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.supplierDetail,
+      page: () =>  SupplierDetailScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.supplierList,
+      page: () =>  SupplierListScreen(),
+      transition: Transition.fadeIn,
+    ),
+      GetPage(
+      name: AppPages.createPurchaseOrder,
+      page: () => CreatePurchaseOrder(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.editPurchaseOrder,
+      page: () => EditPurchaseOrder(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.purchaseOrderDetail,
+      page: () => PurchaseOrderDetail(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.purchaseOrderList,
+      page: () => PurchaseOrderList(),
+      transition: Transition.fadeIn,
+    ),
   ];
+}
+
+class CreatePurchaseOrderScreen {
 }

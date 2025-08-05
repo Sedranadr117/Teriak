@@ -2,6 +2,7 @@
 final Map<String, String> arSY = {
   "Pharmacy Product": "منتجات الصيدلية",
   "Search products": "ابحث عن منتج",
+  "Search suppliers": "ابحث عن موردين",
   "Add Product": " إضافة منتج",
   "Edit Product": " تعديل المنتج",
   "Trade Name": "الاسم التجاري",

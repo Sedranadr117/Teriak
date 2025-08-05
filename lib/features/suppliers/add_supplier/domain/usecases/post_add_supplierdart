@@ -1,0 +1,17 @@
+import 'package:dartz/dartz.dart';
+
+import '../../../../../core/errors/failure.dart';
+import '../../../../../core/params/params.dart';
+import '../entities/AddSupplier_entity.dart';
+import '../repositories/AddSupplier_repository.dart';
+
+class PostAddSupplier {
+  final AddSupplierRepository repository;
+
+  PostAddSupplier({required this.repository});
+
+  Future<Either<Failure, SupplierEntity>> call(
+      {Map<String, dynamic> body}) {
+    return repository.postAddSupplier(body: body);
+  }
+}

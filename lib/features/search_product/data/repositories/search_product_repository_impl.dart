@@ -1,10 +1,9 @@
 import 'package:dartz/dartz.dart';
+import 'package:teriak/core/errors/exceptions.dart' show ServerException;
 import 'package:teriak/features/master_product/domain/entities/product_entity.dart';
 import 'package:teriak/features/search_product/data/datasources/search_product_remote_data_source.dart';
 import 'package:teriak/features/search_product/domain/repositories/search_product_repository.dart';
-
 import '../../../../../core/connection/network_info.dart';
-import '../../../../core/errors/exceptions.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
 

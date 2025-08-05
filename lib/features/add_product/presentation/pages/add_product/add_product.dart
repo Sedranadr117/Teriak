@@ -13,11 +13,31 @@ import 'widgets/barcode_management_card.dart';
 import 'widgets/basic_information_card.dart';
 import 'widgets/product_details_card.dart';
 
-class AddProductPage extends StatelessWidget {
-  AddProductPage({super.key});
+class AddProductPage extends StatefulWidget {
+  const AddProductPage({super.key});
 
+  @override
+  State<AddProductPage> createState() => _AddProductPageState();
+}
+
+class _AddProductPageState extends State<AddProductPage> {
   final addProductController = Get.put(AddProductController());
   final productDataController = Get.put(ProductDataController());
+
+  @override
+  void initState() {
+    super.initState();
+
+    addProductController.arabicTradeNameController.addListener(_updateState);
+    addProductController.englishTradeNameController.addListener(_updateState);
+    addProductController.quantityController.addListener(_updateState);
+    addProductController.barcodeController.addListener(_updateState);
+  }
+
+  void _updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = addProductController;
@@ -39,10 +59,8 @@ class AddProductPage extends StatelessWidget {
                     BasicInformationCard(
                       arabicTradeNameController: c.arabicTradeNameController,
                       englishTradeNameController: c.englishTradeNameController,
-                      // arabicTradeNameError: c.arabicTradeNameError.,
-                      //englishTradeNameError: c.englishTradeNameError,
-                      onArabicTradeNameChanged: () {},
-                      onEnglishTradeNameChanged:() {},
+                      onArabicTradeNameChanged: () => setState(() {}),
+                      onEnglishTradeNameChanged: () => setState(() {}),
                       arabicScientificNameController:
                           c.arabicScientificNameController,
                       englishScientificNameController:
@@ -57,7 +75,6 @@ class AddProductPage extends StatelessWidget {
                           selectedForm: c.selectedForm.value,
                           selectedManufacturer: c.selectedManufacturer.value,
                           formError: c.formError.value,
-                         // manufacturerError: c.manufacturerError.value,
                           onFormTap: () async {
                             await productDataController.getProductData('forms');
                             final list = productDataController.dataList
@@ -70,6 +87,7 @@ class AddProductPage extends StatelessWidget {
                                 c.selectedFormId.value = id;
                                 c.selectedForm.value = name;
                                 c.formError.value = null;
+                                setState(() {}); // تحديث اللون
                               },
                             );
                           },
@@ -86,10 +104,11 @@ class AddProductPage extends StatelessWidget {
                                 c.selectedManufacturerId.value = id;
                                 c.selectedManufacturer.value = name;
                                 c.manufacturerError.value = null;
+                                setState(() {}); // تحديث اللون
                               },
                             );
                           },
-                          onQuantityChanged: () {},
+                          onQuantityChanged: () => setState(() {}),
                         )),
 
                     // Barcode management
@@ -97,12 +116,19 @@ class AddProductPage extends StatelessWidget {
                       return BarcodeManagementCard(
                         barcodes: c.barcodes.toList(),
                         barcodeController: c.barcodeController,
-                        onAddBarcode: c.addBarcode,
-                        onRemoveBarcode: (index) => c.removeBarcode(index),
+                        onAddBarcode: () {
+                          c.addBarcode();
+                          setState(() {});
+                        },
+                        onRemoveBarcode: (index) {
+                          c.removeBarcode(index);
+                          setState(() {});
+                        },
                         onScanBarcode: () {
                           showBarcodeScannerBottomSheet(
                             onScanned: (value) {
                               c.addScannedBarcode(value);
+                              setState(() {});
                             },
                           );
                         },
@@ -113,7 +139,6 @@ class AddProductPage extends StatelessWidget {
                     Obx(() => AdditionalInformationCard(
                           dosageController: c.dosageController,
                           notesController: c.notesController,
-                          //minStockController: c.minStockController,
                           selectedProductType: c.selectedProductType.value,
                           selectedClassification: c.selectedCategoryIds.isEmpty
                               ? null
@@ -151,21 +176,20 @@ class AddProductPage extends StatelessWidget {
                           },
                           onPrescriptionToggle: (value) {
                             c.requiresPrescription.value = value;
-                            print(value);
                           },
                           onNotesChanged: () {},
-                          //onMinStockChanged: () {},
                           onDosageChanged: () {},
                         )),
                   ],
                 ),
               ),
             ),
-              SaveProductButton(
+            SaveProductButton(
               isFormValid: c.isFormValid,
               onTap: () {
                 FocusScope.of(context).unfocus();
                 c.addProduct();
+                setState(() {}); // بعد الحفظ كمان نحدّث اللون
               },
             ),
           ],

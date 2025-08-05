@@ -173,12 +173,59 @@ class AddProductParams {
 class EditProductParams {
   final String languageCode;
   final int id;
-  
+
   const EditProductParams({required this.id, required this.languageCode});
 
   Map<String, dynamic> toMap() {
     return {
       'lang': languageCode,
+    };
+  }
+}
+
+class SupplierParams {
+  final int id;
+
+  const SupplierParams({required this.id});
+}
+
+
+class SearchSupplierParams {
+  final String keyword;
+
+  const SearchSupplierParams({required this.keyword});
+  Map<String, dynamic> toMap() {
+    return {
+      'name': keyword,
+    };
+  }
+}
+class DetailsPurchaseOrdersParams {
+  final String languageCode;
+  final int id;
+
+  const DetailsPurchaseOrdersParams({required this.id, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'language': languageCode,
+    };
+  }
+}
+
+
+class LanguageParam {
+  final String languageCode;
+  final String key;
+
+  const LanguageParam({
+    required this.languageCode,
+    required this.key,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      key: languageCode,
     };
   }
 }
