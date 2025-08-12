@@ -20,66 +20,72 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   Widget build(BuildContext context) {
     final detailsController = Get.put(GetProductDetailsController());
 
-    return Obx(() {
-      if (detailsController.isLoading.value) {
-        return const Center(child: CircularProgressIndicator());
-      }
-
-      if (detailsController.errorMessage.isNotEmpty) {
-        return Center(child: Text(detailsController.errorMessage.value));
-      }
-
-      final drugData = detailsController.product.value;
-      if (drugData == null) {
-        return const Center(child: Text("No data"));
-      }
-
-      return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => Get.back(),
-            icon: CustomIconWidget(
-              iconName: 'arrow_back',
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.onSurfaceDark
-                  : AppColors.onSurfaceLight,
-              size: 24,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () => Get.back(),
+          icon: CustomIconWidget(
+            iconName: 'arrow_back',
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.onSurfaceDark
+                : AppColors.onSurfaceLight,
+            size: 24,
           ),
-          title: Text('Product Details'.tr),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: GestureDetector(
-                  onTap: () {
-                    Get.toNamed(
-                      AppPages.editProductPage,
-                      arguments: drugData,
-                    );
-                  },
-                  child: (drugData.productType == "Pharmacy" ||
-                          drugData.productType == "صيدلية")
-                      ? CustomIconWidget(
-                          iconName: 'edit',
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? AppColors.primaryDark
-                              : AppColors.primaryLight,
-                          size: 20,
-                        )
-                      : Container()),
-            ),
-            (drugData.productType == "Pharmacy" ||
-                          drugData.productType == "صيدلية")
-                      ?CustomIconWidget(
-              iconName: 'delete',
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.errorDark
-                  : AppColors.errorLight,
-              size: 22,
-            ):Container()
-          ],
         ),
-        body: SingleChildScrollView(
+        title: Text('Product Details'.tr),
+        actions: [
+          Obx(() {
+            final drugData = detailsController.product.value;
+            if (drugData == null) return SizedBox();
+
+            return Row(
+              children: [
+                if (drugData.productType == "Pharmacy" ||
+                    drugData.productType == "صيدلية")
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(
+                        AppPages.editProductPage,
+                        arguments: drugData,
+                      );
+                    },
+                    child: CustomIconWidget(
+                      iconName: 'edit',
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.primaryDark
+                          : AppColors.primaryLight,
+                      size: 20,
+                    ),
+                  ),
+                if (drugData.productType == "Pharmacy" ||
+                    drugData.productType == "صيدلية")
+                  CustomIconWidget(
+                    iconName: 'delete',
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.errorDark
+                        : AppColors.errorLight,
+                    size: 22,
+                  ),
+              ],
+            );
+          }),
+        ],
+      ),
+      body: Obx(() {
+        if (detailsController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (detailsController.errorMessage.isNotEmpty) {
+          return Center(child: Text(detailsController.errorMessage.value));
+        }
+
+        final drugData = detailsController.product.value;
+        if (drugData == null) {
+          return const Center(child: Text("No data"));
+        }
+
+        return SingleChildScrollView(
           child: Column(
             children: [
               ProductDetailsHeader(drugData: drugData),
@@ -87,8 +93,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               ProductDetailsBody(drugData: drugData),
             ],
           ),
-        ),
-      );
-    });
+        );
+      }),
+    );
   }
 }

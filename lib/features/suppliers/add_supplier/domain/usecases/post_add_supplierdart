@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
-
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
-import '../entities/AddSupplier_entity.dart';
-import '../repositories/AddSupplier_repository.dart';
+import 'package:teriak/features/suppliers/add_supplier/domain/repositories/add_supplier_repository.dart';
+import 'package:teriak/features/suppliers/all_supplier/domain/entities/supplier_entity.dart';
+
 
 class PostAddSupplier {
   final AddSupplierRepository repository;
@@ -11,7 +11,7 @@ class PostAddSupplier {
   PostAddSupplier({required this.repository});
 
   Future<Either<Failure, SupplierEntity>> call(
-      {Map<String, dynamic> body}) {
+      {required Map<String, dynamic> body}) {
     return repository.postAddSupplier(body: body);
   }
 }

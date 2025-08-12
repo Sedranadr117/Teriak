@@ -59,7 +59,7 @@ class HttpConsumer extends ApiConsumer {
       {dynamic data,
       Map<String, dynamic>? queryParameters,
       bool isFormData = false}) async {
-    try {
+    // try {
       final uri =
           Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
 
@@ -84,14 +84,14 @@ class HttpConsumer extends ApiConsumer {
 
       handleHttpResponse(response);
       return _tryDecode(response.body);
-    } catch (e) {
-      print('💥 HTTP Error: $e');
-      if (e is HttpException) {
-        handleHttpException(e);
-      } else {
-        rethrow;
-      }
-    }
+    // } catch (e) {
+    //   print('💥 HTTP Error: $e');
+    //   if (e is HttpException) {
+    //     handleHttpException(e);
+    //   } else {
+    //     rethrow;
+    //   }
+    // }
   }
 
   @override
@@ -177,7 +177,7 @@ class HttpConsumer extends ApiConsumer {
 
       handleHttpResponse(response);
       return _tryDecode(response.body);
-    }  catch (e) {
+    } catch (e) {
       print('💥 HTTP Error: $e');
       if (e is HttpException) {
         handleHttpException(e);

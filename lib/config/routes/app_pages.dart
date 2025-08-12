@@ -25,8 +25,6 @@ class AppPages {
   static const String supplierList = '/supplier-list-screen';
   static const String editPurchaseOrder = '/edit-purchase-order';
   static const String purchaseOrderList = '/purchase-order-list';
-  static const String supplierManagement = '/supplier-management';
   static const String purchaseOrderDetail = '/purchase-order-detail';
-  static const String productSelection = '/product-selection';
   static const String createPurchaseOrder = '/create-purchase-order';
 }

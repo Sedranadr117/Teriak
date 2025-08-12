@@ -9,8 +9,8 @@ class EditPurchaseOrdersRemoteDataSource {
 
   EditPurchaseOrdersRemoteDataSource({required this.api});
   Future<PurchaseOrderModel> putEditPurchaseOrders(
-      LanguageParam params, Map<String, dynamic> body) async {
-    final response = await api.put(EndPoints.purchaseOrders,
+      EditPurchaseOrdersParams params, Map<String, dynamic> body) async {
+    final response = await api.put("${EndPoints.purchaseOrders}/${params.id}",
         queryParameters: params.toMap(), data: body);
     return PurchaseOrderModel.fromJson(response);
   }

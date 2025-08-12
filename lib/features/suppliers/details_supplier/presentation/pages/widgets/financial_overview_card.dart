@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_theme.dart';
+import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 
 
 class FinancialOverviewCard extends StatelessWidget {
-  final Map<String, dynamic> supplier;
+  final SupplierModel supplier;
 
   const FinancialOverviewCard({
     super.key,
@@ -17,9 +18,9 @@ class FinancialOverviewCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final totalPayments = supplier["totalPayments"] as double;
-    final totalDebts = supplier["totalDebts"] as double;
-    final currency = supplier["preferredCurrency"] as String;
+    final totalPayments = 12.3 ;
+    final totalDebts = 12.4 ;
+    final currency = supplier.preferredCurrency ;
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -28,6 +29,13 @@ class FinancialOverviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Container(
+         decoration:  BoxDecoration(
+        color: theme.colorScheme.surface.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+        ),
+      ),
         width: double.infinity,
         padding: EdgeInsets.all(4.w),
         child: Column(

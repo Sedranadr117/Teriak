@@ -90,7 +90,7 @@ class EditProductController extends GetxController {
 
     final dataController = Get.find<ProductDataController>();
 
-    // ===== Forms =====
+    //  Forms
     await dataController.getProductData('forms');
     final forms = dataController.dataList.cast<ProductDataModel>();
     final formMatch = forms.firstWhere(
@@ -99,7 +99,7 @@ class EditProductController extends GetxController {
     );
     selectedFormId.value = formMatch.id;
 
-    // ===== Manufacturers =====
+    // Manufacturers
     await dataController.getProductData('manufacturers');
     final manufacturers = dataController.dataList.cast<ProductDataModel>();
     final manufacturerMatch = manufacturers.firstWhere(
@@ -108,7 +108,7 @@ class EditProductController extends GetxController {
     );
     selectedManufacturerId.value = manufacturerMatch.id;
 
-    // ===== Types =====
+    //  Types 
     await dataController.getProductData('types');
     final types = dataController.dataList.cast<ProductDataModel>();
     final typeMatch = types.firstWhere(
@@ -117,7 +117,7 @@ class EditProductController extends GetxController {
     );
     selectedTypeId.value = typeMatch.id;
 
-    // ===== Categories =====
+    // Categories 
     await dataController.getProductData('categories');
     final categories = dataController.dataList.cast<ProductDataModel>();
     selectedCategoryIds.assignAll(
@@ -148,6 +148,7 @@ class EditProductController extends GetxController {
       barcodes.add(scannedCode);
     }
   }
+
   bool isFormValid() {
     return arabicTradeNameController.text.trim().isNotEmpty &&
         englishTradeNameController.text.trim().isNotEmpty &&
@@ -201,7 +202,7 @@ class EditProductController extends GetxController {
         {
           "tradeName": arabicTradeNameController.text.trim(),
           "scientificName": arabicScientificNameController.text.trim(),
-          "languageCode": "ar"
+          "lang": "ar"
         }
       ]
     };
@@ -211,10 +212,6 @@ class EditProductController extends GetxController {
     isLoading.value = true;
     try {
       final body = buildRequestBody();
-      print('--- DEBUG BODY ---');
-      body.forEach((key, value) {
-        print('$key: $value');
-      });
 
       final languageCode = LocaleController.to.locale.languageCode;
 
@@ -222,10 +219,6 @@ class EditProductController extends GetxController {
         languageCode: languageCode,
         id: productId,
       );
-      print('--- DEBUG ---');
-      print('tradeName: ${englishTradeNameController.text}');
-      print('scientificName: ${englishScientificNameController.text}');
-      print('notes: ${notesController.text}');
 
       final result = await editProductUseCase(params: params, body: body);
 
@@ -239,7 +232,6 @@ class EditProductController extends GetxController {
         },
         (updatedProduct) {
           Get.snackbar('Success', 'Product updated successfully'.tr);
-      
         },
       );
     } catch (e) {

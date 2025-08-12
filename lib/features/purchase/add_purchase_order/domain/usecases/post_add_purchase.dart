@@ -11,7 +11,7 @@ class AddPurchaseOrder {
   AddPurchaseOrder({required this.repository});
 
   Future<Either<Failure, PurchaseOrderEntity>> call(
-      {required LanguageParam params,required Map<String, dynamic> body}) {
-    return repository.postAddPurchaseOrder(params: params,body:body);
+      {required LanguageParam params, required Map<String, dynamic> body}) {
+    return repository.postAddPurchaseOrder(params: params, body: body);
   }
 }

@@ -64,9 +64,15 @@ class _SettingsState extends State<Settings> {
               child: CustomIconWidget(iconName: "setting")),
           GestureDetector(
               onTap: () {
-                Get.to(PurchaseOrderList());
+                Get.toNamed(AppPages.purchaseOrderList);
               },
-              child: CustomIconWidget(iconName: "cart")),
+              child: CustomIconWidget(iconName: "car_crash")),
+          GestureDetector(
+              onTap: () {
+                Get.toNamed(AppPages.purchaseOrderDetail);
+              },
+              child: CustomIconWidget(iconName: "dangerous")),
+          
         ],
         showThemeToggle:
             false, // Don't show theme toggle in settings since it's already there

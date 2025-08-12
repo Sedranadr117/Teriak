@@ -17,7 +17,7 @@ class EditPurchaseOrdersRepositoryImpl extends EditPurchaseOrdersRepository {
       {required this.remoteDataSource, required this.networkInfo});
   @override
   Future<Either<Failure, PurchaseOrderEntity>> putEditPurchaseOrders(
-      {required LanguageParam params,required Map<String, dynamic> body}) async {
+      {required EditPurchaseOrdersParams params,required Map<String, dynamic> body}) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteEditPurchaseOrders =

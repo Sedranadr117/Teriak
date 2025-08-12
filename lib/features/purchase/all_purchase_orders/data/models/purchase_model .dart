@@ -20,7 +20,8 @@ class PurchaseOrderModel extends PurchaseOrderEntity {
       total: (json[ApiKeys.total] as num).toDouble(),
       status: json[ApiKeys.status],
       items: (json[ApiKeys.items] as List<dynamic>)
-          .map((item) => ProductItemModel.fromJson(item))
+          .map(
+              (item) => ProductItemModel.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -32,7 +33,8 @@ class PurchaseOrderModel extends PurchaseOrderEntity {
       ApiKeys.currency: currency,
       ApiKeys.total: total,
       ApiKeys.status: status,
-      ApiKeys.items: items.map((e) => (e as ProductItemModel).toJson()).toList(),
+      ApiKeys.items:
+          items.map((e) => (e as ProductItemModel).toJson()).toList(),
     };
   }
 }

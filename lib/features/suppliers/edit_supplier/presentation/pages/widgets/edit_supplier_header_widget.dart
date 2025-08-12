@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 
 class EditSupplierHeaderWidget extends StatelessWidget {
-  final Map<String, dynamic> supplierData;
+  final SupplierModel supplierData;
 
   const EditSupplierHeaderWidget({
     super.key,
@@ -57,7 +58,7 @@ class EditSupplierHeaderWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 0.5.h),
                 Text(
-                  supplierData['name'] ?? 'Unknown Supplier',
+                  supplierData.name,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: colorScheme.onSurface,

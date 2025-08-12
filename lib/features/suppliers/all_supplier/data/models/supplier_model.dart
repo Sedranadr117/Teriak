@@ -22,7 +22,6 @@ class SupplierModel extends SupplierEntity {
 
   Map<String, dynamic> toJson() {
     return {
-      ApiKeys.id: id,
       ApiKeys.name: name,
       ApiKeys.phone: phone,
       ApiKeys.address: address,

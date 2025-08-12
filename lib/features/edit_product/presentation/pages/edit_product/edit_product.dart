@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/widgets/custom_binding_widget.dart';
 import 'package:teriak/features/add_product/presentation/pages/add_product/widgets/save_product_button.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
 import 'package:teriak/features/bottom_sheet_management/multi_bottom_sheet.dart';
 import 'package:teriak/features/bottom_sheet_management/single_bottom_sheet.dart';
 import 'package:teriak/features/edit_product/presentation/controller/edit_product_controller.dart';
 import 'package:teriak/features/master_product/data/models/product_model.dart';
+import 'package:teriak/features/master_product/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/product_data/data/models/product_data_model.dart';
 import 'package:teriak/features/product_data/presentation/controller/product_data_controller.dart';
+import 'package:teriak/features/product_details/presentation/controller/get_product_details_controller.dart';
 
 import 'widgets/basic_information_section.dart';
 import 'widgets/barcode_management_section.dart';
@@ -24,6 +27,8 @@ class EditProductPage extends StatefulWidget {
 class _EditProductPageState extends State<EditProductPage> {
   final editController = Get.put(EditProductController());
   final productDataController = Get.put(ProductDataController());
+  final productController = Get.find<GetAllProductController>();
+  final productDetailsController = Get.find<GetProductDetailsController>();
 
   late ProductModel product;
 
@@ -55,6 +60,7 @@ class _EditProductPageState extends State<EditProductPage> {
               ),
           ],
         ),
+        
         leading: IconButton(
           onPressed: () => Get.back(),
           icon: CustomIconWidget(
@@ -71,6 +77,8 @@ class _EditProductPageState extends State<EditProductPage> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    const SizedBox(height: 3),
+                    CommonWidgets.buildRequiredWidget(context: context),
                     const SizedBox(height: 8),
                     BasicInformationSection(
                       arabicTradeNameController:
@@ -216,7 +224,11 @@ class _EditProductPageState extends State<EditProductPage> {
               onTap: () async {
                 FocusScope.of(context).unfocus();
                 await editController.editProduct(product.id);
+                productController.refreshProducts();
+                productDetailsController.getProductDetails(
+                    id: product.id, type: product.productType);
               },
+              label: "Save Product".tr,
             ),
           ],
         ),

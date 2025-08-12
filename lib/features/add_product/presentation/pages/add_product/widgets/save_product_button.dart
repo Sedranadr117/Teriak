@@ -7,7 +7,9 @@ import 'package:teriak/config/themes/app_icon.dart';
 class SaveProductButton extends StatefulWidget {
   bool Function() isFormValid;
   void Function() onTap;
-  SaveProductButton({super.key, required this.isFormValid,required this.onTap});
+  String label;
+  SaveProductButton(
+      {super.key, required this.isFormValid, required this.onTap,required this.label});
 
   @override
   State<SaveProductButton> createState() => _SaveProductButtonState();
@@ -29,7 +31,7 @@ class _SaveProductButtonState extends State<SaveProductButton> {
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: widget.isFormValid() ? widget.onTap : (){},
+          onPressed: widget.isFormValid() ? widget.onTap : () {},
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: context.h * 0.02),
             backgroundColor: widget.isFormValid()
@@ -46,7 +48,7 @@ class _SaveProductButtonState extends State<SaveProductButton> {
               ),
               SizedBox(width: context.w * 0.02),
               Text(
-                "Save Product".tr,
+                widget.label,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.bold,

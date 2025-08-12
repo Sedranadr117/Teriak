@@ -10,7 +10,7 @@ class EditPurchaseOrders {
   EditPurchaseOrders({required this.repository});
 
   Future<Either<Failure, PurchaseOrderEntity>> call(
-      {required LanguageParam params,required Map<String, dynamic> body}) {
+      {required EditPurchaseOrdersParams params,required Map<String, dynamic> body}) {
     return repository.putEditPurchaseOrders(params: params,body:body);
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 
 class SupplierCardWidget extends StatelessWidget {
-  final Map<String, dynamic> supplier;
+  final SupplierModel supplier;
   final VoidCallback? onTap;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
@@ -22,7 +24,7 @@ class SupplierCardWidget extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Dismissible(
-      key: Key(supplier["id"].toString()),
+      key: Key(supplier.id.toString()),
       background: _buildSwipeBackground(
         context,
         alignment: Alignment.centerLeft,
@@ -61,6 +63,28 @@ class SupplierCardWidget extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(12),
           child: Container(
+            decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.cardDark
+              : AppColors.cardLight,
+          border: Border.all(
+            
+              color: AppColors.primaryDark.withValues(alpha:0.5),
+            
+              width: 1.0,
+            
+          ),
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.shadowDark
+                  : AppColors.shadowLight,
+              blurRadius: 8,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
             padding: EdgeInsets.all(4.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,7 +112,7 @@ class SupplierCardWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            supplier["name"] as String? ?? "Unknown Supplier",
+                            supplier.name as String? ?? "Unknown Supplier",
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
@@ -107,7 +131,7 @@ class SupplierCardWidget extends StatelessWidget {
                               SizedBox(width: 1.w),
                               Expanded(
                                 child: Text(
-                                  supplier["phone"] as String? ?? "No phone",
+                                  supplier.phone as String? ?? "No phone",
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
@@ -128,35 +152,11 @@ class SupplierCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        supplier["preferredCurrency"] as String? ?? "USD",
+                        supplier.preferredCurrency as String? ?? "USD",
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSecondaryContainer,
                           fontWeight: FontWeight.w500,
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildFinancialMetric(
-                        context,
-                        label: "Total Payments",
-                        value:
-                            "\$${(supplier["totalPayments"] as num? ?? 0).toStringAsFixed(2)}",
-                        color: colorScheme.tertiary,
-                      ),
-                    ),
-                    SizedBox(width: 3.w),
-                    Expanded(
-                      child: _buildFinancialMetric(
-                        context,
-                        label: "Total Debts",
-                        value:
-                            "\$${(supplier["totalDebts"] as num? ?? 0).toStringAsFixed(2)}",
-                        color: colorScheme.error,
                       ),
                     ),
                   ],
@@ -209,50 +209,6 @@ class SupplierCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildFinancialMetric(
-    BuildContext context, {
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: EdgeInsets.all(2.w),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w500,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          SizedBox(height: 0.5.h),
-          Text(
-            value,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
 
   Future<bool> _showDeleteConfirmation(BuildContext context) async {
     return await showDialog<bool>(
@@ -260,7 +216,7 @@ class SupplierCardWidget extends StatelessWidget {
           builder: (context) => AlertDialog(
             title: const Text('Delete Supplier'),
             content: Text(
-              'Are you sure you want to delete "${supplier["name"]}"? This action cannot be undone.',
+              'Are you sure you want to delete "${supplier.name}"? This action cannot be undone.',
             ),
             actions: [
               TextButton(

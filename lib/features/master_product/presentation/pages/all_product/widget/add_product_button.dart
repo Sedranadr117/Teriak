@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/features/master_product/presentation/controller/get_allProduct_controller.dart';
 
-class AddProductButton extends StatefulWidget {
-  const AddProductButton({super.key});
+class AddButton extends StatefulWidget {
+  String label;
+   void Function() onTap;
+   AddButton({super.key,required this.onTap,required this.label});
 
   @override
-  State<AddProductButton> createState() => _AddProductButtonState();
+  State<AddButton> createState() => _AddButtonState();
 }
 
-class _AddProductButtonState extends State<AddProductButton> {
-  final allController = Get.find<GetAllProductController>();
+class _AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-      onPressed: ()  {
-         Get.toNamed(AppPages.addProductPage);
-      },
+      onPressed:widget.onTap,
       label: Text(
-        'Add Product'.tr,
+        widget.label,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: AppColors.onPrimaryLight,
               fontWeight: FontWeight.w600,

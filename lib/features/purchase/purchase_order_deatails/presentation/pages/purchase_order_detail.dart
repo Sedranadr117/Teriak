@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-
-import 'package:teriak/config/themes/app_icon.dart';
-import './widgets/order_header_card.dart';
-import './widgets/product_item_card.dart';
-import './widgets/supplier_info_card.dart';
-import './widgets/total_amount_card.dart';
+import 'package:teriak/features/purchase/all_purchase_orders/domain/entities/purchase_entity%20.dart';
+import '../controller/purchase_order_details_controller.dart';
+import 'widgets/simple_product_card.dart';
 
 class PurchaseOrderDetail extends StatefulWidget {
   const PurchaseOrderDetail({super.key});
@@ -17,261 +17,104 @@ class PurchaseOrderDetail extends StatefulWidget {
 }
 
 class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
-  bool _isLoading = false;
-  Map<String, dynamic>? _orderData;
-
-  // Mock data for purchase order details
-  final Map<String, dynamic> _mockOrderData = {
-    "orderId": "PO-2025-001",
-    "orderName": "طلبية أدوية الصيدلية المركزية",
-    "status": "pending",
-    "createdDate": "2025-01-15T10:30:00Z",
-    "currency": "SYP",
-    "supplier": {
-      "id": "SUP-001",
-      "name": "شركة الأدوية السورية المحدودة",
-      "phone": "+963-11-2234567",
-      "email": "info@syrianpharma.com",
-      "address": "شارع بغداد، دمشق، سوريا"
-    },
-    "products": [
-      {
-        "id": "PROD-001",
-        "name": "باراسيتامول 500 ملغ",
-        "description": "مسكن للألم وخافض للحرارة، علبة 20 قرص",
-        "image":
-            "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg",
-        "quantity": 50,
-        "unit": "علبة",
-        "unitPrice": 250.0
-      },
-      {
-        "id": "PROD-002",
-        "name": "أموكسيسيلين 250 ملغ",
-        "description": "مضاد حيوي واسع الطيف، علبة 14 كبسولة",
-        "image":
-            "https://images.pexels.com/photos/3683073/pexels-photo-3683073.jpeg",
-        "quantity": 30,
-        "unit": "علبة",
-        "unitPrice": 450.0
-      },
-      {
-        "id": "PROD-003",
-        "name": "فيتامين د3 1000 وحدة",
-        "description": "مكمل غذائي لتقوية العظام، علبة 30 كبسولة",
-        "image":
-            "https://images.pexels.com/photos/3683056/pexels-photo-3683056.jpeg",
-        "quantity": 25,
-        "unit": "علبة",
-        "unitPrice": 180.0
-      },
-      {
-        "id": "PROD-004",
-        "name": "شراب السعال للأطفال",
-        "description": "شراب طبيعي لعلاج السعال، زجاجة 120 مل",
-        "image":
-            "https://images.pexels.com/photos/3683040/pexels-photo-3683040.jpeg",
-        "quantity": 20,
-        "unit": "زجاجة",
-        "unitPrice": 320.0
-      }
-    ]
-  };
-
-  @override
-  void initState() {
-    super.initState();
-    _loadOrderData();
-  }
-
-  Future<void> _loadOrderData() async {
-    setState(() => _isLoading = true);
-
-    // Simulate API call delay
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    setState(() {
-      _orderData = _mockOrderData;
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _refreshOrderData() async {
-    HapticFeedback.lightImpact();
-    await _loadOrderData();
-  }
+  final controller = Get.put(PurchaseOrderDetailsController());
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: _buildAppBar(context),
-      body: _isLoading ? _buildLoadingState(context) : _buildContent(context),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: _buildAppBar(),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return _buildLoadingState();
+        }
+
+        if (controller.errorMessage.value.isNotEmpty) {
+          return _buildErrorState();
+        }
+
+        if (controller.purchaseOrder.value == null) {
+          return _buildNoDataState();
+        }
+
+        return _buildContent();
+      }),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    final theme = Theme.of(context);
-
+  AppBar _buildAppBar() {
     return AppBar(
-      backgroundColor: theme.colorScheme.primary,
-      foregroundColor: theme.colorScheme.onPrimary,
-      elevation: 2,
-      leading: IconButton(
-        icon: CustomIconWidget(
-          iconName: 'arrow_back_ios',
-          color: theme.colorScheme.onPrimary,
-          size: 24,
-        ),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Text(
-        'تفاصيل الطلبية',
-        style: theme.textTheme.titleLarge?.copyWith(
-          color: theme.colorScheme.onPrimary,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      centerTitle: true,
+      title: Text('Purchase Order Details'.tr),
       actions: [
         IconButton(
           icon: CustomIconWidget(
             iconName: 'edit',
-            color: theme.colorScheme.onPrimary,
             size: 24,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.primaryDark
+                : AppColors.primaryLight,
           ),
-          onPressed: () => _navigateToEdit(context),
-          tooltip: 'تعديل الطلبية',
+          onPressed: () {
+            if (controller.purchaseOrder.value?.status == "PENDING") {
+              Get.toNamed(
+                AppPages.editPurchaseOrder,
+                arguments: {
+                  'order': controller.purchaseOrder.value, 
+                  'supplierId': controller.supplierId.value, 
+                },
+              );
+            } else {
+              Fluttertoast.showToast(
+                msg: "لا يمكن تعديل الطلبية في حالتها الحالية",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0,
+              );
+            }
+          },
+          tooltip: 'Edit Order'.tr,
         ),
-        PopupMenuButton<String>(
+        IconButton(
           icon: CustomIconWidget(
-            iconName: 'more_vert',
-            color: theme.colorScheme.onPrimary,
+            iconName: 'delete',
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.errorDark
+                : AppColors.errorLight,
             size: 24,
           ),
-          onSelected: (value) => _handleMenuAction(context, value),
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: 'share',
-              child: ListTile(
-                leading: CustomIconWidget(
-                  iconName: 'share',
-                  color: theme.colorScheme.onSurface,
-                  size: 20,
-                ),
-                title: const Text('مشاركة'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            PopupMenuItem(
-              value: 'duplicate',
-              child: ListTile(
-                leading: CustomIconWidget(
-                  iconName: 'content_copy',
-                  color: theme.colorScheme.onSurface,
-                  size: 20,
-                ),
-                title: const Text('نسخ الطلبية'),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-            const PopupMenuDivider(),
-            PopupMenuItem(
-              value: 'delete',
-              child: ListTile(
-                leading: CustomIconWidget(
-                  iconName: 'delete',
-                  color: theme.colorScheme.error,
-                  size: 20,
-                ),
-                title: Text(
-                  'حذف الطلبية',
-                  style: TextStyle(color: theme.colorScheme.error),
-                ),
-                contentPadding: EdgeInsets.zero,
-              ),
-            ),
-          ],
+          onPressed: () => _showDeleteConfirmation(),
+          tooltip: 'Delete Order'.tr,
         ),
       ],
     );
   }
 
-  Widget _buildLoadingState(BuildContext context) {
-    final theme = Theme.of(context);
-
+  Widget _buildLoadingState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            color: theme.colorScheme.primary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           SizedBox(height: 2.h),
           Text(
-            'جاري تحميل تفاصيل الطلبية...',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
+            'Loading order details'.tr,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    if (_orderData == null) {
-      return _buildErrorState(context);
-    }
-
-    return RefreshIndicator(
-      onRefresh: _refreshOrderData,
-      color: Theme.of(context).colorScheme.primary,
-      child: SingleChildScrollView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 1.h),
-
-            // Order Header Card
-            OrderHeaderCard(orderData: _orderData!),
-
-            // Supplier Information Card
-            SupplierInfoCard(
-              supplierData:
-                  (_orderData!['supplier'] as Map<String, dynamic>?) ?? {},
-              currency: _orderData!['currency'] as String? ?? 'SYP',
-            ),
-
-            // Products Section Header
-            _buildSectionHeader(context, 'المنتجات المطلوبة'),
-
-            // Product Items List
-            ..._buildProductsList(context),
-
-            SizedBox(height: 2.h),
-
-            // Total Amount Card (Sticky at bottom)
-            TotalAmountCard(
-              products: (_orderData!['products'] as List<dynamic>?)
-                      ?.cast<Map<String, dynamic>>() ??
-                  [],
-              currency: _orderData!['currency'] as String? ?? 'SYP',
-            ),
-
-            SizedBox(height: 2.h),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildErrorState(BuildContext context) {
-    final theme = Theme.of(context);
-
+  Widget _buildErrorState() {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(4.w),
@@ -280,34 +123,36 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
           children: [
             CustomIconWidget(
               iconName: 'error_outline',
-              color: theme.colorScheme.error,
+              color: Theme.of(context).colorScheme.error,
               size: 64,
             ),
             SizedBox(height: 2.h),
             Text(
-              'خطأ في تحميل البيانات',
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.error,
-                fontWeight: FontWeight.w600,
-              ),
+              'Error'.tr,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
             SizedBox(height: 1.h),
             Text(
-              'حدث خطأ أثناء تحميل تفاصيل الطلبية. يرجى المحاولة مرة أخرى.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
+              controller.errorMessage.value,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.7),
+                  ),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
             ElevatedButton.icon(
-              onPressed: _loadOrderData,
-              icon: CustomIconWidget(
+              onPressed: () => controller.refreshPurchaseOrderDetails(),
+              icon: const CustomIconWidget(
                 iconName: 'refresh',
-                color: theme.colorScheme.onPrimary,
                 size: 20,
               ),
-              label: const Text('إعادة المحاولة'),
+              label: Text('Retry'.tr),
             ),
           ],
         ),
@@ -315,7 +160,145 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
     );
   }
 
-  Widget _buildSectionHeader(BuildContext context, String title) {
+  Widget _buildNoDataState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomIconWidget(
+            iconName: 'receipt_long',
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+            size: 64,
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            'No purchase orders found'.tr,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    final order = controller.purchaseOrder.value!;
+
+    return RefreshIndicator(
+      onRefresh: controller.refreshPurchaseOrderDetails,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 2.h),
+            _buildOrderHeader(order),
+            SizedBox(height: 2.h),
+            _buildSectionHeader('Products List'.tr),
+            _buildProductsList(order),
+            SizedBox(height: 2.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOrderHeader(dynamic order) {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 4.w),
+      child: Padding(
+        padding: EdgeInsets.all(4.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Supplier Name
+            _buildInfoRow(
+              'Supplier'.tr,
+              order.supplierName ?? ' '.tr,
+              Icons.business,
+            ),
+            SizedBox(height: 1.h),
+
+            // Order Status
+            _buildInfoRow(
+              'Order Status'.tr,
+              _getStatusText(order.status ?? ' '),
+              Icons.info_outline,
+              statusColor: _getStatusColor(order.status ?? 'pending'),
+            ),
+            SizedBox(height: 1.h),
+
+            // Currency
+            _buildInfoRow(
+              'Currency'.tr,
+              order.currency ?? 'SYP',
+              Icons.monetization_on,
+            ),
+            SizedBox(height: 1.h),
+
+            // Total Amount
+            _buildInfoRow(
+              'Total Amount'.tr,
+              _formatAmount(
+                  order.total?.toDouble() ?? 0.0, order.currency ?? 'SYP'),
+              Icons.attach_money,
+              valueColor: AppColors.successLight,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(
+    String label,
+    String value,
+    IconData icon, {
+    Color? statusColor,
+    Color? valueColor,
+  }) {
+    final theme = Theme.of(context);
+
+    return Row(
+      children: [
+        Icon(
+          icon,
+          size: 20,
+          color:
+              statusColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.6),
+        ),
+        SizedBox(width: 3.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+              Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color:
+                      valueColor ?? statusColor ?? theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
     final theme = Theme.of(context);
 
     return Padding(
@@ -343,109 +326,90 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
     );
   }
 
-  List<Widget> _buildProductsList(BuildContext context) {
-    final products = (_orderData!['products'] as List<dynamic>?)
-            ?.cast<Map<String, dynamic>>() ??
-        [];
+  Widget _buildProductsList(PurchaseOrderEntity order) {
+    final products = order.items;
 
     if (products.isEmpty) {
-      return [_buildEmptyProductsState(context)];
-    }
-
-    return products.map((product) {
-      return ProductItemCard(
-        productData: product,
-        currency: _orderData!['currency'] as String? ?? 'SYP',
-        onLongPress: () => _showProductContextMenu(context, product),
+      return Card(
+        margin: EdgeInsets.all(4.w),
+        child: Padding(
+          padding: EdgeInsets.all(6.w),
+          child: Column(
+            children: [
+              CustomIconWidget(
+                iconName: 'inventory_2',
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.4),
+                size: 48,
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                'No products in this order'.tr,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.7),
+                    ),
+              ),
+            ],
+          ),
+        ),
       );
-    }).toList();
-  }
+    }
 
-  Widget _buildEmptyProductsState(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      margin: EdgeInsets.all(4.w),
-      padding: EdgeInsets.all(6.w),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.3),
-        ),
-      ),
-      child: Column(
-        children: [
-          CustomIconWidget(
-            iconName: 'inventory_2',
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
-            size: 48,
-          ),
-          SizedBox(height: 2.h),
-          Text(
-            'لا توجد منتجات في هذه الطلبية',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      children: products.map<Widget>((product) {
+        return SimpleProductCard(
+          productData: {
+            'name': product.productName,
+            'quantity': product.quantity,
+            'unitPrice': product.price,
+            'barcode': product.barcode,
+            'type': product.productType,
+          },
+          currency: order.currency,
+        );
+      }).toList(),
     );
   }
 
-  void _navigateToEdit(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      '/edit-purchase-order',
-      arguments: _orderData,
-    ).then((result) {
-      if (result == true) {
-        _refreshOrderData();
-      }
-    });
-  }
-
-  void _handleMenuAction(BuildContext context, String action) {
-    switch (action) {
-      case 'share':
-        _shareOrderDetails(context);
-        break;
-      case 'duplicate':
-        _duplicateOrder(context);
-        break;
-      case 'delete':
-        _showDeleteConfirmation(context);
-        break;
+  String _getStatusText(String status) {
+    switch (status.toLowerCase()) {
+      case 'PENDING':
+        return 'Pending'.tr;
+      case 'DONE':
+        return 'Completed'.tr;
+      case 'CANCELLED ':
+        return 'Cancelled'.tr;
+      default:
+        return status;
     }
   }
 
-  void _shareOrderDetails(BuildContext context) {
-    final orderName = _orderData!['orderName'] as String? ?? 'طلبية غير محددة';
-    final orderId = _orderData!['orderId'] as String? ?? 'غير محدد';
-
-    // TODO: Implement actual sharing functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('مشاركة تفاصيل الطلبية: $orderName ($orderId)'),
-        action: SnackBarAction(
-          label: 'موافق',
-          onPressed: () {},
-        ),
-      ),
-    );
+  Color _getStatusColor(String status) {
+    switch (status.toLowerCase()) {
+      case 'PENDING':
+        return AppColors.warningLight;
+      case 'DONE':
+        return AppColors.successLight;
+      case 'CANCELLED':
+        return AppColors.errorLight;
+      default:
+        return Theme.of(context).colorScheme.primary;
+    }
   }
 
-  void _duplicateOrder(BuildContext context) {
-    Navigator.pushNamed(
-      context,
-      '/create-purchase-order',
-      arguments: {'duplicateFrom': _orderData},
-    );
+  String _formatAmount(double amount, String currency) {
+    final formattedAmount = amount.toStringAsFixed(2);
+    return currency == 'USD'
+        ? '\$${formattedAmount}'
+        : '${formattedAmount} ل.س';
   }
 
-  void _showDeleteConfirmation(BuildContext context) {
-    final theme = Theme.of(context);
-
+  void _showDeleteConfirmation() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -453,182 +417,47 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
           children: [
             CustomIconWidget(
               iconName: 'warning',
-              color: theme.colorScheme.error,
+              color: Theme.of(context).colorScheme.error,
               size: 24,
             ),
             SizedBox(width: 2.w),
-            const Text('تأكيد الحذف'),
+            Text('Delete Order'.tr),
           ],
         ),
-        content: const Text(
-          'هل أنت متأكد من حذف هذه الطلبية؟ لا يمكن التراجع عن هذا الإجراء.',
+        content: Text(
+          'Are you sure you want to delete this order? This action cannot be undone.',
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('إلغاء'),
+            child: Text('Cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              _deleteOrder(context);
+              _deleteOrder();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
-              foregroundColor: theme.colorScheme.onError,
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
-            child: const Text('حذف'),
+            child: Text('Delete'.tr),
           ),
         ],
       ),
     );
   }
 
-  void _deleteOrder(BuildContext context) {
-    // TODO: Implement actual delete functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('تم حذف الطلبية بنجاح'),
-        backgroundColor: Colors.green,
-      ),
+  void _deleteOrder() {
+    // سيتم تنفيذ حذف الطلبية لاحقاً
+    Get.snackbar(
+      'Delete Order'.tr,
+      'Order deleted successfully',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: AppColors.successLight,
+      colorText: Colors.white,
     );
 
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      '/purchase-order-list',
-      (route) => false,
-    );
-  }
-
-  void _showProductContextMenu(
-      BuildContext context, Map<String, dynamic> product) {
-    final theme = Theme.of(context);
-
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Container(
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outline.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              product['name'] as String? ?? 'منتج غير محدد',
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 3.h),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'info',
-                color: theme.colorScheme.primary,
-                size: 24,
-              ),
-              title: const Text('عرض التفاصيل'),
-              onTap: () {
-                Navigator.pop(context);
-                _showProductDetails(context, product);
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'edit',
-                color: theme.colorScheme.secondary,
-                size: 24,
-              ),
-              title: const Text('تعديل المنتج'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Navigate to product edit
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('تعديل المنتج قريباً')),
-                );
-              },
-            ),
-            SizedBox(height: 2.h),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showProductDetails(BuildContext context, Map<String, dynamic> product) {
-    final theme = Theme.of(context);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          product['name'] as String? ?? 'منتج غير محدد',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (product['description'] != null) ...[
-                Text(
-                  'الوصف:',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                SizedBox(height: 0.5.h),
-                Text(
-                  product['description'] as String,
-                  style: theme.textTheme.bodyMedium,
-                ),
-                SizedBox(height: 2.h),
-              ],
-              Text(
-                'الكمية: ${product['quantity'] ?? 0} ${product['unit'] ?? ''}',
-                style: theme.textTheme.bodyMedium,
-              ),
-              SizedBox(height: 1.h),
-              Text(
-                'سعر الوحدة: ${product['unitPrice'] ?? 0} ${_getCurrencySymbol(_orderData!['currency'] as String? ?? 'SYP')}',
-                style: theme.textTheme.bodyMedium,
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('إغلاق'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _getCurrencySymbol(String currency) {
-    switch (currency.toLowerCase()) {
-      case 'syp':
-      case 'syrian pound':
-        return 'ل.س';
-      case 'usd':
-      case 'us dollar':
-        return '\$';
-      default:
-        return currency;
-    }
+    Get.back(); // العودة للصفحة السابقة
   }
 }

@@ -5,9 +5,9 @@ import 'package:teriak/config/themes/app_icon.dart';
 
 // ignore: must_be_immutable
 class SwitchCard extends StatefulWidget {
-   void Function(bool)? onChanged;
-   bool value;
-   SwitchCard({super.key,required this.onChanged,required this.value});
+  void Function(bool)? onChanged;
+  bool value;
+  SwitchCard({super.key, required this.onChanged, required this.value});
 
   @override
   State<SwitchCard> createState() => _SwitchCardState();

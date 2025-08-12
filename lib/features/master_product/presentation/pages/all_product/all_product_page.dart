@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/features/master_product/presentation/controller/get_allProduct_controller.dart';
 
 import 'package:teriak/features/master_product/presentation/pages/all_product/widget/add_product_button.dart';
@@ -20,7 +21,7 @@ class _AllProductPageState extends State<AllProductPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: Text('Pharmacy Product'.tr,
               style: Theme.of(context).textTheme.titleLarge),
@@ -33,6 +34,11 @@ class _AllProductPageState extends State<AllProductPage> {
             ],
           ),
         ),
-        floatingActionButton: const AddProductButton());
+        floatingActionButton: AddButton(
+          onTap: () {
+            Get.toNamed(AppPages.addProductPage);
+          },
+          label: 'Add Product'.tr,
+        ));
   }
 }

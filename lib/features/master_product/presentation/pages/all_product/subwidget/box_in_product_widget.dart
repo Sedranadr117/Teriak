@@ -3,7 +3,6 @@ import 'package:teriak/config/extensions/responsive.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
-
 // ignore: must_be_immutable
 class BoxInProductWidget extends StatefulWidget {
   String icon;
@@ -29,8 +28,8 @@ class _BoxInProductWidgetState extends State<BoxInProductWidget> {
           horizontal: context.w * 0.02, vertical: context.h * 0.01),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.dark
-              ? AppColors.cardDark
-              : AppColors.cardLight,
+            ? AppColors.cardDark
+            : AppColors.cardLight,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -44,13 +43,14 @@ class _BoxInProductWidgetState extends State<BoxInProductWidget> {
                 size: 14,
               ),
               SizedBox(width: context.w * 0.01),
-              Text(widget.label,
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelSmall /*?.copyWith(
-                          color: AppColors.textSecondaryLight,*/
-
-                  ),
+              Expanded(
+                child: Text(
+                      widget.label,
+        maxLines: 1,
+             
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ),
             ],
           ),
           SizedBox(height: context.h * 0.005),

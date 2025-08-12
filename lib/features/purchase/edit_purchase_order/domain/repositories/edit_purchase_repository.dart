@@ -5,5 +5,5 @@ import '../../../../../core/params/params.dart';
 
 abstract class EditPurchaseOrdersRepository {
   Future<Either<Failure, PurchaseOrderEntity>> putEditPurchaseOrders(
-      {required LanguageParam params,required Map<String, dynamic> body});
+      {required EditPurchaseOrdersParams params,required Map<String, dynamic> body});
 }

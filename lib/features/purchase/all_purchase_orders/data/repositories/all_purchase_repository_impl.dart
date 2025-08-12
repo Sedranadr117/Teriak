@@ -1,12 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:teriak/core/errors/exceptions.dart';
-import 'package:teriak/features/purchase/all_purchase_orders/domain/entities/purchase_entity%20.dart';
+import 'package:teriak/features/purchase/all_purchase_orders/domain/entities/paginated_purchase_entity.dart';
 
 import '../../../../../core/connection/network_info.dart';
 
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
-import '../../domain/entities/product_item_entity.dart';
 import '../../domain/repositories/all_purchase_repository.dart';
 import '../datasources/all_purchase_remote_data_source.dart';
 
@@ -16,8 +15,8 @@ class AllPurchaseOrdersRepositoryImpl extends AllPurchaseOrdersRepository {
   AllPurchaseOrdersRepositoryImpl(
       {required this.remoteDataSource, required this.networkInfo});
   @override
-  Future<Either<Failure, List<PurchaseOrderEntity>>> getAllPurchaseOrders(
-      {required LanguageParam params}) async {
+  Future<Either<Failure, PaginatedPurchaseOrderEntity>> getAllPurchaseOrders(
+      {required PaginationParams params}) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteAllPurchaseOrders =

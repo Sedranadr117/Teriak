@@ -21,6 +21,7 @@ class EndPoints {
   static String suppliers = "suppliers";
   static String searchSuppliers = "suppliers/search";
   static String purchaseOrders = "purchase-orders";
+  static String purchaseOrdersPaginated = "purchase-orders/paginated";
   static String purchaseInvoices = "purchase-invoices";
 }
 

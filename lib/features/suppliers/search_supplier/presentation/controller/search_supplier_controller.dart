@@ -12,7 +12,8 @@ import 'package:teriak/features/suppliers/search_supplier/data/repositories/sear
 import 'package:teriak/features/suppliers/search_supplier/domain/usecases/search_supplier.dart';
 
 class SearchSupplierController extends GetxController {
-  final TextEditingController searchController = TextEditingController();
+    final TextEditingController searchController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
   final FocusNode searchFocus = FocusNode();
   late final NetworkInfoImpl networkInfo;
   late final SearchSupplier searchSupplierUseCase;
@@ -31,7 +32,7 @@ class SearchSupplierController extends GetxController {
   void _initializeDependencies() {
     final cacheHelper = CacheHelper();
     final httpConsumer =
-        HttpConsumer(baseUrl: EndPoints.baserUrl1, cacheHelper: cacheHelper);
+        HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
     networkInfo = NetworkInfoImpl(InternetConnection());
 
