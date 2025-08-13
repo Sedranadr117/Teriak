@@ -9,9 +9,15 @@ abstract class EmployeeRepository {
     required EmployeeParams params,
   });
   Future<Either<Failure, void>> addWorkingHoursToEmployee(
-      int employeeId, WorkingHoursRequestParams wParms);
+    int employeeId,
+    List<WorkingHoursRequestParams> workingHoursRequests,
+  );
+
   Future<Either<Failure, List<RoleEntity>>> getAllRoles();
   Future<Either<Failure, List<EmployeeEntity>>> getAllEmployees();
+  Future<Either<Failure, EmployeeEntity>> getEmployeesById({
+    required int employeeId,
+  });
   Future<Either<Failure, EmployeeEntity>> editEmployee({
     required int employeeId,
     required EmployeeParams params,

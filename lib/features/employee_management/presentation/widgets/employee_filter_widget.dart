@@ -44,18 +44,23 @@ class EmployeeFilterWidget extends StatelessWidget {
                     color: isSelected
                         ? Theme.of(context).colorScheme.onPrimary
                         : Theme.of(context).colorScheme.onSurfaceVariant,
-                    size: 16,
+                    size: 14.sp,
                   ),
                   SizedBox(width: 1.w),
-                  Text(
-                    filter['label']!,
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: isSelected
-                              ? Theme.of(context).colorScheme.onPrimary
-                              : Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontWeight:
-                              isSelected ? FontWeight.w600 : FontWeight.w400,
-                        ),
+                  Flexible(
+                    child: Text(
+                      filter['label']!,
+                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            fontSize: 10.sp,
+                            color: isSelected
+                                ? Theme.of(context).colorScheme.onPrimary
+                                : Theme.of(context)
+                                    .colorScheme
+                                    .onSurfaceVariant,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w400,
+                          ),
+                    ),
                   ),
                 ],
               ),

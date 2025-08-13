@@ -153,10 +153,8 @@ class Dialogs {
             employeeData['dateOfHire'].toString().isNotEmpty
         ? DateTime.tryParse(employeeData['dateOfHire'])
         : null;
-    int selectedRoleId =
-        (employeeData['roleId'] == null || employeeData['roleId'] == 0)
-            ? 3
-            : employeeData['roleId'];
+    int selectedRoleId = mapRoleNameToId(employeeData['roleName']);
+    print(employeeData['roleId']);
     showDialog(
       context: context,
       builder: (context) {
@@ -374,14 +372,14 @@ class Dialogs {
     return '${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}/${date.year}';
   }
 
-  String getRoleNameById(int roleId) {
-    switch (roleId) {
-      case 3:
-        return 'PHARMACY_EMPLOYEE';
-      case 4:
-        return 'PHARMACY_TRAINEE';
+  int mapRoleNameToId(String? roleName) {
+    switch (roleName) {
+      case 'PHARMACIST':
+        return 3;
+      case 'PHARMACY_TRAINEE':
+        return 4;
       default:
-        return 'Unknown Role';
+        return 3; // Default role if unknown
     }
   }
 

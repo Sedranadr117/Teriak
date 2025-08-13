@@ -13,7 +13,6 @@ class EditEmployee {
     required int id,
     required String firstName,
     required String lastName,
-    required String password,
     required String phoneNumber,
     required String status,
     required String dateOfHire,
@@ -26,7 +25,7 @@ class EditEmployee {
         params: EmployeeParams(
           firstName,
           lastName,
-          password,
+          '',
           phoneNumber,
           status,
           dateOfHire,

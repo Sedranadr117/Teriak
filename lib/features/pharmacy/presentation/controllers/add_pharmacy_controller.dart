@@ -208,6 +208,7 @@ class AddPharmacyController extends GetxController {
       if (!isConnected) {
         errorMessage.value =
             'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error', errorMessage.value);
         return;
       }
       String openingHoursString = '';
@@ -256,11 +257,10 @@ class AddPharmacyController extends GetxController {
       final result = await _addPharmacy(pharmacyParams);
       result.fold((failure) {
         print('❌ Pharmacy addition failed: ${failure.errMessage}');
-        // Show more specific error messages
 
         errorMessage.value = 'Failed to add pharmacy: ${failure.errMessage}'.tr;
+        Get.snackbar('Error', errorMessage.value);
 
-        // Show error snackbar
         Get.snackbar(
           'Error'.tr,
           errorMessage.value,
@@ -277,14 +277,12 @@ class AddPharmacyController extends GetxController {
 
         Get.offNamed(AppPages.employeeManagement);
 
-        // Clear all form fields
         managerFirstNameController.clear();
         managerLastNameController.clear();
         locationController.clear();
         phoneController.clear();
         emailController.clear();
         passwordController.clear();
-        // Clear time fields
         openingTime.value = null;
         closingTime.value = null;
       });
@@ -292,7 +290,6 @@ class AddPharmacyController extends GetxController {
       print('💥 Unexpected error: $e');
       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
 
-      // Show error snackbar
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,
@@ -311,7 +308,6 @@ class AddPharmacyController extends GetxController {
     emailController.dispose();
     passwordController.dispose();
 
-    // Dispose focus nodes
     managerFirstNameFocus.dispose();
     managerLastNameFocus.dispose();
     locationFocus.dispose();

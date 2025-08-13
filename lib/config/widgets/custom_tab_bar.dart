@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/gestures.dart';
 
-/// Tab item for CustomTabBar
 class TabItem {
   final String label;
   final IconData? icon;
@@ -15,8 +13,6 @@ class TabItem {
   });
 }
 
-/// Custom TabBar widget for healthcare pharmacy application
-/// Implements Clinical Efficiency Design with clear visual hierarchy
 class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
   final List<TabItem> tabs;
   final TabController? controller;
@@ -35,7 +31,7 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
     required this.tabs,
     this.controller,
     this.onTap,
-    this.isScrollable = false,
+    this.isScrollable = true,
     this.indicatorColor,
     this.labelColor,
     this.unselectedLabelColor,
@@ -128,86 +124,4 @@ class CustomTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => Size.fromHeight(48);
-}
-
-/// Custom TabBarView wrapper for consistent styling
-class CustomTabBarView extends StatelessWidget {
-  final List<Widget> children;
-  final TabController? controller;
-  final DragStartBehavior dragStartBehavior;
-  final double? viewportFraction;
-
-  const CustomTabBarView({
-    super.key,
-    required this.children,
-    this.controller,
-    this.dragStartBehavior = DragStartBehavior.start,
-    this.viewportFraction,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TabBarView(
-      controller: controller,
-      dragStartBehavior: dragStartBehavior,
-      viewportFraction: viewportFraction!,
-      children:
-          children.map((child) => _buildTabContent(context, child)).toList(),
-    );
-  }
-
-  Widget _buildTabContent(BuildContext context, Widget child) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: child,
-    );
-  }
-}
-
-/// Pharmacy-specific tab configurations
-class PharmacyTabs {
-  static const List<TabItem> transactionTabs = [
-    TabItem(
-      label: 'Active',
-      icon: Icons.pending_actions,
-    ),
-    TabItem(
-      label: 'Completed',
-      icon: Icons.check_circle_outline,
-    ),
-    TabItem(
-      label: 'Pending',
-      icon: Icons.schedule,
-    ),
-  ];
-
-  static const List<TabItem> inventoryTabs = [
-    TabItem(
-      label: 'Stock',
-      icon: Icons.inventory_2_outlined,
-    ),
-    TabItem(
-      label: 'Low Stock',
-      icon: Icons.warning_amber_outlined,
-    ),
-    TabItem(
-      label: 'Orders',
-      icon: Icons.shopping_cart_outlined,
-    ),
-  ];
-
-  static const List<TabItem> analyticsTabs = [
-    TabItem(
-      label: 'Daily',
-      icon: Icons.today,
-    ),
-    TabItem(
-      label: 'Weekly',
-      icon: Icons.date_range,
-    ),
-    TabItem(
-      label: 'Monthly',
-      icon: Icons.calendar_month,
-    ),
-  ];
 }

@@ -14,6 +14,7 @@ class PharmacyModel extends PharmacyEntity {
     required super.managerFirstName,
     required super.managerLastName,
     required super.newPassword,
+    required super.isActive,
   });
 
   factory PharmacyModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +31,7 @@ class PharmacyModel extends PharmacyEntity {
       managerFirstName: json['managerFirstName'],
       managerLastName: json['managerLastName'],
       newPassword: '',
+      isActive: json['isActive'],
     );
   }
 

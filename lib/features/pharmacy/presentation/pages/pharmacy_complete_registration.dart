@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/pharmacy/presentation/controllers/add_pharmacy_controller.dart';
 import '../widgets/location_input_widget.dart';
@@ -20,11 +21,57 @@ class _PharmacyCompleteRegistrationState
   final AddPharmacyController addPharmacyController =
       Get.put(AddPharmacyController());
   final ScrollController _scrollController = ScrollController();
+  String _passwordStrength = '';
+  Color _strengthColor = Colors.grey;
 
   @override
   void dispose() {
     _scrollController.dispose();
+    addPharmacyController.passwordController
+        .removeListener(_checkPasswordStrength);
+
     super.dispose();
+  }
+
+  void initState() {
+    super.initState();
+    addPharmacyController.passwordController
+        .addListener(_checkPasswordStrength);
+  }
+
+  void _checkPasswordStrength() {
+    final password = addPharmacyController.passwordController.text;
+
+    if (password.isEmpty) {
+      setState(() {
+        _passwordStrength = '';
+        _strengthColor = Colors.grey;
+      });
+      return;
+    }
+
+    int score = 0;
+
+    if (password.length >= 8) score++;
+    if (password.length >= 12) score++;
+
+    if (password.contains(RegExp(r'[a-z]'))) score++;
+    if (password.contains(RegExp(r'[A-Z]'))) score++;
+    if (password.contains(RegExp(r'[0-9]'))) score++;
+    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
+
+    setState(() {
+      if (score <= 2) {
+        _passwordStrength = 'Weak';
+        _strengthColor = AppColors.errorLight;
+      } else if (score <= 4) {
+        _passwordStrength = 'Medium';
+        _strengthColor = AppColors.warningLight;
+      } else {
+        _passwordStrength = 'Strong';
+        _strengthColor = AppColors.successLight;
+      }
+    });
   }
 
   @override
@@ -34,10 +81,10 @@ class _PharmacyCompleteRegistrationState
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text('Add Pharmacy'.tr),
+          title: Text('Complete Pharmacy Registration'.tr),
           centerTitle: true,
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(8.h),
+            preferredSize: Size.fromHeight(10.h),
             child: Obx(() => ProgressIndicatorWidget(
                   progress: addPharmacyController.getProgress(),
                   isDraftSaved: addPharmacyController.isDraftSaved.value,
@@ -318,49 +365,169 @@ class _PharmacyCompleteRegistrationState
                                   },
                                 )),
                             SizedBox(height: 3.h),
-                            Obx(() => TextFormField(
-                                  controller:
-                                      addPharmacyController.passwordController,
-                                  focusNode:
-                                      addPharmacyController.passwordFocus,
-                                  decoration: InputDecoration(
-                                    labelText: 'New Password'.tr,
-                                    hintText: 'Enter a new password'.tr,
-                                    prefixIcon: Padding(
-                                      padding: EdgeInsets.all(3.w),
-                                      child: CustomIconWidget(
-                                        iconName: 'lock',
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        size: 20,
-                                      ),
-                                    ),
-                                    suffixIcon: addPharmacyController
-                                            .isPasswordValid.value
-                                        ? CustomIconWidget(
-                                            iconName: 'check_circle',
+                            Obx(() => Column(
+                                  children: [
+                                    TextFormField(
+                                      controller: addPharmacyController
+                                          .passwordController,
+                                      focusNode:
+                                          addPharmacyController.passwordFocus,
+                                      decoration: InputDecoration(
+                                        labelText: 'New Password'.tr,
+                                        hintText: 'Enter a new password'.tr,
+                                        prefixIcon: Padding(
+                                          padding: EdgeInsets.all(3.w),
+                                          child: CustomIconWidget(
+                                            iconName: 'lock',
                                             color: Theme.of(context)
                                                 .colorScheme
-                                                .secondary,
+                                                .primary,
                                             size: 20,
-                                          )
-                                        : null,
-                                  ),
-                                  obscureText: !addPharmacyController
-                                      .isPasswordVisible.value,
-                                  textInputAction: TextInputAction.done,
-                                  validator: (value) {
-                                    if (value == null || value.trim().isEmpty) {
-                                      return 'Password is required'.tr;
-                                    }
-                                    if (value.trim().length < 6) {
-                                      return 'Password must be at least 6 characters'
-                                          .tr
-                                          .tr;
-                                    }
-                                    return null;
-                                  },
+                                          ),
+                                        ),
+                                        suffixIcon: (addPharmacyController
+                                                    .isPasswordValid.value &&
+                                                _passwordStrength ==
+                                                    'Strong'.tr)
+                                            ? CustomIconWidget(
+                                                iconName: 'check_circle',
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .secondary,
+                                                size: 20,
+                                              )
+                                            : IconButton(
+                                                onPressed: () {
+                                                  setState(() {
+                                                    addPharmacyController
+                                                            .isPasswordVisible
+                                                            .value =
+                                                        !addPharmacyController
+                                                            .isPasswordVisible
+                                                            .value;
+                                                  });
+                                                },
+                                                icon: CustomIconWidget(
+                                                  iconName:
+                                                      addPharmacyController
+                                                              .isPasswordVisible
+                                                              .value
+                                                          ? 'visibility_off'
+                                                          : 'visibility',
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurfaceVariant,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                      ),
+                                      obscureText: !addPharmacyController
+                                          .isPasswordVisible.value,
+                                      textInputAction: TextInputAction.done,
+                                      validator: (value) {
+                                        if (value == null ||
+                                            value.trim().isEmpty) {
+                                          return 'Password is required'.tr;
+                                        }
+                                        if (value.trim().length < 6) {
+                                          return 'Password must be at least 6 characters'
+                                              .tr
+                                              .tr;
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    if (_passwordStrength.isNotEmpty) ...[
+                                      SizedBox(height: 2.w),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            'Password Strength: '.tr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall,
+                                          ),
+                                          Text(
+                                            _passwordStrength,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  color: _strengthColor,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 1.w),
+                                      LinearProgressIndicator(
+                                        value: _passwordStrength == 'Weak'.tr
+                                            ? 0.33
+                                            : _passwordStrength == 'Medium'.tr
+                                                ? 0.66
+                                                : 1.0,
+                                        backgroundColor: Theme.of(context)
+                                            .colorScheme
+                                            .outline
+                                            .withValues(alpha: 0.3),
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                _strengthColor),
+                                      ),
+                                    ],
+                                    SizedBox(height: 3.w),
+                                    Container(
+                                      padding: EdgeInsets.all(3.w),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary
+                                            .withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            'Password Requirements:'.tr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                ),
+                                          ),
+                                          SizedBox(height: 1.w),
+                                          buildRequirement(
+                                              'At least 6 characters'.tr,
+                                              addPharmacyController
+                                                      .passwordController
+                                                      .text
+                                                      .length >=
+                                                  6),
+                                          buildRequirement(
+                                              'Contains uppercase letter'.tr,
+                                              addPharmacyController
+                                                  .passwordController.text
+                                                  .contains(RegExp(r'[A-Z]'))),
+                                          buildRequirement(
+                                              'Contains lowercase letter'.tr,
+                                              addPharmacyController
+                                                  .passwordController.text
+                                                  .contains(RegExp(r'[a-z]'))),
+                                          buildRequirement(
+                                              'Contains number'.tr,
+                                              addPharmacyController
+                                                  .passwordController.text
+                                                  .contains(RegExp(r'[0-9]'))),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 )),
                           ]),
 
@@ -402,7 +569,8 @@ class _PharmacyCompleteRegistrationState
                                     .isOpeningHoursValid.value &&
                                 addPharmacyController.isEmailValid.value &&
                                 addPharmacyController.isPasswordValid.value &&
-                                !addPharmacyController.isLoading.value)
+                                !addPharmacyController.isLoading.value &&
+                                _passwordStrength == 'Strong'.tr)
                             ? addPharmacyController.addPharmacy
                             : null,
                         child: addPharmacyController.isLoading.value
@@ -416,7 +584,7 @@ class _PharmacyCompleteRegistrationState
                                   ),
                                 ),
                               )
-                            : Text('Add Pharmacy'.tr),
+                            : Text('Complete Registration'.tr),
                       ),
                     )),
                 SizedBox(height: 2.h),
@@ -439,6 +607,32 @@ class _PharmacyCompleteRegistrationState
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildRequirement(String text, bool isMet) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0.5.w),
+      child: Row(
+        children: [
+          CustomIconWidget(
+            iconName: isMet ? 'check_circle' : 'radio_button_unchecked',
+            color: isMet
+                ? AppColors.successLight
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            size: 16,
+          ),
+          SizedBox(width: 2.w),
+          Text(
+            text,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: isMet
+                      ? AppColors.successLight
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+          ),
+        ],
       ),
     );
   }

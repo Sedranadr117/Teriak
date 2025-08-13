@@ -61,10 +61,10 @@ class CancelException extends ServerException {
 class UnknownException extends ServerException {
   UnknownException(super.errorModel);
 }
+
 class ConflictException extends ServerException {
   ConflictException(super.errorModel);
 }
-
 
 void handleHttpException(Object e) {
   if (e is HttpException) {
@@ -84,6 +84,8 @@ void handleHttpResponse(http.Response response) {
   if (status >= 200 && status < 300) {
     return;
   } else if (status == 401) {
+    throw UnauthorizedException(errorModel);
+  } else if (status == 400) {
     throw UnauthorizedException(errorModel);
   } else if (status == 403) {
     throw ForbiddenException(errorModel);

@@ -29,11 +29,13 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
   @override
   Future<Either<Failure, void>> addWorkingHoursToEmployee(
     int employeeId,
-    WorkingHoursRequestParams wParms,
+    List<WorkingHoursRequestParams> workingHoursRequests,
   ) async {
     try {
       await remoteDataSource.addWorkingHoursToEmployee(
-          employeeId: employeeId, wParms: wParms);
+        employeeId: employeeId,
+        workingHoursRequests: workingHoursRequests,
+      );
       return const Right(null);
     } on ServerException catch (e) {
       return Left(Failure(errMessage: e.toString()));
@@ -81,6 +83,19 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
 
       return const Right(null);
     } catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, EmployeeEntity>> getEmployeesById({
+    required int employeeId,
+  }) async {
+    try {
+      final remoteEmployee =
+          await remoteDataSource.getEmloyeeById(employeeId: employeeId);
+      return Right(remoteEmployee);
+    } on ServerException catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
   }

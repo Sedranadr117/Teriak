@@ -1,5 +1,5 @@
 class AppPages {
-    static const String splash = '/';
+  static const String splash = '/';
   static const String signin = '/signin';
   static const String pharmacyCompleteRegistration =
       '/parmacy_complete_registration';
@@ -19,4 +19,6 @@ class AppPages {
   static const String multiSales = '/multi-sales-screen';
   static const String indebtedManagement = '/indebted-management';
   static const String addNewIndebtedCustomer = '/add-newIndebtedCustomer';
+  static const String showInvoices = '/show_invoices';
+  static const String showInvoicesDitails = '/show_invoicesDetails';
 }

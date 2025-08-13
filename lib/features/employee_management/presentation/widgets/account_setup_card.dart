@@ -6,10 +6,12 @@ import 'package:teriak/config/themes/app_icon.dart';
 
 class AccountSetupCard extends StatefulWidget {
   final TextEditingController passwordController;
+  final Function(String strength)? onStrengthChanged;
 
   const AccountSetupCard({
     Key? key,
     required this.passwordController,
+    this.onStrengthChanged,
   }) : super(key: key);
 
   @override
@@ -35,6 +37,7 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
         _passwordStrength = '';
         _strengthColor = Colors.grey;
       });
+      widget.onStrengthChanged?.call('');
       return;
     }
 
@@ -42,7 +45,6 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
 
     if (password.length >= 8) score++;
     if (password.length >= 12) score++;
-
     if (password.contains(RegExp(r'[a-z]'))) score++;
     if (password.contains(RegExp(r'[A-Z]'))) score++;
     if (password.contains(RegExp(r'[0-9]'))) score++;
@@ -60,6 +62,8 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
         _strengthColor = AppColors.successLight;
       }
     });
+
+    widget.onStrengthChanged?.call(_passwordStrength);
   }
 
   @override
@@ -194,9 +198,13 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
                       widget.passwordController.text
                           .contains(RegExp(r'[a-z]'))),
                   _buildRequirement(
-                      'Contains number'.tr,
+                    'Contains number'.tr,
+                    widget.passwordController.text.contains(RegExp(r'[0-9]')),
+                  ),
+                  _buildRequirement(
+                      'Contains special character'.tr,
                       widget.passwordController.text
-                          .contains(RegExp(r'[0-9]'))),
+                          .contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))),
                 ],
               ),
             ),

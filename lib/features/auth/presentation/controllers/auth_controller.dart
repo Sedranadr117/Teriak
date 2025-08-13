@@ -83,7 +83,14 @@ class AuthController extends GetxController {
       result.fold(
         (failure) {
           print('❌ Login failed: ${failure.errMessage}');
-          errorMessage.value = failure.errMessage;
+
+          if (failure.statusCode == 400 || failure.statusCode == 401) {
+            errorMessage.value = 'Email or password is incorrect'.tr;
+          }
+          if (failure.statusCode == 500) {
+            errorMessage.value =
+                'An unexpected error occurred. Please try again.'.tr;
+          }
         },
         (authEntity) async {
           print('✅ Login successful!');
@@ -97,13 +104,9 @@ class AuthController extends GetxController {
               authEntity.token!.isNotEmpty) {
             final cacheHelper = CacheHelper();
             await cacheHelper.saveData(key: 'token', value: authEntity.token);
-            final isPharmacyRegistrationComplete = await cacheHelper.getData(
-                    key: 'isPharmacyRegistrationComplete') ??
-                false;
-            print(
-                "-------------${cacheHelper.getData(key: 'isPharmacyRegistrationComplete')}");
-
-            if (isPharmacyRegistrationComplete) {
+            await cacheHelper.saveData(key: 'Role', value: authEntity.role);
+            print(cacheHelper.getData(key: 'Role'));
+            if (authEntity.isActive == true) {
               Get.offNamed(AppPages.employeeManagement);
             } else {
               Get.offNamed(AppPages.pharmacyCompleteRegistration);
@@ -115,7 +118,6 @@ class AuthController extends GetxController {
         },
       );
     } catch (e) {
-      print('💥 Unexpected error: $e');
       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       if (e.toString().contains('UnknownException')) {
         errorMessage.value = 'Email or Password is wrong'.tr;

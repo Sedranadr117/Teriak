@@ -46,12 +46,12 @@ class _EmployeeManagementState extends State<EmployeeManagement>
         actions: [
           IconButton(
               onPressed: () {
-                Get.toNamed(AppPages.multiSales);
+                Get.toNamed(AppPages.inventoryManagement);
               },
               icon: CustomIconWidget(iconName: 'add')),
           IconButton(
               onPressed: () {
-                Get.toNamed(AppPages.inventoryManagement);
+                Get.toNamed(AppPages.showInvoices);
               },
               icon: CustomIconWidget(iconName: 'abc')),
           IconButton(
@@ -72,48 +72,6 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           preferredSize: Size.fromHeight(16.h),
           child: Column(
             children: [
-              // // Search Bar
-              // Container(
-              //   margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-              //   child: TextField(
-              //     controller: controller.searchController,
-              //     onChanged: (value) {
-              //       setState(() {
-              //         controller.searchQuery = value;
-              //       });
-              //     },
-              //     decoration: InputDecoration(
-              //       hintText: 'Search employees...',
-              //       prefixIcon: Padding(
-              //         padding: EdgeInsets.all(3.w),
-              //         child: CustomIconWidget(
-              //           iconName: 'search',
-              //           color: Theme.of(context).colorScheme.onSurfaceVariant,
-              //           size: 20,
-              //         ),
-              //       ),
-              //       suffixIcon: controller.searchQuery.isNotEmpty
-              //           ? IconButton(
-              //               onPressed: () {
-              //                 controller.searchController.clear();
-              //                 setState(() {
-              //                   controller.searchQuery = '';
-              //                 });
-              //               },
-              //               icon: CustomIconWidget(
-              //                 iconName: 'clear',
-              //                 color: Theme.of(context)
-              //                     .colorScheme
-              //                     .onSurfaceVariant,
-              //                 size: 20,
-              //               ),
-              //             )
-              //           : null,
-              //     ),
-              //   ),
-              // ),
-
-              // Filter Widget
               Obx(
                 () => EmployeeFilterWidget(
                   selectedFilter: controller.selectedFilter.value,
@@ -239,16 +197,16 @@ class _EmployeeManagementState extends State<EmployeeManagement>
           final employee = employees[index];
           final isSelected =
               controller.selectedEmployees.contains(employee["id"]);
-
           return EmployeeCardWidget(
             employee: employee,
             isSelected: isSelected,
             onTap: () async {
+              print("--------------employee$employee");
+
               final model = EmployeeModel.fromJson(employee);
               controller.selectEmployee(model);
               await Get.toNamed(AppPages.employeeDetail, arguments: employee);
               controller.fetchAllEmployees();
-              print("employee${employee}");
             },
             onDeactivatePressed: () async {
               final confirmed = await dialogs.showDeactivateDialog(

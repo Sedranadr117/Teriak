@@ -1,6 +1,8 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
+
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -69,6 +71,29 @@ class ShiftCardWidget extends StatelessWidget {
           children: [
             Row(
               children: [
+                Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    (shift['day'] as List)
+                        .map((day) =>
+                            day.toString().substring(0, 3).toUpperCase())
+                        .join(', '),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontSize: 10.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                  ),
+                ),
+
                 Spacer(),
 
                 if (hasConflict)

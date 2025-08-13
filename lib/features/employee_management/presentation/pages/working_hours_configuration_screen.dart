@@ -9,7 +9,6 @@ import 'package:teriak/features/employee_management/presentation/controllers/emp
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
 
 import '../widgets/add_shift_bottom_sheet_widget.dart';
-import '../widgets/day_selection_card_widget.dart';
 import '../widgets/shift_card_widget.dart';
 
 class WorkingHoursConfigurationScreen extends StatefulWidget {
@@ -27,14 +26,16 @@ class _WorkingHoursConfigurationScreenState
 
   final ScrollController _scrollController = ScrollController();
 
-  void _showAddShiftBottomSheet({ShiftParams? existingShift}) {
+  _showAddShiftBottomSheet({ShiftParams? existingShift, int? existingIndex}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
       builder: (context) => AddShiftBottomSheetWidget(
         existingShift: existingShift,
-        onShiftAdded: controller.addOrUpdateShift,
+        onShiftAdded: (shift, {existingId}) =>
+            controller.addOrUpdateShift(shift, existingId: existingIndex),
+        daysOfWeek: controller.daysOfWeek,
       ),
     );
   }
@@ -70,7 +71,7 @@ class _WorkingHoursConfigurationScreenState
         actions: [
           if (controller.hasShiftConflicts())
             Padding(
-              padding: EdgeInsets.only(right: 4.w),
+              padding: EdgeInsets.only(left: 4.w, right: 4.w),
               child: const CustomIconWidget(
                 iconName: 'warning',
                 color: AppColors.warningLight,
@@ -88,40 +89,7 @@ class _WorkingHoursConfigurationScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Working Days'.tr,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                  SizedBox(height: 1.h),
-                  Text(
-                    'Select the days this employee will work'.tr,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 12.sp,
-                          color: AppColors.textSecondaryLight,
-                        ),
-                  ),
                   SizedBox(height: 2.h),
-                  Obx(
-                    () => Wrap(
-                      spacing: 2.w,
-                      runSpacing: 1.h,
-                      children: controller.daysOfWeek
-                          .map((day) => DaySelectionCardWidget(
-                                day: day.tr,
-                                isSelected:
-                                    controller.selectedDays.contains(day),
-                                onTap: () => controller.toggleDaySelection(day),
-                              ))
-                          .toList(),
-                    ),
-                  ),
-
-                  SizedBox(height: 3.h),
-
-                  // Shifts Section
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -155,7 +123,6 @@ class _WorkingHoursConfigurationScreenState
                     ],
                   ),
                   SizedBox(height: 1.h),
-
                   if (controller.hasShiftConflicts())
                     Container(
                       width: double.infinity,
@@ -252,6 +219,7 @@ class _WorkingHoursConfigurationScreenState
                               'startTime': shift.startTime,
                               'endTime': shift.endTime,
                               'description': shift.description,
+                              'day': shift.daysOfWeek
                             },
                             hasConflict: controller.hasShiftConflicts(),
                             onEdit: () =>
@@ -313,18 +281,8 @@ class _WorkingHoursConfigurationScreenState
                             Navigator.of(context).pop();
                           } else {
                             print("elssssssssssss");
-                            List<WorkingHoursRequestParams> work = [
-                              WorkingHoursRequestParams(
-                                  controller.selectedDays, controller.shifts)
-                            ];
-                            await controller.addWorkingHoursToEmployee(
-                              controller.employee.value!.id,
-                              work,
-                            );
-                            print(work);
+                            controller.saveWorkingHours();
                           }
-                          print(
-                              "controller.employee.value?.workingHoursRequests.isNotEmp=${controller.employee.value?.workingHoursRequests.isNotEmpty}");
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,

@@ -1,11 +1,19 @@
 class EndPoints {
   static const String baserUrl = "http://159.198.75.161:13000/api/v1/";
-  
+  static const String baserUrl1 = "http://159.198.75.161:13000/api/";
+
   static const String template = "template/";
 
   // Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
+
+  static const String createSale = "sales";
+  static const String getCustomers = "customers";
+  static const String searchCustomers = "customers/search";
+
+  static const String getStock = "sales";
+  static const String getSales = "sales";
 
   static const String addEmployee = "employees";
   static const String roleID = "roles";
@@ -18,6 +26,7 @@ class EndPoints {
   static String manufacturers = "manufacturers";
   static String categories = "categories";
 }
+
 class ApiKeys {
   static const String id = "id";
   static const String name = "name";
@@ -34,11 +43,8 @@ class ApiKeys {
   static const String manufacturer = "manufacturer";
   static const String notes = "notes";
   static const String categories = "categories";
-  
-   static const String createSale = 'sales';
-  static const String cancelSale = 'cancel';
+  static const String refPurchasePrice = "refPurchasePrice";
+
+  static const String refSellingPrice = "refSellingPrice";
+  static const String tax = "tax";
 }
-
-
- 
-

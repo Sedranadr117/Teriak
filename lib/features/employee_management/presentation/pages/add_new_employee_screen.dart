@@ -50,6 +50,11 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                       SizedBox(height: 4.w),
                       AccountSetupCard(
                         passwordController: controller.passwordController,
+                        onStrengthChanged: (strength) {
+                          setState(() {
+                            controller.passwordStrength = strength;
+                          });
+                        },
                       ),
                       SizedBox(height: 4.w),
                       Obx(
@@ -142,11 +147,20 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                               : () {
                                   if (controller.formKey.currentState!
                                           .validate() &&
-                                      controller.selectedRoleId.value != 0) {
-                                    controller.addNewEmployee();
-                                    print(
-                                        '📆 Days: ${controller.selectedDays}');
+                                      controller.selectedRoleId.value != 0 &&
+                                      controller.passwordStrength == 'Strong') {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback((_) {
+                                      controller.addNewEmployee();
+                                    });
+
                                     print('⏰ Shifts: ${controller.shifts}');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Password is not strong enough!')),
+                                    );
                                   }
                                 },
                           child: controller.isLoading.value
@@ -160,7 +174,7 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                     ),
                                   ),
                                 )
-                              : Text('Save Employee'.tr),
+                              : Text('Add Employee'.tr),
                         )),
                   ),
                 ),

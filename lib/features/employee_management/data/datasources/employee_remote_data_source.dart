@@ -39,18 +39,21 @@ class EmployeeRemoteDataSource {
 
   Future<EmployeeModel> addWorkingHoursToEmployee({
     required int employeeId,
-    required WorkingHoursRequestParams wParms,
+    required List<WorkingHoursRequestParams> workingHoursRequests,
   }) async {
     try {
-      final workingHoursData = wParms.toJson();
-      print(
-          '🕒 Sending working hours for employee $employeeId: $workingHoursData');
-      final workingHoursResponse = await api.post(
+      final data = {
+        "workingHoursRequests":
+            workingHoursRequests.map((e) => e.toJson()).toList(),
+      };
+
+      print('🕒 Sending working hours for employee $employeeId: $data');
+      final response = await api.post(
         'employees/$employeeId/working-hours',
-        data: workingHoursData,
+        data: data,
       );
-      print('🟢 Working hours response: $workingHoursResponse');
-      return EmployeeModel.fromJson(workingHoursResponse); // <-- Add this line
+      print('🟢 Working hours response: $response');
+      return EmployeeModel.fromJson(response);
     } catch (e) {
       print('❌ Error adding working hours: $e');
       rethrow;
@@ -85,13 +88,24 @@ class EmployeeRemoteDataSource {
     }
   }
 
+  Future<EmployeeModel> getEmloyeeById({
+    required int employeeId,
+  }) async {
+    try {
+      final response = await api.get('${EndPoints.addEmployee}/${employeeId}');
+      return EmployeeModel.fromJson(response);
+    } catch (e) {
+      print('❌ Error fetching employee: $e');
+      rethrow;
+    }
+  }
+
   Future<EmployeeModel> editEmployeeInfo(
       int employeeId, EmployeeParams params) async {
     try {
       final employeeData = {
         'firstName': params.firstName,
         'lastName': params.lastName,
-        'password': params.password,
         'phoneNumber': params.phoneNumber,
         'status': params.status,
         'dateOfHire': params.dateOfHire,

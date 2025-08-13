@@ -10,7 +10,7 @@ class AddWorkingHoursToEmployee {
 
   Future<Either<Failure, void>> call({
     required int employeeId,
-    required WorkingHoursRequestParams workingHours,
+    required List<WorkingHoursRequestParams> workingHours,
   }) async {
     return await repository.addWorkingHoursToEmployee(
       employeeId,

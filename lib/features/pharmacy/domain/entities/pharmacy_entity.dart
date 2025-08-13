@@ -11,6 +11,7 @@ class PharmacyEntity {
   final String managerFirstName;
   final String managerLastName;
   final String newPassword;
+  final bool isActive;
 
   PharmacyEntity({
     this.id,
@@ -25,5 +26,6 @@ class PharmacyEntity {
     required this.managerFirstName,
     required this.managerLastName,
     required this.newPassword,
+    required this.isActive,
   });
 }

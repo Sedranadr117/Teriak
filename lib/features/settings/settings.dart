@@ -4,10 +4,10 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/config/widgets/custom_app_bar.dart';
-import 'package:teriak/core/databases/cache/cache_helper.dart';
 
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
 import './widgets/user_profile_header_widget.dart';
@@ -536,8 +536,10 @@ class _SettingsState extends State<Settings> {
                         Navigator.pop(context);
                         setState(() {});
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Language changed to \$language')),
+                          SnackBar(
+                              content: _localeController.isArabic
+                                  ? Text('Language changed to Arabic')
+                                  : Text('Language changed to English')),
                         );
                       },
                     )))
@@ -791,16 +793,8 @@ class _SettingsState extends State<Settings> {
           ),
           ElevatedButton(
             onPressed: () async {
-              CacheHelper cacheHelper = CacheHelper();
+              final cacheHelper = CacheHelper();
               await cacheHelper.removeData(key: 'token');
-              bool result = await cacheHelper.removeData(
-                  key: 'isPharmacyRegistrationCompletes');
-              await cacheHelper.clearData();
-
-              print("removed phaaaaaaa$result");
-
-              // Remove any other user data if needed
-
               Get.offAllNamed(AppPages.signin);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Signed out successfully')),

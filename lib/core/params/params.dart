@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class TemplateParams {
   final String id;
   TemplateParams({required this.id});
@@ -65,17 +66,14 @@ class EmployeeParams {
 }
 
 class WorkingHoursRequestParams {
-  final List<String> daysOfWeek;
   final List<ShiftParams> shifts;
 
   const WorkingHoursRequestParams(
-    this.daysOfWeek,
     this.shifts,
   );
 
   Map<String, dynamic> toJson() {
     return {
-      'daysOfWeek': daysOfWeek,
       'shifts': shifts.map((shift) => shift.toJson()).toList(),
     };
   }
@@ -85,17 +83,20 @@ class ShiftParams {
   final String startTime;
   final String endTime;
   final String description;
+  final List<String> daysOfWeek;
 
   const ShiftParams(
     this.startTime,
     this.endTime,
     this.description,
+    this.daysOfWeek,
   );
   Map<String, dynamic> toJson() {
     return {
       'startTime': startTime,
       'endTime': endTime,
       'description': description,
+      'daysOfWeek': daysOfWeek
     };
   }
 }
@@ -173,7 +174,7 @@ class AddProductParams {
 class EditProductParams {
   final String languageCode;
   final int id;
-  
+
   const EditProductParams({required this.id, required this.languageCode});
 
   Map<String, dynamic> toMap() {
@@ -181,4 +182,97 @@ class EditProductParams {
       'lang': languageCode,
     };
   }
+}
+
+class SaleProcessParams {
+  final int customerId;
+  final String paymentType;
+  final String paymentMethod;
+  final String currency;
+  final String discountType;
+  final double discountValue;
+  final double? paidAmount;
+  final List<SaleItemParams> items;
+
+  const SaleProcessParams({
+    required this.customerId,
+    required this.paymentType,
+    required this.paymentMethod,
+    required this.currency,
+    required this.discountType,
+    required this.discountValue,
+    this.paidAmount,
+    required this.items,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "customerId": customerId,
+      "paymentType": paymentType,
+      "paymentMethod": paymentMethod,
+      "currency": currency,
+      "invoiceDiscountType": discountType,
+      "invoiceDiscountValue": discountValue,
+      "paidAmount": paidAmount,
+      "items": items.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class SaleItemParams {
+  final int stockItemId;
+  final int quantity;
+  final double unitPrice;
+  final double discountValue;
+  final String discountType;
+
+  const SaleItemParams({
+    required this.stockItemId,
+    required this.quantity,
+    required this.unitPrice,
+    required this.discountType,
+    required this.discountValue,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "stockItemId": stockItemId,
+      "quantity": quantity,
+      "unitPrice": unitPrice,
+      "discountValue": discountValue,
+      "discountType": discountType,
+    };
+  }
+}
+
+class CustomerParams {
+  final String name;
+  final String phoneNumber;
+  final String address;
+  final String notes;
+
+  CustomerParams(
+      {required this.notes,
+      required this.name,
+      required this.phoneNumber,
+      required this.address});
+}
+
+class SearchParams {
+  final String name;
+
+  const SearchParams({required this.name});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+    };
+  }
+}
+
+class StockParams {
+  int id;
+  StockParams({
+    required this.id,
+  });
 }

@@ -21,41 +21,41 @@ class ProgressIndicatorWidget extends StatelessWidget {
       'Manage Password'.tr,
       'Complete'.tr,
     ];
+
     List<Widget> buildSteps(BuildContext context, double progress) {
       final totalSteps = steps.length - 1;
       return List.generate(steps.length, (index) {
         final stepValue = index / totalSteps;
         final isCompleted = progress >= stepValue;
         final isActive =
-            (progress >= (index) / totalSteps) && (progress < stepValue);
-        return _buildProgressStep(
-          context,
-          steps[index],
-          isCompleted,
-          isActive: isActive,
+            (progress >= index / totalSteps) && (progress < stepValue);
+
+        return Flexible(
+          child: _buildProgressStep(
+            context,
+            steps[index],
+            isCompleted,
+            isActive: isActive,
+          ),
         );
       });
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.5.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Form Progress'.tr,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ],
+          Text(
+            'Form Progress'.tr,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 11.sp,
+                ),
           ),
-          SizedBox(height: 1.h),
+          SizedBox(height: 1.2.h),
           ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: progress,
               backgroundColor:
@@ -65,13 +65,14 @@ class ProgressIndicatorWidget extends StatelessWidget {
                     ? Theme.of(context).colorScheme.secondary
                     : Theme.of(context).colorScheme.primary,
               ),
-              minHeight: 6,
+              minHeight: 1.h, // responsive height
             ),
           ),
-          SizedBox(height: 1.h),
+          SizedBox(height: 2.h),
           Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: buildSteps(context, progress)),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: buildSteps(context, progress),
+          ),
         ],
       ),
     );
@@ -90,23 +91,25 @@ class ProgressIndicatorWidget extends StatelessWidget {
     }
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 8,
-          height: 8,
+          width: 2.w,
+          height: 2.w,
           decoration: BoxDecoration(
             color: stepColor,
             shape: BoxShape.circle,
           ),
         ),
-        SizedBox(height: 0.5.h),
+        SizedBox(height: 0.8.h),
         Text(
           label,
+          textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: stepColor,
                 fontWeight:
                     isActive || isCompleted ? FontWeight.w600 : FontWeight.w400,
-                fontSize: 10.sp,
+                fontSize: 8.sp,
               ),
         ),
       ],

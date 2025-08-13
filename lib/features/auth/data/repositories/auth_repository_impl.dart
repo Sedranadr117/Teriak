@@ -20,7 +20,10 @@ class AuthRepositoryImpl extends AuthRepository {
       final remoteAuth = await remoteDataSource.getAuth(params);
       return Right(remoteAuth);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(Failure(
+        errMessage: e.errorModel.errorMessage,
+        statusCode: e.errorModel.status,
+      ));
     }
   }
 }

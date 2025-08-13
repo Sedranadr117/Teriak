@@ -161,6 +161,8 @@ class _SigninScreenState extends State<SigninScreen> {
 
               // Login Form
               Obx(() {
+                print('------------' + authController.errorMessage.value);
+
                 return LoginFormWidget(
                   formKey: authController.formKey,
                   emailController: authController.emailController,

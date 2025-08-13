@@ -27,10 +27,10 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    controller.selectedRoleId.value = controller.employee.value?.roleId ?? 3;
     final args = ModalRoute.of(context)?.settings.arguments;
     if (args is Map<String, dynamic>) {
       employeeData = args;
+
       if (controller.employee.value == null) {
         controller.employee.value = EmployeeModel.fromJson(args);
       }

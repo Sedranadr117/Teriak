@@ -1,21 +1,22 @@
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/features/Sales%20management/presentation/pages/multi_sales_screen.dart';
-import 'package:teriak/features/Sales%20management/presentation/pages/product_search_screen.dart';
+import 'package:teriak/features/Sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/auth/presentation/pages/signIn_screen.dart';
-import 'package:teriak/features/employee_management/presentation/pages/employee_detail_screen.dart';
-import 'package:teriak/features/employee_management/presentation/bindinga/employee_management_binding.dart';
+import 'package:teriak/features/customer_managment/presentation/pages/add_new_indebted_customer.dart';
+import 'package:teriak/features/customer_managment/presentation/pages/indebted_customers_management.dart';
 import 'package:teriak/features/employee_management/presentation/pages/add_new_employee_screen.dart';
+import 'package:teriak/features/employee_management/presentation/pages/employee_detail_screen.dart';
+import 'package:teriak/features/employee_management/presentation/binding/employee_management_binding.dart';
 import 'package:teriak/features/employee_management/presentation/pages/employee_management.dart';
 import 'package:teriak/features/add_product/presentation/pages/add_product/add_product.dart';
 import 'package:teriak/features/edit_product/presentation/pages/edit_product/edit_product.dart';
 import 'package:teriak/features/employee_management/presentation/pages/working_hours_configuration_screen.dart';
-import 'package:teriak/features/indebted_management/presentation/pages/add_new_indebted_customer.dart';
-import 'package:teriak/features/indebted_management/presentation/pages/indebted_customers_management.dart';
-import 'package:teriak/features/inventory_management/inventory_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
+import 'package:teriak/features/sales_management/presentation/pages/invoice_detail_screen.dart';
+import 'package:teriak/features/sales_management/presentation/pages/invoice_list_screen.dart';
 import 'package:teriak/features/settings/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
+import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
 import 'package:teriak/features/template/presentation/pages/template_screen.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/product_details/presentation/pages/product_details/product_details_page.dart';
@@ -44,12 +45,7 @@ class AppRoutes {
     ),
     GetPage(
       name: AppPages.inventoryManagement,
-      page: () => InventoryManagement(),
-      transition: Transition.fadeIn,
-    ),
-    GetPage(
-      name: AppPages.productSearch,
-      page: () => const ProductSearchScreen(),
+      page: () => StockManagement(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -60,6 +56,16 @@ class AppRoutes {
     GetPage(
       name: AppPages.indebtedManagement,
       page: () => const IndebtedCustomersManagement(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.showInvoices,
+      page: () => const InvoiceListScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.showInvoicesDitails,
+      page: () => const InvoiceDetailScreen(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -110,7 +116,7 @@ class AppRoutes {
     ),
     GetPage(
       name: AppPages.editProductPage,
-      page: () =>  EditProductPage(),
+      page: () => EditProductPage(),
       transition: Transition.fadeIn,
     ),
   ];

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
@@ -18,9 +17,10 @@ import 'package:teriak/features/employee_management/domain/usecases/edit_employe
 import 'package:teriak/features/employee_management/domain/usecases/get_all_roles.dart';
 import 'package:teriak/features/employee_management/domain/usecases/get_all_employees.dart';
 import 'package:teriak/features/employee_management/domain/usecases/delete_employee.dart';
+import 'package:teriak/features/employee_management/domain/usecases/get_employee_by_id.dart';
 
 class EmployeeController extends GetxController {
-  final Rx<EmployeeEntity?> employee = Rx<EmployeeEntity?>(null);
+  Rx<EmployeeEntity?> employee = Rx<EmployeeEntity?>(null);
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -34,6 +34,7 @@ class EmployeeController extends GetxController {
   final RxString currentUserType = 'intern'.obs;
   final List<String> employeeStatuses = ['Active', 'Inactive'];
   final RxBool isActive = true.obs;
+  String passwordStrength = '';
 
   final RxInt selectedRoleId = 0.obs;
   final RxList<WorkingHoursRequestParams> workingHoursRequests =
@@ -50,11 +51,12 @@ class EmployeeController extends GetxController {
   final RxList<int> selectedEmployees = <int>[].obs;
   late final AddEmployee _addEmployee;
   late final GetAllRoles _getAllRoles;
+  late final GetEmployeeById _getEmployeeById;
 
   late final AddWorkingHoursToEmployee _addWorkingHoursToEmployee;
   late final DeleteEmployee _deleteEmployee;
 
-  final List<String> daysOfWeek = [
+  final RxList<String> daysOfWeek = [
     'MONDAY',
     'TUESDAY',
     'WEDNESDAY',
@@ -62,13 +64,13 @@ class EmployeeController extends GetxController {
     'FRIDAY',
     'SATURDAY',
     'SUNDAY',
-  ];
+  ].obs;
 
-  final RxList<String> selectedDays = <String>[].obs;
   final RxList<ShiftParams> shifts = <ShiftParams>[].obs;
   final RxList<EmployeeEntity> employees = <EmployeeEntity>[].obs;
   late final GetAllEmployees _getAllEmployees;
   late final EditEmployee _editEmployee;
+  var selectedDays = <String>[].obs;
 
   late final EmployeeRemoteDataSource remoteDataSource;
 
@@ -79,7 +81,8 @@ class EmployeeController extends GetxController {
       final index = shifts.indexWhere((s) =>
           s.startTime == shiftData.startTime &&
           s.endTime == shiftData.endTime &&
-          s.description == shiftData.description);
+          s.description == shiftData.description &&
+          s.daysOfWeek == shiftData.daysOfWeek);
       if (index != -1) {
         shifts[index] = shiftData;
       }
@@ -87,6 +90,11 @@ class EmployeeController extends GetxController {
       shifts.add(shiftData);
     }
     sortShifts();
+  }
+
+  void buildWorkingHoursRequests() {
+    workingHoursRequests.clear();
+    workingHoursRequests.add(WorkingHoursRequestParams(shifts.toList()));
   }
 
   void sortShifts() {
@@ -102,13 +110,21 @@ class EmployeeController extends GetxController {
   bool hasShiftConflicts() {
     for (int i = 0; i < shifts.length; i++) {
       for (int j = i + 1; j < shifts.length; j++) {
+        final commonDays = shifts[i]
+            .daysOfWeek
+            .toSet()
+            .intersection(shifts[j].daysOfWeek.toSet());
+
+        if (commonDays.isEmpty) {
+          continue;
+        }
+
         final start1 = _parseTime(shifts[i].startTime);
         final end1 = _parseTime(shifts[i].endTime);
         final start2 = _parseTime(shifts[j].startTime);
         final end2 = _parseTime(shifts[j].endTime);
 
-        if ((start1 < end2 && end1 > start2) ||
-            (start2 < end1 && end2 > start1)) {
+        if ((start1 < end2 && end1 > start2)) {
           return true;
         }
       }
@@ -121,12 +137,7 @@ class EmployeeController extends GetxController {
     return int.parse(parts[0]) * 60 + int.parse(parts[1]);
   }
 
-  void saveWorkingHours(BuildContext context) {
-    if (selectedDays.isEmpty) {
-      Get.snackbar('Error'.tr, 'Please select at least one working day'.tr);
-      return;
-    }
-
+  void saveWorkingHours() {
     if (shifts.isEmpty) {
       Get.snackbar('Error'.tr, 'Please add at least one shift'.tr);
       return;
@@ -134,7 +145,9 @@ class EmployeeController extends GetxController {
 
     if (hasShiftConflicts()) {
       Get.snackbar(
-          'Warning'.tr, 'Shift conflicts detected. Please resolve them.'.tr);
+        'Error'.tr,
+        'Please resolve shift conflicts before saving'.tr,
+      );
       return;
     }
 
@@ -144,15 +157,15 @@ class EmployeeController extends GetxController {
       return;
     }
 
-    final workingHours = WorkingHoursRequestParams(
-      selectedDays.toList(),
-      shifts.toList(),
+    buildWorkingHoursRequests();
+
+    addWorkingHoursToEmployee(
+      employee.value!.id,
+      workingHoursRequests.toList(),
     );
-    addWorkingHoursToEmployee(employee.value!.id, [workingHours]);
   }
 
   void clearWorkingHours() {
-    selectedDays.clear();
     shifts.clear();
   }
 
@@ -215,6 +228,7 @@ class EmployeeController extends GetxController {
         AddWorkingHoursToEmployee(repository: repository);
     _editEmployee = EditEmployee(repository: repository);
     _deleteEmployee = DeleteEmployee(repository);
+    _getEmployeeById = GetEmployeeById(repository: repository);
   }
 
   Future<void> fetchRoles() async {
@@ -311,42 +325,34 @@ class EmployeeController extends GetxController {
     }
   }
 
-  Future<void> addWorkingHoursToEmployee(int employeeId,
-      List<WorkingHoursRequestParams> workingHoursRequests) async {
-    print('addNewEmployee cssalled');
-    isLoading.value = true;
-    try {
-      await Future.delayed(Duration(seconds: 3));
-
-      for (var whrs in workingHoursRequests) {
-        final result = await _addWorkingHoursToEmployee(
-            employeeId: employeeId, workingHours: whrs);
-        result.fold(
-          (failure) {
-            print(
-                '❌ Error adding working hours for employee $employeeId: ${failure.errMessage}');
-            Get.snackbar(
-                'Error'.tr, 'Failed to add working hours for employee.'.tr);
-          },
-          (_) {
-            Get.back();
-            print('✅ Working hours added for employee $employeeId');
-            Get.snackbar('Success'.tr, 'Working hours added successfully!'.tr);
-          },
-        );
-      }
-    } catch (e) {
-      print('❌ Exception adding working hours for employee $employeeId: $e');
-      Get.snackbar('Error'.tr, 'Failed to add working hours for employee.'.tr);
-    } finally {
-      isLoading.value = false;
-    }
+  void addWorkingHoursForDays(List<String> days, List<ShiftParams> shifts) {
+    workingHoursRequests.add(WorkingHoursRequestParams(shifts));
   }
 
-  Future<void> openWorkingHoursScreen(BuildContext context) async {
-    final result = await Get.toNamed(AppPages.workingHours);
-    if (result != null && result is List<WorkingHoursRequestParams>) {
-      workingHoursRequests.assignAll(result);
+  Future<void> addWorkingHoursToEmployee(int employeeId,
+      List<WorkingHoursRequestParams> workingHoursRequests) async {
+    isLoading.value = true;
+    try {
+      final result = await _addWorkingHoursToEmployee(
+        employeeId: employeeId,
+        workingHours: workingHoursRequests,
+      );
+      result.fold(
+        (failure) {
+          print('❌ Error adding working hours: ${failure.errMessage}');
+          Get.snackbar('Error'.tr, 'Failed to add working hours.'.tr);
+        },
+        (_) {
+          Get.back();
+          print('✅ Working hours added successfully');
+          Get.snackbar('Success'.tr, 'Working hours added successfully!'.tr);
+        },
+      );
+    } catch (e) {
+      print('❌ Exception adding working hours: $e');
+      Get.snackbar('Error'.tr, 'Failed to add working hours.'.tr);
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -357,8 +363,9 @@ class EmployeeController extends GetxController {
         .where((e) {
           if (selectedFilter.value == 'All'.tr) return true;
           if (selectedFilter.value == 'Active'.tr) return e.status == 'ACTIVE';
-          if (selectedFilter.value == 'Inactive'.tr)
+          if (selectedFilter.value == 'Inactive'.tr) {
             return e.status == 'INACTIVE';
+          }
           return true;
         })
         .map((e) => {
@@ -386,56 +393,12 @@ class EmployeeController extends GetxController {
   }
 
   void toggleDaySelection(String day) {
+    selectedDays.clear();
     if (selectedDays.contains(day)) {
       selectedDays.remove(day);
     } else {
       selectedDays.add(day);
     }
-  }
-
-  void saveSchedule(BuildContext context) async {
-    if (selectedDays.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please select at least one working day'.tr),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-      return;
-    }
-
-    if (shifts.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please add at least one shift'.tr),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
-      );
-      return;
-    }
-
-    if (hasShiftConflicts()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please resolve shift conflicts before saving'.tr),
-          backgroundColor: AppColors.warningLight,
-        ),
-      );
-      return;
-    }
-
-    isLoading.value = true;
-
-    await Future.delayed(const Duration(seconds: 2));
-
-    isLoading.value = false;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Working hours saved successfully'.tr),
-        backgroundColor: AppColors.successLight,
-      ),
-    );
   }
 
   Future<void> fetchAllEmployees() async {
@@ -464,6 +427,30 @@ class EmployeeController extends GetxController {
     }
   }
 
+  Future<void> fetchEmployeeById(
+    int employeeId,
+  ) async {
+    print('fetch Employees called');
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      final result = await _getEmployeeById(employeeId: employeeId);
+      result.fold((failure) {
+        print('❌ Error fetching employee : ${failure.errMessage}');
+        errorMessage.value = failure.errMessage;
+        Get.snackbar('Error'.tr, errorMessage.value);
+      }, (currEmployee) {
+        employee.value = currEmployee;
+      });
+    } catch (e) {
+      print('💥 Unexpected error while fetching employees: $e');
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> editEmployee(int employeeId, EmployeeParams params) async {
     isLoading.value = true;
     errorMessage.value = '';
@@ -472,7 +459,6 @@ class EmployeeController extends GetxController {
         id: employeeId,
         firstName: params.firstName,
         lastName: params.lastName,
-        password: params.password,
         phoneNumber: params.phoneNumber,
         status: params.status,
         dateOfHire: params.dateOfHire,
@@ -488,10 +474,18 @@ class EmployeeController extends GetxController {
         },
         (updatedEmployee) {
           employee.value = updatedEmployee;
-          Future.delayed(Duration(milliseconds: 100), () {
-            Get.snackbar('Success'.tr, 'Employee updated successfully!'.tr);
-          });
-          // Get.back();
+          Get.snackbar('Success'.tr, 'Employee updated successfully!'.tr);
+          fetchEmployeeById(employeeId);
+          firstNameController.clear();
+          lastNameController.clear();
+          passwordController.clear();
+          phoneNumberController.clear();
+          statusController.clear();
+          dateOfHireController.clear();
+          selectedRoleId.value = 0;
+          workingHoursRequests.clear();
+          statusController.text = 'ACTIVE';
+          dateOfHireController.text = DateTime.now().toString().split(' ')[0];
         },
       );
     } catch (e) {

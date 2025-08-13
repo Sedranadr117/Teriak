@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/core/params/params.dart';
-import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/employee_management/presentation/widgets/day_selection_card_widget.dart';
 
 class AddShiftBottomSheetWidget extends StatefulWidget {
   final ShiftParams? existingShift;
   final void Function(ShiftParams shift, {int? existingId}) onShiftAdded;
+  final RxList<String> daysOfWeek;
 
   const AddShiftBottomSheetWidget({
     Key? key,
     this.existingShift,
     required this.onShiftAdded,
+    required this.daysOfWeek,
   }) : super(key: key);
 
   @override
@@ -24,19 +27,24 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
 
-  String? selectedDay;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
   bool isEditing = false;
 
+  // هنا بنعمل List محلية لإدارة الأيام المختارة (بدل widget.selectedDays)
+  late List<String> selectedDaysLocal;
+
   @override
   void initState() {
     super.initState();
+
+    // تهيئة الأيام المختارة محلياً من الشفت الموجود أو فاضية لو جديد
+    selectedDaysLocal = widget.existingShift?.daysOfWeek.toList() ?? [];
+
     if (widget.existingShift != null) {
       isEditing = true;
       _descriptionController.text = widget.existingShift!.description;
 
-      // Parse existing times
       final startParts = widget.existingShift!.startTime.split(':');
       startTime = TimeOfDay(
         hour: int.parse(startParts[0]),
@@ -82,17 +90,8 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
     final startMinutes = startTime!.hour * 60 + startTime!.minute;
     final endMinutes = endTime!.hour * 60 + endTime!.minute;
 
-    // Allow overnight shifts
+    // يسمح للشفتات اللي تمتد عبر منتصف الليل (overnight)
     return startMinutes != endMinutes;
-  }
-
-  bool _isOvernightShift() {
-    if (startTime == null || endTime == null) return false;
-
-    final startMinutes = startTime!.hour * 60 + startTime!.minute;
-    final endMinutes = endTime!.hour * 60 + endTime!.minute;
-
-    return endMinutes <= startMinutes;
   }
 
   void _selectTime(BuildContext context, bool isStartTime) async {
@@ -112,7 +111,7 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
               hourMinuteTextColor: Theme.of(context).colorScheme.primary,
               dialHandColor: Theme.of(context).colorScheme.primary,
               dialBackgroundColor:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
             ),
           ),
           child: child!,
@@ -131,15 +130,40 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
     }
   }
 
+  void _toggleDaySelection(String day) {
+    setState(() {
+      if (selectedDaysLocal.contains(day)) {
+        selectedDaysLocal.remove(day);
+      } else {
+        selectedDaysLocal.add(day);
+      }
+    });
+  }
+
   void _saveShift() {
     if (!_formKey.currentState!.validate()) return;
     if (startTime == null || endTime == null) return;
     if (!_isValidTimeRange()) return;
+    if (selectedDaysLocal.isEmpty) {
+      Get.snackbar('Error', 'Please select at least one day.'.tr,
+          snackPosition: SnackPosition.BOTTOM);
+      return;
+    }
 
-    final shiftData = ShiftParams(_formatTimeOfDay(startTime!),
-        _formatTimeOfDay(endTime!), _descriptionController.text.trim());
+    final shiftData = ShiftParams(
+      _formatTimeOfDay(startTime!),
+      _formatTimeOfDay(endTime!),
+      _descriptionController.text.trim(),
+      List<String>.from(selectedDaysLocal),
+    );
 
-    widget.onShiftAdded(shiftData);
+    widget.onShiftAdded(
+      shiftData,
+      existingId: widget.existingShift != null
+          ? widget.daysOfWeek.indexOf(selectedDaysLocal.first)
+          : null,
+    );
+
     Navigator.pop(context);
   }
 
@@ -174,7 +198,6 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 3.h),
 
                   // Header
@@ -198,7 +221,32 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
 
                   SizedBox(height: 3.h),
 
-                  // Time Selection
+                  // Day Selection مع استخدام الحالة المحلية بدل widget.selectedDays
+                  Text(
+                    'Select Day',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                  SizedBox(height: 1.h),
+
+                  Wrap(
+                    spacing: 2.w,
+                    runSpacing: 1.h,
+                    children: widget.daysOfWeek
+                        .map((day) => DaySelectionCardWidget(
+                              day: day.tr,
+                              isSelected: selectedDaysLocal.contains(day),
+                              onTap: () => _toggleDaySelection(day),
+                            ))
+                        .toList(),
+                  ),
+
+                  SizedBox(height: 2.h),
+
+                  // الوقت وزي ما هو في الكود
+
                   Row(
                     children: [
                       // Start Time
@@ -317,52 +365,6 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                     ],
                   ),
 
-                  // Overnight Shift Indicator
-                  if (startTime != null &&
-                      endTime != null &&
-                      _isOvernightShift()) ...[
-                    SizedBox(height: 1.h),
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.all(3.w),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .secondary
-                              .withValues(alpha: 0.3),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          CustomIconWidget(
-                            iconName: 'nights_stay',
-                            color: Theme.of(context).colorScheme.secondary,
-                            size: 16,
-                          ),
-                          SizedBox(width: 2.w),
-                          Text(
-                            'This is an overnight shift',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(
-                                  fontSize: 12.sp,
-                                  color:
-                                      Theme.of(context).colorScheme.secondary,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-
-                  // Time Validation Error
                   if (startTime != null &&
                       endTime != null &&
                       !_isValidTimeRange()) ...[
@@ -374,13 +376,13 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
                         color: Theme.of(context)
                             .colorScheme
                             .error
-                            .withValues(alpha: 0.1),
+                            .withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: Theme.of(context)
                               .colorScheme
                               .error
-                              .withValues(alpha: 0.3),
+                              .withOpacity(0.3),
                         ),
                       ),
                       child: Row(
@@ -408,7 +410,6 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
 
                   SizedBox(height: 3.h),
 
-                  // Description
                   Text(
                     'Description (Optional)'.tr,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -437,7 +438,6 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
 
                   SizedBox(height: 4.h),
 
-                  // Action Buttons
                   Row(
                     children: [
                       Expanded(

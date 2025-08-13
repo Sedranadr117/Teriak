@@ -15,14 +15,14 @@ import 'package:teriak/features/search_product/domain/usecases/search_product.da
 
 class SearchProductController extends GetxController {
   final TextEditingController searchController = TextEditingController();
-final FocusNode searchFocus = FocusNode();
+  final FocusNode searchFocus = FocusNode();
   late final NetworkInfoImpl networkInfo;
   late final SearchProduct searchProductUseCase;
 
   var isSearching = false.obs;
   var results = [].obs;
   var errorMessage = ''.obs;
-final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
+  final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
 
   Timer? _debounceTimer;
 
@@ -31,19 +31,19 @@ final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
     super.onInit();
     _initializeDependencies();
 
-  //   searchController.addListener(() {
-  //     if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
+    //   searchController.addListener(() {
+    //     if (_debounceTimer?.isActive ?? false) _debounceTimer!.cancel();
 
-  //     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
-  //       final query = searchController.text.trim();
-  //       if (query.isEmpty) {
-  //         results.clear();
-  //         errorMessage.value = '';
-  // searchStatus.value = null; 
-  //         return;
-  //       }
-  //       search(query);
-  //     });
+    //     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+    //       final query = searchController.text.trim();
+    //       if (query.isEmpty) {
+    //         results.clear();
+    //         errorMessage.value = '';
+    // searchStatus.value = null;
+    //         return;
+    //       }
+    //       search(query);
+    //     });
     // });
   }
 
@@ -51,7 +51,7 @@ final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
   void onClose() {
     _debounceTimer?.cancel();
     searchController.dispose();
-        searchFocus.dispose();
+    searchFocus.dispose();
 
     super.onClose();
   }
