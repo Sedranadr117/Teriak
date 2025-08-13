@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/widgets/custom_binding_widget.dart';
@@ -7,7 +8,6 @@ import 'package:teriak/features/master_product/presentation/pages/all_product/wi
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/pages/widgets/supplier_bottomsheet_widget.dart';
 import 'package:teriak/features/suppliers/delete_supplier/presentation/controller/delete_supplier_controller.dart';
-import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/supplier_detail_bottom_sheet_widget.dart';
 import 'package:teriak/features/suppliers/search_supplier/presentation/controller/search_supplier_controller.dart';
 import 'package:teriak/features/suppliers/search_supplier/presentation/pages/search_bar.dart';
 import './widgets/supplier_card_widget.dart';
@@ -33,7 +33,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: Text('Supplier Management',
+          title: Text('Supplier Management'.tr,
               style: Theme.of(context).textTheme.titleLarge),
         ),
         body: SafeArea(
@@ -53,12 +53,12 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                       return CommonWidgets.buildErrorWidget(
                         context: context,
                         errorMessage: supplierController.errorMessage.value,
-                        title: 'Error Suppliers Loading',
+                        title: 'Error Suppliers Loading'.tr,
                       );
                     }
 
                     if (supplierController.suppliers.isEmpty) {
-                      return Center(child: Text("لايوجد موردين"));
+                      return Center(child: Text("No suppliers found".tr));
                     }
 
                     return RefreshIndicator(
@@ -83,12 +83,12 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                                 Get.toNamed(AppPages.editSupplier,
                                     arguments: supplier);
                               },
-                                onDelete: () async {
-                              await deleteController
-                                  .deleteSupplier(supplier.id);
-                              supplierController.suppliers
-                                  .removeWhere((s) => s.id == supplier.id);
-                            },
+                              onDelete: () async {
+                                await deleteController
+                                    .deleteSupplier(supplier.id);
+                                supplierController.suppliers
+                                    .removeWhere((s) => s.id == supplier.id);
+                              },
                             ),
                           ),
                         ],
@@ -104,7 +104,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                     return CommonWidgets.buildErrorWidget(
                       context: context,
                       errorMessage: searchController.errorMessage.value,
-                      title: 'Error Searching Suppliers',
+                      title: 'Error Searching Suppliers'.tr,
                     );
                   }
 
@@ -157,7 +157,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
           onTap: () {
             Get.toNamed(AppPages.addSupplier);
           },
-          label: 'Add Supplier',
+          label: 'Add Supplier'.tr,
         ));
   }
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_theme.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
-
 
 class FinancialOverviewCard extends StatelessWidget {
   final SupplierModel supplier;
@@ -18,9 +18,9 @@ class FinancialOverviewCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final totalPayments = 12.3 ;
-    final totalDebts = 12.4 ;
-    final currency = supplier.preferredCurrency ;
+    final totalPayments = 12.3;
+    final totalDebts = 12.4;
+    final currency = supplier.preferredCurrency;
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -29,13 +29,13 @@ class FinancialOverviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Container(
-         decoration:  BoxDecoration(
-        color: theme.colorScheme.surface.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          ),
         ),
-      ),
         width: double.infinity,
         padding: EdgeInsets.all(4.w),
         child: Column(
@@ -50,7 +50,7 @@ class FinancialOverviewCard extends StatelessWidget {
                 ),
                 SizedBox(width: 3.w),
                 Text(
-                  "Financial Overview",
+                  "Financial Overview".tr,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: colorScheme.onSurface,
@@ -64,7 +64,7 @@ class FinancialOverviewCard extends StatelessWidget {
                 Expanded(
                   child: _buildFinancialItem(
                     context: context,
-                    title: "Total Payments",
+                    title: "Total Payments".tr,
                     amount: totalPayments,
                     currency: currency,
                     color: Theme.of(context).colorScheme.tertiary,
@@ -75,7 +75,7 @@ class FinancialOverviewCard extends StatelessWidget {
                 Expanded(
                   child: _buildFinancialItem(
                     context: context,
-                    title: "Total Debts",
+                    title: "Total Debts".tr,
                     amount: totalDebts,
                     currency: currency,
                     color: totalDebts > 0
@@ -99,7 +99,7 @@ class FinancialOverviewCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Net Balance",
+                    "Net Balance".tr,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       color: colorScheme.onSurface,

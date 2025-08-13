@@ -30,4 +30,13 @@ class ProductEntity {
     required this.notes,
     required this.categories,
   });
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is ProductEntity && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
 }

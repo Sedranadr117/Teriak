@@ -23,6 +23,7 @@ class EndPoints {
   static String purchaseOrders = "purchase-orders";
   static String purchaseOrdersPaginated = "purchase-orders/paginated";
   static String purchaseInvoices = "purchase-invoices";
+  static String purchaseInvoicesPaginated = "purchase-invoices/paginated";
 }
 
 class ApiKeys {
@@ -66,4 +67,20 @@ class ApiKeys {
   // Sales
   static const String createSale = 'sales';
   static const String cancelSale = 'cancel';
+
+  // Purchase Invoice
+  static const String purchaseOrderId = 'purchaseOrderId';
+  static const String invoiceNumber = 'invoiceNumber';
+  static const String createdAt = 'createdAt';
+  static const String createdBy = 'createdBy';
+
+
+  // Item keys
+  static const String productName = 'productName';
+  static const String receivedQty = 'receivedQty';
+  static const String bonusQty = 'bonusQty';
+  static const String invoicePrice = 'invoicePrice';
+  static const String actualPrice = 'actualPrice';
+  static const String batchNo = 'batchNo';
+  static const String expiryDate = 'expiryDate';
 }

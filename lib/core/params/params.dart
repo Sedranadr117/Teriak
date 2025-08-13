@@ -189,6 +189,7 @@ class SupplierParams {
   const SupplierParams({required this.id});
 }
 
+
 class SearchSupplierParams {
   final String keyword;
 
@@ -198,6 +199,11 @@ class SearchSupplierParams {
       'name': keyword,
     };
   }
+}
+class DeletePurchaseOrderParams {
+  final int id;
+
+  const DeletePurchaseOrderParams({required this.id});
 }
 
 class DetailsPurchaseOrdersParams {
@@ -218,6 +224,32 @@ class EditPurchaseOrdersParams {
   final int id;
 
   const EditPurchaseOrdersParams(
+      {required this.id, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'language': languageCode,
+    };
+  }
+}
+class PurchaseInvoiceDetailsParams {
+  final String languageCode;
+  final int id;
+
+  const PurchaseInvoiceDetailsParams(
+      {required this.id, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'language': languageCode,
+    };
+  }
+}
+class EditPurchaseInvoiceParams {
+  final String languageCode;
+  final int id;
+
+  const EditPurchaseInvoiceParams(
       {required this.id, required this.languageCode});
 
   Map<String, dynamic> toMap() {

@@ -44,16 +44,28 @@ class GetAllProductController extends GetxController {
 
   void getProducts() async {
     try {
-    isLoading.value = true;
-    String currentLanguageCode = LocaleController.to.locale.languageCode;
-    final q = AllProductParams(
-      languageCode: currentLanguageCode,
-    );
-    final result = await getAllProductUseCase(params: q);
-    result.fold(
-      (failure) => errorMessage.value = failure.errMessage,
-      (productList) => products.value = productList,
-    );
+      isLoading.value = true;
+      String currentLanguageCode = LocaleController.to.locale.languageCode;
+      final q = AllProductParams(
+        languageCode: currentLanguageCode,
+      );
+      final result = await getAllProductUseCase(params: q);
+      result.fold(
+        (failure) => errorMessage.value = failure.errMessage,
+        (productList) {
+          // Ensure we have unique products based on ID
+          final uniqueProducts = productList.fold<List<dynamic>>(
+            [],
+            (list, product) {
+              if (!list.any((p) => p.id == product.id)) {
+                list.add(product);
+              }
+              return list;
+            },
+          );
+          products.value = uniqueProducts;
+        },
+      );
     } catch (e) {
       errorMessage.value = e.toString();
       print(errorMessage.value);
@@ -61,7 +73,8 @@ class GetAllProductController extends GetxController {
       isLoading.value = false;
     }
   }
-    Future<void> refreshProducts() async {
+
+  Future<void> refreshProducts() async {
     try {
       isRefreshing.value = true;
       await Future.delayed(const Duration(milliseconds: 1500));
@@ -70,5 +83,4 @@ class GetAllProductController extends GetxController {
       isRefreshing.value = false;
     }
   }
-
 }

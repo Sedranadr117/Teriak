@@ -14,18 +14,21 @@ import 'package:teriak/features/indebted_management/presentation/pages/add_new_i
 import 'package:teriak/features/indebted_management/presentation/pages/indebted_customers_management.dart';
 import 'package:teriak/features/inventory_management/inventory_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
-import 'package:teriak/features/purchase/add_purchase_order/presentation/controller/add_order_binding.dart';
-import 'package:teriak/features/purchase/add_purchase_order/presentation/pages/create_purchase_order.dart';
-import 'package:teriak/features/purchase/all_purchase_orders/presentation/pages/purchase_order_list.dart';
-import 'package:teriak/features/purchase/edit_purchase_order/presentation/pages/edit_purchase_order.dart';
-import 'package:teriak/features/purchase/edit_purchase_order/presentation/binding/edit_purchase_order_binding.dart';
-import 'package:teriak/features/purchase/purchase_order_deatails/presentation/pages/purchase_order_detail.dart';
+import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/pages/enhanced_create_invoice_screen.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
+import 'package:teriak/features/purchase_invoice/EditPurchaseInvoice/presentation/pages/invoice_editing.dart';
+import 'package:teriak/features/purchase_invoice/PurchaseInvoiceDetails/presentation/pages/invoice_detail_screen.dart';
+import 'package:teriak/features/purchase_order/add_purchase_order/presentation/controller/add_order_binding.dart';
+import 'package:teriak/features/purchase_order/add_purchase_order/presentation/pages/create_purchase_order.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
+import 'package:teriak/features/purchase_order/edit_purchase_order/presentation/pages/edit_purchase_order.dart';
+import 'package:teriak/features/purchase_order/edit_purchase_order/presentation/binding/edit_purchase_order_binding.dart';
+import 'package:teriak/features/purchase_order/purchase_order_deatails/presentation/pages/purchase_order_detail.dart';
 import 'package:teriak/features/settings/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
 import 'package:teriak/features/suppliers/add_supplier/presentation/pages/add_supplier_screen.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/pages/supplier_list_screen.dart';
 import 'package:teriak/features/suppliers/edit_supplier/presentation/pages/edit_supplier_screen.dart';
-import 'package:teriak/features/template/presentation/pages/template_screen.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/product_details/presentation/pages/product_details/product_details_page.dart';
 
@@ -102,11 +105,7 @@ class AppRoutes {
       page: () => WorkingHoursConfigurationScreen(),
       transition: Transition.fadeIn,
     ),
-    GetPage(
-      name: AppPages.home,
-      page: () => const HomePage(),
-      transition: Transition.fadeIn,
-    ),
+ 
     GetPage(
       name: AppPages.productDetailPage,
       page: () => const ProductDetailPage(),
@@ -161,7 +160,25 @@ class AppRoutes {
       page: () => PurchaseOrderList(),
       transition: Transition.fadeIn,
     ),
+    GetPage(
+      name: AppPages.purchaseInvoiceList,
+      page: () => AllPurchaseInvoiceScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.enhancedCreateInvoice,
+      page: () => EnhancedCreateInvoiceScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.editPurchaseInvoice,
+      page: () => InvoiceEditing(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.invoiceDetail,
+      page: () => InvoiceDetailScreen(),
+      transition: Transition.fadeIn,
+    ),
   ];
 }
-
-class CreatePurchaseOrderScreen {}

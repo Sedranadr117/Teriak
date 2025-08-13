@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -40,7 +41,7 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          'Add Supplier',
+          'Add Supplier'.tr,
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
@@ -75,7 +76,7 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
 
                   setState(() {});
                 },
-                label: "Save Supplier"),
+                label: "Save Supplier".tr),
             CommonWidgets.buildRequiredWidget(context: context),
           ],
         ),

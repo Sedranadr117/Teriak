@@ -27,4 +27,11 @@ class AppPages {
   static const String purchaseOrderList = '/purchase-order-list';
   static const String purchaseOrderDetail = '/purchase-order-detail';
   static const String createPurchaseOrder = '/create-purchase-order';
+  static const String enhancedCreateInvoice = '/enhanced-create-invoice-screen';
+
+  // Purchase Invoice Routes
+  static const String purchaseInvoiceList = '/purchase-invoice-list';
+  static const String invoiceDetail = '/invoice-detail';
+  static const String purchaseOrderSelection = '/purchase-order-selection';
+  static const String editPurchaseInvoice = '/edit-purchase-invoice';
 }

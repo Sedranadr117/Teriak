@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/financial_overview_card.dart';
@@ -37,16 +38,16 @@ class SupplierDetailBottomSheetWidget extends StatelessWidget {
             preferredCurrency: supplier.preferredCurrency,
           ),
           SupplierInfoWidget(
-            title: 'Contact Information',
+            title: 'Contact Information'.tr,
             children: [
               SupplierInfoRow(
                 iconName: 'phone',
-                label: 'Phone',
+                label: 'Phone'.tr,
                 value: supplier.phone,
               ),
               SupplierInfoRow(
                 iconName: 'location_on',
-                label: 'Address',
+                label: 'Address'.tr,
                 value: supplier.address,
               ),
             ],

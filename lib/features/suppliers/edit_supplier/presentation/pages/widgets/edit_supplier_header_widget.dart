@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
@@ -50,7 +51,7 @@ class EditSupplierHeaderWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Editing Supplier',
+                  'Editing Supplier'.tr,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
@@ -68,7 +69,7 @@ class EditSupplierHeaderWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 0.5.h),
                 Text(
-                  'Make changes to supplier information',
+                  'Make changes to supplier information'.tr,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),

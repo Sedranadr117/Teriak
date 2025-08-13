@@ -7,7 +7,6 @@ import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_colors.dart';
-import 'package:teriak/features/purchase/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/pages/supplier_list_screen.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
@@ -69,9 +68,10 @@ class _SettingsState extends State<Settings> {
               child: CustomIconWidget(iconName: "car_crash")),
           GestureDetector(
               onTap: () {
-                Get.toNamed(AppPages.purchaseOrderDetail);
+                Get.toNamed(AppPages.purchaseInvoiceList);
               },
               child: CustomIconWidget(iconName: "dangerous")),
+         
           
         ],
         showThemeToggle:
