@@ -79,7 +79,7 @@ class OrderSummaryCard extends StatelessWidget {
       children: [
         _buildSummaryRow(
           'Products List'.tr,
-          '$itemCount ${itemCount == 1 ? 'item' : 'items'}',
+          '$itemCount ${itemCount == 1 ? 'item'.tr : 'items'.tr}',
         ),
         SizedBox(height: 0.8.h),
         _buildSummaryRow(

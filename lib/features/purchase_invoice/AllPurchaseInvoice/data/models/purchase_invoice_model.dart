@@ -24,10 +24,10 @@ class PurchaseInvoiceModel extends PurchaseInvoiceEntity {
       currency: json[ApiKeys.currency],
       total: (json[ApiKeys.total] ?? 0).toDouble(),
       invoiceNumber: json[ApiKeys.invoiceNumber],
-      createdAt:List<int>.from(json['createdAt'] ?? []),
+      createdAt:List<int>.from(json[ApiKeys.createdAt] ?? []),
       createdBy: json[ApiKeys.createdBy],
-      items: (json[ApiKeys.items] as List)
-          .map((item) => PurchaseInvoiceItemModel.fromJson(item))
+      items: (json[ApiKeys.items] as List<dynamic>)
+          .map((item) => PurchaseInvoiceItemModel.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }

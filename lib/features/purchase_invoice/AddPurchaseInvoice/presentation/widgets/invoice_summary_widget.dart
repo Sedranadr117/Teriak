@@ -3,61 +3,34 @@ import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
-
-
-class RunningTotalWidget extends StatelessWidget {
-  final List<Map<String, dynamic>> products;
+class InvoiceSummaryWidget extends StatelessWidget {
+  final int totalReceivedItems;
+  final int totalBonusItems;
   final double totalAmount;
+  final bool isSaving;
+  final VoidCallback onProceedToPayment;
 
-  const RunningTotalWidget({
+  const InvoiceSummaryWidget({
     super.key,
-    required this.products,
+    required this.totalReceivedItems,
+    required this.totalBonusItems,
     required this.totalAmount,
+    required this.isSaving,
+    required this.onProceedToPayment,
   });
-
-  int get _totalReceivedItems {
-    return products.fold(
-        0, (sum, product) => sum + (product['receivedQuantity'] as int));
-  }
-
-  int get _totalBonusItems {
-    return products.fold(
-        0, (sum, product) => sum + (product['bonusQuantity'] as int));
-  }
-
-  double get _subtotal {
-    return totalAmount;
-  }
-
-  double get _taxAmount {
-    // Assuming 15% VAT/Tax
-    return _subtotal * 0.15;
-  }
-
-  double get _finalTotal {
-    return _subtotal + _taxAmount;
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(4.w),
+      width: double.infinity,
+      padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            theme.colorScheme.primary.withValues(alpha: 0.05),
-            theme.colorScheme.tertiary.withValues(alpha: 0.05),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.3),
-            width: 1,
-          ),
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: theme.colorScheme.outline.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -69,12 +42,12 @@ class RunningTotalWidget extends StatelessWidget {
               CustomIconWidget(
                 iconName: 'calculate',
                 color: theme.colorScheme.primary,
-                size: 24,
+                size: 20,
               ),
               SizedBox(width: 2.w),
               Text(
                 'ملخص الفاتورة',
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.primary,
                 ),
@@ -84,34 +57,34 @@ class RunningTotalWidget extends StatelessWidget {
 
           SizedBox(height: 2.h),
 
-          // Quick Stats Row
+          // Quick Stats Row - Smaller size
           Row(
             children: [
               Expanded(
-                child: _buildStatCard(
+                child: _buildSmallStatCard(
                   context,
                   'العناصر المستلمة',
-                  _totalReceivedItems.toString(),
+                  totalReceivedItems.toString(),
                   'inventory_2',
                   theme.colorScheme.primary,
                 ),
               ),
-              SizedBox(width: 2.w),
+              SizedBox(width: 1.w),
               Expanded(
-                child: _buildStatCard(
+                child: _buildSmallStatCard(
                   context,
                   'العناصر المجانية',
-                  _totalBonusItems.toString(),
+                  totalBonusItems.toString(),
                   'redeem',
                   theme.colorScheme.tertiary,
                 ),
               ),
-              SizedBox(width: 2.w),
+              SizedBox(width: 1.w),
               Expanded(
-                child: _buildStatCard(
+                child: _buildSmallStatCard(
                   context,
                   'إجمالي العناصر',
-                  (_totalReceivedItems + _totalBonusItems).toString(),
+                  (totalReceivedItems + totalBonusItems).toString(),
                   'widgets',
                   theme.colorScheme.secondary,
                 ),
@@ -124,83 +97,92 @@ class RunningTotalWidget extends StatelessWidget {
           // Calculation Breakdown
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(3.w),
+            padding: EdgeInsets.all(2.w),
             decoration: BoxDecoration(
-              color: theme.colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.colorScheme.outline.withValues(alpha: 0.3),
-              ),
+              color: theme.colorScheme.surfaceContainer.withValues(alpha: 0.5),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
               children: [
-                _buildCalculationRow(
+                _buildSmallCalculationRow(
                   context,
                   'المجموع الفرعي',
-                  _subtotal,
+                  totalAmount,
                   false,
                 ),
-                SizedBox(height: 1.h),
-                _buildCalculationRow(
+                SizedBox(height: 0.5.h),
+                _buildSmallCalculationRow(
                   context,
                   'ضريبة القيمة المضافة (15%)',
-                  _taxAmount,
+                  totalAmount * 0.15,
                   false,
                 ),
-                SizedBox(height: 1.h),
+                SizedBox(height: 0.5.h),
                 Divider(
                   color: theme.colorScheme.outline.withValues(alpha: 0.5),
                   thickness: 1,
                 ),
-                SizedBox(height: 1.h),
-                _buildCalculationRow(
+                SizedBox(height: 0.5.h),
+                _buildSmallCalculationRow(
                   context,
-                  'المبلغ الإجمالي المدفوع للمورد',
-                  _finalTotal,
+                  'المبلغ الإجمالي',
+                  totalAmount * 1.15,
                   true,
                 ),
               ],
             ),
           ),
 
-          // Payment Method Info (Optional)
-          if (_finalTotal > 0) ...[
-            SizedBox(height: 2.h),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(3.w),
-              decoration: BoxDecoration(
-                color:
-                    theme.colorScheme.surfaceContainer.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(12),
+          SizedBox(height: 2.h),
+
+          // Continue to Payment Button - Smaller width
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: ElevatedButton(
+              onPressed: isSaving ? null : onProceedToPayment,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
-              child: Row(
-                children: [
-                  CustomIconWidget(
-                    iconName: 'info',
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    size: 16,
-                  ),
-                  SizedBox(width: 2.w),
-                  Expanded(
-                    child: Text(
-                      'سيتم تحديد طريقة الدفع في الخطوة التالية',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color:
-                            theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              child: isSaving
+                  ? SizedBox(
+                      height: 18,
+                      width: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          theme.colorScheme.onPrimary,
+                        ),
                       ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomIconWidget(
+                          iconName: 'payment',
+                          color: theme.colorScheme.onPrimary,
+                          size: 18,
+                        ),
+                        SizedBox(width: 1.w),
+                        Text(
+                          'متابعة الدفع',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
             ),
-          ],
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildStatCard(
+  Widget _buildSmallStatCard(
     BuildContext context,
     String title,
     String value,
@@ -210,10 +192,10 @@ class RunningTotalWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: EdgeInsets.all(2.w),
+      padding: EdgeInsets.all(1.5.w),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: color.withValues(alpha: 0.3),
         ),
@@ -223,12 +205,12 @@ class RunningTotalWidget extends StatelessWidget {
           CustomIconWidget(
             iconName: iconName,
             color: color,
-            size: 20,
+            size: 16,
           ),
-          SizedBox(height: 0.5.h),
+          SizedBox(height: 0.3.h),
           Text(
             value,
-            style: theme.textTheme.titleMedium?.copyWith(
+            style: theme.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.w700,
               color: color,
             ),
@@ -237,6 +219,7 @@ class RunningTotalWidget extends StatelessWidget {
             title,
             style: theme.textTheme.labelSmall?.copyWith(
               color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+              fontSize: 9.sp,
             ),
             textAlign: TextAlign.center,
           ),
@@ -245,7 +228,7 @@ class RunningTotalWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildCalculationRow(
+  Widget _buildSmallCalculationRow(
     BuildContext context,
     String label,
     double amount,
@@ -259,22 +242,22 @@ class RunningTotalWidget extends StatelessWidget {
         Text(
           label,
           style: isTotal
-              ? theme.textTheme.titleSmall?.copyWith(
+              ? theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.primary,
                 )
-              : theme.textTheme.bodyMedium?.copyWith(
+              : theme.textTheme.bodySmall?.copyWith(
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
         ),
         Text(
           '\$${NumberFormat('#,##0.00').format(amount)}',
           style: isTotal
-              ? theme.textTheme.titleMedium?.copyWith(
+              ? theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.primary,
                 )
-              : theme.textTheme.bodyMedium?.copyWith(
+              : theme.textTheme.bodySmall?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.onSurface,
                 ),

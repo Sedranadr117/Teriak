@@ -161,7 +161,7 @@ class CommonWidgets {
           SizedBox(width: 2.w),
           Expanded(
             child: Text(
-              'All fields marked with * are required. Make sure to double-check the information before saving.',
+              'All fields marked with * are required. Make sure to double-check the information before saving'.tr,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),

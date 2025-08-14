@@ -67,7 +67,7 @@ class OrderItemsList extends StatelessWidget {
           ),
           const Spacer(),
           Obx(() => Text(
-                '${items.length} ${items.length == 1 ? 'item' : 'items'}',
+                '${items.length} ${items.length == 1 ? 'item'.tr : 'items'.tr}',
                 style: TextStyle(
                   fontSize: 10.sp,
                   color: AppColors.textSecondaryLight,

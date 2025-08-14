@@ -562,6 +562,8 @@ final Map<String, String> arSY = {
   "Pending": "معلق",
   "Completed": "مكتمل",
   "Cancelled": "ملغي",
+  "item": "عنصر",
+  "items": "عناصر",
   "Loading purchase orders": "جاري تحميل طلبات الشراء",
   "Failed to load purchase orders": "فشل في تحميل طلبات الشراء",
   "Failed to load invoices": "فشل في تحميل الفواتير",
@@ -569,6 +571,14 @@ final Map<String, String> arSY = {
   "No data available": "لا توجد بيانات متاحة",
   "View Details": "عرض التفاصيل",
   "No Invoice Number": "لا يوجد رقم فاتورة",
+  "Edit Purchase Order": "تعديل طلبية الشراء",
   "Invoices will appear here once created": "ستظهر الفواتير هنا بمجرد إنشائها",
-  "Available Orders": "الطلبات المتاحة"
+  "Available Orders": "الطلبات المتاحة",
+  "Create Invoice": "إنشاء فاتورة",
+  "No pending purchase orders available": "لا توجد طلبات شراء معلقة",
+  "Pending Orders": "الطلبات المعلقة",
+  "Choose a pending purchase order to create invoice":
+      "اختر طلبية شراء معلقة لإنشاء فاتورة",
+  "All fields marked with * are required. Make sure to double-check the information before saving":
+      "جميع الحقول المشار إليها بـ * مطلوبة. تأكد من التحقق من المعلومات قبل الحفظ"
 };

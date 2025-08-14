@@ -14,7 +14,9 @@ import 'package:teriak/features/indebted_management/presentation/pages/add_new_i
 import 'package:teriak/features/indebted_management/presentation/pages/indebted_customers_management.dart';
 import 'package:teriak/features/inventory_management/inventory_management.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
+import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/bindings/add_purchase_invoice_binding.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/pages/enhanced_create_invoice_screen.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/binding/all_purchase_invoice_binding.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
 import 'package:teriak/features/purchase_invoice/EditPurchaseInvoice/presentation/pages/invoice_editing.dart';
 import 'package:teriak/features/purchase_invoice/PurchaseInvoiceDetails/presentation/pages/invoice_detail_screen.dart';
@@ -105,7 +107,6 @@ class AppRoutes {
       page: () => WorkingHoursConfigurationScreen(),
       transition: Transition.fadeIn,
     ),
- 
     GetPage(
       name: AppPages.productDetailPage,
       page: () => const ProductDetailPage(),
@@ -161,14 +162,15 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: AppPages.purchaseInvoiceList,
-      page: () => AllPurchaseInvoiceScreen(),
-      transition: Transition.fadeIn,
-    ),
+        name: AppPages.purchaseInvoiceList,
+        page: () => AllPurchaseInvoiceScreen(),
+        transition: Transition.fadeIn,
+        binding: AllPurchaseInvoiceBinding()),
     GetPage(
       name: AppPages.enhancedCreateInvoice,
       page: () => EnhancedCreateInvoiceScreen(),
       transition: Transition.fadeIn,
+      binding: AddPurchaseInvoiceBinding(),
     ),
     GetPage(
       name: AppPages.editPurchaseInvoice,

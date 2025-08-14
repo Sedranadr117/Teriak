@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
+
+
 class InvoiceProductsTableWidget extends StatelessWidget {
   final List<Map<String, dynamic>> products;
   final String searchQuery;

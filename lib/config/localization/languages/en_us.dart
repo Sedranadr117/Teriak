@@ -569,14 +569,24 @@ final Map<String, String> enUS = {
   "Pending": "Pending",
   "Completed": "Completed",
   "Cancelled": "Cancelled",
+  "item": "item",
+  "items": "items",
   "Loading purchase orders": "Loading purchase orders",
   "Failed to load purchase orders": "Failed to load purchase orders",
   "Failed to load invoices": "Failed to load invoices",
   "Refresh": "Refresh",
+  "Create Invoice": "Create Invoice",
   "No data available": "No data available",
   "View Details": "View Details",
+  "No pending purchase orders available": "No pending purchase orders available",
+  "Pending Orders": "Pending Orders",
+  "Choose a pending purchase order to create invoice":
+      "Choose a pending purchase order to create invoice",
   "No Invoice Number": "No Invoice Number",
+  "Edit Purchase Order": "Edit Purchase Order",
   "Invoices will appear here once created":
       "Invoices will appear here once created",
-  "Available Orders": "Available Orders"
+  "Available Orders": "Available Orders",
+  "All fields marked with * are required. Make sure to double-check the information before saving":
+      "All fields marked with * are required. Make sure to double-check the information before saving"
 };

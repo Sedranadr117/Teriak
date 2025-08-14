@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/config/themes/app_icon.dart' show CustomIconWidget;
+import 'package:teriak/config/themes/app_icon.dart';
+
+
 
 class ProductSearchBarWidget extends StatelessWidget {
   final TextEditingController controller;

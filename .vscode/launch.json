@@ -1,10 +1,10 @@
 {
     "configurations": [
         {
-            "name": "Flutter (lib\\features\\purchase_invoice\\AllPurchaseInvoice\\domain\\repositories\\template_repository.dart)",
+            "name": "Flutter",
             "type": "dart",
             "request": "launch",
-            "program": "lib\\features\\purchase_invoice\\AllPurchaseInvoice\\domain\\repositories\\template_repository.dart"
+            "program": "lib/main.dart" 
         }
     ]
 }

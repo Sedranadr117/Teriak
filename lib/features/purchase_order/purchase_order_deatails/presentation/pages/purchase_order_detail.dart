@@ -253,7 +253,7 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
             // Currency
             _buildInfoRow(
               'Currency'.tr,
-              order.currency ?? 'SYP',
+              order.currency,
               Icons.monetization_on,
             ),
             SizedBox(height: 1.h),
@@ -262,7 +262,7 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
             _buildInfoRow(
               'Total Amount'.tr,
               _formatAmount(
-                  order.total?.toDouble() ?? 0.0, order.currency ?? 'SYP'),
+                  order.total?.toDouble() ?? 0.0, order.currency),
               Icons.attach_money,
               valueColor: AppColors.successLight,
             ),
@@ -394,7 +394,7 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
   }
 
   String _getStatusText(String status) {
-    switch (status.toLowerCase()) {
+    switch (status) {
       case 'PENDING':
         return 'Pending'.tr;
       case 'DONE':

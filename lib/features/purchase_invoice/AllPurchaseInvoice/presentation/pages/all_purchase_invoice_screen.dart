@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import '../controller/all_purchase_invoice_controller.dart';
-import '../widgets/purchase_order_selection_widget.dart';
-import '../widgets/invoices_list_widget.dart';
+import 'widgets/purchase_order_selection_widget.dart';
+import 'widgets/invoices_list_widget.dart';
 
 class AllPurchaseInvoiceScreen extends StatefulWidget {
   const AllPurchaseInvoiceScreen({super.key});
@@ -52,6 +52,7 @@ class _AllPurchaseInvoiceScreenState extends State<AllPurchaseInvoiceScreen> {
       body: Column(
         children: [
           // Purchase Order Selection Section
+          SizedBox(height: 1.h),
           PurchaseOrderSelectionWidget(),
 
           SizedBox(height: 2.h),

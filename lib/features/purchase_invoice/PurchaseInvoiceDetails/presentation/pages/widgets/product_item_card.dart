@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
 
 class ProductItemCard extends StatefulWidget {
-  final Map<String, dynamic> productData;
+  final PurchaseInvoiceItemModel productData;
   final int index;
 
   const ProductItemCard({
@@ -55,148 +56,11 @@ class _ProductItemCardState extends State<ProductItemCard>
     }
   }
 
-  void _showItemActions(BuildContext context) {
-    HapticFeedback.mediumImpact();
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 12.w,
-              height: 0.5.h,
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .outline
-                    .withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            SizedBox(height: 3.h),
-            Text(
-              widget.productData["productName"] ?? "Product Actions",
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 3.h),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'inventory',
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
-              title: Text(
-                'Check Inventory',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              subtitle: Text(
-                'View current stock levels',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to inventory check
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'edit',
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
-              title: Text(
-                'Edit Item',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              subtitle: Text(
-                'Modify quantity or details',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to edit item
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'info',
-                color: Theme.of(context).colorScheme.primary,
-                size: 24,
-              ),
-              title: Text(
-                'Product Details',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              subtitle: Text(
-                'View complete product information',
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                // Navigate to product details
-              },
-            ),
-            SizedBox(height: 2.h),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Color _getStockStatusColor(String stockLevel) {
-    switch (stockLevel.toLowerCase()) {
-      case 'high':
-      case 'in_stock':
-        return const Color(0xFF059669);
-      case 'medium':
-      case 'low_stock':
-        return const Color(0xFFD97706);
-      case 'low':
-      case 'out_of_stock':
-        return const Color(0xFFDC2626);
-      default:
-        return const Color(0xFF64748B);
-    }
-  }
-
-  String _getStockStatusIcon(String stockLevel) {
-    switch (stockLevel.toLowerCase()) {
-      case 'high':
-      case 'in_stock':
-        return 'check_circle';
-      case 'medium':
-      case 'low_stock':
-        return 'warning';
-      case 'low':
-      case 'out_of_stock':
-        return 'error';
-      default:
-        return 'help';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final productName = widget.productData["productName"] ?? "Unknown Product";
-    final quantityReceived = widget.productData["quantityReceived"] ?? 0;
-    final freeQuantity = widget.productData["freeQuantity"] ?? 0;
-    final actualPrice = widget.productData["actualPrice"] ?? 0.0;
-    final expiryDate = widget.productData["expiryDate"] ?? "N/A";
-    final totalAmount = widget.productData["totalAmount"] ?? 0.0;
-    final stockLevel = widget.productData["stockLevel"] ?? "medium";
-    final productCode = widget.productData["productCode"] ?? "";
-    final batchNumber = widget.productData["batchNumber"] ?? "";
-    final manufacturer = widget.productData["manufacturer"] ?? "";
+    final totalAmount = (widget.productData.actualPrice) *
+        (widget.productData.receivedQty + widget.productData.bonusQty);
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -220,56 +84,17 @@ class _ProductItemCardState extends State<ProductItemCard>
           // Main Product Info
           GestureDetector(
             onTap: _toggleExpansion,
-            onLongPress: () => _showItemActions(context),
             child: Container(
               padding: EdgeInsets.all(4.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Product Name and Stock Status
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          productName,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 2.w, vertical: 0.5.h),
-                        decoration: BoxDecoration(
-                          color: _getStockStatusColor(stockLevel)
-                              .withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: _getStockStatusColor(stockLevel)
-                                .withValues(alpha: 0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomIconWidget(
-                              iconName: _getStockStatusIcon(stockLevel),
-                              color: _getStockStatusColor(stockLevel),
-                              size: 12,
-                            ),
-                            SizedBox(width: 1.w),
-                            Text(
-                              stockLevel.toUpperCase(),
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: _getStockStatusColor(stockLevel),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                  Text(
+                    widget.productData.productName,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   SizedBox(height: 2.h),
 
@@ -291,13 +116,13 @@ class _ProductItemCardState extends State<ProductItemCard>
                             Row(
                               children: [
                                 Text(
-                                  quantityReceived.toString(),
+                                  widget.productData.receivedQty.toString(),
                                   style: theme.textTheme.bodyLarge?.copyWith(
                                     fontWeight: FontWeight.w600,
                                     fontFamily: 'monospace',
                                   ),
                                 ),
-                                if (freeQuantity > 0) ...[
+                                if (widget.productData.bonusQty > 0) ...[
                                   SizedBox(width: 2.w),
                                   Container(
                                     padding: EdgeInsets.symmetric(
@@ -308,7 +133,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      '+$freeQuantity FREE',
+                                      '+${widget.productData.bonusQty} FREE',
                                       style:
                                           theme.textTheme.labelSmall?.copyWith(
                                         fontWeight: FontWeight.w600,
@@ -335,10 +160,9 @@ class _ProductItemCardState extends State<ProductItemCard>
                             ),
                             SizedBox(height: 0.5.h),
                             Text(
-                              '\$${actualPrice.toStringAsFixed(2)}',
+                              '\$${widget.productData.actualPrice.toStringAsFixed(2)}',
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 fontWeight: FontWeight.w600,
-                                fontFamily: 'monospace',
                               ),
                             ),
                           ],
@@ -419,81 +243,21 @@ class _ProductItemCardState extends State<ProductItemCard>
                         child: _buildDetailItem(
                           context,
                           'Expiry Date',
-                          expiryDate,
+                          widget.productData.formattedExpiryDate,
                           'calendar_today',
                         ),
                       ),
                       Expanded(
                         child: _buildDetailItem(
                           context,
-                          'Product Code',
-                          productCode.isNotEmpty ? productCode : 'N/A',
-                          'qr_code',
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 2.h),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDetailItem(
-                          context,
                           'Batch Number',
-                          batchNumber.isNotEmpty ? batchNumber : 'N/A',
+                          widget.productData.batchNo,
                           'numbers',
                         ),
                       ),
-                      Expanded(
-                        child: _buildDetailItem(
-                          context,
-                          'Manufacturer',
-                          manufacturer.isNotEmpty ? manufacturer : 'N/A',
-                          'business',
-                        ),
-                      ),
                     ],
                   ),
-                  SizedBox(height: 2.h),
-
-                  // Action Buttons
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton.icon(
-                          onPressed: () => _showItemActions(context),
-                          icon: CustomIconWidget(
-                            iconName: 'more_horiz',
-                            color: theme.colorScheme.primary,
-                            size: 16,
-                          ),
-                          label: Text('Actions'),
-                          style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 3.w),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            // Navigate to inventory check
-                            HapticFeedback.lightImpact();
-                          },
-                          icon: CustomIconWidget(
-                            iconName: 'inventory',
-                            color: Colors.white,
-                            size: 16,
-                          ),
-                          label: Text('Check Stock'),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  SizedBox(height: 1.h),
                 ],
               ),
             ),

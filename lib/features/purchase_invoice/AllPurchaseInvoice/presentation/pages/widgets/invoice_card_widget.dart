@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/domain/entities/purchase_invoice_entity.dart';
 
 class InvoiceCardWidget extends StatelessWidget {
   final PurchaseInvoiceModel invoice;

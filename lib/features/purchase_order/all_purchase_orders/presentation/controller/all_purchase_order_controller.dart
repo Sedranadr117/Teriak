@@ -8,6 +8,7 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/datasources/all_purchase_remote_data_source.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/repositories/all_purchase_repository_impl.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity%20.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/domain/usecases/get_all_purchase.dart';
 
 class GetAllPurchaseOrderController extends GetxController {
@@ -26,6 +27,10 @@ class GetAllPurchaseOrderController extends GetxController {
   var hasNext = false.obs;
   var hasPrevious = false.obs;
   var isLoadingMore = false.obs;
+
+   var pendingPurchaseOrders = <PurchaseOrderEntity>[].obs;
+  var isLoadingPendingOrders = false.obs;
+  var errorMessagePendingOrders = ''.obs;
 
   @override
   void onInit() {
@@ -50,6 +55,7 @@ class GetAllPurchaseOrderController extends GetxController {
 
     getAllPurchaseUseCase = GetAllPurchaseOrders(repository: repository);
     getPurchaseOrders();
+    getAllPendingPurchaseOrders();
   }
 
   void getPurchaseOrders({bool refresh = false}) async {
@@ -125,6 +131,37 @@ class GetAllPurchaseOrderController extends GetxController {
       } finally {
         isLoadingMore.value = false;
       }
+    }
+  }
+  Future<void> getAllPendingPurchaseOrders() async {
+    try {
+      isLoadingPendingOrders.value = true;
+      errorMessagePendingOrders.value = '';
+
+      String currentLanguageCode = LocaleController.to.locale.languageCode;
+      
+      final params = PaginationParams(
+        page: 0,
+        size: 1000, 
+        languageCode: currentLanguageCode,
+      );
+
+      final result = await getAllPurchaseUseCase(params: params);
+      result.fold(
+        (failure) {
+          errorMessagePendingOrders.value = failure.errMessage;
+        },
+        (paginatedData) {
+          final allPendingOrders = paginatedData.content
+              .where((order) => order.status == 'PENDING')
+              .toList();
+          pendingPurchaseOrders.value = allPendingOrders;
+        },
+      );
+    } catch (e) {
+      errorMessagePendingOrders.value = e.toString();
+    } finally {
+      isLoadingPendingOrders.value = false;
     }
   }
 

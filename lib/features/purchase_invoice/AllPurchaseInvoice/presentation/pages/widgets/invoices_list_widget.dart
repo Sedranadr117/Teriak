@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
-import '../controller/all_purchase_invoice_controller.dart';
+import 'package:teriak/config/routes/app_pages.dart' show AppPages;
+import '../../controller/all_purchase_invoice_controller.dart';
 import 'invoice_card_widget.dart';
 
 class InvoicesListWidget extends StatelessWidget {
@@ -88,7 +88,8 @@ class InvoicesListWidget extends StatelessWidget {
                       ),
                       SizedBox(height: 2.h),
                       ElevatedButton(
-                        onPressed: () => controller.loadInvoices(),
+                        onPressed: () =>
+                            controller.getPurchaseInvoices(refresh: true),
                         child: Text('Retry'.tr),
                       ),
                     ],
@@ -130,7 +131,7 @@ class InvoicesListWidget extends StatelessWidget {
               }
 
               return RefreshIndicator(
-                onRefresh: controller.refreshInvoices,
+                onRefresh: controller.refreshPurchaseInvoices,
                 color: theme.colorScheme.primary,
                 child: ListView.builder(
                   controller: scrollController,
@@ -156,8 +157,7 @@ class InvoicesListWidget extends StatelessWidget {
                     return InvoiceCardWidget(
                       invoice: invoice,
                       onTap: () {
-                        // TODO: Navigate to invoice details
-                        print('Navigate to invoice: ${invoice.id}');
+                        Get.toNamed(AppPages.invoiceDetail,arguments: invoice);
                       },
                     );
                   },
