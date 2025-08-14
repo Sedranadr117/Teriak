@@ -1,5 +1,6 @@
 class AppPages {
   static const String splash = '/';
+  static const String splash = '/';
   static const String signin = '/signin';
   static const String pharmacyCompleteRegistration =
       '/parmacy_complete_registration';
@@ -19,6 +20,14 @@ class AppPages {
   static const String multiSales = '/multi-sales-screen';
   static const String indebtedManagement = '/indebted-management';
   static const String addNewIndebtedCustomer = '/add-newIndebtedCustomer';
+  static const String editSupplier = '/edit-supplier-screen';
+  static const String supplierDetail = '/supplier-detail-screen';
+  static const String addSupplier = '/add-supplier-screen';
+  static const String supplierList = '/supplier-list-screen';
+  static const String editPurchaseOrder = '/edit-purchase-order';
+  static const String purchaseOrderList = '/purchase-order-list';
+  static const String purchaseOrderDetail = '/purchase-order-detail';
+  static const String createPurchaseOrder = '/create-purchase-order';
   static const String showInvoices = '/show_invoices';
   static const String showInvoicesDitails = '/show_invoicesDetails';
 }

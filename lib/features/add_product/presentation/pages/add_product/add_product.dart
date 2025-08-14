@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:teriak/config/extensions/responsive.dart';
+import 'package:teriak/config/widgets/custom_binding_widget.dart';
 import 'package:teriak/features/add_product/presentation/controller/add_product_controller.dart';
 import 'package:teriak/features/add_product/presentation/pages/add_product/widgets/save_product_button.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
 import 'package:teriak/features/bottom_sheet_management/multi_bottom_sheet.dart';
 import 'package:teriak/features/bottom_sheet_management/single_bottom_sheet.dart';
+import 'package:teriak/features/master_product/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/product_data/data/models/product_data_model.dart';
 import 'package:teriak/features/product_data/presentation/controller/product_data_controller.dart';
 import 'widgets/additional_information_card.dart';
@@ -13,11 +15,32 @@ import 'widgets/barcode_management_card.dart';
 import 'widgets/basic_information_card.dart';
 import 'widgets/product_details_card.dart';
 
-class AddProductPage extends StatelessWidget {
-  AddProductPage({super.key});
+class AddProductPage extends StatefulWidget {
+  const AddProductPage({super.key});
 
+  @override
+  State<AddProductPage> createState() => _AddProductPageState();
+}
+
+class _AddProductPageState extends State<AddProductPage> {
   final addProductController = Get.put(AddProductController());
   final productDataController = Get.put(ProductDataController());
+  final productController = Get.find<GetAllProductController>();
+
+  @override
+  void initState() {
+    super.initState();
+
+    addProductController.arabicTradeNameController.addListener(_updateState);
+    addProductController.englishTradeNameController.addListener(_updateState);
+    addProductController.quantityController.addListener(_updateState);
+    addProductController.barcodeController.addListener(_updateState);
+  }
+
+  void _updateState() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = addProductController;
@@ -30,19 +53,21 @@ class AddProductPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+             
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.only(bottom: context.h * 0.02),
                 child: Column(
                   children: [
+                    const SizedBox(height: 3),
+                    CommonWidgets.buildRequiredWidget(context: context),
+                    const SizedBox(height: 8),
                     // Basic Information
                     BasicInformationCard(
                       arabicTradeNameController: c.arabicTradeNameController,
                       englishTradeNameController: c.englishTradeNameController,
-                      // arabicTradeNameError: c.arabicTradeNameError.,
-                      //englishTradeNameError: c.englishTradeNameError,
-                      onArabicTradeNameChanged: () {},
-                      onEnglishTradeNameChanged:() {},
+                      onArabicTradeNameChanged: () => setState(() {}),
+                      onEnglishTradeNameChanged: () => setState(() {}),
                       arabicScientificNameController:
                           c.arabicScientificNameController,
                       englishScientificNameController:
@@ -57,7 +82,6 @@ class AddProductPage extends StatelessWidget {
                           selectedForm: c.selectedForm.value,
                           selectedManufacturer: c.selectedManufacturer.value,
                           formError: c.formError.value,
-                         // manufacturerError: c.manufacturerError.value,
                           onFormTap: () async {
                             await productDataController.getProductData('forms');
                             final list = productDataController.dataList
@@ -70,6 +94,7 @@ class AddProductPage extends StatelessWidget {
                                 c.selectedFormId.value = id;
                                 c.selectedForm.value = name;
                                 c.formError.value = null;
+                                setState(() {}); // تحديث اللون
                               },
                             );
                           },
@@ -86,10 +111,11 @@ class AddProductPage extends StatelessWidget {
                                 c.selectedManufacturerId.value = id;
                                 c.selectedManufacturer.value = name;
                                 c.manufacturerError.value = null;
+                                setState(() {}); // تحديث اللون
                               },
                             );
                           },
-                          onQuantityChanged: () {},
+                          onQuantityChanged: () => setState(() {}),
                         )),
 
                     // Barcode management
@@ -97,12 +123,19 @@ class AddProductPage extends StatelessWidget {
                       return BarcodeManagementCard(
                         barcodes: c.barcodes.toList(),
                         barcodeController: c.barcodeController,
-                        onAddBarcode: c.addBarcode,
-                        onRemoveBarcode: (index) => c.removeBarcode(index),
+                        onAddBarcode: () {
+                          c.addBarcode();
+                          setState(() {});
+                        },
+                        onRemoveBarcode: (index) {
+                          c.removeBarcode(index);
+                          setState(() {});
+                        },
                         onScanBarcode: () {
                           showBarcodeScannerBottomSheet(
                             onScanned: (value) {
                               c.addScannedBarcode(value);
+                              setState(() {});
                             },
                           );
                         },
@@ -113,7 +146,6 @@ class AddProductPage extends StatelessWidget {
                     Obx(() => AdditionalInformationCard(
                           dosageController: c.dosageController,
                           notesController: c.notesController,
-                          //minStockController: c.minStockController,
                           selectedProductType: c.selectedProductType.value,
                           selectedClassification: c.selectedCategoryIds.isEmpty
                               ? null
@@ -151,22 +183,24 @@ class AddProductPage extends StatelessWidget {
                           },
                           onPrescriptionToggle: (value) {
                             c.requiresPrescription.value = value;
-                            print(value);
                           },
                           onNotesChanged: () {},
-                          //onMinStockChanged: () {},
                           onDosageChanged: () {},
                         )),
                   ],
                 ),
               ),
             ),
-              SaveProductButton(
+           
+            SaveProductButton(
               isFormValid: c.isFormValid,
               onTap: () {
                 FocusScope.of(context).unfocus();
                 c.addProduct();
+                productController.refreshProducts();
+                setState(() {});
               },
+              label: "Save Product".tr,
             ),
           ],
         ),

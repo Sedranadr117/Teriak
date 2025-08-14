@@ -54,14 +54,12 @@ class _TextFieldBlockState extends State<TextFieldBlock> {
         SizedBox(height: context.h * 0.01),
         Container(
           decoration: BoxDecoration(
-            color: isDark
-                ? AppColors.backgroundDark
-                : AppColors.backgroundLight,
+            color:
+                isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color:  isDark
-                      ? AppColors.backgroundDark
-                      : AppColors.backgroundLight,
+              color:
+                  isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
               width: 1,
             ),
           ),
@@ -87,6 +85,7 @@ class _TextFieldBlockState extends State<TextFieldBlock> {
               ),
             ),
             onChanged: (_) => widget.onChanged(),
+            textInputAction:TextInputAction.next ,
           ),
         ),
       ],

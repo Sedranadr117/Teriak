@@ -16,6 +16,7 @@ class GetAllProductController extends GetxController {
   var isLoading = true.obs;
   var products = [].obs;
   var errorMessage = ''.obs;
+  var isRefreshing = false.obs;
 
   @override
   void onInit() {
@@ -58,6 +59,15 @@ class GetAllProductController extends GetxController {
       print(errorMessage.value);
     } finally {
       isLoading.value = false;
+    }
+  }
+    Future<void> refreshProducts() async {
+    try {
+      isRefreshing.value = true;
+      await Future.delayed(const Duration(milliseconds: 1500));
+      getProducts();
+    } finally {
+      isRefreshing.value = false;
     }
   }
 

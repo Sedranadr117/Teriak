@@ -1,7 +1,9 @@
+
+import 'package:teriak/features/template/data/models/template_model.dart';
+
 import '../../../../../core/databases/api/api_consumer.dart';
 import '../../../../../core/databases/api/end_points.dart';
 import '../../../../../core/params/params.dart';
-import '../models/template_model.dart';
 
 class TemplateRemoteDataSource {
   final ApiConsumer api;

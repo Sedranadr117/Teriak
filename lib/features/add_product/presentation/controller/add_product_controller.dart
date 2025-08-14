@@ -192,7 +192,7 @@ class AddProductController extends GetxController {
         {
           "tradeName": arabicTradeNameController.text.trim(),
           "scientificName": arabicScientificNameController.text.trim(),
-          "languageCode": "ar",
+          "lang": "ar",
         }
       ]
     };
@@ -225,7 +225,6 @@ class AddProductController extends GetxController {
         (product) {
           Get.snackbar('Success', 'Product added successfully'.tr);
           resetForm();
-          
         },
       );
     } catch (e) {

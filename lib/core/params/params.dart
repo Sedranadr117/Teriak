@@ -129,7 +129,7 @@ class SearchProductParams {
   Map<String, dynamic> toMap() {
     return {
       'keyword': keyword,
-      'languageCode': languageCode,
+      'lang': languageCode,
     };
   }
 }
@@ -141,7 +141,7 @@ class AllProductParams {
 
   Map<String, dynamic> toMap() {
     return {
-      'languageCode': languageCode,
+      'lang': languageCode,
     };
   }
 }
@@ -180,6 +180,87 @@ class EditProductParams {
   Map<String, dynamic> toMap() {
     return {
       'lang': languageCode,
+    };
+  }
+}
+
+class SupplierParams {
+  final int id;
+
+  const SupplierParams({required this.id});
+}
+
+class SearchSupplierParams {
+  final String keyword;
+
+  const SearchSupplierParams({required this.keyword});
+  Map<String, dynamic> toMap() {
+    return {
+      'name': keyword,
+    };
+  }
+}
+
+class DetailsPurchaseOrdersParams {
+  final String languageCode;
+  final int id;
+
+  const DetailsPurchaseOrdersParams(
+      {required this.id, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'language': languageCode,
+    };
+  }
+}
+
+class EditPurchaseOrdersParams {
+  final String languageCode;
+  final int id;
+
+  const EditPurchaseOrdersParams(
+      {required this.id, required this.languageCode});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'language': languageCode,
+    };
+  }
+}
+
+class LanguageParam {
+  final String languageCode;
+  final String key;
+
+  const LanguageParam({
+    required this.languageCode,
+    required this.key,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      key: languageCode,
+    };
+  }
+}
+
+class PaginationParams {
+  final int page;
+  final int size;
+  final String languageCode;
+
+  const PaginationParams({
+    required this.page,
+    required this.size,
+    required this.languageCode,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'page': page.toString(),
+      'size': size.toString(),
+      'language': languageCode,
     };
   }
 }

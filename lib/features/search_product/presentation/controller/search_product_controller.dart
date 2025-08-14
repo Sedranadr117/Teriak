@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
@@ -24,8 +23,6 @@ class SearchProductController extends GetxController {
   var errorMessage = ''.obs;
   final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
 
-  Timer? _debounceTimer;
-
   @override
   void onInit() {
     super.onInit();
@@ -45,15 +42,6 @@ class SearchProductController extends GetxController {
     //       search(query);
     //     });
     // });
-  }
-
-  @override
-  void onClose() {
-    _debounceTimer?.cancel();
-    searchController.dispose();
-    searchFocus.dispose();
-
-    super.onClose();
   }
 
   void _initializeDependencies() {

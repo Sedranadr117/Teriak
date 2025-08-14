@@ -72,4 +72,5 @@ class GetProductDetailsController extends GetxController {
       isLoading.value = false;
     }
   }
+
 }

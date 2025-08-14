@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
+import 'package:teriak/core/errors/exceptions.dart';
 import '../../../../../core/connection/network_info.dart';
-import '../../../../core/errors/exceptions.dart';
+
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
 import '../../domain/repositories/edit_product_repository.dart';

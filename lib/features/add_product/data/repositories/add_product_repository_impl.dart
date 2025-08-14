@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
+import 'package:teriak/core/errors/exceptions.dart';
 import 'package:teriak/features/add_product/data/datasources/add_product_remote_data_source.dart';
 import 'package:teriak/features/add_product/domain/repositories/add_product_repository.dart';
 import 'package:teriak/features/master_product/domain/entities/product_entity.dart';
 
 import '../../../../../core/connection/network_info.dart';
-import '../../../../core/errors/exceptions.dart';
+
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
 

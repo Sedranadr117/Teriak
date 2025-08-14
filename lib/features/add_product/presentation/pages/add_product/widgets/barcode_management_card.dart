@@ -108,11 +108,15 @@ class BarcodeManagementCard extends StatelessWidget {
                 SizedBox(width: context.w * 0.02),
                 Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: barcodeController.text.trim().isEmpty
+                        ? Theme.of(context).colorScheme.outline
+                        : Theme.of(context).colorScheme.primary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: IconButton(
-                    onPressed: onAddBarcode,
+                    onPressed: barcodeController.text.trim().isEmpty
+                        ? null
+                        : onAddBarcode,
                     icon: CustomIconWidget(
                       iconName: 'add',
                       color: Colors.white,
