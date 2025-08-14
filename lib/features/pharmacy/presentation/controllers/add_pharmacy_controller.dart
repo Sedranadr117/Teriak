@@ -73,7 +73,6 @@ class AddPharmacyController extends GetxController {
     return '$hour:$minute $period';
   }
 
-  // Format time for backend (24-hour format)
   String formatTimeForBackend(TimeOfDay? time) {
     if (time == null) return '';
     final hour = time.hour.toString().padLeft(2, '0');

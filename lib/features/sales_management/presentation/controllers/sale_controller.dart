@@ -14,6 +14,8 @@ import 'package:teriak/features/customer_managment/presentation/controllers/cust
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
 import 'package:teriak/features/sales_management/domain/entities/invoice_entity.dart';
 import 'package:teriak/features/sales_management/domain/usecases/get_invoices.dart';
+import 'package:teriak/features/stock_management/data/models/Stock_model.dart';
+import 'package:teriak/features/stock_management/domain/usecases/search_stock.dart';
 
 class SaleController extends GetxController {
   final String customerTag;
@@ -43,6 +45,10 @@ class SaleController extends GetxController {
   late final GetInvoices _getInvoices;
   late RxString selectedPaymentMethod;
   late CustomerController customerController;
+  RxList<StockModel> results = <StockModel>[].obs;
+  late final SearchStock _searchStock;
+  final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
+
   bool done = false;
   @override
   void onInit() {
@@ -69,6 +75,8 @@ class SaleController extends GetxController {
     );
 
     _createSale = CreateSale(repository: repository);
+    //_searchStock = SearchStock(repository: repository);
+
     _getInvoices = GetInvoices(repository: repository);
   }
 
@@ -96,6 +104,47 @@ class SaleController extends GetxController {
       print('💥 Unexpected error while fetching invoices: $e');
       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar('Error'.tr, errorMessage.value);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> search(String query) async {
+    try {
+      isLoading.value = true;
+      print('Search Status: Loading');
+      errorMessage.value = '';
+      final q = SearchParams(
+        name: query.trim(),
+      );
+      print('Searching for: $query');
+
+      final result = await _searchStock(params: q);
+      result.fold(
+        (failure) {
+          results.clear();
+          errorMessage.value = failure.errMessage;
+          searchStatus.value = RxStatus.error(failure.errMessage);
+          print('Search Error: ${failure.errMessage}');
+        },
+        (list) {
+          results.clear();
+          results.assignAll(list.map((entity) => StockModel()).toList());
+
+          print('Search Results: ${results.length} items');
+          if (list.isEmpty) {
+            results.clear();
+            searchStatus.value = RxStatus.empty();
+            print('Search Status: Empty Results');
+          } else {
+            searchStatus.value = RxStatus.success();
+          }
+        },
+      );
+    } catch (e) {
+      errorMessage.value = e.toString();
+      searchStatus.value = RxStatus.error(e.toString());
+      print('Search Status: Error: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
@@ -198,6 +247,7 @@ class SaleController extends GetxController {
     }
   }
 
+//
   void addItemFromProduct(InvoiceItemModel product) {
     final existingItem =
         invoiceItems.firstWhereOrNull((item) => item.id == product.id);

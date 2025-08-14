@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
@@ -59,19 +58,13 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
               Get.toNamed(
                 AppPages.editPurchaseOrder,
                 arguments: {
-                  'order': controller.purchaseOrder.value, 
-                  'supplierId': controller.supplierId.value, 
+                  'order': controller.purchaseOrder.value,
+                  'supplierId': controller.supplierId.value,
                 },
               );
             } else {
-              Fluttertoast.showToast(
-                msg: "لا يمكن تعديل الطلبية في حالتها الحالية",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.BOTTOM,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0,
-              );
+              Get.snackbar('', "لا يمكن تعديل الطلبية في حالتها الحالية",
+                  backgroundColor: Colors.red, colorText: Colors.white);
             }
           },
           tooltip: 'Edit Order'.tr,
@@ -404,9 +397,7 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
 
   String _formatAmount(double amount, String currency) {
     final formattedAmount = amount.toStringAsFixed(2);
-    return currency == 'USD'
-        ? '\$${formattedAmount}'
-        : '${formattedAmount} ل.س';
+    return currency == 'USD' ? '\$$formattedAmount' : '$formattedAmount ل.س';
   }
 
   void _showDeleteConfirmation() {

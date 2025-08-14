@@ -41,10 +41,6 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text('Purchase Orders Management'.tr,
-              style: Theme.of(context).textTheme.titleLarge),
-        ),
         body: Column(
           children: [
             SizedBox(height: 2.h),

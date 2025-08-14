@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/config/widgets/custom_app_bar.dart';
 import 'package:teriak/config/widgets/custom_tab_bar.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
 import 'package:teriak/features/stock_management/presentation/controller/stock_controller.dart';
@@ -21,7 +20,7 @@ class StockManagement extends StatefulWidget {
 class _StockManagementState extends State<StockManagement>
     with TickerProviderStateMixin {
   late TabController _tabController;
-
+  StockController controller = Get.put(StockController());
   final bool _isLoading = false;
   final List<Map<String, dynamic>> _allProducts = [];
   List<Map<String, dynamic>> _filteredProducts = [];
@@ -29,9 +28,9 @@ class _StockManagementState extends State<StockManagement>
   @override
   void initState() {
     super.initState();
+    controller.fetchStock();
     _tabController =
         TabController(length: stockController.tabs.length, vsync: this);
-    stockController.fetchStock();
   }
 
   @override
@@ -456,6 +455,7 @@ class _StockManagementState extends State<StockManagement>
 
   StockController stockController = Get.put(StockController());
 ///////////////////////////////////////////////////////////////////////////////////////
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -463,20 +463,6 @@ class _StockManagementState extends State<StockManagement>
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: 'Stock Management'.tr,
-        actions: [
-          IconButton(
-            onPressed: stockController.refreshStock,
-            icon: CustomIconWidget(
-              iconName: 'refresh',
-              color: colorScheme.onSurface,
-              size: 6.w,
-            ),
-            tooltip: 'Refresh Stock'.tr,
-          ),
-        ],
-      ),
       body: Column(
         children: [
           StockSearchBar(

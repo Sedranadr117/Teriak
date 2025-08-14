@@ -95,7 +95,7 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                 ),
                 onItemTap: (product) {
                   saleController.addItemFromProduct(product);
-                  saleController.searchController.text = product.tradeName;
+                  saleController.searchController.text = product;
                   searchController.results.clear();
                 },
                 hintText: 'Search by product name or generic name...'.tr,

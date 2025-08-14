@@ -93,6 +93,9 @@ class StockController extends GetxController {
         },
         (list) {
           allStokes.assignAll(list.map((entity) => StockEntity()));
+          for (var emp in allStokes) {
+            print('Employee: ${emp} ${emp}');
+          }
         },
       );
     } catch (e) {

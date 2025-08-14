@@ -41,33 +41,33 @@ class _EmployeeManagementState extends State<EmployeeManagement>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: CustomAppBar(
-        title: 'Employee Management'.tr,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Get.toNamed(AppPages.inventoryManagement);
-              },
-              icon: CustomIconWidget(iconName: 'add')),
-          IconButton(
-              onPressed: () {
-                Get.toNamed(AppPages.showInvoices);
-              },
-              icon: CustomIconWidget(iconName: 'abc')),
-          IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/settings');
-              CacheHelper cacheHelper = CacheHelper();
+      appBar: AppBar(
+        title: Text('Employee Management'.tr),
+        // actions: [
+        //   IconButton(
+        //       onPressed: () {
+        //         Get.toNamed(AppPages.inventoryManagement);
+        //       },
+        //       icon: CustomIconWidget(iconName: 'add')),
+        //   IconButton(
+        //       onPressed: () {
+        //         Get.toNamed(AppPages.showInvoices);
+        //       },
+        //       icon: CustomIconWidget(iconName: 'abc')),
+        //   IconButton(
+        //     onPressed: () {
+        //       Navigator.pushNamed(context, '/settings');
+        //       CacheHelper cacheHelper = CacheHelper();
 
-              print(cacheHelper.getData(key: 'token'));
-            },
-            icon: CustomIconWidget(
-              iconName: 'settings',
-              color: Theme.of(context).colorScheme.onSurface,
-              size: 24,
-            ),
-          ),
-        ],
+        //       print(cacheHelper.getData(key: 'token'));
+        //     },
+        //     icon: CustomIconWidget(
+        //       iconName: 'settings',
+        //       color: Theme.of(context).colorScheme.onSurface,
+        //       size: 24,
+        //     ),
+        //   ),
+        // ],
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(16.h),
           child: Column(

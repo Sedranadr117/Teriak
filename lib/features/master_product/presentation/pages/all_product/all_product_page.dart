@@ -22,10 +22,6 @@ class _AllProductPageState extends State<AllProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Text('Pharmacy Product'.tr,
-              style: Theme.of(context).textTheme.titleLarge),
-        ),
         body: const SafeArea(
           child: Column(
             children: [

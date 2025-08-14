@@ -125,15 +125,9 @@ class _MultiSalesScreenState extends State<MultiSalesScreen>
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        title: Text(
-          'Point of Sale'.tr,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
-              ),
-        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(55),
+          preferredSize: Size.fromHeight(3.h),
           child: SizedBox(
             height: 50,
             child: TabBar(

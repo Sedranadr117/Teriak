@@ -4,8 +4,8 @@ import 'package:teriak/config/themes/app_icon.dart';
 
 class AddButton extends StatefulWidget {
   String label;
-   void Function() onTap;
-   AddButton({super.key,required this.onTap,required this.label});
+  void Function() onTap;
+  AddButton({super.key, required this.onTap, required this.label});
 
   @override
   State<AddButton> createState() => _AddButtonState();
@@ -15,7 +15,7 @@ class _AddButtonState extends State<AddButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-      onPressed:widget.onTap,
+      onPressed: widget.onTap,
       label: Text(
         widget.label,
         style: Theme.of(context).textTheme.labelMedium?.copyWith(

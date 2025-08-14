@@ -11,6 +11,7 @@ import 'package:teriak/features/employee_management/presentation/pages/employee_
 import 'package:teriak/features/add_product/presentation/pages/add_product/add_product.dart';
 import 'package:teriak/features/edit_product/presentation/pages/edit_product/edit_product.dart';
 import 'package:teriak/features/employee_management/presentation/pages/working_hours_configuration_screen.dart';
+import 'package:teriak/features/home/presentation/pages/home_page.dart';
 import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_registration.dart';
 import 'package:teriak/features/purchase/add_purchase_order/presentation/controller/add_order_binding.dart';
 import 'package:teriak/features/purchase/add_purchase_order/presentation/pages/create_purchase_order.dart';
@@ -26,7 +27,6 @@ import 'package:teriak/features/suppliers/add_supplier/presentation/pages/add_su
 import 'package:teriak/features/suppliers/all_supplier/presentation/pages/supplier_list_screen.dart';
 import 'package:teriak/features/suppliers/edit_supplier/presentation/pages/edit_supplier_screen.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
-import 'package:teriak/features/template/presentation/pages/template_screen.dart';
 import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/product_details/presentation/pages/product_details/product_details_page.dart';
 
@@ -109,11 +109,6 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: AppPages.home,
-      page: () => const HomePage(),
-      transition: Transition.fadeIn,
-    ),
-    GetPage(
       name: AppPages.productDetailPage,
       page: () => const ProductDetailPage(),
       transition: Transition.fadeIn,
@@ -165,7 +160,11 @@ class AppRoutes {
     GetPage(
       name: AppPages.purchaseOrderList,
       page: () => PurchaseOrderList(),
-      page: () => EditProductPage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.home,
+      page: () => HomePage(),
       transition: Transition.fadeIn,
     ),
   ];

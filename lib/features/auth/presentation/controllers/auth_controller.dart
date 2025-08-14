@@ -107,7 +107,7 @@ class AuthController extends GetxController {
             await cacheHelper.saveData(key: 'Role', value: authEntity.role);
             print(cacheHelper.getData(key: 'Role'));
             if (authEntity.isActive == true) {
-              Get.offNamed(AppPages.employeeManagement);
+              Get.offNamed(AppPages.home);
             } else {
               Get.offNamed(AppPages.pharmacyCompleteRegistration);
             }

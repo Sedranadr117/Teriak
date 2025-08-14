@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:teriak/config/extensions/responsive.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -9,7 +8,10 @@ class SaveProductButton extends StatefulWidget {
   void Function() onTap;
   String label;
   SaveProductButton(
-      {super.key, required this.isFormValid, required this.onTap,required this.label});
+      {super.key,
+      required this.isFormValid,
+      required this.onTap,
+      required this.label});
 
   @override
   State<SaveProductButton> createState() => _SaveProductButtonState();

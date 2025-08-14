@@ -11,8 +11,6 @@ import 'package:teriak/features/purchase/purchase_order_deatails/data/datasource
 import 'package:teriak/features/purchase/purchase_order_deatails/data/repositories/details_purchase_repository_impl.dart';
 import 'package:teriak/features/purchase/purchase_order_deatails/domain/usecases/get_details_purchase.dart';
 import 'package:teriak/features/suppliers/search_supplier/data/datasources/search_supplier_remote_data_source.dart';
-import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
-import 'package:teriak/core/params/params.dart';
 
 class PurchaseOrderDetailsController extends GetxController {
   late final NetworkInfoImpl networkInfo;
