@@ -20,7 +20,7 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
-      padding: EdgeInsets.all(4.w),
+      padding: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -79,7 +79,7 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
             ],
           ),
 
-          SizedBox(height: 3.h),
+          SizedBox(height: 1.5.h),
 
           // Dropdown Selection
           Obx(() {
@@ -188,71 +188,60 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 1.h),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: theme.colorScheme.outline.withValues(alpha: 0.3),
-                    ),
-                  ),
-                  child: DropdownButtonFormField<int>(
-                    value: invoiceController.selectedOrderId.value,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Select Purchase Order'.tr,
-                      hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    items: pendingOrders.map((order) {
-                      print(pendingOrders.length);
-                      return DropdownMenuItem<int>(
-                        value: order.id,
-                        child: Container(
-                          constraints: BoxConstraints(maxWidth: 60.w),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                order.supplierName,
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                              Text(
-                                '${order.total} ${order.currency}',
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: theme.colorScheme.onSurfaceVariant,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      if (value != null) {
-                        invoiceController.selectPurchaseOrder(value);
-                      }
-                    },
-                    dropdownColor: theme.colorScheme.surface,
-                    icon: Icon(
-                      Icons.keyboard_arrow_down,
+                DropdownButtonFormField<int>(
+                  value: invoiceController.selectedOrderId.value,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Select Purchase Order'.tr,
+                    hintStyle: theme.textTheme.bodyMedium?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
-                    isExpanded: true,
                   ),
+                  items: pendingOrders.map((order) {
+                    print(pendingOrders.length);
+                    return DropdownMenuItem<int>(
+                      value: order.id,
+                      child: Container(
+                        constraints: BoxConstraints(maxWidth: 60.w),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              order.supplierName,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w500,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            Text(
+                              '${order.total} ${order.currency}',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    if (value != null) {
+                      invoiceController.selectPurchaseOrder(value);
+                    }
+                  },
+                  dropdownColor: theme.colorScheme.surface,
+                  icon: Icon(
+                    Icons.keyboard_arrow_down,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  isExpanded: true,
                 ),
 
                 // Create Invoice Button
-                SizedBox(height: 2.h),
+                SizedBox(height: 1.h),
                 SizedBox(
                   width: double.infinity,
                   child: Obx(() {
@@ -276,11 +265,11 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
                           : null,
                       icon: Icon(
                         Icons.add_shopping_cart,
-                        size: 20,
+                        size: 6.w,
                       ),
                       label: Text(
                         'Create Invoice'.tr,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
                               color: AppColors.onPrimaryLight,
                               fontWeight: FontWeight.w600,
                             ),
@@ -288,7 +277,7 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,
                         foregroundColor: theme.colorScheme.onPrimary,
-                        padding: EdgeInsets.symmetric(vertical: 3.h),
+                        padding: EdgeInsets.symmetric(vertical: 0.7.h),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),

@@ -62,7 +62,6 @@ class AddPurchaseOrderController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final AddPurchaseOrder addPurchaseOrderUseCase;
 
-  var suppliers = <SupplierModel>[].obs;
   var products = <ProductModel>[].obs;
   final productController = Get.find<GetAllProductController>();
   final supplierController = Get.find<GetAllSupplierController>();

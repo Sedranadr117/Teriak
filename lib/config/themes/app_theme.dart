@@ -12,6 +12,7 @@ class AppTheme {
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
         primary: AppColors.primaryLight,
+        
         onPrimary: AppColors.onPrimaryLight,
         primaryContainer: AppColors.primaryVariantLight,
         onPrimaryContainer: AppColors.onPrimaryLight,

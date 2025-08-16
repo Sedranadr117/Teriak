@@ -29,7 +29,6 @@ class _InvoiceProductsTableWidgetState
   @override
   void didUpdateWidget(InvoiceProductsTableWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // تحديث الواجهة عند تغيير البيانات
     if (oldWidget.products != widget.products ||
         oldWidget.searchQuery != widget.searchQuery) {
       setState(() {});
@@ -60,7 +59,6 @@ class _InvoiceProductsTableWidgetState
   void _updateProductData(int index, String field, dynamic value) {
     final updatedProduct = {...widget.products[index], field: value};
 
-    // تحديث سعر الشراء الفعلي تلقائياً إذا تم تغيير الكمية أو السعر
     if (field == 'receivedQty' ||
         field == 'bonusQty' ||
         field == 'invoicePrice') {
@@ -70,7 +68,6 @@ class _InvoiceProductsTableWidgetState
 
     widget.onProductDataChanged(index, updatedProduct);
 
-    // تحديث الواجهة
     setState(() {});
   }
 

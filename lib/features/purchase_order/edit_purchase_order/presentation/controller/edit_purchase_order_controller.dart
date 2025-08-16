@@ -378,11 +378,12 @@ class EditPurchaseOrderController extends GetxController {
     if (!canUpdateOrder) return;
 
     isLoading.value = true;
+    final languageCode = LocaleController.to.locale.languageCode;
 
     try {
       final params = EditPurchaseOrdersParams(
         id: orderId!,
-        languageCode: Get.find<LocaleController>().isArabic ? 'ar_SY' : 'en_US',
+        languageCode: languageCode,
       );
 
       final body = {

@@ -29,7 +29,7 @@ class AllPurchaseInvoiceController extends GetxController {
 
   // Pagination variables for invoices
   var currentPage = 0.obs;
-  var pageSize = 10.obs;
+  var pageSize = 5.obs;
   var totalPages = 0.obs;
   var totalElements = 0.obs;
   var hasNext = false.obs;

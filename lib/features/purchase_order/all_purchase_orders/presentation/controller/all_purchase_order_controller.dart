@@ -21,7 +21,7 @@ class GetAllPurchaseOrderController extends GetxController {
 
   // Pagination variables
   var currentPage = 0.obs;
-  var pageSize = 10.obs;
+  var pageSize = 5.obs;
   var totalPages = 0.obs;
   var totalElements = 0.obs;
   var hasNext = false.obs;
@@ -174,4 +174,5 @@ class GetAllPurchaseOrderController extends GetxController {
       isRefreshing.value = false;
     }
   }
+
 }

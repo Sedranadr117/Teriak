@@ -1,10 +1,7 @@
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/domain/entities/paginated_purchase_invoice_entity.dart';
 
-
 class PaginatedInvoiceModel extends PaginatedInvoiceEntity {
- 
-
   PaginatedInvoiceModel({
     required super.content,
     required super.page,
@@ -29,6 +26,4 @@ class PaginatedInvoiceModel extends PaginatedInvoiceEntity {
       hasPrevious: json['hasPrevious'] ?? false,
     );
   }
-
-
 }

@@ -131,9 +131,11 @@ class _CreatePurchaseOrderPageState extends State<CreatePurchaseOrderPage> {
 
           // Create Order Button
           CreateOrderButton(
-            onPressed: () {
+            onPressed: () async {
               controller.createPurchaseOrder();
               orderController.refreshPurchaseOrders();
+              await Future.delayed(const Duration(milliseconds: 1500));
+              orderController.getAllPendingPurchaseOrders();
             },
             isLoading: controller.isLoading.value,
             isEnabled: controller.canCreateOrder,

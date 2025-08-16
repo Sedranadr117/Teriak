@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart' show AppPages;
+import 'package:teriak/config/themes/app_icon.dart';
 import '../../controller/all_purchase_invoice_controller.dart';
 import 'invoice_card_widget.dart';
 
@@ -44,6 +45,17 @@ class InvoicesListWidget extends StatelessWidget {
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   color: theme.colorScheme.secondary,
+                ),
+              ),
+              Spacer(),
+              IconButton(
+                onPressed: () {
+                  Get.toNamed( AppPages.searchPurchaseInvoice,);
+                },
+                icon: CustomIconWidget(
+                  iconName: 'search',
+                  color: theme.colorScheme.onSurfaceVariant,
+                  size:7.w,
                 ),
               ),
             ],
@@ -157,7 +169,7 @@ class InvoicesListWidget extends StatelessWidget {
                     return InvoiceCardWidget(
                       invoice: invoice,
                       onTap: () {
-                        Get.toNamed(AppPages.invoiceDetail,arguments: invoice);
+                        Get.toNamed(AppPages.invoiceDetail, arguments: invoice);
                       },
                     );
                   },

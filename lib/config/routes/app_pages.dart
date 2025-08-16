@@ -36,4 +36,5 @@ class AppPages {
   static const String invoiceDetail = '/invoice-detail';
   static const String purchaseOrderSelection = '/purchase-order-selection';
   static const String editPurchaseInvoice = '/edit-purchase-invoice';
+  static const String searchPurchaseInvoice = '/search-purchase-invoice';
 }

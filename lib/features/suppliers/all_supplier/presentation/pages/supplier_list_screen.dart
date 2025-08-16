@@ -20,7 +20,7 @@ class SupplierListScreen extends StatefulWidget {
 }
 
 class _SupplierListScreenState extends State<SupplierListScreen> {
-  final supplierController = Get.put(GetAllSupplierController());
+  final supplierController = Get.find<GetAllSupplierController>();
   final searchController = Get.put(SearchSupplierController());
   final deleteController = Get.put(DeleteSupplierController());
 

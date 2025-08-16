@@ -16,6 +16,7 @@ import 'package:teriak/features/pharmacy/presentation/pages/pharmacy_complete_re
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/binding/all_purchase_invoice_binding.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
 import 'package:teriak/features/purchase_invoice/PurchaseInvoiceDetails/presentation/pages/invoice_detail_screen.dart';
+import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/presentation/pages/search_purchase_invoice_page.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/presentation/controller/add_order_binding.dart';
 import 'package:teriak/features/sales_management/presentation/pages/invoice_detail_screen.dart';
 import 'package:teriak/features/sales_management/presentation/pages/invoice_list_screen.dart';
@@ -193,6 +194,11 @@ class AppRoutes {
       page: () => const AllPurchaseInvoiceScreen(),
       transition: Transition.fadeIn,
       binding: AllPurchaseInvoiceBinding(),
+    ),
+    GetPage(
+      name: AppPages.searchPurchaseInvoice,
+      page: () => const SearchPurchaseInvoicePage(),
+      transition: Transition.fadeIn,
     ),
   ];
 }

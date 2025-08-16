@@ -32,58 +32,18 @@ class HttpConsumer extends ApiConsumer {
   @override
   Future<dynamic> get(String path,
       {Object? data, Map<String, dynamic>? queryParameters}) async {
-    try {
-      final uri =
-          Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-      final headers = _getHeaders();
-      final response = await http.get(uri, headers: headers).timeout(
-        const Duration(seconds: 30),
-        onTimeout: () {
-          throw TimeoutException('Request timed out after 30 seconds');
-        },
-      );
-      handleHttpResponse(response);
-      return _tryDecode(response.body);
-    } catch (e) {
-      print('💥 HTTP Error: $e');
-      if (e is HttpException) {
-        handleHttpException(e);
-      } else {
-        rethrow;
-      }
-    }
-  }
-
-  @override
-  Future<dynamic> post(String path,
-      {dynamic data,
-      Map<String, dynamic>? queryParameters,
-      bool isFormData = false}) async {
     // try {
-      final uri =
-          Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-
-      print('🌐 Full URL: $uri');
-      print('📤 Request method: POST');
-      print('📦 Request data: $data');
-
-      final headers = _getHeaders(isFormData: isFormData);
-      print('📋 Headers: $headers');
-
-      final body = isFormData ? data : json.encode(data);
-      print('📄 Request body: $body');
-
-      final response = await http.post(
-        uri,
-        body: body,
-        headers: headers,
-      );
-
-      print('📥 Response status: ${response.statusCode}');
-      print('📥 Response body: ${response.body}');
-
-      handleHttpResponse(response);
-      return _tryDecode(response.body);
+    final uri =
+        Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+    final headers = _getHeaders();
+    final response = await http.get(uri, headers: headers).timeout(
+      const Duration(seconds: 30),
+      onTimeout: () {
+        throw TimeoutException('Request timed out after 30 seconds');
+      },
+    );
+    handleHttpResponse(response);
+    return _tryDecode(response.body);
     // } catch (e) {
     //   print('💥 HTTP Error: $e');
     //   if (e is HttpException) {
@@ -92,6 +52,46 @@ class HttpConsumer extends ApiConsumer {
     //     rethrow;
     //   }
     // }
+  }
+
+  @override
+  Future<dynamic> post(String path,
+      {dynamic data,
+      Map<String, dynamic>? queryParameters,
+      bool isFormData = false}) async {
+    try {
+    final uri =
+        Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+
+    print('🌐 Full URL: $uri');
+    print('📤 Request method: POST');
+    print('📦 Request data: $data');
+
+    final headers = _getHeaders(isFormData: isFormData);
+    print('📋 Headers: $headers');
+
+    final body = isFormData ? data : json.encode(data);
+    print('📄 Request body: $body');
+
+    final response = await http.post(
+      uri,
+      body: body,
+      headers: headers,
+    );
+
+    print('📥 Response status: ${response.statusCode}');
+    print('📥 Response body: ${response.body}');
+
+    handleHttpResponse(response);
+    return _tryDecode(response.body);
+    } catch (e) {
+      print('💥 HTTP Error: $e');
+      if (e is HttpException) {
+        handleHttpException(e);
+      } else {
+        rethrow;
+      }
+    }
   }
 
   @override

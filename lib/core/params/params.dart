@@ -190,7 +190,6 @@ class SupplierParams {
   const SupplierParams({required this.id});
 }
 
-
 class SearchSupplierParams {
   final String keyword;
 
@@ -201,6 +200,7 @@ class SearchSupplierParams {
     };
   }
 }
+
 class DeletePurchaseOrderParams {
   final int id;
 
@@ -234,6 +234,7 @@ class EditPurchaseOrdersParams {
     };
   }
 }
+
 class PurchaseInvoiceDetailsParams {
   final String languageCode;
   final int id;
@@ -247,6 +248,7 @@ class PurchaseInvoiceDetailsParams {
     };
   }
 }
+
 class EditPurchaseInvoiceParams {
   final String languageCode;
   final int id;
@@ -257,6 +259,52 @@ class EditPurchaseInvoiceParams {
   Map<String, dynamic> toMap() {
     return {
       'language': languageCode,
+    };
+  }
+}
+
+class SearchBySupplierParams {
+  final int supplierId;
+  final int page;
+  final int size;
+  final String language;
+
+  const SearchBySupplierParams({
+    required this.supplierId,
+    required this.page,
+    required this.size,
+    required this.language,
+  });
+  Map<String, dynamic> toMap() {
+    return {
+      'page': page.toString(),
+      'size': size.toString(),
+      'language': language,
+    };
+  }
+}
+
+class SearchByDateRangeParams {
+  final DateTime startDate;
+  final DateTime endDate;
+  final int page;
+  final int size;
+  final String language;
+
+  const SearchByDateRangeParams({
+    required this.startDate,
+    required this.endDate,
+    this.page = 0,
+    this.size = 10,
+    this.language = 'ar',
+  });
+  Map<String, dynamic> toMap() {
+    return {
+      'startDate': startDate.toIso8601String(),
+      'endDate': endDate.toIso8601String(),
+      'page': page.toString(),
+      'size': size.toString(),
+      'language': language,
     };
   }
 }

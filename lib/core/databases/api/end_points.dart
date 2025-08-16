@@ -28,9 +28,11 @@ class EndPoints {
   static String suppliers = "suppliers";
   static String searchSuppliers = "suppliers/search";
   static String purchaseOrders = "purchase-orders";
-  static String purchaseOrdersPaginated = "purchase-orders/paginated";
   static String purchaseInvoices = "purchase-invoices";
-  static String purchaseInvoicesPaginated = "purchase-invoices/paginated";
+  static String purchaseOrderSearchBySupplier = "purchase-orders/supplier";
+  static String purchaseOrderSearchByDateRange = "purchase-orders/time-range";
+  static String purchaseInvoicesSearchBySupplier = "purchase-invoices/supplier";
+  static String purchaseInvoicesSearchByDateRange = "purchase-invoices/time-range";
 }
 
 class ApiKeys {

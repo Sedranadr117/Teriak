@@ -193,9 +193,11 @@ class _EditPurchaseOrderPageState extends State<EditPurchaseOrderPage> {
 
           // Update Order Button
           CreateOrderButton(
-            onPressed: () {
+            onPressed: () async{
               controller.updatePurchaseOrder();
               orderController.refreshPurchaseOrders();
+              await Future.delayed(const Duration(milliseconds: 1500));
+              orderController.getAllPendingPurchaseOrders();
               detailsController.refreshPurchaseOrderDetails();
             },
             isLoading: controller.isLoading.value,
