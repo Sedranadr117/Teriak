@@ -276,10 +276,11 @@ class _InvoiceProductsTableWidgetState
       Row(children: [
         Expanded(
             child: _buildDateField(
-                context,
-                'Expiry Date'.tr,
-                product['expiryDate'],
-                (value) => _updateProductData(index, 'expiryDate', value))),
+          context,
+          'Expiry Date'.tr,
+          product['expiryDate'],
+          (value) => _updateProductData(index, 'expiryDate', value),
+        )),
         SizedBox(width: 2.w),
         Expanded(
             child:

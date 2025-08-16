@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-import 'package:intl/intl.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -11,8 +10,6 @@ import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/data/datasources/add_purchase_invoice_remote_data_source.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/data/repositories/add_purchase_invoice_repository_impl.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/domain/usecases/post_add_purchase_invoice.dart';
-import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
-import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/purchase_model .dart';
 
 class AddPurchaseInvoiceController extends GetxController {
@@ -207,9 +204,9 @@ class AddPurchaseInvoiceController extends GetxController {
     return true;
   }
 
-  Future<bool> saveInvoice() async {
+  Future<void> saveInvoice() async {
     if (!validateForm()) {
-      return false;
+      return;
     }
     _isSaving.value = true;
 
@@ -244,15 +241,17 @@ class AddPurchaseInvoiceController extends GetxController {
       );
       return result.fold(
         (failure) {
-          // أعرض رسالة الخطأ
-          Get.snackbar(
-            'خطأ',
-            failure.errMessage,
-            snackPosition: SnackPosition.TOP,
-            backgroundColor: Colors.red.shade400,
-            colorText: Colors.white,
-          );
-          return false;
+          if (failure.statusCode == 409) {
+            Get.snackbar('Error', "ExpireDate  is required");
+          } else {
+            Get.snackbar(
+              'خطأ',
+              failure.errMessage,
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.red.shade400,
+              colorText: Colors.white,
+            );
+          }
         },
         (savedInvoice) {
           _hasUnsavedChanges.value = false;
@@ -264,11 +263,11 @@ class AddPurchaseInvoiceController extends GetxController {
             colorText: Colors.white,
           );
           _hasUnsavedChanges.value = false;
-          return true;
+          return;
         },
       );
     } catch (e) {
-      return false;
+      Get.snackbar('Error', e.toString());
     } finally {
       _isSaving.value = false;
     }
