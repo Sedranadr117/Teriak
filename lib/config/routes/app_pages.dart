@@ -29,4 +29,11 @@ class AppPages {
   static const String createPurchaseOrder = '/create-purchase-order';
   static const String showInvoices = '/show_invoices';
   static const String showInvoicesDitails = '/show_invoicesDetails';
+  static const String enhancedCreateInvoice = '/enhanced-create-invoice-screen';
+
+  // Purchase Invoice Routes
+  static const String purchaseInvoiceList = '/purchase-invoice-list';
+  static const String invoiceDetail = '/invoice-detail';
+  static const String purchaseOrderSelection = '/purchase-order-selection';
+  static const String editPurchaseInvoice = '/edit-purchase-invoice';
 }

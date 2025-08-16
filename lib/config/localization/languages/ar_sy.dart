@@ -7,6 +7,7 @@ final Map<String, String> arSY = {
   "Trade Name": "الاسم التجاري",
   "Scientific Name": "الاسم العلمي",
   "Barcode": "الباركود",
+  "Scan Barcode": "مسح الباركود",
   "barcode Hint": 'أدخل رمز الباركود',
   "Added Barcodes": 'الباركودات المضافة:',
   "scan": 'مسح الباركود بالكاميرا',
@@ -439,6 +440,7 @@ final Map<String, String> arSY = {
 
   // Add Purchase Order
   "Create Purchase Order": "إنشاء طلبية شراء",
+  "Purchase Order": "طلبية شراء",
   "Supplier Selection": "اختيار المورد",
   "Select Supplier": "اختر المورد",
   "Please select a supplier": "يرجى اختيار مورد",
@@ -533,4 +535,258 @@ final Map<String, String> arSY = {
   "from indebted customers?": "من قائمة العملاء المدينين؟",
   "Delete Customer": "حذف العميل",
   "Contact Information": "معلومات التواصل",
+  "The order cannot be deleted in its current state":
+      "لا يمكن حذف الطلبية في حالتها الحالية",
+
+  "The order cannot be modified in its current state":
+      "لا يمكن تعديل الطلبية في حالتها الحالية",
+  "Order deleted successfully": "تم حذف الطلبية بنجاح",
+
+  // Suppliers Management
+  "Add Supplier": "إضافة مورد",
+  "Edit Supplier": "تعديل المورد",
+  "Save Supplier": "حفظ المورد",
+  "Supplier Management": "إدارة الموردين",
+  "New Supplier": "مورد جديد",
+  "Supplier Name": "اسم المورد",
+  "Phone Number": "رقم الهاتف",
+  "Address": "العنوان",
+  "Preferred Currency": "العملة المفضلة",
+  "Enter supplier name": "أدخل اسم المورد",
+  "Enter supplier address": "أدخل عنوان المورد",
+  "Fill in the details below to add a new supplier to your system":
+      "املأ التفاصيل أدناه لإضافة مورد جديد إلى نظامك",
+  "Editing Supplier": "تعديل المورد",
+  "Make changes to supplier information":
+      "قم بإجراء تغييرات على معلومات المورد",
+  "Contact Information": "معلومات التواصل",
+  "Phone": "الهاتف",
+  "No phone": "لا يوجد هاتف",
+  "Unknown Supplier": "مورد غير معروف",
+  "Delete Supplier": "حذف المورد",
+  "Are you sure you want to delete": "هل أنت متأكد أنك تريد حذف",
+  "This action cannot be undone.": "لا يمكن التراجع عن هذا الإجراء.",
+  "Supplier deleted successfully": "تم حذف المورد بنجاح",
+  "Supplier added successfully": "تم إضافة المورد بنجاح",
+  "Supplier updated successfully": "تم تحديث المورد بنجاح",
+  "Error Suppliers Loading": "خطأ في تحميل الموردين",
+  "Error Searching Suppliers": "خطأ في البحث عن الموردين",
+  "No suppliers found": "لا يوجد موردين",
+  "Search suppliers": "البحث عن موردين",
+  "Search suppliers...": "البحث عن موردين...",
+  "View all records feature coming soon": "ميزة عرض جميع السجلات قريباً",
+  "View All": "عرض الكل",
+  "Financial Overview": "نظرة مالية عامة",
+  "Financial Records": "السجلات المالية",
+  "Total Payments": "إجمالي المدفوعات",
+  "Total Debts": "إجمالي الديون",
+  "Net Balance": "الرصيد الصافي",
+  "No Financial Records": "لا توجد سجلات مالية",
+  "Financial transactions will appear here": "ستظهر المعاملات المالية هنا",
+  "Show more records feature coming soon": "ميزة عرض المزيد من السجلات قريباً",
+  "Payment for office supplies": "دفع للمستلزمات المكتبية",
+  "Outstanding invoice #INV-2024-001": "فاتورة معلقة رقم #INV-2024-001",
+  "Partial payment received": "تم استلام دفعة جزئية",
+  "completed": "مكتمل",
+  "pending": "معلق",
+  "Payment": "دفع",
+  "Debt": "دين",
+  "Edit": "تعديل",
+  "Delete": "حذف",
+  "Cancel": "إلغاء",
+  "OK": "تم",
+  "Retry": "إعادة المحاولة",
+  "Clear search": "مسح البحث",
+  "No results found": "لا توجد نتائج",
+  "Create new order": "إنشاء طلب جديد",
+
+  // All Purchase Invoice
+  "Purchase Invoice Management": "إدارة فواتير الشراء",
+  "Select Purchase Order": "اختر طلبية الشراء",
+  "Choose a purchase order to create invoice": "اختر طلبية شراء لإنشاء فاتورة",
+  "No purchase orders available": "لا توجد طلبات شراء متاحة",
+  "All Invoices": "جميع الفواتير",
+  "No invoices found": "لا توجد فواتير",
+  "Invoice Number": "رقم الفاتورة",
+  "Supplier": "المورد",
+  "Total Amount": "المبلغ الإجمالي",
+  "Date": "التاريخ",
+  "Currency": "العملة",
+  "Status": "الحالة",
+  "Pending": "معلق",
+  "Completed": "مكتمل",
+  "Cancelled": "ملغي",
+  "item": "عنصر",
+  "items": "عناصر",
+  "Purchase Invoices": "فواتير الشراء",
+  "Loading purchase orders": "جاري تحميل طلبات الشراء",
+  "Failed to load purchase orders": "فشل في تحميل طلبات الشراء",
+  "Failed to load invoices": "فشل في تحميل الفواتير",
+  "Refresh": "تحديث",
+  "No data available": "لا توجد بيانات متاحة",
+  "View Details": "عرض التفاصيل",
+  "No Invoice Number": "لا يوجد رقم فاتورة",
+  "Edit Purchase Order": "تعديل طلبية الشراء",
+  "Invoices will appear here once created": "ستظهر الفواتير هنا بمجرد إنشائها",
+  "Available Orders": "الطلبات المتاحة",
+  "Create Invoice": "إنشاء فاتورة",
+  "No pending purchase orders available": "لا توجد طلبات شراء معلقة",
+  "Pending Orders": "الطلبات المعلقة",
+  "Choose a pending purchase order to create invoice":
+      "اختر طلبية شراء معلقة لإنشاء فاتورة",
+  "All fields marked with * are required. Make sure to double-check the information before saving":
+      "جميع الحقول المشار إليها بـ * مطلوبة. تأكد من التحقق من المعلومات قبل الحفظ",
+
+  // Add Purchase Invoice
+  "Create Purchase Invoice": "إنشاء فاتورة شراء",
+  "Products from Purchase Order": "المنتجات من طلب الشراء",
+  "Proceed to Payment": "متابعة الدفع",
+  "Saving...": "جاري الحفظ...",
+  "Save Success": "تم الحفظ بنجاح",
+  "Save Error": "فشل في حفظ الفاتورة",
+  "Please try again": "الرجاء المحاولة مرة أخرى",
+
+  // Invoice Header
+  "Purchase Order Data": "بيانات طلب الشراء",
+  "Search Products": "البحث عن المنتجات",
+  "Last Barcode": "آخر باركود",
+
+  // Invoice Summary
+  "Invoice Summary": "ملخص الفاتورة",
+  "Received Items": "العناصر المستلمة",
+  "Bonus Items": "العناصر المجانية",
+  "Total Items": "إجمالي العناصر",
+  "Total Amount": "المبلغ الإجمالي",
+  "Continue to Payment": "متابعة الدفع",
+
+  // Products Table
+  "No Products": "لا توجد منتجات",
+  "No Products Found": "لم يتم العثور على منتجات في طلب الشراء المحدد",
+  "Barcode": "الباركود",
+  "Required Quantity": "الكمية المطلوبة",
+  "Actual Purchase Price": "سعر الشراء الفعلي",
+  "Receipt Data": "بيانات الاستلام",
+  "Received Quantity": "الكمية المستلمة",
+  "Bonus Quantity": "كمية البونص",
+  "Min Stock Level": "الحد الأدنى للمخزون",
+  "Batch Number": "رقم التشغيلة",
+  "Expiry Date": "تاريخ انتهاء الصلاحية",
+  "Unit Price": "سعر الوحدة",
+  "Choose Date": "اختر التاريخ",
+  "Required": "مطلوب",
+
+  // Search
+  "Search": "البحث",
+  "Search Invoices": "البحث في الفواتير",
+  "Search Results": "نتائج البحث",
+  "No Results Found": "لم يتم العثور على نتائج",
+
+  // Edit
+  "Edit Purchase Invoice": "تعديل فاتورة الشراء",
+  "Update Invoice": "تحديث الفاتورة",
+  "Update Success": "تم التحديث بنجاح",
+  "Update Error": "فشل في تحديث الفاتورة",
+
+  // Details
+  "Invoice Details": "تفاصيل الفاتورة",
+  "Invoice Information": "معلومات الفاتورة",
+  "Supplier Information": "معلومات المورد",
+  "Product Details": "تفاصيل المنتجات",
+  "Payment Information": "معلومات الدفع",
+
+  // Actions
+  "Actions": "الإجراءات",
+  "View": "عرض",
+  "Approve": "موافقة",
+  "Reject": "رفض",
+  "Confirm": "تأكيد",
+
+  // Messages
+  "Confirm Delete": "هل أنت متأكد من حذف هذه الفاتورة؟",
+  "Confirm Cancel": "هل أنت متأكد من إلغاء هذه الفاتورة؟",
+  "Delete Success": "تم حذف الفاتورة بنجاح",
+  "Cancel Success": "تم إلغاء الفاتورة بنجاح",
+  "Operation Failed": "فشلت العملية",
+
+  // Validation
+  "Field Required": "هذا الحقل مطلوب",
+  "Invalid Number": "رقم غير صحيح",
+  "Invalid Date": "تاريخ غير صحيح",
+  "Invalid Email": "بريد إلكتروني غير صحيح",
+  "Invalid Phone": "رقم هاتف غير صحيح",
+
+  // Common
+  "Yes": "نعم",
+  "No": "لا",
+  "Close": "إغلاق",
+  "Back": "رجوع",
+  "Next": "التالي",
+  "Previous": "السابق",
+  "Loading": "جاري التحميل...",
+  "Warning": "تحذير",
+  "Info": "معلومات",
+
+  // Date Formats
+  "Date Format": "dd/MM/yyyy",
+  "Time Format": "HH:mm",
+  "DateTime Format": "dd/MM/yyyy HH:mm",
+
+  // Currency
+  "Amount": "المبلغ",
+  "Subtotal": "المجموع الفرعي",
+  "Tax": "الضريبة",
+  "Discount": "الخصم",
+  "Grand Total": "المجموع الكلي",
+
+  // Navigation
+  "Home": "الرئيسية",
+  "Dashboard": "لوحة التحكم",
+  "Settings": "الإعدادات",
+  "Profile": "الملف الشخصي",
+  "Logout": "تسجيل الخروج",
+
+  // Filters
+  "Filters": "الفلاتر",
+  "Apply Filters": "تطبيق الفلاتر",
+  "Clear Filters": "مسح الفلاتر",
+  "Date Range": "نطاق التاريخ",
+  "Status Filter": "فلتر الحالة",
+  "Supplier Filter": "فلتر المورد",
+
+  // Pagination
+  "Items Per Page": "العناصر في الصفحة",
+  "Showing": "عرض",
+  "To": "إلى",
+  "From": "من",
+
+  // Export
+  "Export": "تصدير",
+  "Export to Excel": "تصدير إلى Excel",
+  "Export to PDF": "تصدير إلى PDF",
+  "Export to CSV": "تصدير إلى CSV",
+  "Download": "تحميل",
+
+  // Print
+  "Print": "طباعة",
+  "Print Invoice": "طباعة الفاتورة",
+  "Print Receipt": "طباعة الإيصال",
+
+  // Email
+  "Email": "البريد الإلكتروني",
+  "Send Email": "إرسال بريد إلكتروني",
+  "Email Sent": "تم إرسال البريد الإلكتروني",
+  "Email Failed": "فشل في إرسال البريد الإلكتروني",
+
+  // Notifications
+  "Notifications": "الإشعارات",
+  "Mark as Read": "تحديد كمقروء",
+  "Mark All as Read": "تحديد الكل كمقروء",
+  "No Notifications": "لا توجد إشعارات",
+
+  // Help
+  "Help": "المساعدة",
+  "Support": "الدعم",
+  "Contact Us": "اتصل بنا",
+  "FAQ": "الأسئلة الشائعة",
+  "User Guide": "دليل المستخدم"
 };

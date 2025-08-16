@@ -1,0 +1,280 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:intl/intl.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
+import 'package:teriak/core/connection/network_info.dart';
+import 'package:teriak/core/databases/api/end_points.dart';
+import 'package:teriak/core/databases/api/http_consumer.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/data/datasources/add_purchase_invoice_remote_data_source.dart';
+import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/data/repositories/add_purchase_invoice_repository_impl.dart';
+import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/domain/usecases/post_add_purchase_invoice.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/purchase_model .dart';
+
+class AddPurchaseInvoiceController extends GetxController {
+  final _formKey = GlobalKey<FormState>();
+  final _invoiceNumberController = TextEditingController();
+  final _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+
+  // Observable variables
+  final Rx<PurchaseOrderModel?> _purchaseOrder = Rx<PurchaseOrderModel?>(null);
+  final RxList<Map<String, dynamic>> _products = <Map<String, dynamic>>[].obs;
+  final RxBool _isSaving = false.obs;
+  final RxString _searchQuery = ''.obs;
+  final RxBool _hasUnsavedChanges = false.obs;
+
+  // Getters
+  GlobalKey<FormState> get formKey => _formKey;
+  TextEditingController get invoiceNumberController => _invoiceNumberController;
+  TextEditingController get searchController => _searchController;
+  ScrollController get scrollController => _scrollController;
+  PurchaseOrderModel? get purchaseOrder => _purchaseOrder.value;
+  List<Map<String, dynamic>> get products => _products;
+  bool get isSaving => _isSaving.value;
+  String get searchQuery => _searchQuery.value;
+  bool get hasUnsavedChanges => _hasUnsavedChanges.value;
+
+  late final NetworkInfoImpl networkInfo;
+
+  late final AddPurchaseInvoice addPurchaseInvoiceUseCase;
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initDependencies();
+  }
+
+  void _initDependencies() {
+    final cacheHelper = CacheHelper();
+    final httpConsumer =
+        HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
+    networkInfo = NetworkInfoImpl(InternetConnection());
+    final remoteDataSource =
+        AddPurchaseInvoiceRemoteDataSource(api: httpConsumer);
+    final repository = AddPurchaseInvoiceRepositoryImpl(
+      remoteDataSource: remoteDataSource,
+      networkInfo: networkInfo,
+    );
+    addPurchaseInvoiceUseCase = AddPurchaseInvoice(repository: repository);
+  }
+
+  @override
+  void onClose() {
+    _invoiceNumberController.dispose();
+    _searchController.dispose();
+    _scrollController.dispose();
+    super.onClose();
+  }
+
+  void setPurchaseOrder(PurchaseOrderModel po) {
+    _purchaseOrder.value = po;
+    _generateProductsFromPO(po);
+  }
+
+  void _generateProductsFromPO(PurchaseOrderModel po) {
+    final List<Map<String, dynamic>> products = po.items
+        .map((item) => {
+              "id": item.id,
+              "name": item.productName,
+              "productId": item.productId,
+              "barcode": item.barcode,
+              "requiredQuantity": item.quantity,
+              "invoicePrice": item.price,
+              "receivedQty": 0,
+              "bonusQty": 0,
+              "minStockLevel": 10,
+              "batchNo": "",
+              "expiryDate": null,
+              "actualPrice": 0.0,
+              "isSelected": false,
+              "productType": item.productType
+            })
+        .toList();
+
+    _products.assignAll(products);
+  }
+
+  void onSearchChanged(String query) {
+    _searchQuery.value = query;
+
+    if (query.isNotEmpty) {
+      _scrollToMatchingProduct(query);
+    }
+  }
+
+  void _scrollToMatchingProduct(String query) {
+    for (int i = 0; i < _products.length; i++) {
+      final product = _products[i];
+      if (product['name'].contains(query) ||
+          product['barcode'].contains(query)) {
+        final position = i * 120.0;
+        _scrollController.animateTo(
+          position,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+        break;
+      }
+    }
+  }
+
+  void onBarcodeScanned(String barcode) {
+    _searchController.text = barcode;
+    onSearchChanged(barcode);
+
+    // البحث عن المنتج وتحديد موقعه
+    for (int i = 0; i < _products.length; i++) {
+      if (_products[i]['barcode'] == barcode) {
+        _scrollToMatchingProduct(barcode);
+        break;
+      }
+    }
+  }
+
+  void onProductDataChanged(int index, Map<String, dynamic> updatedData) {
+    _products[index] = {..._products[index], ...updatedData};
+
+    // تحديث سعر الشراء الفعلي تلقائياً
+    _updateActualPrice(index);
+
+    _hasUnsavedChanges.value = true;
+  }
+
+  void _updateActualPrice(int index) {
+    final product = _products[index];
+    final receivedQty = product['receivedQty'] as int;
+    final bonusQty = product['bonusQty'] as int;
+    final invoicePrice = product['invoicePrice'] as double;
+
+    if (receivedQty > 0) {
+      final totalQty = receivedQty + bonusQty;
+      final actualPrice =
+          totalQty > 0 ? (receivedQty * invoicePrice) / totalQty : invoicePrice;
+
+      _products[index]['actualPrice'] = actualPrice;
+    } else {
+      _products[index]['actualPrice'] = invoicePrice;
+    }
+
+    // تحديث الواجهة
+    _products.refresh();
+  }
+
+  double calculateTotalAmount() {
+    double total = 0.0;
+    for (final product in _products) {
+      final receivedQty = product['receivedQty'] as int;
+      final bonusQty = product['bonusQty'] as int;
+      final invoicePrice = product['invoicePrice'] as double;
+
+      if (receivedQty > 0) {
+        final totalQty = receivedQty + bonusQty;
+        final actualPrice = totalQty > 0
+            ? (receivedQty * invoicePrice) / totalQty
+            : invoicePrice;
+        total += totalQty * actualPrice;
+      }
+    }
+    return total;
+  }
+
+  int getTotalReceivedItems() {
+    return _products.fold(
+        0, (sum, product) => sum + (product['receivedQty'] as int));
+  }
+
+  int getTotalBonusItems() {
+    return _products.fold(
+        0, (sum, product) => sum + (product['bonusQty'] as int));
+  }
+
+  bool validateForm() {
+    if (!_formKey.currentState!.validate()) {
+      return false;
+    }
+
+    final hasReceivedProducts =
+        _products.any((product) => (product['receivedQty'] as int) > 0);
+    if (!hasReceivedProducts) {
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> saveInvoice() async {
+    if (!validateForm()) {
+      return false;
+    }
+    _isSaving.value = true;
+
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      final List<Map<String, dynamic>> items =
+          _products.where((p) => (p['receivedQty'] ?? 0) > 0).map((p) {
+        final DateTime? exp = p['expiryDate'] as DateTime?;
+        return {
+          "productId": p["productId"],
+          "receivedQty": p["receivedQty"],
+          "bonusQty": p["bonusQty"] ?? 0,
+          "invoicePrice": (p["invoicePrice"] ?? 0.0),
+          "batchNo": (p["batchNo"] ?? "").toString(),
+          "expiryDate": exp != null ? [exp.year, exp.month, exp.day] : null,
+          "productType": p["productType"],
+        };
+      }).toList();
+      final Map<String, dynamic> body = {
+        "purchaseOrderId": _purchaseOrder.value?.id,
+        "supplierId": _purchaseOrder.value?.supplierId,
+        "currency": _purchaseOrder.value?.currency ?? "USD",
+        //"total": calculateTotalAmount(),
+        "invoiceNumber": _invoiceNumberController.text,
+        "items": items,
+      };
+      final langCode = LocaleController.to.locale.languageCode;
+      final langParam = LanguageParam(key: "language", languageCode: langCode);
+      final result = await addPurchaseInvoiceUseCase(
+        params: langParam,
+        body: body,
+      );
+      return result.fold(
+        (failure) {
+          // أعرض رسالة الخطأ
+          Get.snackbar(
+            'خطأ',
+            failure.errMessage,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.red.shade400,
+            colorText: Colors.white,
+          );
+          return false;
+        },
+        (savedInvoice) {
+          _hasUnsavedChanges.value = false;
+          Get.snackbar(
+            'تم الحفظ',
+            'تم إنشاء الفاتورة بنجاح (${savedInvoice.invoiceNumber})',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green.shade400,
+            colorText: Colors.white,
+          );
+          _hasUnsavedChanges.value = false;
+          return true;
+        },
+      );
+    } catch (e) {
+      return false;
+    } finally {
+      _isSaving.value = false;
+    }
+  }
+
+  void clearUnsavedChanges() {
+    _hasUnsavedChanges.value = false;
+  }
+}

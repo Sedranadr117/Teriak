@@ -7,54 +7,32 @@ class CommonWidgets {
   static Widget buildErrorWidget({
     required BuildContext context,
     required String errorMessage,
-    String title = 'Error Loading',
+    void Function()? onPressed,
     String iconName = 'error',
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     return Center(
-      child: Padding(
-        padding: EdgeInsets.all(8.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 30.w,
-              height: 30.w,
-              decoration: BoxDecoration(
-                color: colorScheme.errorContainer,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: CustomIconWidget(
-                  iconName: iconName,
-                  color: colorScheme.error,
-                  size: 15.w,
-                ),
-              ),
-            ),
-            SizedBox(height: 3.h),
-            Text(
-              title,
-              style: theme.textTheme.titleLarge?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 1.h),
-            Text(
-              errorMessage,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-                height: 1.5,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 3.h),
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Error'.tr,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            errorMessage,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 2.h),
+          ElevatedButton(
+            onPressed: onPressed,
+            child: Text('Retry'.tr),
+          ),
+        ],
       ),
     );
   }
@@ -161,7 +139,8 @@ class CommonWidgets {
           SizedBox(width: 2.w),
           Expanded(
             child: Text(
-              'All fields marked with * are required. Make sure to double-check the information before saving.',
+              'All fields marked with * are required. Make sure to double-check the information before saving'
+                  .tr,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),

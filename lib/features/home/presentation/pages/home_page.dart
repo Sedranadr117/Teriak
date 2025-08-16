@@ -5,11 +5,12 @@ import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/core/themes/app_assets.dart';
 import 'package:teriak/features/home/presentation/widgets/custom_bottom_nav.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
 
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
-import 'package:teriak/features/purchase/all_purchase_orders/presentation/pages/purchase_order_list.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
-import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/purchaseInvoiceList.dart';
 
 class HomePage extends StatefulWidget {
@@ -37,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       StockManagement(),
       MultiSalesScreen(),
       AllProductPage(),
-      purchaseInvoiceList(),
+      AllPurchaseInvoiceScreen(),
     ];
   }
 
@@ -46,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     "Stock Management".tr,
     "Point of Sale".tr,
     "Pharmacy Product".tr,
-    "Invoices".tr
+    'Purchase Invoice Management'.tr,
   ];
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 
 class SupplierActionsWidget extends StatelessWidget {
@@ -26,7 +27,7 @@ class SupplierActionsWidget extends StatelessWidget {
                   onPressed: onEdit,
                   icon: Icon(Icons.edit,
                       color: theme.colorScheme.primary, size: 16.sp),
-                  label: const Text('Edit'),
+                  label: Text('Edit'.tr),
                 ),
               ),
             ],
@@ -40,7 +41,7 @@ class SupplierActionsWidget extends StatelessWidget {
                   icon: Icon(Icons.delete,
                       color: theme.colorScheme.error, size: 16.sp),
                   label: Text(
-                    'Delete',
+                    'Delete'.tr,
                     style: TextStyle(color: theme.colorScheme.error),
                   ),
                   style: OutlinedButton.styleFrom(

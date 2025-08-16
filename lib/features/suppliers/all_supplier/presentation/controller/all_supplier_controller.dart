@@ -53,7 +53,17 @@ class GetAllSupplierController extends GetxController {
           errorMessage.value = failure.errMessage;
         },
         (supplierList) {
-          suppliers.value = supplierList;
+          // Ensure we have unique suppliers based on ID
+          final uniqueSuppliers = supplierList.fold<List<dynamic>>(
+            [],
+            (list, supplier) {
+              if (!list.any((s) => s.id == supplier.id)) {
+                list.add(supplier);
+              }
+              return list;
+            },
+          );
+          suppliers.value = uniqueSuppliers;
         },
       );
     } catch (e) {

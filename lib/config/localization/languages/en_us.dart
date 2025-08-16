@@ -7,6 +7,7 @@ final Map<String, String> enUS = {
   "Trade Name": "Trade Name",
   "Scientific Name": "Scientific Name",
   "Barcode": "Barcode",
+  "Scan Barcode": "Scan Barcode",
   "barcode Hint": "Enter Barcode",
   "Added Barcodes": "Added Barcodes",
   "scan": "Scan the barcode with the camera.",
@@ -414,6 +415,7 @@ final Map<String, String> enUS = {
 
   // Purchase Orders Management
   "Purchase Orders Management": "Purchase Orders Management",
+  "Purchase Order": "Purchase Order",
   "Search purchase orders": "Search purchase orders",
   "Order Name": "Order Name",
   "Supplier Name": "Supplier Name",
@@ -534,4 +536,263 @@ final Map<String, String> enUS = {
   "from indebted customers?": "from indebted customers?",
   "Delete Customer": "Delete Customer",
   "Contact Information": "Contact Information",
+  "The order cannot be modified in its current state":
+      "The order cannot be modified in its current state",
+  "Order deleted successfully": "Order deleted successfully",
+  "The order cannot be deleted in its current state":
+      "The order cannot be deleted in its current state",
+
+  // Suppliers Management
+  "Add Supplier": "Add Supplier",
+  "Edit Supplier": "Edit Supplier",
+  "Save Supplier": "Save Supplier",
+  "Supplier Management": "Supplier Management",
+  "New Supplier": "New Supplier",
+  "Supplier Name": "Supplier Name",
+  "Phone Number": "Phone Number",
+  "Address": "Address",
+  "Preferred Currency": "Preferred Currency",
+  "Enter supplier name": "Enter supplier name",
+  "Enter supplier address": "Enter supplier address",
+  "Fill in the details below to add a new supplier to your system":
+      "Fill in the details below to add a new supplier to your system",
+  "Editing Supplier": "Editing Supplier",
+  "Make changes to supplier information":
+      "Make changes to supplier information",
+  "Contact Information": "Contact Information",
+  "Phone": "Phone",
+  "No phone": "No phone",
+  "Unknown Supplier": "Unknown Supplier",
+  "Delete Supplier": "Delete Supplier",
+  "Are you sure you want to delete": "Are you sure you want to delete",
+  "This action cannot be undone.": "This action cannot be undone.",
+  "Supplier deleted successfully": "Supplier deleted successfully",
+  "Supplier added successfully": "Supplier added successfully",
+  "Supplier updated successfully": "Supplier updated successfully",
+  "Error Suppliers Loading": "Error Suppliers Loading",
+  "Error Searching Suppliers": "Error Searching Suppliers",
+  "No suppliers found": "No suppliers found",
+  "Search suppliers": "Search suppliers",
+  "Search suppliers...": "Search suppliers...",
+  "View all records feature coming soon":
+      "View all records feature coming soon",
+  "View All": "View All",
+  "Financial Overview": "Financial Overview",
+  "Financial Records": "Financial Records",
+  "Total Payments": "Total Payments",
+  "Total Debts": "Total Debts",
+  "Net Balance": "Net Balance",
+  "No Financial Records": "No Financial Records",
+  "Financial transactions will appear here":
+      "Financial transactions will appear here",
+  "Show more records feature coming soon":
+      "Show more records feature coming soon",
+  "Payment for office supplies": "Payment for office supplies",
+  "Outstanding invoice #INV-2024-001": "Outstanding invoice #INV-2024-001",
+  "Partial payment received": "Partial payment received",
+  "completed": "completed",
+  "pending": "pending",
+  "Payment": "Payment",
+  "Debt": "Debt",
+  "Edit": "Edit",
+  "Delete": "Delete",
+  "Cancel": "Cancel",
+  "OK": "OK",
+  "Retry": "Retry",
+  "Clear search": "Clear search",
+  "No results found": "No results found",
+  "Create new order": "Create new order",
+
+  // All Purchase Invoice
+  "Purchase Invoice Management": "Purchase Invoice Management",
+  "Select Purchase Order": "Select Purchase Order",
+  "Choose a purchase order to create invoice":
+      "Choose a purchase order to create invoice",
+  "No purchase orders available": "No purchase orders available",
+  "All Invoices": "All Invoices",
+  "No invoices found": "No invoices found",
+  "Invoice Number": "Invoice Number",
+  "Supplier": "Supplier",
+  "Total Amount": "Total Amount",
+  "Date": "Date",
+  "Currency": "Currency",
+  "Status": "Status",
+  "Pending": "Pending",
+  "Completed": "Completed",
+  "Cancelled": "Cancelled",
+  "Purchase Invoices": "Purchase Invoices",
+  "item": "item",
+  "items": "items",
+  "Loading purchase orders": "Loading purchase orders",
+  "Failed to load purchase orders": "Failed to load purchase orders",
+  "Failed to load invoices": "Failed to load invoices",
+  "Refresh": "Refresh",
+  "Create Invoice": "Create Invoice",
+  "No data available": "No data available",
+  "View Details": "View Details",
+  "No pending purchase orders available":
+      "No pending purchase orders available",
+  "Pending Orders": "Pending Orders",
+  "Choose a pending purchase order to create invoice":
+      "Choose a pending purchase order to create invoice",
+  "No Invoice Number": "No Invoice Number",
+  "Edit Purchase Order": "Edit Purchase Order",
+  "Invoices will appear here once created":
+      "Invoices will appear here once created",
+  "Available Orders": "Available Orders",
+  "All fields marked with * are required. Make sure to double-check the information before saving":
+      "All fields marked with * are required. Make sure to double-check the information before saving",
+
+  // Add Purchase Invoice
+  "Create Purchase Invoice": "Create Purchase Invoice",
+  "Products from Purchase Order": "Products from Purchase Order",
+  "Proceed to Payment": "Proceed to Payment",
+  "Saving...": "Saving...",
+  "Save Success": "Save Success",
+  "Save Error": "Save Error",
+  "Please try again": "Please try again",
+
+  // Invoice Header
+  "Purchase Order Data": "Purchase Order Data",
+  "Search Products": "Search Products",
+  "Last Barcode": "Last Barcode",
+
+  // Invoice Summary
+  "Invoice Summary": "Invoice Summary",
+  "Received Items": "Received Items",
+  "Bonus Items": "Bonus Items",
+  "Total Items": "Total Items",
+  "Total Amount": "Total Amount",
+  "Continue to Payment": "Continue to Payment",
+
+  // Products Table
+  "No Products": "No Products",
+  "No Products Found": "No products found in the selected purchase order",
+  "Barcode": "Barcode",
+  "Required Quantity": "Required Quantity",
+  "Actual Purchase Price": "Actual Purchase Price",
+  "Receipt Data": "Receipt Data",
+  "Received Quantity": "Received Quantity",
+  "Bonus Quantity": "Bonus Quantity",
+  "Min Stock Level": "Min Stock Level",
+  "Batch Number": "Batch Number",
+  "Expiry Date": "Expiry Date",
+  "Unit Price": "Unit Price",
+  "Choose Date": "Choose Date",
+  "Required": "Required",
+
+  // Search
+  "Search": "Search",
+  "Search Invoices": "Search Invoices",
+  "Search Results": "Search Results",
+  "No Results Found": "No Results Found",
+
+  // Edit
+  "Edit Purchase Invoice": "Edit Purchase Invoice",
+  "Update Invoice": "Update Invoice",
+  "Update Success": "Update Success",
+  "Update Error": "Update Error",
+
+  // Details
+  "Invoice Details": "Invoice Details",
+  "Invoice Information": "Invoice Information",
+  "Supplier Information": "Supplier Information",
+  "Product Details": "Product Details",
+  "Payment Information": "Payment Information",
+
+  // Actions
+  "Actions": "Actions",
+  "View": "View",
+  "Approve": "Approve",
+  "Reject": "Reject",
+  "Confirm": "Confirm",
+
+  // Messages
+  "Confirm Delete": "Are you sure you want to delete this invoice?",
+  "Confirm Cancel": "Are you sure you want to cancel this invoice?",
+  "Delete Success": "Invoice deleted successfully",
+  "Cancel Success": "Invoice cancelled successfully",
+  "Operation Failed": "Operation failed",
+
+  // Validation
+  "Field Required": "This field is required",
+  "Invalid Number": "Invalid number",
+  "Invalid Date": "Invalid date",
+  "Invalid Email": "Invalid email",
+  "Invalid Phone": "Invalid phone number",
+
+  // Common
+  "Yes": "Yes",
+  "No": "No",
+  "Close": "Close",
+  "Back": "Back",
+  "Next": "Next",
+  "Previous": "Previous",
+  "Loading": "Loading...",
+  "Warning": "Warning",
+  "Info": "Info",
+
+  // Date Formats
+  "Date Format": "dd/MM/yyyy",
+  "Time Format": "HH:mm",
+  "DateTime Format": "dd/MM/yyyy HH:mm",
+
+  // Currency
+  "Amount": "Amount",
+  "Subtotal": "Subtotal",
+  "Tax": "Tax",
+  "Discount": "Discount",
+  "Grand Total": "Grand Total",
+
+  // Navigation
+  "Home": "Home",
+  "Dashboard": "Dashboard",
+  "Settings": "Settings",
+  "Profile": "Profile",
+  "Logout": "Logout",
+
+  // Filters
+  "Filters": "Filters",
+  "Apply Filters": "Apply Filters",
+  "Clear Filters": "Clear Filters",
+  "Date Range": "Date Range",
+  "Status Filter": "Status Filter",
+  "Supplier Filter": "Supplier Filter",
+
+  // Pagination
+  "Items Per Page": "Items per page",
+  "Showing": "Showing",
+  "To": "to",
+  "From": "from",
+
+  // Export
+  "Export": "Export",
+  "Export to Excel": "Export to Excel",
+  "Export to PDF": "Export to PDF",
+  "Export to CSV": "Export to CSV",
+  "Download": "Download",
+
+  // Print
+  "Print": "Print",
+  "Print Invoice": "Print Invoice",
+  "Print Receipt": "Print Receipt",
+
+  // Email
+  "Email": "Email",
+  "Send Email": "Send Email",
+  "Email Sent": "Email sent",
+  "Email Failed": "Email failed",
+
+  // Notifications
+  "Notifications": "Notifications",
+  "Mark as Read": "Mark as read",
+  "Mark All as Read": "Mark all as read",
+  "No Notifications": "No notifications",
+
+  // Help
+  "Help": "Help",
+  "Support": "Support",
+  "Contact Us": "Contact Us",
+  "FAQ": "FAQ",
+  "User Guide": "User Guide"
 };

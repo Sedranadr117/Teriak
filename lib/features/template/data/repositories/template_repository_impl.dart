@@ -12,8 +12,7 @@ class TemplateRepositoryImpl extends TemplateRepository {
   final NetworkInfo networkInfo;
   final TemplateRemoteDataSource remoteDataSource;
   TemplateRepositoryImpl(
-      {required this.remoteDataSource,
-      required this.networkInfo});
+      {required this.remoteDataSource, required this.networkInfo});
   @override
   Future<Either<Failure, TemplateEntity>> getTemplate(
       {required TemplateParams params}) async {
@@ -22,10 +21,13 @@ class TemplateRepositoryImpl extends TemplateRepository {
         final remoteTemplate = await remoteDataSource.getTemplate(params);
         return Right(remoteTemplate);
       } on ServerException catch (e) {
-        return Left(Failure(errMessage: e.errorModel.errorMessage));
+        return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status,
+        ));
       }
     } else {
-   return Left(Failure(errMessage: 'No internet connection'));
-      }
+      return Left(Failure(errMessage: 'No internet connection'));
+    }
   }
 }

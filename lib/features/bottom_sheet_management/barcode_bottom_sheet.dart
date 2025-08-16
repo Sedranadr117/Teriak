@@ -48,12 +48,12 @@ class _ScannerSheetState extends State<_ScannerSheet> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Padding(
+         Padding(
           padding: EdgeInsets.all(16),
           child: Row(
             children: [
               Text(
-                "Scan Barcode",
+                "Scan Barcode".tr,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               Spacer(),

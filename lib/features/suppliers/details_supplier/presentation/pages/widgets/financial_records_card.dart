@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
-
-
 
 class FinancialRecordsCard extends StatelessWidget {
   final SupplierModel supplier;
@@ -24,7 +23,7 @@ class FinancialRecordsCard extends StatelessWidget {
         "id": 1,
         "type": "payment",
         "amount": 2500.00,
-        "description": "Payment for office supplies",
+        "description": "Payment for office supplies".tr,
         "date": DateTime.now().subtract(Duration(days: 5)),
         "status": "completed",
       },
@@ -32,7 +31,7 @@ class FinancialRecordsCard extends StatelessWidget {
         "id": 2,
         "type": "debt",
         "amount": 1200.00,
-        "description": "Outstanding invoice #INV-2024-001",
+        "description": "Outstanding invoice #INV-2024-001".tr,
         "date": DateTime.now().subtract(Duration(days: 12)),
         "status": "pending",
       },
@@ -40,7 +39,7 @@ class FinancialRecordsCard extends StatelessWidget {
         "id": 3,
         "type": "payment",
         "amount": 800.00,
-        "description": "Partial payment received",
+        "description": "Partial payment received".tr,
         "date": DateTime.now().subtract(Duration(days: 18)),
         "status": "completed",
       },
@@ -53,13 +52,13 @@ class FinancialRecordsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Container(
-       decoration:  BoxDecoration(
-        color: theme.colorScheme.surface.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+          ),
         ),
-      ),
         width: double.infinity,
         padding: EdgeInsets.all(4.w),
         child: Column(
@@ -77,7 +76,7 @@ class FinancialRecordsCard extends StatelessWidget {
                     ),
                     SizedBox(width: 3.w),
                     Text(
-                      "Financial Records",
+                      "Financial Records".tr,
                       style: theme.textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: colorScheme.onSurface,
@@ -89,13 +88,14 @@ class FinancialRecordsCard extends StatelessWidget {
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("View all records feature coming soon"),
+                        content:
+                            Text("View all records feature coming soon".tr),
                         duration: Duration(seconds: 2),
                       ),
                     );
                   },
                   child: Text(
-                    "View All",
+                    "View All".tr,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -126,13 +126,14 @@ class FinancialRecordsCard extends StatelessWidget {
                   onPressed: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Show more records feature coming soon"),
+                        content:
+                            Text("Show more records feature coming soon".tr),
                         duration: Duration(seconds: 2),
                       ),
                     );
                   },
                   child: Text(
-                    "Show ${financialRecords.length - 3} more records",
+                    "Show ${financialRecords.length - 3} more records".tr,
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -163,7 +164,7 @@ class FinancialRecordsCard extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           Text(
-            "No Financial Records",
+            "No Financial Records".tr,
             style: theme.textTheme.titleMedium?.copyWith(
               color: colorScheme.onSurfaceVariant,
               fontWeight: FontWeight.w500,
@@ -171,7 +172,7 @@ class FinancialRecordsCard extends StatelessWidget {
           ),
           SizedBox(height: 1.h),
           Text(
-            "Financial transactions will appear here",
+            "Financial transactions will appear here".tr,
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
             ),
@@ -191,11 +192,10 @@ class FinancialRecordsCard extends StatelessWidget {
     final description = record["description"] as String;
     final date = record["date"] as DateTime;
     final status = record["status"] as String;
-    final currency = supplier.preferredCurrency ;
+    final currency = supplier.preferredCurrency;
 
-    final recordColor = isPayment
-        ? Theme.of(context).colorScheme.tertiary
-        : colorScheme.error;
+    final recordColor =
+        isPayment ? Theme.of(context).colorScheme.tertiary : colorScheme.error;
 
     final statusColor = status == "completed"
         ? Theme.of(context).colorScheme.tertiary
@@ -274,7 +274,7 @@ class FinancialRecordsCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        status.toUpperCase(),
+                        status.toUpperCase().tr,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: statusColor,
                           fontWeight: FontWeight.w600,

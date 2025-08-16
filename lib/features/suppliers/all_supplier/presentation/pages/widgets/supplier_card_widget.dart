@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
@@ -30,14 +31,14 @@ class SupplierCardWidget extends StatelessWidget {
         alignment: Alignment.centerLeft,
         color: colorScheme.tertiary,
         icon: 'edit',
-        label: 'Edit',
+        label: 'Edit'.tr,
       ),
       secondaryBackground: _buildSwipeBackground(
         context,
         alignment: Alignment.centerRight,
         color: colorScheme.error,
         icon: 'delete',
-        label: 'Delete',
+        label: 'Delete'.tr,
       ),
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.startToEnd) {
@@ -64,27 +65,24 @@ class SupplierCardWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Container(
             decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark
-              ? AppColors.cardDark
-              : AppColors.cardLight,
-          border: Border.all(
-            
-              color: AppColors.primaryDark.withValues(alpha:0.5),
-            
-              width: 1.0,
-            
-          ),
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
               color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.shadowDark
-                  : AppColors.shadowLight,
-              blurRadius: 8,
-              offset: Offset(0, 2),
+                  ? AppColors.cardDark
+                  : AppColors.cardLight,
+              border: Border.all(
+                color: AppColors.primaryDark.withValues(alpha: 0.5),
+                width: 1.0,
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? AppColors.shadowDark
+                      : AppColors.shadowLight,
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
-          ],
-        ),
             padding: EdgeInsets.all(4.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +110,7 @@ class SupplierCardWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            supplier.name as String? ?? "Unknown Supplier",
+                            supplier.name as String? ?? "Unknown Supplier".tr,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
@@ -131,7 +129,7 @@ class SupplierCardWidget extends StatelessWidget {
                               SizedBox(width: 1.w),
                               Expanded(
                                 child: Text(
-                                  supplier.phone as String? ?? "No phone",
+                                  supplier.phone as String? ?? "No phone".tr,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
@@ -209,26 +207,26 @@ class SupplierCardWidget extends StatelessWidget {
     );
   }
 
-
   Future<bool> _showDeleteConfirmation(BuildContext context) async {
     return await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Delete Supplier'),
+            title: Text('Delete Supplier'.tr),
             content: Text(
-              'Are you sure you want to delete "${supplier.name}"? This action cannot be undone.',
+              'Are you sure you want to delete "${supplier.name}"? This action cannot be undone.'
+                  .tr,
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Cancel'),
+                child: Text('Cancel'.tr),
               ),
               TextButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 style: TextButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.error,
                 ),
-                child: const Text('Delete'),
+                child: Text('Delete'.tr),
               ),
             ],
           ),

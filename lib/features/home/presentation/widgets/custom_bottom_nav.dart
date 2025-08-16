@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 
@@ -35,13 +36,13 @@ class CustomBottomNav extends StatelessWidget {
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.list),
-        title: ("Products"),
+        title: ("Purchase Order".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.receipt),
-        title: ("Invoices"),
+        title: ("Purchase Invoices".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
@@ -51,7 +52,7 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(
-      backgroundColor: AppColors.backgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       padding: EdgeInsets.all(10),
       animationSettings: const NavBarAnimationSettings(
         navBarItemAnimation: ItemAnimationSettings(

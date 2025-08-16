@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/widgets/custom_binding_widget.dart';
-import 'package:teriak/features/add_product/presentation/pages/add_product/widgets/save_product_button.dart';
+import 'package:teriak/features/products/add_product/presentation/pages/add_product/widgets/save_product_button.dart';
 import 'package:teriak/features/suppliers/add_supplier/presentation/pages/widgets/supplier_form_widget.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
@@ -29,12 +30,10 @@ class _EditSupplierScreenState extends State<EditSupplierScreen> {
     supplier = Get.arguments as SupplierModel;
     editController.loadSupplierData(supplier);
 
-    
     editController.nameController.addListener(_updateState);
     editController.phoneController.addListener(_updateState);
     editController.addressController.addListener(_updateState);
   }
-
 
   void _updateState() {
     setState(() {});
@@ -49,7 +48,7 @@ class _EditSupplierScreenState extends State<EditSupplierScreen> {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(
-          'Edit Supplier',
+          'Edit Supplier'.tr,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w600,
           ),
@@ -88,7 +87,7 @@ class _EditSupplierScreenState extends State<EditSupplierScreen> {
 
                     setState(() {});
                   },
-                  label: "Save Supplier"),
+                  label: "Save Supplier".tr),
               CommonWidgets.buildRequiredWidget(context: context),
             ],
           ),

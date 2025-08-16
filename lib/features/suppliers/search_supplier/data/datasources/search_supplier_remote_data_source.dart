@@ -1,4 +1,3 @@
-import 'package:teriak/features/master_product/data/models/product_model.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import '../../../../../core/databases/api/api_consumer.dart';
 import '../../../../../core/databases/api/end_points.dart';

@@ -13,7 +13,7 @@ import 'package:teriak/features/Sales_management/presentation/widgets/search_bar
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
-import 'package:teriak/features/search_product/presentation/controller/search_product_controller.dart';
+import 'package:teriak/features/products/search_product/presentation/controller/search_product_controller.dart';
 
 class SingleSaleScreen extends StatefulWidget {
   final String tabId;

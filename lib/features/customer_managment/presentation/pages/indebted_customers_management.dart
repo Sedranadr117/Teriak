@@ -356,6 +356,7 @@ class _IndebtedCustomersManagementState
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: null,
         onPressed: () {
           Navigator.pushNamed(context, AppPages.addNewIndebtedCustomer);
         },

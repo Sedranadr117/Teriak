@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 
 class SupplierHeaderWidget extends StatelessWidget {
   final String name;
   final String preferredCurrency;
 
-   const SupplierHeaderWidget({
+  const SupplierHeaderWidget({
     Key? key,
     required this.name,
     required this.preferredCurrency,
-  }) ;
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +68,7 @@ class SupplierHeaderWidget extends StatelessWidget {
                           color: theme.colorScheme.primary, size: 18),
                       SizedBox(width: 2.w),
                       Text(
-                        "Preferred Currency: $preferredCurrency",
+                        "Preferred Currency: $preferredCurrency".tr,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.primary,
                           fontWeight: FontWeight.w500,

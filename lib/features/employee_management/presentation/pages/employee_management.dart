@@ -151,6 +151,7 @@ class _EmployeeManagementState extends State<EmployeeManagement>
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: null,
         onPressed: () => Get.toNamed(AppPages.addEmployee),
         backgroundColor:
             Theme.of(context).floatingActionButtonTheme.backgroundColor,

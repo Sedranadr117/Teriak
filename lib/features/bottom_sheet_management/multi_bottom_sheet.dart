@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:teriak/features/product_data/data/models/product_data_model.dart';
+import 'package:teriak/features/products/product_data/data/models/product_data_model.dart';
 
 void showMultiSelectBottomSheet({
   required String title,
