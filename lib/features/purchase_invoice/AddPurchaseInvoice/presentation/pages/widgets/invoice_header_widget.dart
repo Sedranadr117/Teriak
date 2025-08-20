@@ -6,6 +6,7 @@ import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation
 class InvoiceHeaderWidget extends StatefulWidget {
   final String supplierName;
   final String currency;
+  final String date;
   final TextEditingController searchController;
   final Function(String) onSearchChanged;
   final void Function()? onBarcodeScanned;
@@ -14,6 +15,7 @@ class InvoiceHeaderWidget extends StatefulWidget {
     super.key,
     required this.supplierName,
     required this.currency,
+    required this.date,
     required this.searchController,
     required this.onSearchChanged,
     required this.onBarcodeScanned,
@@ -27,7 +29,6 @@ class _InvoiceHeaderWidgetState extends State<InvoiceHeaderWidget> {
   @override
   void didUpdateWidget(InvoiceHeaderWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // تحديث الواجهة عند تغيير البيانات
     if (oldWidget.searchController.text != widget.searchController.text) {
       setState(() {});
     }
@@ -63,12 +64,35 @@ class _InvoiceHeaderWidgetState extends State<InvoiceHeaderWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Purchase Order Data'.tr,
-                  style: theme.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: theme.colorScheme.primary,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Purchase Order Data'.tr,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                           Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today,
+                        color:
+                            theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                        size: 16,
+                      ),
+                      SizedBox(width: 1.w),
+                      Text(
+                        widget.date,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant
+                              .withValues(alpha: 0.7),
+                        ),
+                      ),
+                    ],
                   ),
+                  ],
                 ),
                 SizedBox(height: 1.h),
                 Row(
@@ -86,6 +110,7 @@ class _InvoiceHeaderWidgetState extends State<InvoiceHeaderWidget> {
                     ),
                   ],
                 ),
+             
               ],
             ),
           ),

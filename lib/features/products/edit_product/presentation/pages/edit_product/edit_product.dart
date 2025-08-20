@@ -11,6 +11,7 @@ import 'package:teriak/features/products/all_products/data/models/product_model.
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/products/product_data/data/models/product_data_model.dart';
 import 'package:teriak/features/products/product_data/presentation/controller/product_data_controller.dart';
+import 'package:teriak/features/products/product_data/presentation/controller/product_names_controller.dart';
 import 'package:teriak/features/products/product_details/presentation/controller/get_product_details_controller.dart';
 
 import 'widgets/basic_information_section.dart';
@@ -27,6 +28,7 @@ class EditProductPage extends StatefulWidget {
 class _EditProductPageState extends State<EditProductPage> {
   final editController = Get.put(EditProductController());
   final productDataController = Get.put(ProductDataController());
+  final namesController = Get.put(ProductNamesController());
   final productController = Get.find<GetAllProductController>();
   final productDetailsController = Get.find<GetProductDetailsController>();
 
@@ -37,6 +39,7 @@ class _EditProductPageState extends State<EditProductPage> {
     super.initState();
     product = Get.arguments as ProductModel;
     editController.loadProductData(product);
+    print(namesController.productNames.value);
   }
 
   @override

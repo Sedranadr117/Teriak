@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/presentation/controller/search_purchase_invoice_controller.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/presentation/pages/search_section.dart';
@@ -44,10 +45,10 @@ class _SearchPurchaseInvoicePageState extends State<SearchPurchaseInvoicePage> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       resizeToAvoidBottomInset: false,
-      appBar:  AppBar(
-          title: Text('Search Purchase Invoice'.tr,
-              style: Theme.of(context).textTheme.titleLarge),
-       ),
+      appBar: AppBar(
+        title: Text('Search Purchase Invoice'.tr,
+            style: Theme.of(context).textTheme.titleLarge),
+      ),
       body: Column(
         children: [
           SizedBox(height: 2.h),
@@ -131,7 +132,8 @@ class _SearchPurchaseInvoicePageState extends State<SearchPurchaseInvoicePage> {
   }
 
   Widget _buildSearchResults() {
-    if (searchController.isSearching.value) {
+    if (searchController.isSearchingSupplier.value ||
+        searchController.isSearchingDate.value) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -197,7 +199,8 @@ class _SearchPurchaseInvoicePageState extends State<SearchPurchaseInvoicePage> {
           itemBuilder: (context, index) {
             if (index == searchController.searchResults.length) {
               return Obx(() {
-                if (searchController.isSearching.value) {
+                if (searchController.isSearchingSupplier.value ||
+                    searchController.isSearchingDate.value) {
                   return Container(
                     padding: EdgeInsets.all(4.w),
                     child: const Center(
@@ -208,13 +211,14 @@ class _SearchPurchaseInvoicePageState extends State<SearchPurchaseInvoicePage> {
                 return const SizedBox.shrink();
               });
             }
-      
-            final invoice = searchController.searchResults[index] as PurchaseInvoiceModel;
+
+            final invoice =
+                searchController.searchResults[index] as PurchaseInvoiceModel;
+
             return InvoiceCardWidget(
               invoice: invoice,
               onTap: () {
-                // Navigate to invoice details
-                // Get.toNamed(AppPages.purchaseInvoiceDetail, arguments: {'id': invoice.id});
+                Get.toNamed(AppPages.invoiceDetail, arguments: invoice);
               },
             );
           },

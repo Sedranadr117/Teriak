@@ -44,6 +44,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     drugData.productType == "صيدلية")
                   IconButton(
                     onPressed: () {
+                      print(drugData.productType);
                       Get.toNamed(
                         AppPages.editProductPage,
                         arguments: drugData,

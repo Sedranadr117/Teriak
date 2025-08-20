@@ -7,6 +7,7 @@ class PurchaseOrderEntity {
   final String currency;
   final double total;
   final String status;
+  final List<int> createdAt;
   final List<ProductItemEntity> items;
 
   const PurchaseOrderEntity({
@@ -16,6 +17,7 @@ class PurchaseOrderEntity {
     required this.currency,
     required this.total,
     required this.status,
+    required this.createdAt,
     required this.items,
   });
 }

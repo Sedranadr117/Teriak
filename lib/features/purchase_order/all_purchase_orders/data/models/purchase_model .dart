@@ -10,6 +10,7 @@ class PurchaseOrderModel extends PurchaseOrderEntity {
     required super.currency,
     required super.total,
     required super.status,
+    required super.createdAt,
     required super.items,
   });
 
@@ -21,6 +22,7 @@ class PurchaseOrderModel extends PurchaseOrderEntity {
       currency: json[ApiKeys.currency],
       total: (json[ApiKeys.total] as num).toDouble(),
       status: json[ApiKeys.status],
+      createdAt:List<int>.from(json[ApiKeys.createdAt] ?? []),
       items: (json[ApiKeys.items] as List<dynamic>)
           .map(
               (item) => ProductItemModel.fromJson(item as Map<String, dynamic>))
@@ -36,8 +38,32 @@ class PurchaseOrderModel extends PurchaseOrderEntity {
       ApiKeys.currency: currency,
       ApiKeys.total: total,
       ApiKeys.status: status,
+       ApiKeys.createdAt:createdAt,
       ApiKeys.items:
           items.map((e) => (e as ProductItemModel).toJson()).toList(),
     };
+  }
+
+      DateTime get creationDateTime {
+    if (createdAt.length >= 6) {
+      return DateTime(
+        createdAt[0], // year
+        createdAt[1], // month
+        createdAt[2], // day
+        createdAt[3], // hour
+        createdAt[4], // minute
+        createdAt[5], // second
+      );
+    }
+    return DateTime.now();
+  }
+
+  String get formattedCreationDateTime {
+    final date = creationDateTime;
+    final formattedDate =
+        '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+    final formattedTime =
+        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+    return '$formattedDate, $formattedTime';
   }
 }

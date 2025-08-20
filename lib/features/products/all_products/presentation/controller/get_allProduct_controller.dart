@@ -8,15 +8,26 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/products/all_products/data/datasources/product_remote_data_source.dart';
 import 'package:teriak/features/products/all_products/data/repositories/product_repository_impl.dart';
+import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
 import 'package:teriak/features/products/all_products/domain/usecases/get_product.dart';
 
 class GetAllProductController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final GetAllProduct getAllProductUseCase;
+
   var isLoading = true.obs;
-  var products = [].obs;
+  var products = <ProductEntity>[].obs;
   var errorMessage = ''.obs;
   var isRefreshing = false.obs;
+
+  // Pagination variables
+  var currentPage = 0.obs;
+  var pageSize = 10.obs;
+  var totalPages = 0.obs;
+  var totalElements = 0.obs;
+  var hasNext = false.obs;
+  var hasPrevious = false.obs;
+  var isLoadingMore = false.obs;
 
   @override
   void onInit() {
@@ -42,28 +53,47 @@ class GetAllProductController extends GetxController {
     getProducts();
   }
 
-  void getProducts() async {
+  void getProducts({bool refresh = false}) async {
     try {
-      isLoading.value = true;
+      if (refresh) {
+        currentPage.value = 0;
+        isLoading.value = true;
+        products.clear();
+      } else {
+        isLoading.value = true;
+      }
+
       String currentLanguageCode = LocaleController.to.locale.languageCode;
-      final q = AllProductParams(
+      final params = AllProductParams(
         languageCode: currentLanguageCode,
+        page: currentPage.value,
+        size: pageSize.value,
       );
-      final result = await getAllProductUseCase(params: q);
+
+      final result = await getAllProductUseCase(params: params);
       result.fold(
         (failure) => errorMessage.value = failure.errMessage,
-        (productList) {
-          // Ensure we have unique products based on ID
-          final uniqueProducts = productList.fold<List<dynamic>>(
-            [],
-            (list, product) {
-              if (!list.any((p) => p.id == product.id)) {
-                list.add(product);
-              }
-              return list;
-            },
-          );
-          products.value = uniqueProducts;
+        (paginatedData) {
+          // ندمج المنتجات مع الموجودة مع التحقق من uniqueness
+          final newProducts = <ProductEntity>[];
+          for (var product in paginatedData.content) {
+            bool exists = products.any((p) =>
+                p.id == product.id && p.productType == product.productType);
+            if (!exists) {
+              newProducts.add(product);
+            }
+          }
+
+          if (refresh) {
+            products.value = newProducts;
+          } else {
+            products.addAll(newProducts);
+          }
+
+          totalPages.value = paginatedData.totalPages;
+          totalElements.value = paginatedData.totalElements;
+          hasNext.value = paginatedData.hasNext;
+          hasPrevious.value = paginatedData.hasPrevious;
         },
       );
     } catch (e) {
@@ -74,11 +104,53 @@ class GetAllProductController extends GetxController {
     }
   }
 
+  Future<void> loadNextPage() async {
+    if (hasNext.value && !isLoadingMore.value) {
+      try {
+        isLoadingMore.value = true;
+        currentPage.value++;
+
+        String currentLanguageCode = LocaleController.to.locale.languageCode;
+        final params = AllProductParams(
+          languageCode: currentLanguageCode,
+          page: currentPage.value,
+          size: pageSize.value,
+        );
+
+        final result = await getAllProductUseCase(params: params);
+        result.fold(
+          (failure) => errorMessage.value = failure.errMessage,
+          (paginatedData) {
+            final newProducts = <ProductEntity>[];
+            for (var product in paginatedData.content) {
+              bool exists = products.any((p) =>
+                  p.id == product.id && p.productType == product.productType);
+              if (!exists) {
+                newProducts.add(product);
+              }
+            }
+            products.addAll(newProducts);
+
+            totalPages.value = paginatedData.totalPages;
+            totalElements.value = paginatedData.totalElements;
+            hasNext.value = paginatedData.hasNext;
+            hasPrevious.value = paginatedData.hasPrevious;
+          },
+        );
+      } catch (e) {
+        errorMessage.value = e.toString();
+        print(errorMessage.value);
+      } finally {
+        isLoadingMore.value = false;
+      }
+    }
+  }
+
   Future<void> refreshProducts() async {
     try {
       isRefreshing.value = true;
       await Future.delayed(const Duration(milliseconds: 1500));
-      getProducts();
+      getProducts(refresh: true);
     } finally {
       isRefreshing.value = false;
     }

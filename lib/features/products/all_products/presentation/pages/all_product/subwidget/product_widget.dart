@@ -26,7 +26,8 @@ class ProductWidget extends StatelessWidget {
     final String dosageSize = drug.concentration as String? ?? '';
 
     final String drugForm = drug.form as String? ?? '';
-    final String drugQuantity = drug.size as String? ?? '';
+    final String drugSize = drug.size as String? ?? '';
+    final int drugQuantity = drug.quantity;
 
     return GestureDetector(
       onTap: onTap,
@@ -135,7 +136,7 @@ class ProductWidget extends StatelessWidget {
                     child: BoxInProductWidget(
                       icon: 'inventory',
                       label: 'Quantity'.tr,
-                      value: drugQuantity,
+                      value: drugSize,
                     ),
                   ),
                   SizedBox(width: context.w * 0.02),
@@ -159,42 +160,54 @@ class ProductWidget extends StatelessWidget {
               SizedBox(height: context.h * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: context.w * 0.03,
-                        vertical: context.h * 0.01),
-                    decoration: BoxDecoration(
-                      color: prescriptionRequired
-                          ? (Theme.of(context).brightness == Brightness.dark
-                                  ? AppColors.warningDark.withValues(alpha: 0.1)
-                                  : AppColors.warningLight)
-                              .withValues(alpha: 0.1)
-                          : (Theme.of(context).brightness == Brightness.dark
-                              ? AppColors.successDark.withValues(alpha: 0.1)
-                              : AppColors.successLight.withValues(alpha: 0.1)),
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
+                  // Prescription
+                  Flexible(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: context.w * 0.03,
+                          vertical: context.h * 0.01),
+                      decoration: BoxDecoration(
                         color: prescriptionRequired
                             ? (Theme.of(context).brightness == Brightness.dark
-                                ? AppColors.warningDark
-                                : AppColors.warningLight)
+                                ? AppColors.warningDark.withValues(alpha: 0.1)
+                                : AppColors.warningLight.withValues(alpha: 0.1))
                             : (Theme.of(context).brightness == Brightness.dark
-                                ? AppColors.successDark
-                                : AppColors.successLight),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CustomIconWidget(
-                          iconName: prescriptionRequired ? 'lock' : 'lock_open',
-                          color: AppColors.textPrimaryLight,
-                          size: 16,
+                                ? AppColors.successDark.withValues(alpha: 0.1)
+                                : AppColors.successLight
+                                    .withValues(alpha: 0.1)),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: prescriptionRequired
+                              ? (Theme.of(context).brightness == Brightness.dark
+                                  ? AppColors.warningDark
+                                  : AppColors.warningLight)
+                              : (Theme.of(context).brightness == Brightness.dark
+                                  ? AppColors.successDark
+                                  : AppColors.successLight),
+                          width: 1,
                         ),
-                        SizedBox(width: context.w * 0.01),
-                        Text(
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomIconWidget(
+                            iconName:
+                                prescriptionRequired ? 'lock' : 'lock_open',
+                            color: prescriptionRequired
+                                ? (Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AppColors.warningDark
+                                    : AppColors.warningLight)
+                                : (Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AppColors.successDark
+                                    : AppColors.successLight),
+                            size: 16,
+                          ),
+                          SizedBox(width: context.w * 0.01),
+                          Text(
                             prescriptionRequired
                                 ? 'Prescription Required'.tr
                                 : 'No Prescription'.tr,
@@ -202,12 +215,65 @@ class ProductWidget extends StatelessWidget {
                                 .textTheme
                                 .labelSmall
                                 ?.copyWith(
-                                  color: AppColors.textPrimaryLight,
+                                  color: prescriptionRequired
+                                      ? (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? AppColors.warningDark
+                                          : AppColors.warningLight)
+                                      : (Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? AppColors.successDark
+                                          : AppColors.successLight),
                                   fontWeight: FontWeight.w500,
-                                )),
-                      ],
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+
+                  SizedBox(width: context.w * 0.04),
+
+                  // Quantity
+                  // Flexible(
+                  //   child: Container(
+                  //     padding: EdgeInsets.symmetric(
+                  //         horizontal: context.w * 0.03,
+                  //         vertical: context.h * 0.01),
+                  //     decoration: BoxDecoration(
+                  //       color: prescriptionRequired
+                  //           ? (Theme.of(context).brightness == Brightness.dark
+                  //               ? AppColors.secondaryLight
+                  //                   .withValues(alpha: 0.1)
+                  //               : AppColors.secondaryLight
+                  //                   .withValues(alpha: 0.1))
+                  //           : (Theme.of(context).brightness == Brightness.dark
+                  //               ? AppColors.secondaryVariantLight
+                  //                   .withValues(alpha: 0.1)
+                  //               : AppColors.secondaryVariantLight
+                  //                   .withValues(alpha: 0.1)),
+                  //       borderRadius: BorderRadius.circular(8),
+                  //       border: Border.all(
+                  //         color: prescriptionRequired
+                  //             ? AppColors.secondaryLight
+                  //             : AppColors.secondaryVariantLight,
+                  //         width: 1,
+                  //       ),
+                  //     ),
+                  //     child: Text(
+                  //       "${'Quantity in stock'.tr}: ${drugQuantity.toString()}",
+                  //       style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  //             color: prescriptionRequired
+                  //                 ? AppColors.secondaryLight
+                  //                 : AppColors.secondaryVariantLight,
+                  //             fontWeight: FontWeight.w500,
+                  //           ),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  SizedBox(width: context.w * 0.02),
+
                   CustomIconWidget(
                     iconName: 'arrow_forward_ios',
                     color: Theme.of(context).brightness == Brightness.dark
@@ -216,7 +282,7 @@ class ProductWidget extends StatelessWidget {
                     size: 16,
                   ),
                 ],
-              ),
+              )
             ],
           ),
         ),

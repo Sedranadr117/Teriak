@@ -33,7 +33,11 @@ class CurrencySelectionCard extends StatelessWidget {
         final isSelected = currency == selectedCurrency;
         return Expanded(
           child: GestureDetector(
-            onTap: () => onCurrencyChanged(currency),
+            onTap: () {
+              print("select$selectedCurrency");
+              print("curr$currency");
+              onCurrencyChanged(currency);
+            },
             child: Container(
               margin: EdgeInsets.only(
                 right: currency == availableCurrencies.last ? 0 : 1.w,

@@ -213,9 +213,10 @@ class SupplierCardWidget extends StatelessWidget {
           builder: (context) => AlertDialog(
             title: Text('Delete Supplier'.tr),
             content: Text(
-              'Are you sure you want to delete "${supplier.name}"? This action cannot be undone.'
+              '${"Are you sure you want to delete".tr} "${supplier.name}"'
                   .tr,
             ),
+
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),

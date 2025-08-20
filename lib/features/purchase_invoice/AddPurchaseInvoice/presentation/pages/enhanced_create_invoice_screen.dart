@@ -36,7 +36,6 @@ class _EnhancedCreateInvoiceScreenState
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // تحديث الواجهة عند تغيير البيانات
     if (mounted) {
       setState(() {});
     }
@@ -45,7 +44,6 @@ class _EnhancedCreateInvoiceScreenState
   @override
   void didUpdateWidget(EnhancedCreateInvoiceScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // تحديث الواجهة عند تغيير البيانات
     if (mounted) {
       _refreshUI();
     }
@@ -64,7 +62,6 @@ class _EnhancedCreateInvoiceScreenState
 
   void _loadPurchaseOrderData() {
     controller.setPurchaseOrder(orderItem);
-    // تحديث الواجهة
     _refreshUI();
   }
 
@@ -91,6 +88,7 @@ class _EnhancedCreateInvoiceScreenState
               key: ValueKey('${controller.searchQuery}'),
               supplierName: controller.purchaseOrder!.supplierName,
               currency: controller.purchaseOrder!.currency,
+              date: controller.purchaseOrder!.formattedCreationDateTime,
               searchController: controller.searchController,
               onSearchChanged: (query) {
                 controller.onSearchChanged(query);

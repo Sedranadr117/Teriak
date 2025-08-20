@@ -122,26 +122,42 @@ class ProductDetailsParams {
 class SearchProductParams {
   final String keyword;
   final String languageCode;
+  final int page;
+  final int size;
 
-  const SearchProductParams(
-      {required this.keyword, required this.languageCode});
+  const SearchProductParams({
+    required this.keyword,
+    required this.languageCode,
+    required this.page,
+    required this.size,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'keyword': keyword,
       'lang': languageCode,
+      'page': page.toString(),
+      'size': size.toString(),
     };
   }
 }
 
 class AllProductParams {
   final String languageCode;
+  final int page;
+  final int size;
 
-  const AllProductParams({required this.languageCode});
+  AllProductParams({
+    required this.languageCode,
+    required this.page,
+    required this.size,
+  });
 
   Map<String, dynamic> toMap() {
     return {
-      'lang': languageCode,
+      "lang": languageCode,
+      "page": page.toString(),
+      "size": size.toString(),
     };
   }
 }
@@ -180,6 +196,20 @@ class EditProductParams {
   Map<String, dynamic> toMap() {
     return {
       'lang': languageCode,
+    };
+  }
+}
+
+class ProductNamesParams {
+  final int id;
+  String? type;
+
+  ProductNamesParams({required this.id, required this.type});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'type': type,
     };
   }
 }

@@ -218,7 +218,7 @@ class UnifiedDropdown<T> extends StatelessWidget {
     // If value doesn't exist, try to find by id (for entities)
     try {
       final found = items.cast<dynamic>().firstWhere(
-            (item) => item.id == (value as dynamic).id,
+            (item) => (item.id == (value as dynamic).id && item.productType == (value as dynamic).productType),
             orElse: () => null,
           );
       if (found != null) return found as T;

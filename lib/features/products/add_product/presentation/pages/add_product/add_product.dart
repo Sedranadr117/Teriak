@@ -192,10 +192,14 @@ class _AddProductPageState extends State<AddProductPage> {
             ),
             SaveProductButton(
               isFormValid: c.isFormValid,
-              onTap: () {
+              onTap: ()  {
                 FocusScope.of(context).unfocus();
-                c.addProduct();
+
+                 c.addProduct();
+
                 productController.refreshProducts();
+            
+
                 setState(() {});
               },
               label: "Save Product".tr,

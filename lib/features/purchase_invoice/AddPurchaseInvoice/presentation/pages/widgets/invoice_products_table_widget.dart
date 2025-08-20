@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
-class InvoiceProductsTableWidget extends StatefulWidget {
+class InvoiceProductsTableWidget extends StatelessWidget {
   final String currency;
   final List<Map<String, dynamic>> products;
   final String searchQuery;
@@ -18,22 +18,6 @@ class InvoiceProductsTableWidget extends StatefulWidget {
     required this.searchQuery,
     required this.onProductDataChanged,
   });
-
-  @override
-  State<InvoiceProductsTableWidget> createState() =>
-      _InvoiceProductsTableWidgetState();
-}
-
-class _InvoiceProductsTableWidgetState
-    extends State<InvoiceProductsTableWidget> {
-  @override
-  void didUpdateWidget(InvoiceProductsTableWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.products != widget.products ||
-        oldWidget.searchQuery != widget.searchQuery) {
-      setState(() {});
-    }
-  }
 
   bool _isProductHighlighted(Map<String, dynamic> product, String query) {
     if (query.isEmpty) return false;
@@ -57,7 +41,7 @@ class _InvoiceProductsTableWidgetState
   }
 
   void _updateProductData(int index, String field, dynamic value) {
-    final updatedProduct = {...widget.products[index], field: value};
+    final updatedProduct = {...products[index], field: value};
 
     if (field == 'receivedQty' ||
         field == 'bonusQty' ||
@@ -66,16 +50,14 @@ class _InvoiceProductsTableWidgetState
       updatedProduct['actualPrice'] = actualPrice;
     }
 
-    widget.onProductDataChanged(index, updatedProduct);
-
-    setState(() {});
+    onProductDataChanged(index, updatedProduct);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    if (widget.products.isEmpty) {
+    if (products.isEmpty) {
       return Container(
           width: double.infinity,
           padding: EdgeInsets.all(6.w),
@@ -105,12 +87,11 @@ class _InvoiceProductsTableWidgetState
     return ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.products.length,
+        itemCount: products.length,
         separatorBuilder: (context, index) => SizedBox(height: 2.h),
         itemBuilder: (context, index) {
-          final product = widget.products[index];
-          final isHighlighted =
-              _isProductHighlighted(product, widget.searchQuery);
+          final product = products[index];
+          final isHighlighted = _isProductHighlighted(product, searchQuery);
 
           return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
@@ -202,7 +183,7 @@ class _InvoiceProductsTableWidgetState
                                             color: theme.colorScheme.onSurface
                                                 .withValues(alpha: 0.7))),
                                 Text(
-                                    '${widget.currency}${NumberFormat('#,##0.00').format(product['actualPrice'])}',
+                                    '${currency}${NumberFormat('#,##0.00').format(product['actualPrice'])}',
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
                                             fontWeight: FontWeight.w600,
@@ -221,6 +202,8 @@ class _InvoiceProductsTableWidgetState
   Widget _buildInputFieldsGrid(
       BuildContext context, Map<String, dynamic> product, int index) {
     final theme = Theme.of(context);
+    final isPharmacyProduct = product['productType'] == 'PHARMACY' ||
+        product['productType'] == 'صيدلية';
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text('Receipt Data'.tr,
@@ -253,7 +236,7 @@ class _InvoiceProductsTableWidgetState
       // Row 2: Min Stock Level & Batch Number
       Row(children: [
         Expanded(
-            child: _buildNumberField(
+            child: _buildMinStockLevelField(
                 context,
                 'Min Stock Level'.tr,
                 product['minStockLevel'],
@@ -269,7 +252,7 @@ class _InvoiceProductsTableWidgetState
 
       SizedBox(height: 2.h),
 
-      // Row 3: Expiry Date & Actual Purchase Price
+      // Row 3: Expiry Date & Unit Price
       Row(children: [
         Expanded(
             child: _buildDateField(
@@ -279,49 +262,137 @@ class _InvoiceProductsTableWidgetState
           (value) => _updateProductData(index, 'expiryDate', value),
         )),
         SizedBox(width: 2.w),
-        Expanded(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text('${'Unit Price'.tr} *',
-              style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.8))),
-          SizedBox(height: 0.5.h),
-          (product['productType'] == 'MASTER' ||
-                  product['productType'] == 'مركزي')
-              ? Text(
-                  '${widget.currency}${NumberFormat('#,##0.00').format(product['invoicePrice'])}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: theme.colorScheme.primary),
-                )
-              : TextFormField(
-                  initialValue: product['invoicePrice'].toString(),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
-                  decoration: InputDecoration(
-                      isDense: true,
-                      prefixText: widget.currency,
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: 3.w, vertical: 1.5.h),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8))),
-                  validator: (value) {
-                    if (value == null ||
-                        value.trim().isEmpty ||
-                        double.tryParse(value) == 0) {
-                      return 'Required'.tr;
-                    }
-                  },
-                  onChanged: (val) {
-                    final doubleValue = double.tryParse(val) ?? 0.0;
-                    _updateProductData(index, 'invoicePrice', doubleValue);
-                  },
-                ),
-        ])),
+        Expanded(child: _buildUnitPriceField(context, product, index)),
       ]),
+
+      // Row 4: Selling Price (only for Pharmacy products)
+      if (isPharmacyProduct) ...[
+        SizedBox(height: 2.h),
+        _buildSellingPriceField(context, product, index),
+      ],
+    ]);
+  }
+
+  Widget _buildUnitPriceField(
+      BuildContext context, Map<String, dynamic> product, int index) {
+    final theme = Theme.of(context);
+    final isMasterProduct =
+        product['productType'] == 'MASTER' || product['productType'] == 'مركزي';
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('${'Unit Price'.tr} *',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.8))),
+      SizedBox(height: 0.5.h),
+      if (isMasterProduct)
+        Text(
+          '${currency}${NumberFormat('#,##0.00').format(product['invoicePrice'])}',
+          style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
+        )
+      else
+        TextFormField(
+          initialValue: product['invoicePrice'].toString(),
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(
+              isDense: true,
+              prefixText: currency,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+          validator: (value) {
+            if (value == null ||
+                value.trim().isEmpty ||
+                double.tryParse(value) == 0) {
+              return 'Required'.tr;
+            }
+          },
+          onChanged: (val) {
+            final doubleValue = double.tryParse(val) ?? 0.0;
+            _updateProductData(index, 'invoicePrice', doubleValue);
+          },
+        ),
+    ]);
+  }
+
+  Widget _buildSellingPriceField(
+      BuildContext context, Map<String, dynamic> product, int index) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('${'Selling Price'.tr} *',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.8))),
+      SizedBox(height: 0.5.h),
+      TextFormField(
+        initialValue: product['sellingPrice'].toString(),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        decoration: InputDecoration(
+            isDense: true,
+            prefixText: currency,
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+        validator: (value) {
+          if (value == null ||
+              value.trim().isEmpty ||
+              double.tryParse(value) == 0) {
+            return 'Required'.tr;
+          }
+        },
+        onChanged: (val) {
+          final doubleValue = double.tryParse(val) ?? 0.0;
+          _updateProductData(index, 'sellingPrice', doubleValue);
+        },
+      ),
+    ]);
+  }
+
+  Widget _buildMinStockLevelField(
+    BuildContext context,
+    String label,
+    dynamic value,
+    Function(int) onChanged,
+  ) {
+    final isRequired = value == 0;
+
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text('${label}${isRequired ? ' *' : ''}',
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.8))),
+      SizedBox(height: 0.5.h),
+      TextFormField(
+          initialValue: value.toString(),
+          keyboardType: TextInputType.number,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: InputDecoration(
+              isDense: true,
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+          onChanged: (val) {
+            final intValue = int.tryParse(val) ?? 0;
+            onChanged(intValue);
+          },
+          validator: isRequired
+              ? (value) {
+                  if (value == null ||
+                      value.trim().isEmpty ||
+                      int.tryParse(value) == 0) {
+                    return 'Required'.tr;
+                  }
+                  return null;
+                }
+              : null),
     ]);
   }
 
@@ -409,8 +480,6 @@ class _InvoiceProductsTableWidgetState
                 lastDate: DateTime.now().add(const Duration(days: 3650)));
             if (selectedDate != null) {
               onChanged(selectedDate);
-              // تحديث الواجهة بعد اختيار التاريخ
-              setState(() {});
             }
           },
           child: Container(

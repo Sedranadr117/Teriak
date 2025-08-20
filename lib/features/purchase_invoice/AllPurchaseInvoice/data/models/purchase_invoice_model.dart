@@ -61,7 +61,6 @@ class PurchaseInvoiceModel extends PurchaseInvoiceEntity {
     return DateTime.now();
   }
 
-  // دالة getter لتنسيق التاريخ والوقت
   String get formattedCreationDateTime {
     final date = creationDateTime;
     final formattedDate =

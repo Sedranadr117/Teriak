@@ -19,6 +19,8 @@ class EndPoints {
   static const String roleID = "roles";
   static String product = "search/all-products";
   static String pharmacyProduct = "pharmacy_products";
+  static String pharmacyProductNames = "pharmacy_products/multi-lang";
+  static String masterProductNames = "master_products/multi-lang/";
   static String masterProductDetails = "master_products";
   static String searchProduct = "search/products";
   static String form = "Forms";
@@ -43,6 +45,10 @@ class ApiKeys {
   // Product
   static const String tradeName = "tradeName";
   static const String scientificName = "scientificName";
+  static const String tradeNameAr = "tradeNameAr";
+  static const String tradeNameEn = "tradeNameEn";
+  static const String scientificNameAr = "scientificNameAr";
+  static const String scientificNameEn = "scientificNameEn";
   static const String barcode = "barcode";
   static const String barcodes = "barcodes";
   static const String productType = "productTypeName";
@@ -78,8 +84,8 @@ class ApiKeys {
   static const String createSale = 'sales';
   static const String cancelSale = 'cancel';
   static const String refPurchasePrice = "refPurchasePrice";
-
   static const String refSellingPrice = "refSellingPrice";
+  static const String minStockLevel="minStockLevel";
   static const String tax = "tax";
 
   // Purchase Invoice

@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:teriak/core/errors/exceptions.dart';
+import 'package:teriak/features/products/product_data/domain/entities/product_names_entity.dart';
 
 import '../../../../../core/connection/network_info.dart';
 
@@ -23,7 +24,28 @@ class ProductDataRepositoryImpl extends ProductDataRepository {
         final remoteProductData = await remoteDataSource.getProductData(params);
         return Right(remoteProductData);
       } on ServerException catch (e) {
-        return Left(Failure(errMessage: e.errorModel.errorMessage));
+            return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status,
+        ));
+      }
+    } else {
+      return Left(Failure(errMessage: 'No internet connection'));
+    }
+  }
+  @override
+  Future<Either<Failure,ProductNamesEntity>> getProductNames({
+    required ProductNamesParams params,
+  }) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteProductData = await remoteDataSource.getProductNames(params);
+        return Right(remoteProductData);
+      } on ServerException catch (e) {
+           return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status,
+        ));
       }
     } else {
       return Left(Failure(errMessage: 'No internet connection'));

@@ -10,6 +10,8 @@ class ProductItemModel extends ProductItemEntity {
     required super.barcode,
     required super.productId,
     required super.productType,
+    required super.refSellingPrice,
+    required super.minStockLevel,
   });
 
   factory ProductItemModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,8 @@ class ProductItemModel extends ProductItemEntity {
       barcode: json[ApiKeys.barcode],
       productId: json[ApiKeys.productItemId],
       productType: json[ApiKeys.productItemType],
+      refSellingPrice: json[ApiKeys.refSellingPrice],
+      minStockLevel: json[ApiKeys.minStockLevel],
     );
   }
 
@@ -33,6 +37,8 @@ class ProductItemModel extends ProductItemEntity {
       ApiKeys.barcode: barcode,
       ApiKeys.productItemId: productId,
       ApiKeys.productItemType: productType,
+      ApiKeys.refSellingPrice: refSellingPrice,
+      ApiKeys.minStockLevel: minStockLevel,
     };
   }
 }

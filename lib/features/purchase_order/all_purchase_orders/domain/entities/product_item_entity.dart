@@ -6,6 +6,8 @@ class ProductItemEntity {
   final String barcode;
   final int productId;
   final String productType;
+  final double refSellingPrice;
+  final int? minStockLevel;
 
   const ProductItemEntity({
     required this.id,
@@ -15,5 +17,7 @@ class ProductItemEntity {
     required this.barcode,
     required this.productId,
     required this.productType,
+    required this.refSellingPrice,
+    required this.minStockLevel,
   });
 }

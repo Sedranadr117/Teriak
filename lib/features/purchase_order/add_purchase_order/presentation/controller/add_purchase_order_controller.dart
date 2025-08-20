@@ -7,6 +7,7 @@ import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/data/datasources/add_purchase_remote_data_source.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/data/repositories/add_purchase_repository_impl.dart';
@@ -16,7 +17,7 @@ import 'package:teriak/features/products/all_products/data/models/product_model.
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 
 class PurchaseOrderItem {
-  final ProductModel product;
+  final ProductEntity product;
   final int quantity;
   final double price;
   double get total => quantity * price;
@@ -28,7 +29,7 @@ class PurchaseOrderItem {
   });
 
   PurchaseOrderItem copyWith({
-    ProductModel? product,
+    ProductEntity? product,
     int? quantity,
     double? price,
   }) {
@@ -47,7 +48,7 @@ class AddPurchaseOrderController extends GetxController {
 
   var selectedSupplier = Rxn<SupplierModel>();
   var selectedCurrency = 'SYP'.obs;
-  var selectedProduct = Rxn<ProductModel>();
+  var selectedProduct = Rxn<ProductEntity>();
   var orderItems = <PurchaseOrderItem>[].obs;
   var currentQuantity = 1.obs;
   var currentPrice = 0.0.obs;
@@ -120,10 +121,10 @@ class AddPurchaseOrderController extends GetxController {
     supplierError.value = null;
   }
 
-  void selectProduct(ProductModel product) {
+  void selectProduct(ProductEntity product) {
     // Find the exact product from the products list to ensure reference equality
     final existing = productController.products.firstWhere(
-      (p) => p.id == product.id,
+      (p) => p.id == product.id && p.productType == product.productType,
       orElse: () => product,
     );
 
@@ -134,23 +135,17 @@ class AddPurchaseOrderController extends GetxController {
     _handleProductPriceLogic(existing);
   }
 
-  void _handleProductPriceLogic(ProductModel product) {
-    if (product.productType != null) {
-      final productType = product.productType;
-      final isMasterProduct = productType == "Master" || productType == "مركزي";
-
-      if (isMasterProduct) {
-        // double price = (product.refPurchasePrice != null && product.refPurchasePrice! > 0)
-        //     ? product.refPurchasePrice!
-        //     : 2.0;
-        double price = 2;
-
-        currentPrice.value = price;
-        priceController.text = price.toStringAsFixed(2);
-      } else {
-        currentPrice.value = 0.0;
-        priceController.clear();
-      }
+  void _handleProductPriceLogic(ProductEntity product) {
+    final productType = product.productType;
+    final isMasterProduct = productType == "Master" || productType == "مركزي";
+    if (isMasterProduct) {
+      double price =
+          (product.refPurchasePrice > 0) ? product.refPurchasePrice : 2.0;
+      currentPrice.value = price;
+      priceController.text = price.toStringAsFixed(2);
+    } else {
+      currentPrice.value = product.refPurchasePrice;
+      priceController.text = product.refPurchasePrice.toStringAsFixed(2);
     }
   }
 
@@ -165,7 +160,7 @@ class AddPurchaseOrderController extends GetxController {
     } else {
       Get.snackbar(
         'Error'.tr,
-        'Product not found'.tr,
+        'not found'.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
     }
@@ -317,13 +312,27 @@ class AddPurchaseOrderController extends GetxController {
     priceError.value = null;
   }
 
+  String mapProductType(String type) {
+    switch (type) {
+      case "صيدلية":
+      case "Pharmacy":
+        return "Pharmacy".toUpperCase();
+      case "مركزي":
+      case "Master":
+        return "Master".toUpperCase();
+      default:
+        throw Exception("Unknown productType: $type");
+    }
+  }
+
   Map<String, dynamic> buildRequestBody() {
     final items = orderItems
         .map((item) => {
               "productId": item.product.id,
               "quantity": item.quantity,
               "price": item.price,
-              "productType": item.product.productType.toUpperCase(),
+              "productType":
+                  mapProductType(item.product.productType),
             })
         .toList();
 
@@ -349,6 +358,8 @@ class AddPurchaseOrderController extends GetxController {
         params: params,
         body: body,
       );
+      print("Currency sent: ${selectedCurrency.value}");
+      print("Request body: $body");
 
       result.fold(
         (failure) {

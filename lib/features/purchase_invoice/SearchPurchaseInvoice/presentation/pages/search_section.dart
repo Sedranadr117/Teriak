@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
-import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/presentation/controller/search_purchase_invoice_controller.dart';
+import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 
 class SearchSection extends StatefulWidget {
   final List<SupplierModel> suppliers;
@@ -67,8 +67,13 @@ class _SearchSectionState extends State<SearchSection> {
           SizedBox(height: 0.3.h),
 
           // Error Display
-          if (widget.errorText != null && widget.errorText!.isNotEmpty)
-            _buildErrorText(context, widget.errorText!),
+          Obx(() {
+            final error = widget.searchController.searchError.value;
+            if (error.isNotEmpty) {
+              return _buildErrorText(context, error);
+            }
+            return const SizedBox.shrink();
+          }),
         ],
       ),
     );
@@ -86,7 +91,6 @@ class _SearchSectionState extends State<SearchSection> {
         ),
         SizedBox(height: 1.h),
         Container(
-          // padding: EdgeInsets.symmetric(horizontal: 3.w),
           decoration: BoxDecoration(
             border: Border.all(
               color: widget.searchController.supplierError.value != null
@@ -119,25 +123,24 @@ class _SearchSectionState extends State<SearchSection> {
                 widget.onSupplierSelected(value);
               }
             },
-            validator: (value) {
-              if (widget.searchController.supplierError.value != null) {
-                return widget.searchController.supplierError.value;
-              }
-              return null;
-            },
           ),
         ),
-        if (widget.searchController.supplierError.value != null)
-          Padding(
-            padding: EdgeInsets.only(top: 1.h),
-            child: Text(
-              widget.searchController.supplierError.value!,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 10.sp,
+        Obx(() {
+          final error = widget.searchController.supplierError.value;
+          if (error != null) {
+            return Padding(
+              padding: EdgeInsets.only(top: 1.h),
+              child: Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 10.sp,
+                ),
               ),
-            ),
-          ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -176,17 +179,22 @@ class _SearchSectionState extends State<SearchSection> {
             ),
           ],
         ),
-        if (widget.searchController.dateError.value != null)
-          Padding(
-            padding: EdgeInsets.only(top: 1.h),
-            child: Text(
-              widget.searchController.dateError.value!,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 10.sp,
+        Obx(() {
+          final error = widget.searchController.dateError.value;
+          if (error != null) {
+            return Padding(
+              padding: EdgeInsets.only(top: 1.h),
+              child: Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 10.sp,
+                ),
               ),
-            ),
-          ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -205,7 +213,8 @@ class _SearchSectionState extends State<SearchSection> {
           label,
           style: TextStyle(
             fontSize: 10.sp,
-            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+            color:
+                Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
           ),
         ),
         SizedBox(height: 0.5.h),
@@ -219,7 +228,6 @@ class _SearchSectionState extends State<SearchSection> {
             );
             if (date != null) {
               onDateSelected(date);
-              // Force rebuild to show selected date
               setState(() {});
             }
           },
@@ -245,13 +253,19 @@ class _SearchSectionState extends State<SearchSection> {
                     fontSize: 11.sp,
                     color: selectedDate != null
                         ? Theme.of(context).textTheme.bodyMedium?.color
-                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.8),
                   ),
                 ),
                 Icon(
                   Icons.calendar_today,
                   size: 16.sp,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.8),
                 ),
               ],
             ),
@@ -265,67 +279,74 @@ class _SearchSectionState extends State<SearchSection> {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton.icon(
-            onPressed: widget.searchController.isSearching.value
-                ? null
-                : () => widget.searchController.searchBySupplier(),
-            icon: widget.searchController.isSearching.value
-                ? SizedBox(
-                    width: 10.sp,
-                    height: 10.sp,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
+          child: Obx(() {
+            final isSearching =
+                widget.searchController.isSearchingSupplier.value;
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () => widget.searchController.searchBySupplier(),
+              icon: isSearching
+                  ? SizedBox(
+                      width: 16.sp,
+                      height: 16.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
                       ),
-                    ),
-                  )
-                : Icon(Icons.search, size: 10.sp),
-            label: Text(
-              'Search by Supplier'.tr,
-              style: TextStyle(fontSize: 9.sp),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryVariantLight,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                    )
+                  : Icon(Icons.search, size: 16.sp),
+              label: Text(
+                isSearching ? 'Searching...'.tr : 'Search by Supplier'.tr,
+                style: TextStyle(fontSize: 11.sp),
               ),
-            ),
-          ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryVariantLight,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          }),
         ),
         SizedBox(width: 2.w),
         Expanded(
-          child: ElevatedButton.icon(
-            onPressed: widget.searchController.isSearching.value
-                ? null
-                : () => widget.searchController.searchByDateRange(),
-            icon: widget.searchController.isSearching.value
-                ? SizedBox(
-                    width: 10.sp,
-                    height: 10.sp,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
+          child: Obx(() {
+            final isSearching = widget.searchController.isSearchingDate.value;
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () => widget.searchController.searchByDateRange(),
+              icon: isSearching
+                  ? SizedBox(
+                      width: 16.sp,
+                      height: 16.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
                       ),
-                    ),
-                  )
-                : Icon(Icons.date_range, size: 10.sp),
-            label: Text(
-              'Search by Date'.tr,
-              style: TextStyle(fontSize: 9.sp),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryLight,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                    )
+                  : Icon(Icons.date_range, size: 16.sp),
+              label: Text(
+                isSearching ? 'Searching...'.tr : 'Search by Date'.tr,
+                style: TextStyle(fontSize: 11.sp),
               ),
-            ),
-          ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryLight,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          }),
         ),
       ],
     );

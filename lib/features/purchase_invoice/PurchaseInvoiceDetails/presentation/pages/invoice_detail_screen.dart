@@ -71,7 +71,7 @@ class _PurchaseInvoiceDetailScreenState
                       : AppColors.primaryLight,
                 ),
                 onPressed: () {
-                  Get.toNamed(AppPages.editPurchaseInvoice);
+                  // Get.toNamed(AppPages.editPurchaseInvoice);
                 }),
           ]),
       body: Column(

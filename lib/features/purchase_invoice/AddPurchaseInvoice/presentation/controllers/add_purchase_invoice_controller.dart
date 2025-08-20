@@ -82,9 +82,10 @@ class AddPurchaseInvoiceController extends GetxController {
               "barcode": item.barcode,
               "requiredQuantity": item.quantity,
               "invoicePrice": item.price,
+              "sellingPrice": item.refSellingPrice,
               "receivedQty": 0,
               "bonusQty": 0,
-              "minStockLevel": 10,
+              "minStockLevel": item.minStockLevel,
               "batchNo": "",
               "expiryDate": null,
               "actualPrice": 0.0,
@@ -94,6 +95,27 @@ class AddPurchaseInvoiceController extends GetxController {
         .toList();
 
     _products.assignAll(products);
+
+    _fetchProductDetails();
+  }
+
+  Future<void> _fetchProductDetails() async {
+    try {
+      for (int i = 0; i < _products.length; i++) {
+        final product = _products[i];
+        final productId = product['productId'];
+
+        if (product['productType'] == 'PHARMACY' ||
+            product['productType'] == 'صيدلية') {
+          _products[i]['sellingPrice'];
+          _products[i]['minStockLevel'];
+        }
+      }
+
+      _products.refresh();
+    } catch (e) {
+      print('Error fetching product details: $e');
+    }
   }
 
   void onSearchChanged(String query) {
@@ -124,7 +146,6 @@ class AddPurchaseInvoiceController extends GetxController {
     _searchController.text = barcode;
     onSearchChanged(barcode);
 
-    // البحث عن المنتج وتحديد موقعه
     for (int i = 0; i < _products.length; i++) {
       if (_products[i]['barcode'] == barcode) {
         _scrollToMatchingProduct(barcode);
@@ -136,7 +157,6 @@ class AddPurchaseInvoiceController extends GetxController {
   void onProductDataChanged(int index, Map<String, dynamic> updatedData) {
     _products[index] = {..._products[index], ...updatedData};
 
-    // تحديث سعر الشراء الفعلي تلقائياً
     _updateActualPrice(index);
 
     _hasUnsavedChanges.value = true;
@@ -204,6 +224,19 @@ class AddPurchaseInvoiceController extends GetxController {
     return true;
   }
 
+  String mapProductType(String type) {
+    switch (type) {
+      case "صيدلية":
+      case "Pharmacy":
+        return "Pharmacy".toUpperCase();
+      case "مركزي":
+      case "Master":
+        return "Master".toUpperCase();
+      default:
+        throw Exception("Unknown productType: $type");
+    }
+  }
+
   Future<void> saveInvoice() async {
     if (!validateForm()) {
       return;
@@ -214,13 +247,16 @@ class AddPurchaseInvoiceController extends GetxController {
       await Future.delayed(const Duration(seconds: 2));
       final List<Map<String, dynamic>> items =
           _products.where((p) => (p['receivedQty'] ?? 0) > 0).map((p) {
+        print(p["productType"]);
         final DateTime? exp = p['expiryDate'] as DateTime?;
         return {
           "productId": p["productId"],
           "receivedQty": p["receivedQty"],
-          "bonusQty": p["bonusQty"] ?? 0,
-          "invoicePrice": (p["invoicePrice"] ?? 0.0),
-          "batchNo": (p["batchNo"] ?? "").toString(),
+          "bonusQty": p["bonusQty"],
+          "invoicePrice": (p["invoicePrice"]),
+          "sellingPrice": (p["sellingPrice"]),
+          "minStockLevel": (p["minStockLevel"]),
+          "batchNo": (p["batchNo"]),
           "expiryDate": exp != null ? [exp.year, exp.month, exp.day] : null,
           "productType": p["productType"],
         };
@@ -228,7 +264,7 @@ class AddPurchaseInvoiceController extends GetxController {
       final Map<String, dynamic> body = {
         "purchaseOrderId": _purchaseOrder.value?.id,
         "supplierId": _purchaseOrder.value?.supplierId,
-        "currency": _purchaseOrder.value?.currency ?? "USD",
+        "currency": _purchaseOrder.value!.currency,
         //"total": calculateTotalAmount(),
         "invoiceNumber": _invoiceNumberController.text,
         "items": items,
@@ -239,6 +275,7 @@ class AddPurchaseInvoiceController extends GetxController {
         params: langParam,
         body: body,
       );
+      print(body);
       return result.fold(
         (failure) {
           if (failure.statusCode == 409) {
@@ -258,11 +295,11 @@ class AddPurchaseInvoiceController extends GetxController {
           Get.snackbar(
             'تم الحفظ',
             'تم إنشاء الفاتورة بنجاح (${savedInvoice.invoiceNumber})',
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green.shade400,
-            colorText: Colors.white,
+            snackPosition: SnackPosition.TOP,
           );
           _hasUnsavedChanges.value = false;
+          resetForm();
+          Get.back();
           return;
         },
       );
@@ -275,5 +312,18 @@ class AddPurchaseInvoiceController extends GetxController {
 
   void clearUnsavedChanges() {
     _hasUnsavedChanges.value = false;
+  }
+
+  void resetForm() {
+    _invoiceNumberController.clear();
+    _searchController.clear();
+
+    _purchaseOrder.value = null;
+    _products.clear();
+    _isSaving.value = false;
+    _searchQuery.value = '';
+    _hasUnsavedChanges.value = false;
+
+    _products.refresh();
   }
 }

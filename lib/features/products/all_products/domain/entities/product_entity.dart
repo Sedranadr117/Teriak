@@ -12,6 +12,10 @@ class ProductEntity {
   final String form;
   final String? manufacturer;
   final String? notes;
+  final double refPurchasePrice;
+  final double refSellingPrice;
+  final int? minStockLevel;
+  final int quantity;
   final List<dynamic>? categories;
 
   const ProductEntity({
@@ -28,6 +32,10 @@ class ProductEntity {
     required this.form,
     required this.manufacturer,
     required this.notes,
+    required this.refPurchasePrice,
+    required this.refSellingPrice,
+    required this.minStockLevel,
+    required this.quantity,
     required this.categories,
   });
 

@@ -5,6 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/widgets/custom_binding_widget.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/widget/add_product_button.dart';
+import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/presentation/controller/search_purchase_invoice_controller.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/pages/widgets/supplier_bottomsheet_widget.dart';
 import 'package:teriak/features/suppliers/delete_supplier/presentation/controller/delete_supplier_controller.dart';
@@ -22,6 +23,7 @@ class SupplierListScreen extends StatefulWidget {
 class _SupplierListScreenState extends State<SupplierListScreen> {
   final supplierController = Get.find<GetAllSupplierController>();
   final searchController = Get.put(SearchSupplierController());
+  final invoiceController = Get.put(SearchPurchaseInvoiceController());
   final deleteController = Get.put(DeleteSupplierController());
 
   @override

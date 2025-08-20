@@ -7,6 +7,7 @@ import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/purchase_order/edit_purchase_order/data/datasources/edit_purchase_remote_data_source.dart';
 import 'package:teriak/features/purchase_order/edit_purchase_order/data/repositories/edit_purchase_repository_impl.dart';
@@ -17,7 +18,7 @@ import 'package:teriak/features/suppliers/all_supplier/presentation/controller/a
 import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity .dart';
 
 class EditPurchaseOrderItem {
-  final ProductModel product;
+  final ProductEntity product;
   final int quantity;
   final double price;
   final String productType;
@@ -31,7 +32,7 @@ class EditPurchaseOrderItem {
   });
 
   EditPurchaseOrderItem copyWith({
-    ProductModel? product,
+    ProductEntity? product,
     int? quantity,
     double? price,
     String? productType,
@@ -61,7 +62,7 @@ class EditPurchaseOrderController extends GetxController {
 
   var selectedSupplier = Rxn<SupplierModel>();
   var selectedCurrency = 'SYP'.obs;
-  var selectedProduct = Rxn<ProductModel>();
+  var selectedProduct = Rxn<ProductEntity>();
   var orderItems = <EditPurchaseOrderItem>[].obs;
   var currentQuantity = 1.obs;
   var currentPrice = 0.0.obs;
@@ -214,7 +215,7 @@ class EditPurchaseOrderController extends GetxController {
     selectedCurrency.value = currency;
   }
 
-  void selectProduct(ProductModel product) {
+  void selectProduct(ProductEntity product) {
     selectedProduct.value = product;
     currentPrice.value = 0.0;
     priceController.text = '0.0';
@@ -222,23 +223,17 @@ class EditPurchaseOrderController extends GetxController {
     _handleProductPriceLogic(product);
   }
 
-  void _handleProductPriceLogic(ProductModel product) {
-    if (product.productType != null) {
-      final productType = product.productType;
-      final isMasterProduct = productType == "Master" || productType == "مركزي";
-
-      if (isMasterProduct) {
-        // double price = (product.refPurchasePrice != null && product.refPurchasePrice! > 0)
-        //     ? product.refPurchasePrice!
-        //     : 2.0;
-        double price = 2;
-
-        currentPrice.value = price;
-        priceController.text = price.toStringAsFixed(2);
-      } else {
-        currentPrice.value = 0.0;
-        priceController.clear();
-      }
+  void _handleProductPriceLogic(ProductEntity product) {
+    final productType = product.productType;
+    final isMasterProduct = productType == "Master" || productType == "مركزي";
+    if (isMasterProduct) {
+      double price =
+          (product.refPurchasePrice > 0) ? product.refPurchasePrice : 2.0;
+      currentPrice.value = price;
+      priceController.text = price.toStringAsFixed(2);
+    } else {
+      currentPrice.value = product.refPurchasePrice;
+      priceController.text = product.refPurchasePrice.toStringAsFixed(2);
     }
   }
 

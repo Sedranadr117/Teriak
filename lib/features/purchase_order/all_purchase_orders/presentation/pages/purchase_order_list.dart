@@ -163,7 +163,7 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
   }
 
   Widget _buildSearchResults() {
-    if (searchController.isSearching.value) {
+    if (searchController.isSearchingSupplier.value||searchController.isSearchingDate.value) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -182,11 +182,11 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
               style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 2.h),
-            ElevatedButton(
-              onPressed: () => searchController.resetSearch(),
-              child: Text('Clear Search'.tr),
-            ),
+            // SizedBox(height: 2.h),
+            // ElevatedButton(
+            //   onPressed: () => searchController.resetSearch(),
+            //   child: Text('Clear Search'.tr),
+            // ),
           ],
         ),
       );
@@ -227,7 +227,7 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
         itemBuilder: (context, index) {
           if (index == searchController.searchResults.length) {
             return Obx(() {
-              if (searchController.isSearching.value) {
+              if (searchController.isSearchingSupplier.value||searchController.isSearchingDate.value) {
                 return Container(
                   padding: EdgeInsets.all(4.w),
                   child: const Center(

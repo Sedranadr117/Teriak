@@ -9,16 +9,19 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/domain/entities/purchase_invoice_entity.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/domain/usecases/get_search_purchase_invoice.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity%20.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/data/datasources/search_purchase_invoice_remote_data_source.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/data/repositories/search_purchase_invoice_repository_impl.dart';
 
 class SearchPurchaseInvoiceController extends GetxController {
-  final supplierController = Get.find<GetAllSupplierController>();
+   final supplierController = Get.find<GetAllSupplierController>();
 
   // Search state
-  var isSearching = false.obs;
+ var isSearchingSupplier = false.obs;
+var isSearchingDate = false.obs;
+
   var searchResults = <PurchaseInvoiceEntity>[].obs;
   var searchError = ''.obs;
   var hasSearchResults = false.obs;
@@ -85,14 +88,14 @@ class SearchPurchaseInvoiceController extends GetxController {
     dateError.value = null;
   }
 
-  Future<void> searchBySupplier() async {
+ Future<void> searchBySupplier() async {
     if (selectedSupplier.value == null) {
       supplierError.value = 'Please select a supplier'.tr;
       return;
     }
 
     try {
-      isSearching.value = true;
+      isSearchingSupplier.value = true;
       searchError.value = '';
       currentPage.value = 0;
       final languageCode = LocaleController.to.locale.languageCode;
@@ -123,7 +126,7 @@ class SearchPurchaseInvoiceController extends GetxController {
       searchError.value = e.toString();
       hasSearchResults.value = false;
     } finally {
-      isSearching.value = false;
+      isSearchingSupplier.value = false;
     }
   }
 
@@ -139,7 +142,7 @@ class SearchPurchaseInvoiceController extends GetxController {
     }
 
     try {
-      isSearching.value = true;
+      isSearchingDate.value = true;
       searchError.value = '';
       currentPage.value = 0;
       final languageCode = LocaleController.to.locale.languageCode;
@@ -171,62 +174,75 @@ class SearchPurchaseInvoiceController extends GetxController {
       searchError.value = e.toString();
       hasSearchResults.value = false;
     } finally {
-      isSearching.value = false;
+      isSearchingDate.value = false;
     }
   }
 
-  Future<void> loadNextPage() async {
-    if (!hasNext.value || isSearching.value) return;
+ Future<void> loadNextPage() async {
+  if (!hasNext.value) return;
 
-    try {
-      currentPage.value++;
-      final languageCode = LocaleController.to.locale.languageCode;
+  try {
+    currentPage.value++;
+    final languageCode = LocaleController.to.locale.languageCode;
 
-      if (selectedSupplier.value != null) {
-        final params = SearchBySupplierParams(
-            supplierId: selectedSupplier.value!.id,
-            page: currentPage.value,
-            size: 5,
-            language: languageCode);
+    if (selectedSupplier.value != null) {
+      if (isSearchingSupplier.value) return;
+      isSearchingSupplier.value = true;
 
-        final result =
-            await searchBySupplierUseCase.callBySupplier(params: params);
-        result.fold(
-          (failure) {
-            searchError.value = failure.errMessage;
-            currentPage.value--;
-          },
-          (paginatedResult) {
-            searchResults.addAll(paginatedResult.content);
-            hasNext.value = paginatedResult.hasNext;
-          },
-        );
-      } else if (startDate.value != null && endDate.value != null) {
-        final params = SearchByDateRangeParams(
-          startDate: startDate.value!,
-          endDate: endDate.value!,
+      final params = SearchBySupplierParams(
+          supplierId: selectedSupplier.value!.id,
           page: currentPage.value,
           size: 5,
-          language: languageCode,
-        );
+          language: languageCode);
 
-        final result = await searchByDateRangeUseCase.callByDateRange(params: params);
-        result.fold(
-          (failure) {
-            searchError.value = failure.errMessage;
-            currentPage.value--;
-          },
-          (paginatedResult) {
-            searchResults.addAll(paginatedResult.content);
-            hasNext.value = paginatedResult.hasNext;
-          },
-        );
-      }
-    } catch (e) {
-      searchError.value = e.toString();
-      currentPage.value--;
+      final result =
+          await searchBySupplierUseCase.callBySupplier(params: params);
+      result.fold(
+        (failure) {
+          searchError.value = failure.errMessage;
+          currentPage.value--;
+        },
+        (paginatedResult) {
+          searchResults.addAll(paginatedResult.content);
+          hasNext.value = paginatedResult.hasNext;
+        },
+      );
+
+      isSearchingSupplier.value = false;
+    } 
+    else if (startDate.value != null && endDate.value != null) {
+      if (isSearchingDate.value) return;
+      isSearchingDate.value = true;
+
+      final params = SearchByDateRangeParams(
+        startDate: startDate.value!,
+        endDate: endDate.value!,
+        page: currentPage.value,
+        size: 5,
+        language: languageCode,
+      );
+
+      final result = await searchByDateRangeUseCase.callByDateRange(params: params);
+      result.fold(
+        (failure) {
+          searchError.value = failure.errMessage;
+          currentPage.value--;
+        },
+        (paginatedResult) {
+          searchResults.addAll(paginatedResult.content);
+          hasNext.value = paginatedResult.hasNext;
+        },
+      );
+
+      isSearchingDate.value = false;
     }
+  } catch (e) {
+    searchError.value = e.toString();
+    currentPage.value--;
+    isSearchingSupplier.value = false;
+    isSearchingDate.value = false;
   }
+}
 
   void clearSearch() {
     searchResults.clear();

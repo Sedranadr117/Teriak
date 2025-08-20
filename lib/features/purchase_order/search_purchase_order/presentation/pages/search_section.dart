@@ -66,13 +66,14 @@ class _SearchSectionState extends State<SearchSection> {
           _buildSearchButtons(context),
           SizedBox(height: 0.3.h),
 
-          // Clear Search Button
-          // if (widget.searchController.hasSearchResults.value)
-          //   _buildClearSearchButton(context),
-
           // Error Display
-          if (widget.errorText != null && widget.errorText!.isNotEmpty)
-            _buildErrorText(context, widget.errorText!),
+          Obx(() {
+            final error = widget.searchController.searchError.value;
+            if (error.isNotEmpty) {
+              return _buildErrorText(context, error);
+            }
+            return const SizedBox.shrink();
+          }),
         ],
       ),
     );
@@ -89,48 +90,57 @@ class _SearchSectionState extends State<SearchSection> {
               ),
         ),
         SizedBox(height: 1.h),
-        DropdownButtonFormField<SupplierModel>(
-          value: widget.selectedSupplier,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: 'Select Supplier'.tr,
-            hintStyle: TextStyle(
-              color: Colors.grey.shade500,
-              fontSize: 12.sp,
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: widget.searchController.supplierError.value != null
+                  ? Colors.red
+                  : Theme.of(context).colorScheme.outline,
             ),
+            borderRadius: BorderRadius.circular(12),
           ),
-          items: widget.suppliers.map((supplier) {
-            return DropdownMenuItem<SupplierModel>(
-              value: supplier,
+          child: DropdownButtonFormField<SupplierModel>(
+            value: widget.selectedSupplier,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Select Supplier'.tr,
+              hintStyle: TextStyle(
+                color: Colors.grey.shade500,
+                fontSize: 12.sp,
+              ),
+            ),
+            items: widget.suppliers.map((supplier) {
+              return DropdownMenuItem<SupplierModel>(
+                value: supplier,
+                child: Text(
+                  supplier.name,
+                  style: TextStyle(fontSize: 12.sp),
+                ),
+              );
+            }).toList(),
+            onChanged: (SupplierModel? value) {
+              if (value != null) {
+                widget.onSupplierSelected(value);
+              }
+            },
+          ),
+        ),
+        Obx(() {
+          final error = widget.searchController.supplierError.value;
+          if (error != null) {
+            return Padding(
+              padding: EdgeInsets.only(top: 1.h),
               child: Text(
-                supplier.name,
-                style: TextStyle(fontSize: 12.sp),
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 10.sp,
+                ),
               ),
             );
-          }).toList(),
-          onChanged: (SupplierModel? value) {
-            if (value != null) {
-              widget.onSupplierSelected(value);
-            }
-          },
-          validator: (value) {
-            if (widget.searchController.supplierError.value != null) {
-              return widget.searchController.supplierError.value;
-            }
-            return null;
-          },
-        ),
-        if (widget.searchController.supplierError.value != null)
-          Padding(
-            padding: EdgeInsets.only(top: 1.h),
-            child: Text(
-              widget.searchController.supplierError.value!,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 10.sp,
-              ),
-            ),
-          ),
+          }
+          return const SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -169,17 +179,22 @@ class _SearchSectionState extends State<SearchSection> {
             ),
           ],
         ),
-        if (widget.searchController.dateError.value != null)
-          Padding(
-            padding: EdgeInsets.only(top: 1.h),
-            child: Text(
-              widget.searchController.dateError.value!,
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 10.sp,
+        Obx(() {
+          final error = widget.searchController.dateError.value;
+          if (error != null) {
+            return Padding(
+              padding: EdgeInsets.only(top: 1.h),
+              child: Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 10.sp,
+                ),
               ),
-            ),
-          ),
+            );
+          }
+          return const SizedBox.shrink();
+        }),
       ],
     );
   }
@@ -213,7 +228,6 @@ class _SearchSectionState extends State<SearchSection> {
             );
             if (date != null) {
               onDateSelected(date);
-              // Force rebuild to show selected date
               setState(() {});
             }
           },
@@ -239,13 +253,19 @@ class _SearchSectionState extends State<SearchSection> {
                     fontSize: 11.sp,
                     color: selectedDate != null
                         ? Theme.of(context).textTheme.bodyMedium?.color
-                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.8),
                   ),
                 ),
                 Icon(
                   Icons.calendar_today,
                   size: 16.sp,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.8),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.8),
                 ),
               ],
             ),
@@ -259,104 +279,75 @@ class _SearchSectionState extends State<SearchSection> {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton.icon(
-            onPressed: widget.searchController.isSearching.value
-                ? null
-                : () => widget.searchController.searchBySupplier(),
-            icon: widget.searchController.isSearching.value
-                ? SizedBox(
-                    width: 10.sp,
-                    height: 10.sp,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
+          child: Obx(() {
+            final isSearching = widget.searchController.isSearchingSupplier.value;
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () => widget.searchController.searchBySupplier(),
+              icon: isSearching
+                  ? SizedBox(
+                      width: 16.sp,
+                      height: 16.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
                       ),
-                    ),
-                  )
-                : Icon(Icons.search, size: 10.sp),
-            label: Text(
-              'Search by Supplier'.tr,
-              style: TextStyle(fontSize: 9.sp),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryVariantLight,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                    )
+                  : Icon(Icons.search, size: 16.sp),
+              label: Text(
+                isSearching ? 'Searching...'.tr : 'Search by Supplier'.tr,
+                style: TextStyle(fontSize: 11.sp),
               ),
-            ),
-          ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryVariantLight,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          }),
         ),
         SizedBox(width: 2.w),
         Expanded(
-          child: ElevatedButton.icon(
-            onPressed: widget.searchController.isSearching.value
-                ? null
-                : () => widget.searchController.searchByDateRange(),
-            icon: widget.searchController.isSearching.value
-                ? SizedBox(
-                    width: 10.sp,
-                    height: 10.sp,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        Theme.of(context).primaryColor,
+          child: Obx(() {
+            final isSearching = widget.searchController.isSearchingDate.value;
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () => widget.searchController.searchByDateRange(),
+              icon: isSearching
+                  ? SizedBox(
+                      width: 16.sp,
+                      height: 16.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
                       ),
-                    ),
-                  )
-                : Icon(Icons.date_range, size: 10.sp),
-            label: Text(
-              'Search by Date'.tr,
-              style: TextStyle(fontSize: 9.sp),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.secondaryLight,
-              foregroundColor: Colors.white,
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                    )
+                  : Icon(Icons.date_range, size: 16.sp),
+              label: Text(
+                isSearching ? 'Searching...'.tr : 'Search by Date'.tr,
+                style: TextStyle(fontSize: 11.sp),
               ),
-            ),
-          ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryLight,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          }),
         ),
       ],
-    );
-  }
-
-  Widget _buildClearSearchButton(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 0.3.h),
-      child: ElevatedButton.icon(
-        onPressed: widget.searchController.isSearching.value
-            ? null
-            : () => widget.searchController.clearSearch(),
-        icon: widget.searchController.isSearching.value
-            ? SizedBox(
-                width: 10.sp,
-                height: 10.sp,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).primaryColor,
-                  ),
-                ),
-              )
-            : Icon(Icons.clear_all, size: 10.sp),
-        label: Text(
-          'Clear search'.tr,
-          style: TextStyle(fontSize: 9.sp),
-        ),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.secondaryLight,
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      ),
     );
   }
 

@@ -16,6 +16,10 @@ class ProductModel extends ProductEntity {
     required super.form,
     required super.manufacturer,
     required super.notes,
+    required super.refPurchasePrice,
+    required super.refSellingPrice,
+    required super.minStockLevel,
+    required super.quantity,
     required super.categories,
   });
 
@@ -54,6 +58,18 @@ class ProductModel extends ProductEntity {
       notes: json.containsKey(ApiKeys.notes) && json[ApiKeys.notes] != null
           ? json[ApiKeys.notes]
           : '',
+      refPurchasePrice: json.containsKey(ApiKeys.refPurchasePrice) && json[ApiKeys.refPurchasePrice] != null
+          ? json[ApiKeys.refPurchasePrice]
+          : '',
+      refSellingPrice: json.containsKey(ApiKeys.refSellingPrice) && json[ApiKeys.refSellingPrice] != null
+          ? json[ApiKeys.refSellingPrice]
+          : '',
+      minStockLevel: json.containsKey(ApiKeys.minStockLevel) && json[ApiKeys.minStockLevel] != null
+          ? json[ApiKeys.minStockLevel]
+          : 0,
+      quantity: json.containsKey(ApiKeys.productItemQuantity) && json[ApiKeys.productItemQuantity] != null
+          ? json[ApiKeys.productItemQuantity]
+          : 0,
       categories: (json.containsKey(ApiKeys.categories) &&
               json[ApiKeys.categories] != null)
           ? (json[ApiKeys.categories]).map((e) => e.toString()).toList()
@@ -76,6 +92,10 @@ class ProductModel extends ProductEntity {
       ApiKeys.form: form,
       ApiKeys.manufacturer: manufacturer,
       ApiKeys.notes: notes,
+      ApiKeys.refPurchasePrice: refPurchasePrice,
+      ApiKeys.refSellingPrice: refSellingPrice,
+      ApiKeys.minStockLevel: minStockLevel,
+      ApiKeys.productItemQuantity: quantity,
       ApiKeys.categories: categories,
     };
   }

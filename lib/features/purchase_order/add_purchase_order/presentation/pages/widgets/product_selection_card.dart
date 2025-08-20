@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/extensions/responsive.dart';
+import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/products/add_product/presentation/pages/add_product/add_product.dart';
 import 'package:teriak/features/products/all_products/data/models/product_model.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
+import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/presentation/pages/widgets/unified_card.dart';
 
 class ProductSelectionCard extends StatelessWidget {
-  final List<ProductModel> products;
-  final Function(ProductModel) onProductSelected;
+  final List<ProductEntity> products;
+  final Function(ProductEntity) onProductSelected;
   final Function(String) onBarcodeScanned;
-  final ProductModel? selectedProduct;
+  final ProductEntity? selectedProduct;
   final TextEditingController barcodeController;
   final TextEditingController quantityController;
   final TextEditingController priceController;
@@ -67,10 +72,11 @@ class ProductSelectionCard extends StatelessWidget {
   Widget _buildProductSelection() {
     return Builder(builder: (context) {
       // Ensure we have unique products based on ID
-      final uniqueProducts = products.fold<List<ProductModel>>(
+      final uniqueProducts = products.fold<List<ProductEntity>>(
         [],
         (list, product) {
-          if (!list.any((p) => p.id == product.id)) {
+          if (!list.any((p) =>
+              p.id == product.id && p.productType == product.productType)) {
             list.add(product);
           }
           return list;
@@ -87,18 +93,41 @@ class ProductSelectionCard extends StatelessWidget {
                 ),
           ),
           SizedBox(height: 0.8.h),
-          UnifiedDropdown<ProductModel>(
-            hint: 'Select Product'.tr,
-            value: selectedProduct,
-            items: uniqueProducts,
-            itemText: (product) => product.tradeName,
-            onChanged: (product) {
-              if (product != null) {
-                print('Product type: ${selectedProduct?.productType}');
-                onProductSelected(product);
-              }
-            },
-            errorText: productError,
+          Row(
+            children: [
+              Expanded(
+                child: UnifiedDropdown<ProductEntity>(
+                  hint: 'Select Product'.tr,
+                  value: selectedProduct,
+                  items: uniqueProducts,
+                  itemText: (product) => product.tradeName,
+                  onChanged: (product) {
+                    if (product != null) {
+                      print('Product type: ${selectedProduct?.productType}');
+                      onProductSelected(product);
+                    }
+                  },
+                  errorText: productError,
+                ),
+              ),
+              SizedBox(width: context.w * 0.02),
+              Container(
+                decoration: BoxDecoration(
+                  color:  Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: IconButton(
+                  onPressed: () async {
+                    final result = await Get.toNamed(AppPages.addProductPage);
+                  },
+                  icon: CustomIconWidget(
+                    iconName: 'add',
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ],
           ),
           if (productError != null) ...[
             SizedBox(height: 0.8.h),

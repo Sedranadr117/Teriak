@@ -18,7 +18,9 @@ class SearchPurchaseOrderController extends GetxController {
   final supplierController = Get.find<GetAllSupplierController>();
 
   // Search state
-  var isSearching = false.obs;
+ var isSearchingSupplier = false.obs;
+var isSearchingDate = false.obs;
+
   var searchResults = <PurchaseOrderEntity>[].obs;
   var searchError = ''.obs;
   var hasSearchResults = false.obs;
@@ -92,7 +94,7 @@ class SearchPurchaseOrderController extends GetxController {
     }
 
     try {
-      isSearching.value = true;
+      isSearchingSupplier.value = true;
       searchError.value = '';
       currentPage.value = 0;
       final languageCode = LocaleController.to.locale.languageCode;
@@ -123,7 +125,7 @@ class SearchPurchaseOrderController extends GetxController {
       searchError.value = e.toString();
       hasSearchResults.value = false;
     } finally {
-      isSearching.value = false;
+      isSearchingSupplier.value = false;
     }
   }
 
@@ -139,7 +141,7 @@ class SearchPurchaseOrderController extends GetxController {
     }
 
     try {
-      isSearching.value = true;
+      isSearchingDate.value = true;
       searchError.value = '';
       currentPage.value = 0;
       final languageCode = LocaleController.to.locale.languageCode;
@@ -171,62 +173,75 @@ class SearchPurchaseOrderController extends GetxController {
       searchError.value = e.toString();
       hasSearchResults.value = false;
     } finally {
-      isSearching.value = false;
+      isSearchingDate.value = false;
     }
   }
 
-  Future<void> loadNextPage() async {
-    if (!hasNext.value || isSearching.value) return;
+ Future<void> loadNextPage() async {
+  if (!hasNext.value) return;
 
-    try {
-      currentPage.value++;
-      final languageCode = LocaleController.to.locale.languageCode;
+  try {
+    currentPage.value++;
+    final languageCode = LocaleController.to.locale.languageCode;
 
-      if (selectedSupplier.value != null) {
-        final params = SearchBySupplierParams(
-            supplierId: selectedSupplier.value!.id,
-            page: currentPage.value,
-            size: 5,
-            language: languageCode);
+    if (selectedSupplier.value != null) {
+      if (isSearchingSupplier.value) return;
+      isSearchingSupplier.value = true;
 
-        final result =
-            await searchBySupplierUseCase.callSupplier(params: params);
-        result.fold(
-          (failure) {
-            searchError.value = failure.errMessage;
-            currentPage.value--;
-          },
-          (paginatedResult) {
-            searchResults.addAll(paginatedResult.content);
-            hasNext.value = paginatedResult.hasNext;
-          },
-        );
-      } else if (startDate.value != null && endDate.value != null) {
-        final params = SearchByDateRangeParams(
-          startDate: startDate.value!,
-          endDate: endDate.value!,
+      final params = SearchBySupplierParams(
+          supplierId: selectedSupplier.value!.id,
           page: currentPage.value,
           size: 5,
-          language: languageCode,
-        );
+          language: languageCode);
 
-        final result = await searchByDateRangeUseCase.callDate(params: params);
-        result.fold(
-          (failure) {
-            searchError.value = failure.errMessage;
-            currentPage.value--;
-          },
-          (paginatedResult) {
-            searchResults.addAll(paginatedResult.content);
-            hasNext.value = paginatedResult.hasNext;
-          },
-        );
-      }
-    } catch (e) {
-      searchError.value = e.toString();
-      currentPage.value--;
+      final result =
+          await searchBySupplierUseCase.callSupplier(params: params);
+      result.fold(
+        (failure) {
+          searchError.value = failure.errMessage;
+          currentPage.value--;
+        },
+        (paginatedResult) {
+          searchResults.addAll(paginatedResult.content);
+          hasNext.value = paginatedResult.hasNext;
+        },
+      );
+
+      isSearchingSupplier.value = false;
+    } 
+    else if (startDate.value != null && endDate.value != null) {
+      if (isSearchingDate.value) return;
+      isSearchingDate.value = true;
+
+      final params = SearchByDateRangeParams(
+        startDate: startDate.value!,
+        endDate: endDate.value!,
+        page: currentPage.value,
+        size: 5,
+        language: languageCode,
+      );
+
+      final result = await searchByDateRangeUseCase.callDate(params: params);
+      result.fold(
+        (failure) {
+          searchError.value = failure.errMessage;
+          currentPage.value--;
+        },
+        (paginatedResult) {
+          searchResults.addAll(paginatedResult.content);
+          hasNext.value = paginatedResult.hasNext;
+        },
+      );
+
+      isSearchingDate.value = false;
     }
+  } catch (e) {
+    searchError.value = e.toString();
+    currentPage.value--;
+    isSearchingSupplier.value = false;
+    isSearchingDate.value = false;
   }
+}
 
   void clearSearch() {
     searchResults.clear();

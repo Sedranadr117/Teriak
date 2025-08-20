@@ -13,6 +13,7 @@ import 'package:teriak/features/products/edit_product/domain/usecases/put_edit_p
 import 'package:teriak/features/products/all_products/data/models/product_model.dart';
 import 'package:teriak/features/products/product_data/data/models/product_data_model.dart';
 import 'package:teriak/features/products/product_data/presentation/controller/product_data_controller.dart';
+import 'package:teriak/features/products/product_data/presentation/controller/product_names_controller.dart';
 
 class EditProductController extends GetxController {
   // Controllers
@@ -74,14 +75,12 @@ class EditProductController extends GetxController {
   // Original data
 
   void loadProductData(ProductModel product) async {
-    arabicTradeNameController.text = product.tradeName;
-    englishTradeNameController.text = product.tradeName;
+    print("=== loadProductData STARTED ===");
+
     selectedForm.value = product.form;
     selectedManufacturer.value = product.manufacturer;
     sizeController.text = product.size;
     barcodes.assignAll((product.barcodes ?? []).cast<String>());
-    arabicScientificNameController.text = product.scientificName;
-    englishScientificNameController.text = product.scientificName;
     dosageController.text = product.concentration;
     selectedProductType.value = product.type;
     selectedClassification.assignAll((product.categories ?? []).cast<String>());
@@ -129,6 +128,21 @@ class EditProductController extends GetxController {
         return match.id;
       }).where((id) => id != -1),
     );
+    final namesController = Get.find<ProductNamesController>();
+
+    print("Calling getProductNames...");
+    await namesController.getProductNames(product.productType, product.id);
+    print("Called getProductNames DONE");
+
+    final fetchedNames = namesController.productNames.value;
+    print(
+        "Fetched names: ${fetchedNames?.tradeNameAr}, ${fetchedNames?.tradeNameEn}");
+    if (fetchedNames != null) {
+      arabicTradeNameController.text = fetchedNames.tradeNameAr;
+      englishTradeNameController.text = fetchedNames.tradeNameEn;
+      arabicScientificNameController.text = fetchedNames.scientificNameAr;
+      englishScientificNameController.text = fetchedNames.scientificNameEn;
+    }
   }
 
   void addBarcode() {
