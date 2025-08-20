@@ -45,12 +45,25 @@ class EditPurchaseOrderItem {
     );
   }
 
+  String mapProductType(String type) {
+    switch (type) {
+      case "صيدلية":
+      case "Pharmacy":
+        return "Pharmacy".toUpperCase();
+      case "مركزي":
+      case "Master":
+        return "Master".toUpperCase();
+      default:
+        throw Exception("Unknown productType: $type");
+    }
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'productId': product.id,
       'quantity': quantity,
       'price': price,
-      'productType': productType,
+      'productType': mapProductType(productType),
     };
   }
 }
@@ -178,7 +191,7 @@ class EditPurchaseOrderController extends GetxController {
     }
 
     // Set currency
-    selectedCurrency.value = order.currency ?? 'SYP';
+    selectedCurrency.value = order.currency;
 
     if (order.items != null) {
       orderItems.value = order.items!
@@ -190,7 +203,7 @@ class EditPurchaseOrderController extends GetxController {
                 product: product,
                 quantity: item.quantity,
                 price: item.price,
-                productType: product.productType.toUpperCase(),
+                productType: mapProductType(product.productType),
               );
             }
             return null;
@@ -246,7 +259,11 @@ class EditPurchaseOrderController extends GetxController {
       selectProduct(product);
       barcodeController.text = barcode;
     } else {
-      productError.value = 'Product not found'.tr;
+       Get.snackbar(
+        'Error'.tr,
+        'not found'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
   }
 
@@ -284,7 +301,7 @@ class EditPurchaseOrderController extends GetxController {
       product: selectedProduct.value!,
       quantity: currentQuantity.value,
       price: currentPrice.value,
-      productType: selectedProduct.value!.productType.toUpperCase(),
+      productType: mapProductType(selectedProduct.value!.productType),
     );
 
     orderItems.add(newItem);
@@ -369,52 +386,96 @@ class EditPurchaseOrderController extends GetxController {
     return false;
   }
 
-  Future<void> updatePurchaseOrder() async {
-    if (!canUpdateOrder) return;
+String mapProductType(String type) {
+  final normalized = type.toLowerCase();
 
-    isLoading.value = true;
-    final languageCode = LocaleController.to.locale.languageCode;
-
-    try {
-      final params = EditPurchaseOrdersParams(
-        id: orderId!,
-        languageCode: languageCode,
-      );
-
-      final body = {
-        'supplierId': selectedSupplier.value!.id,
-        'currency': selectedCurrency.value,
-        'items': orderItems.map((item) => item.toJson()).toList(),
-      };
-
-      final result = await editPurchaseOrderUseCase(params: params, body: body);
-
-      result.fold(
-        (failure) {
-          Get.snackbar(
-            'Error'.tr,
-            'Failed to update purchase order'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        },
-        (updatedOrder) {
-          Get.snackbar(
-            'Success'.tr,
-            'Purchase order updated successfully'.tr,
-            snackPosition: SnackPosition.BOTTOM,
-          );
-        },
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Error'.tr,
-        'An unexpected error occurred'.tr,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } finally {
-      isLoading.value = false;
-    }
+  switch (normalized) {
+    case "صيدلية":
+    case "pharmacy":
+      return "PHARMACY";
+    case "مركزي":
+    case "master":
+      return "MASTER";
+    default:
+      throw Exception("Unknown productType: $type");
   }
+}
+Map<String, dynamic> buildRequestBody() {
+    final items = orderItems
+        .map((item) => {
+              "productId": item.product.id,
+              "quantity": item.quantity,
+              "price": item.price,
+              "productType": mapProductType(item.product.productType),
+            })
+        .toList();
+
+    return {
+      "supplierId": selectedSupplier.value!.id,
+      "currency": selectedCurrency.value,
+      "items": items,
+    };
+  }
+
+
+Future<void> updatePurchaseOrder() async {
+  if (!canUpdateOrder) return;
+
+  isLoading.value = true;
+  final languageCode = LocaleController.to.locale.languageCode;
+
+  try {
+    final params = EditPurchaseOrdersParams(
+      id: orderId!,
+      languageCode: languageCode,
+    );
+
+  final body = buildRequestBody();
+    // 🐞 Debug Prints
+    print("==================================");
+    print("📡 Update Purchase Order Request");
+    print("➡️ URL: ${EndPoints.baserUrl}/api/v1/purchase-orders/$orderId");
+    print("➡️ Method: PUT");
+    print("➡️ Headers: {Content-Type: application/json}");
+    print("➡️ Params: ${params.toString()}");
+    print("➡️ Body: ${body.toString()}");
+    print("==================================");
+
+    final result = await editPurchaseOrderUseCase(params: params, body: body);
+
+    print("📥 Result: $result");
+
+    result.fold(
+      (failure) {
+        print("💥 HTTP Error: $failure");
+        Get.snackbar(
+          'Error'.tr,
+          'Failed to update purchase order'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      },
+      (updatedOrder) {
+        print("✅ Success: Purchase order updated");
+        Get.snackbar(
+          'Success'.tr,
+          'Purchase order updated successfully'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      },
+    );
+  } catch (e, stacktrace) {
+    print("❌ Exception: $e");
+    print("📌 Stacktrace: $stacktrace");
+    Get.snackbar(
+      'Error'.tr,
+      'An unexpected error occurred'.tr,
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 
   @override
   void onClose() {

@@ -4,6 +4,7 @@ import 'package:teriak/config/extensions/responsive.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/products/add_product/presentation/pages/add_product/subWidget/text_field_block.dart';
+import 'package:teriak/features/products/edit_product/presentation/controller/edit_product_controller.dart';
 
 class BasicInformationSection extends StatelessWidget {
   final TextEditingController arabicTradeNameController;
@@ -27,6 +28,7 @@ class BasicInformationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final editController = Get.find<EditProductController>();
 
     return Container(
       margin: EdgeInsets.symmetric(
@@ -85,6 +87,7 @@ class BasicInformationSection extends StatelessWidget {
               ),
             ),
           ),
+          
           if (isExpanded) ...[
             Divider(
               height: context.h * 0.005,

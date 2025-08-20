@@ -37,7 +37,6 @@ class ProductDataRemoteDataSource {
   Future<ProductNamesModel> getProductNames(ProductNamesParams params) async {
     late String endpoint;
 
-    // إصلاح switch statement
     if (params.type == "Master" || params.type == "مركزي") {
       endpoint = EndPoints.masterProductNames;
     } else if (params.type == "Pharmacy" || params.type == "صيدلية") {
@@ -47,12 +46,11 @@ class ProductDataRemoteDataSource {
     }
 
     final response = await api.get("$endpoint/${params.id}");
-    print("🟢 RAW RESPONSE: ${response.data}");
-    print("Product Type: ${params.type}");
-    print("Endpoint: $endpoint");
-    print("Product ID: ${params.id}");
-    print("Response Status: ${response.statusCode}");
+    if (response is! Map<String, dynamic>) {
+      throw Exception(
+          'Invalid response format. Expected Map<String, dynamic>, got ${response.runtimeType}');
+    }
 
-    return ProductNamesModel.fromJson(response.data);
+    return ProductNamesModel.fromJson(response);
   }
 }

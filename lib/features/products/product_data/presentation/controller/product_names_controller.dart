@@ -43,7 +43,6 @@ class ProductNamesController extends GetxController {
   }
 
   Future<void> getProductNames(String type, int id) async {
-    print(">>> getProductNames called with type=$type, id=$id");
     try {
       isLoading.value = true;
       errorMessage.value = '';
@@ -53,29 +52,21 @@ class ProductNamesController extends GetxController {
         type: type,
       );
 
-      print(">>> Calling API with params: ${params.toMap()}");
-
       final result = await getProductDataUseCase.callNames(params: params);
       result.fold(
         (failure) {
-          errorMessage.value = failure.errMessage;
-          print(">>> API Error: ${failure.errMessage}");
+          errorMessage.value = failure.errMessage;;
           productNames.value = null;
         },
         (data) {
-          productNames.value = data;
-          print(">>> API Success: ${data.tradeNameAr}, ${data.tradeNameEn}");
-          print(">>> Full data: $data");
+         productNames.value = data;
         },
       );
     } catch (e) {
       errorMessage.value = e.toString();
-      print(">>> Exception: $e");
       productNames.value = null;
     } finally {
       isLoading.value = false;
-      print(
-          ">>> getProductNames completed. Loading: ${isLoading.value}, Error: ${errorMessage.value}");
     }
   }
 }

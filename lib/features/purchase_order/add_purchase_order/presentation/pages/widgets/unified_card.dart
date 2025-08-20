@@ -195,17 +195,24 @@ class UnifiedDropdown<T> extends StatelessWidget {
   }
 
   // Helper method to get unique items
-  List<T> _getUniqueItems(List<T> items) {
-    final seen = <int>{};
-    return items.where((item) {
-      final hashCode = item.hashCode;
-      if (seen.contains(hashCode)) {
+ List<T> _getUniqueItems(List<T> items) {
+  final uniqueItems = <T>[];
+
+  for (var item in items) {
+    final exists = uniqueItems.any((existing) {
+      try {
+        return (existing as dynamic).id == (item as dynamic).id &&
+               (existing as dynamic).productType == (item as dynamic).productType;
+      } catch (_) {
         return false;
       }
-      seen.add(hashCode);
-      return true;
-    }).toList();
+    });
+    if (!exists) uniqueItems.add(item);
   }
+
+  return uniqueItems;
+}
+
 
   // Helper method to get valid value
   T? _getValidValue(T? value, List<T> items) {

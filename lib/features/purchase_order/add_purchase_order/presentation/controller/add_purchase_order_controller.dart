@@ -288,7 +288,7 @@ class AddPurchaseOrderController extends GetxController {
       Get.snackbar(
         'Error'.tr,
         'Please add at least one product'.tr,
-        snackPosition: SnackPosition.BOTTOM,
+        snackPosition: SnackPosition.TOP,
       );
       isValid = false;
     }

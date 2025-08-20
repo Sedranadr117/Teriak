@@ -26,20 +26,18 @@ class EditProductPage extends StatefulWidget {
 }
 
 class _EditProductPageState extends State<EditProductPage> {
+  late ProductModel product;
   final editController = Get.put(EditProductController());
   final productDataController = Get.put(ProductDataController());
   final namesController = Get.put(ProductNamesController());
   final productController = Get.find<GetAllProductController>();
   final productDetailsController = Get.find<GetProductDetailsController>();
 
-  late ProductModel product;
-
   @override
   void initState() {
     super.initState();
     product = Get.arguments as ProductModel;
     editController.loadProductData(product);
-    print(namesController.productNames.value);
   }
 
   @override
@@ -82,21 +80,23 @@ class _EditProductPageState extends State<EditProductPage> {
                     const SizedBox(height: 3),
                     CommonWidgets.buildRequiredWidget(context: context),
                     const SizedBox(height: 8),
-                    BasicInformationSection(
-                      arabicTradeNameController:
-                          editController.arabicTradeNameController,
-                      englishTradeNameController:
-                          editController.englishTradeNameController,
-                      arabicScientificNameController:
-                          editController.arabicScientificNameController,
-                      englishScientificNameController:
-                          editController.englishScientificNameController,
-                      isExpanded: editController.basicInfoExpanded.value,
-                      onToggle: () {
-                        setState(() {
-                          editController.basicInfoExpanded.value =
-                              !editController.basicInfoExpanded.value;
-                        });
+                    Obx(
+                      () {
+                        return BasicInformationSection(
+                          arabicTradeNameController:
+                              editController.arabicTradeNameController,
+                          englishTradeNameController:
+                              editController.englishTradeNameController,
+                          arabicScientificNameController:
+                              editController.arabicScientificNameController,
+                          englishScientificNameController:
+                              editController.englishScientificNameController,
+                          isExpanded: editController.basicInfoExpanded.value,
+                          onToggle: () {
+                            editController.basicInfoExpanded.value =
+                                !editController.basicInfoExpanded.value;
+                          },
+                        );
                       },
                     ),
                     Obx(
@@ -110,7 +110,6 @@ class _EditProductPageState extends State<EditProductPage> {
                           showBarcodeScannerBottomSheet(
                             onScanned: (value) {
                               editController.addScannedBarcode(value);
-                              setState(() {});
                             },
                           );
                         },

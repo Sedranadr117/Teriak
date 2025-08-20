@@ -632,6 +632,8 @@ final Map<String, String> arSY = {
   "Quantity in stock": "الكمية في المخزون",
   "Are you sure you want to delete": "هل أنت متأكد من حذف المورد",
   "Invoice n": "رقم الفاتورة",
+  'Are you sure you want to delete this order? This action cannot be undone':"هل متأكد انك تريد حذف هذه الطلبية لا يوجد عودة من الامر",
+   'Supplier Invoices':'فواتير المورد',
   "Invoice Number": "أدخل رقم الفاتورة",
   "not found":"المنتج غير موجود حاول اضافته اولا من زر الدواء",
   "Supplier": "المورد",

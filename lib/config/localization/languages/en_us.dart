@@ -7,6 +7,7 @@ final Map<String, String> enUS = {
   "Trade Name": "Trade Name",
   "Scientific Name": "Scientific Name",
   "Barcode": "Barcode",
+
   "Search by supplier name": "Search by supplier name",
   "Scan Barcode": "Scan Barcode",
   "Search Purchase Invoice":"Search Purchase Invoice",
@@ -109,8 +110,10 @@ final Map<String, String> enUS = {
   "Search by Date Range": "Search by Date Range",
   "Start Date": "Start Date",
   "End Date": "End Date",
+  'Are you sure you want to delete this order? This action cannot be undone':'Are you sure you want to delete this order? This action cannot be undone',
   "Select Date": "Select Date",
   "Search by Supplier": "Search by Supplier",
+  'Supplier Invoices':'Supplier Invoices',
   "Search by Date": "Search by Date",
   "Please select a supplier": "Please select a supplier",
   "Please select both start and end dates":

@@ -23,7 +23,6 @@ class EditProductController extends GetxController {
   final barcodeController = TextEditingController();
   final arabicScientificNameController = TextEditingController();
   final englishScientificNameController = TextEditingController();
-  //final minStockController = TextEditingController();
   final dosageController = TextEditingController();
   final notesController = TextEditingController();
 
@@ -43,11 +42,14 @@ class EditProductController extends GetxController {
 
   // Expanded sections
   var basicInfoExpanded = false.obs;
+  var basicInfoLoading = true.obs;
   var barcodeExpanded = false.obs;
   var additionalInfoExpanded = false.obs;
   late final NetworkInfoImpl networkInfo;
   late final PutEditProduct editProductUseCase;
   var isLoading = false.obs;
+
+  late ProductModel originalProduct;
 
   @override
   void onInit() {
@@ -74,8 +76,9 @@ class EditProductController extends GetxController {
 
   // Original data
 
-  void loadProductData(ProductModel product) async {
-    print("=== loadProductData STARTED ===");
+  Future<void> loadProductData(ProductModel product) async {
+
+    originalProduct = product; 
 
     selectedForm.value = product.form;
     selectedManufacturer.value = product.manufacturer;
@@ -128,15 +131,11 @@ class EditProductController extends GetxController {
         return match.id;
       }).where((id) => id != -1),
     );
-    final namesController = Get.find<ProductNamesController>();
 
-    print("Calling getProductNames...");
-    await namesController.getProductNames(product.productType, product.id);
-    print("Called getProductNames DONE");
+     final namesController = Get.find<ProductNamesController>();
 
+     await namesController.getProductNames(product.productType, product.id);
     final fetchedNames = namesController.productNames.value;
-    print(
-        "Fetched names: ${fetchedNames?.tradeNameAr}, ${fetchedNames?.tradeNameEn}");
     if (fetchedNames != null) {
       arabicTradeNameController.text = fetchedNames.tradeNameAr;
       englishTradeNameController.text = fetchedNames.tradeNameEn;
@@ -192,7 +191,6 @@ class EditProductController extends GetxController {
     barcodeController.dispose();
     arabicScientificNameController.dispose();
     englishScientificNameController.dispose();
-    //minStockController.dispose();
     dosageController.dispose();
     notesController.dispose();
     super.onClose();

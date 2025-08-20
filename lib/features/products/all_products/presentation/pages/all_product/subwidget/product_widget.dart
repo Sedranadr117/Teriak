@@ -38,7 +38,7 @@ class ProductWidget extends StatelessWidget {
               : AppColors.cardLight,
           border: Border(
             left: BorderSide(
-              color: productSource == "Master"
+              color:( productSource == "Master" ||productSource == "مركزي")
                   ? (Theme.of(context).brightness == Brightness.dark
                       ? AppColors.primaryDark
                       : AppColors.primaryLight)
@@ -101,7 +101,7 @@ class ProductWidget extends StatelessWidget {
                         horizontal: context.w * 0.02,
                         vertical: context.h * 0.005),
                     decoration: BoxDecoration(
-                      color: productSource == 'Master'
+              color:( productSource == "Master" ||productSource == "مركزي")
                           ? (Theme.of(context).brightness == Brightness.dark
                               ? AppColors.primaryDark
                               : AppColors.primaryLight)
@@ -234,43 +234,43 @@ class ProductWidget extends StatelessWidget {
 
                   SizedBox(width: context.w * 0.04),
 
-                  // Quantity
-                  // Flexible(
-                  //   child: Container(
-                  //     padding: EdgeInsets.symmetric(
-                  //         horizontal: context.w * 0.03,
-                  //         vertical: context.h * 0.01),
-                  //     decoration: BoxDecoration(
-                  //       color: prescriptionRequired
-                  //           ? (Theme.of(context).brightness == Brightness.dark
-                  //               ? AppColors.secondaryLight
-                  //                   .withValues(alpha: 0.1)
-                  //               : AppColors.secondaryLight
-                  //                   .withValues(alpha: 0.1))
-                  //           : (Theme.of(context).brightness == Brightness.dark
-                  //               ? AppColors.secondaryVariantLight
-                  //                   .withValues(alpha: 0.1)
-                  //               : AppColors.secondaryVariantLight
-                  //                   .withValues(alpha: 0.1)),
-                  //       borderRadius: BorderRadius.circular(8),
-                  //       border: Border.all(
-                  //         color: prescriptionRequired
-                  //             ? AppColors.secondaryLight
-                  //             : AppColors.secondaryVariantLight,
-                  //         width: 1,
-                  //       ),
-                  //     ),
-                  //     child: Text(
-                  //       "${'Quantity in stock'.tr}: ${drugQuantity.toString()}",
-                  //       style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  //             color: prescriptionRequired
-                  //                 ? AppColors.secondaryLight
-                  //                 : AppColors.secondaryVariantLight,
-                  //             fontWeight: FontWeight.w500,
-                  //           ),
-                  //     ),
-                  //   ),
-                  // ),
+                
+                  Flexible(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: context.w * 0.03,
+                          vertical: context.h * 0.01),
+                      decoration: BoxDecoration(
+                        color: prescriptionRequired
+                            ? (Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.secondaryLight
+                                    .withValues(alpha: 0.1)
+                                : AppColors.secondaryLight
+                                    .withValues(alpha: 0.1))
+                            : (Theme.of(context).brightness == Brightness.dark
+                                ? AppColors.secondaryVariantLight
+                                    .withValues(alpha: 0.1)
+                                : AppColors.secondaryVariantLight
+                                    .withValues(alpha: 0.1)),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: prescriptionRequired
+                              ? AppColors.secondaryLight
+                              : AppColors.secondaryVariantLight,
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        "${'Quantity in stock'.tr}: ${drugQuantity.toString()}",
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              color: prescriptionRequired
+                                  ? AppColors.secondaryLight
+                                  : AppColors.secondaryVariantLight,
+                              fontWeight: FontWeight.w500,
+                            ),
+                      ),
+                    ),
+                  ),
 
                   SizedBox(width: context.w * 0.02),
 

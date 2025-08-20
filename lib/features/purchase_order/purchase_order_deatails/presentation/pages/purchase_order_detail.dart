@@ -428,7 +428,7 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
           ],
         ),
         content: Text(
-          'Are you sure you want to delete this order? This action cannot be undone.',
+          'Are you sure you want to delete this order? This action cannot be undone'.tr,
         ),
         actions: [
           TextButton(

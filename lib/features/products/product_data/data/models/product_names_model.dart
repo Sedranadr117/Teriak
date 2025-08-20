@@ -11,12 +11,13 @@ class ProductNamesModel extends ProductNamesEntity {
   });
 
   factory ProductNamesModel.fromJson(Map<String, dynamic> json) {
+
     return ProductNamesModel(
-      id: json[ApiKeys.id],
-      tradeNameAr: json[ApiKeys.tradeNameAr] ,
-      tradeNameEn: json[ApiKeys.tradeNameEn] ,
-      scientificNameAr: json[ApiKeys.scientificNameAr] ,
-      scientificNameEn: json[ApiKeys.scientificNameEn] ,
+      id: json[ApiKeys.id] ?? 0,
+      tradeNameAr: json[ApiKeys.tradeNameAr],
+      tradeNameEn: json[ApiKeys.tradeNameEn],
+      scientificNameAr: json[ApiKeys.scientificNameAr],
+      scientificNameEn: json[ApiKeys.scientificNameEn],
     );
   }
 
@@ -24,7 +25,7 @@ class ProductNamesModel extends ProductNamesEntity {
     return {
       ApiKeys.id: id,
       ApiKeys.tradeNameAr: tradeNameAr,
-     ApiKeys.tradeNameEn: tradeNameEn,
+      ApiKeys.tradeNameEn: tradeNameEn,
       ApiKeys.scientificNameAr: scientificNameAr,
       ApiKeys.scientificNameEn: scientificNameEn,
     };
