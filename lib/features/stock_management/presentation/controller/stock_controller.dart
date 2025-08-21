@@ -330,6 +330,7 @@ class StockController extends GetxController {
       isLoading.value = false;
     }
   }
+  //
 
   @override
   void dispose() {
