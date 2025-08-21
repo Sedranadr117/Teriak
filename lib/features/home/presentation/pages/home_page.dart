@@ -9,13 +9,14 @@ import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/core/themes/app_assets.dart';
 import 'package:teriak/features/home/presentation/widgets/custom_bottom_nav.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
 
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
-import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
+
 import 'package:teriak/main.dart';
-import 'package:teriak/purchaseInvoiceList.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -44,7 +45,7 @@ class _HomePageState extends State<HomePage> {
       AllProductPage(),
     ];
     if (role != "PHARMACY_TRAINEE") {
-      screns.add(purchaseInvoiceList());
+      screns.add(AllPurchaseInvoiceScreen());
     }
 
     return screns;
