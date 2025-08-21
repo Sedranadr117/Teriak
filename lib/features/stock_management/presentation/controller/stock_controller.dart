@@ -209,7 +209,7 @@ class StockController extends GetxController {
             case 0: // All Stock
               return true;
             case 1: // Low Stock
-              final currentStock = (p.totalBonusQuantity as num?)?.toInt() ?? 0;
+              final currentStock = (p.totalQuantity as num?)?.toInt() ?? 0;
               final minPoint = p.minStockLevel;
               if (minPoint == null) return false;
               return currentStock <= minPoint;
