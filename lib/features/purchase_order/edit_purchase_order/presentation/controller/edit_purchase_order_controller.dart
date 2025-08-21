@@ -451,7 +451,7 @@ Future<void> updatePurchaseOrder() async {
         Get.snackbar(
           'Error'.tr,
           'Failed to update purchase order'.tr,
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
         );
       },
       (updatedOrder) {
@@ -459,7 +459,7 @@ Future<void> updatePurchaseOrder() async {
         Get.snackbar(
           'Success'.tr,
           'Purchase order updated successfully'.tr,
-          snackPosition: SnackPosition.BOTTOM,
+          snackPosition: SnackPosition.TOP,
         );
       },
     );

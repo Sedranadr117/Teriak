@@ -52,16 +52,30 @@ class DeleteSupplierController extends GetxController {
 
       result.fold(
         (failure) {
-          Get.snackbar('Error', failure.errMessage);
-          print(failure.errMessage.toString());
+          if (failure.statusCode == 500) {
+            Get.snackbar(
+                'Error',
+                'You cannot delete the supplier because he has purchase invoices'
+                    .tr);
+          } else {
+            Get.snackbar('Error', failure.errMessage);
+          }
         },
         (x) {
           Get.snackbar('Success', 'Supplier deleted successfully');
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
-      print(e.toString());
+      if (e.hashCode == 500) {
+        Get.snackbar(
+            'Error',
+            'You cannot delete the supplier because he has purchase invoices'
+                .tr);
+      } else {
+        Get.snackbar('Error', e.toString());
+      }
+      // Get.snackbar('Error', e.toString());
+      // print(e.toString());
     } finally {
       isLoading.value = false;
     }

@@ -143,7 +143,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text('Invoice Management'),
+        title: Text('Invoice Management'.tr),
         actions: [
           IconButton(
             onPressed: saleController.refreshData,
@@ -169,7 +169,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
               title: Text(product.tradeName),
             ),
             onItemTap: (item) {},
-            hintText: 'Search invoices by...',
+            hintText: 'Search invoices by...'.tr,
             isScanner: false,
           ),
 
@@ -279,7 +279,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
           ),
           SizedBox(height: 2.h),
           Text(
-            'Loading invoices...',
+            'Loading invoices...'.tr,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -310,8 +310,8 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
             SizedBox(height: 2.h),
             Text(
               _searchQuery.isNotEmpty || _activeFilters.isNotEmpty
-                  ? 'No invoices found'
-                  : 'No invoices available',
+                  ? 'No invoices found'.tr
+                  : 'No invoices available'.tr,
               style: theme.textTheme.headlineSmall?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.7),
                 fontWeight: FontWeight.w500,
@@ -320,8 +320,8 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
             SizedBox(height: 1.h),
             Text(
               _searchQuery.isNotEmpty || _activeFilters.isNotEmpty
-                  ? 'Try adjusting your search or filters'
-                  : 'Invoices will appear here when available',
+                  ? 'Try adjusting your search or filters'.tr
+                  : 'Invoices will appear here when available'.tr,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: colorScheme.onSurface.withValues(alpha: 0.5),
               ),
@@ -338,7 +338,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
                     _activeFilterChips.clear();
                   });
                 },
-                child: const Text('Clear Filters'),
+                child: Text('Clear Filters'.tr),
               ),
             ],
           ],

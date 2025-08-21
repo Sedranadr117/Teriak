@@ -377,8 +377,6 @@ class AddPurchaseOrderController extends GetxController {
           );
 
           _resetForm();
-
-          Get.back();
         },
       );
     } catch (e) {

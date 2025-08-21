@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
@@ -106,7 +107,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Quantity Received',
+                              'Quantity Received'.tr,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.7),
@@ -133,7 +134,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Text(
-                                      '+${widget.productData.bonusQty} FREE',
+                                      '+${widget.productData.bonusQty} ${'FREE'.tr}',
                                       style:
                                           theme.textTheme.labelSmall?.copyWith(
                                         fontWeight: FontWeight.w600,
@@ -152,7 +153,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              'Unit Price',
+                              'Unit Price'.tr,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.7),
@@ -180,7 +181,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Total Amount',
+                              'Total Amount'.tr,
                               style: theme.textTheme.bodySmall?.copyWith(
                                 color: theme.colorScheme.onSurface
                                     .withValues(alpha: 0.7),
@@ -242,7 +243,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                       Expanded(
                         child: _buildDetailItem(
                           context,
-                          'Expiry Date',
+                          'Expiry Date'.tr,
                           widget.productData.formattedExpiryDate,
                           'calendar_today',
                         ),
@@ -250,7 +251,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                       Expanded(
                         child: _buildDetailItem(
                           context,
-                          'Batch Number',
+                          'Batch Number'.tr,
                           widget.productData.batchNo,
                           'numbers',
                         ),

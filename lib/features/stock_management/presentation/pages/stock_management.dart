@@ -442,7 +442,8 @@ class _StockManagementState extends State<StockManagement>
   }
 
   void _transferProduct(Map<String, dynamic> product) {
-    _showSnackBar("Transfer functionality would be implemented here".tr);
+    _showSnackBar(
+        "${"Transfer functionality would be implemented here".tr} ${product['name']}");
   }
 
   void _viewTransactionHistory(Map<String, dynamic> product) {

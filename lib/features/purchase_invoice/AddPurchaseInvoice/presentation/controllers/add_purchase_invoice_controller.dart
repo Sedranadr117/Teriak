@@ -291,7 +291,6 @@ class AddPurchaseInvoiceController extends GetxController {
           }
         },
         (savedInvoice) {
-          _hasUnsavedChanges.value = false;
           Get.snackbar(
             'تم الحفظ',
             'تم إنشاء الفاتورة بنجاح (${savedInvoice.invoiceNumber})',
@@ -299,7 +298,6 @@ class AddPurchaseInvoiceController extends GetxController {
           );
           _hasUnsavedChanges.value = false;
           resetForm();
-          Get.back();
           return;
         },
       );

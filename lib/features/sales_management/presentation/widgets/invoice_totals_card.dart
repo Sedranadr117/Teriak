@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -33,7 +34,7 @@ class InvoiceTotalsCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Invoice Summary',
+              'Invoice Summary'.tr,
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -44,7 +45,7 @@ class InvoiceTotalsCard extends StatelessWidget {
             // Subtotal
             _buildTotalRow(
               context,
-              'Subtotal',
+              'Subtotal'.tr,
               subtotal,
               isSubtotal: true,
             ),
@@ -54,7 +55,7 @@ class InvoiceTotalsCard extends StatelessWidget {
             // Tax
             _buildTotalRow(
               context,
-              'Tax',
+              'Tax'.tr,
               tax,
               isTax: true,
             ),
@@ -65,7 +66,7 @@ class InvoiceTotalsCard extends StatelessWidget {
             if (discount > 0) ...[
               _buildTotalRow(
                 context,
-                'Discount',
+                'Discount'.tr,
                 -discount,
                 isDiscount: true,
               ),
@@ -85,7 +86,7 @@ class InvoiceTotalsCard extends StatelessWidget {
             // Total
             _buildTotalRow(
               context,
-              'Total Amount',
+              'Total Amount'.tr,
               total,
               isTotal: true,
             ),
@@ -118,7 +119,7 @@ class InvoiceTotalsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Payment Method',
+                          'Payment Method'.tr,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.brightness == Brightness.light
                                 ? const Color(0x99212121)
@@ -126,7 +127,7 @@ class InvoiceTotalsCard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          invoiceData["paymentMethod"] ?? "N/A",
+                          invoiceData["paymentMethod"] ?? "N/A".tr,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                             color: colorScheme.primary,
@@ -205,7 +206,7 @@ class InvoiceTotalsCard extends StatelessWidget {
 
   Widget _buildPaymentStatusIndicator(BuildContext context) {
     final theme = Theme.of(context);
-    final String status = invoiceData["paymentStatus"] ?? "Unknown";
+    final String status = invoiceData["paymentStatus"] ?? "Unknown".tr;
 
     Color indicatorColor;
     IconData statusIcon;

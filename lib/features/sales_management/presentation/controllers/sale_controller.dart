@@ -82,7 +82,7 @@ class SaleController extends GetxController {
 
   Future<void> refreshData() async {
     await fetchAllInvoices();
-    Get.snackbar('', "Invoices refreshed successfully");
+    Get.snackbar('', "Invoices refreshed successfully".tr);
   }
 
   Future<void> fetchAllInvoices() async {

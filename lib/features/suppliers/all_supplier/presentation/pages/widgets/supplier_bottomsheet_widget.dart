@@ -26,7 +26,7 @@ class SupplierDetailBottomSheet {
           child: SupplierDetailBottomSheetWidget(
             supplier: supplier,
             onEdit: () {
-               Get.back();
+              Get.back();
               Get.toNamed(
                 AppPages.editSupplier,
                 arguments: supplier,
@@ -34,8 +34,7 @@ class SupplierDetailBottomSheet {
             },
             onDelete: () async {
               await deleteController.deleteSupplier(supplier.id);
-              supplierController.suppliers
-                  .removeWhere((s) => s.id == supplier.id);
+              supplierController.refreshSuppliers();
             },
           ),
         ),

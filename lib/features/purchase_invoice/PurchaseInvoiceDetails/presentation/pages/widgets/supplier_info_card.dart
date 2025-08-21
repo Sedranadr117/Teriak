@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
 
@@ -49,12 +50,13 @@ class SupplierInfoCard extends StatelessWidget {
 
             // Invoice Details Row
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Invoice Date',
+                      'Invoice Date'.tr,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color:
                             theme.colorScheme.onSurface.withValues(alpha: 0.7),
@@ -75,7 +77,7 @@ class SupplierInfoCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Invoice Number',
+                            'Invoice Number'.tr,
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: theme.colorScheme.onSurface
                                   .withValues(alpha: 0.7),
@@ -85,8 +87,7 @@ class SupplierInfoCard extends StatelessWidget {
                           Text(
                             invoiceData.invoiceNumber!,
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'monospace',
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ],
@@ -112,7 +113,7 @@ class SupplierInfoCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Total Amount',
+                    'Total Amount'.tr,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                     ),
@@ -120,10 +121,9 @@ class SupplierInfoCard extends StatelessWidget {
                   SizedBox(height: 1.h),
                   Text(
                     '${invoiceData.currency}${invoiceData.total.toStringAsFixed(2)}',
-                    style: theme.textTheme.headlineMedium?.copyWith(
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w700,
                       color: theme.colorScheme.primary,
-                      fontFamily: 'monospace',
                     ),
                   ),
                 ],
