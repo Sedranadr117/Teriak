@@ -9,6 +9,7 @@ import 'package:teriak/features/products/delete_product/presentation/controller/
 import 'package:teriak/features/products/product_details/presentation/controller/get_product_details_controller.dart';
 import 'package:teriak/features/products/product_details/presentation/pages/product_details/widget/product_details-body.dart';
 import 'package:teriak/features/products/product_details/presentation/pages/product_details/widget/product_details_header.dart';
+import 'package:teriak/main.dart';
 
 class ProductDetailPage extends StatefulWidget {
   const ProductDetailPage({super.key});
@@ -71,8 +72,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             return Row(
               children: [
-                if (drugData.productType == "Pharmacy" ||
-                    drugData.productType == "صيدلية")
+                    if ((drugData.productType == "Pharmacy" ||
+                        drugData.productType == "صيدلية") &&
+                    (role != "PHARMACY_TRAINEE"))
                   IconButton(
                     onPressed: () {
                       print(drugData.productType);
@@ -89,8 +91,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       size: 20,
                     ),
                   ),
-                if (drugData.productType == "Pharmacy" ||
-                    drugData.productType == "صيدلية")
+                if ((drugData.productType == "Pharmacy" ||
+                        drugData.productType == "صيدلية") &&
+                    (role == "PHARMACY_MANAGER"))
                   IconButton(
                     onPressed: () async {
                       await _showDeleteConfirmation(context, () {

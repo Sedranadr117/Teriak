@@ -13,6 +13,7 @@ import 'package:teriak/features/products/product_data/data/models/product_data_m
 import 'package:teriak/features/products/product_data/presentation/controller/product_data_controller.dart';
 import 'package:teriak/features/products/product_data/presentation/controller/product_names_controller.dart';
 import 'package:teriak/features/products/product_details/presentation/controller/get_product_details_controller.dart';
+import 'package:teriak/main.dart';
 
 import 'widgets/basic_information_section.dart';
 import 'widgets/barcode_management_section.dart';
@@ -99,29 +100,32 @@ class _EditProductPageState extends State<EditProductPage> {
                         );
                       },
                     ),
-                    Obx(
-                      () => BarcodeManagementSection(
-                        barcodes: editController.barcodes.toList(),
-                        barcodeController: editController.barcodeController,
-                        onAddBarcode: editController.addBarcode,
-                        onRemoveBarcode: (index) =>
-                            editController.removeBarcode(index),
-                        onScanBarcode: () {
-                          showBarcodeScannerBottomSheet(
-                            onScanned: (value) {
-                              editController.addScannedBarcode(value);
-                            },
-                          );
-                        },
-                        isExpanded: editController.barcodeExpanded.value,
-                        onToggle: () {
-                          setState(() {
-                            editController.barcodeExpanded.value =
-                                !editController.barcodeExpanded.value;
-                          });
-                        },
-                      ),
-                    ),
+                    (role != "PHARMACY_MANAGER")
+                        ? Container()
+                        : Obx(
+                            () => BarcodeManagementSection(
+                              barcodes: editController.barcodes.toList(),
+                              barcodeController:
+                                  editController.barcodeController,
+                              onAddBarcode: editController.addBarcode,
+                              onRemoveBarcode: (index) =>
+                                  editController.removeBarcode(index),
+                              onScanBarcode: () {
+                                showBarcodeScannerBottomSheet(
+                                  onScanned: (value) {
+                                    editController.addScannedBarcode(value);
+                                  },
+                                );
+                              },
+                              isExpanded: editController.barcodeExpanded.value,
+                              onToggle: () {
+                                setState(() {
+                                  editController.barcodeExpanded.value =
+                                      !editController.barcodeExpanded.value;
+                                });
+                              },
+                            ),
+                          ),
                     AdditionalInformationSection(
                       dosageController: editController.dosageController,
                       notesController: editController.notesController,

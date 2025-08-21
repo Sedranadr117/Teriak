@@ -36,12 +36,6 @@ class CustomBottomNav extends StatelessWidget {
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.shopping_cart),
-        title: ("Purchase Order".tr),
-        activeColorPrimary: AppColors.primaryLight,
-        inactiveColorPrimary: Colors.grey,
-      ),
     ];
 
     if (role != "PHARMACY_TRAINEE") {
@@ -49,6 +43,16 @@ class CustomBottomNav extends StatelessWidget {
         PersistentBottomNavBarItem(
           icon: Icon(Icons.receipt),
           title: ("Invoices"),
+          activeColorPrimary: AppColors.primaryLight,
+          inactiveColorPrimary: Colors.grey,
+        ),
+      );
+    }
+    if (role != "PHARMACY_TRAINEE") {
+      items.add(
+        PersistentBottomNavBarItem(
+          icon: Icon(Icons.shopping_cart),
+          title: ("Purchase Order".tr),
           activeColorPrimary: AppColors.primaryLight,
           inactiveColorPrimary: Colors.grey,
         ),

@@ -8,6 +8,7 @@ import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
+import 'package:teriak/main.dart';
 
 import 'widgets/product_item_card.dart';
 import 'widgets/supplier_info_card.dart';
@@ -62,6 +63,9 @@ class _PurchaseInvoiceDetailScreenState
           title: Text('Invoice Details'.tr,
               style: Theme.of(context).textTheme.titleLarge),
           actions: [
+            (role == "PHARMACY_MANAGER")
+                ? Container()
+                :
             IconButton(
                 icon: CustomIconWidget(
                   iconName: 'edit',
