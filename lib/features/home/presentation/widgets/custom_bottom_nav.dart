@@ -34,6 +34,7 @@ class CustomBottomNav extends StatelessWidget {
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
+      
       PersistentBottomNavBarItem(
         icon: Icon(Icons.shopping_cart),
         title: ("Purchase Order".tr),

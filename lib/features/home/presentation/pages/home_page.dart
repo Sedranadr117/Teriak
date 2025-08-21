@@ -11,6 +11,7 @@ import 'package:teriak/features/sales_management/presentation/pages/multi_sales_
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/main.dart';
 import 'package:teriak/purchaseInvoiceList.dart';
 
 class HomePage extends StatefulWidget {
@@ -84,13 +85,15 @@ class _HomePageState extends State<HomePage> {
                 Get.toNamed(AppPages.indebtedManagement);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.person_add_alt_1_rounded),
-              title: const Text("Suppliers"),
-              onTap: () {
-                Get.toNamed(AppPages.supplierList);
-              },
-            ),
+            (role == "PHARMACY_TRAINEE")
+                ? Container()
+                : ListTile(
+                    leading: const Icon(Icons.person_add_alt_1_rounded),
+                    title: const Text("Suppliers"),
+                    onTap: () {
+                      Get.toNamed(AppPages.supplierList);
+                    },
+                  ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text("Settings"),
