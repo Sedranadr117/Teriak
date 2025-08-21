@@ -262,10 +262,10 @@ class ProductCard extends StatelessWidget {
         SizedBox(width: 2.w),
         Text(
           isExpired
-              ? '${'أقرب دفعة انتهت'.tr} ${(-daysUntilExpiry)} ${'days ago'.tr}'
+              ? '${'The nearest batch has expired"'.tr} ${(-daysUntilExpiry)} ${'days ago'.tr}'
               : isNearExpiry
-                  ? '${'اقرب دفعة تنتهي عند'.tr} $daysUntilExpiry ${'days'.tr}'
-                  : '${'اقرب دفعة تنتهي عند:'.tr} ${expiryDate.day}/${expiryDate.month}/${expiryDate.year}',
+                  ? '${'The nearest batch expires at'.tr} $daysUntilExpiry ${'days'.tr}'
+                  : '${'Nearest batch expires at:'.tr} ${expiryDate.day}/${expiryDate.month}/${expiryDate.year}',
           style: theme.textTheme.bodySmall?.copyWith(
             color: isExpired
                 ? colorScheme.error

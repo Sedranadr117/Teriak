@@ -58,7 +58,7 @@ class InvoiceTotalsCard extends StatelessWidget {
 
             _buildTotalRow(
               context,
-              '${invoiceData["discountType"] == "PERCENTAGE" ? "%" : invoiceData["currency"] == "SYP" ? "SP" : "\$"}Discount',
+              '${invoiceData["discountType"] == "PERCENTAGE" ? "%" : invoiceData["currency"] == "SYP" ? "SP" : "\$"}${'Discount'.tr}',
               discount,
               isDiscount: true,
             ),

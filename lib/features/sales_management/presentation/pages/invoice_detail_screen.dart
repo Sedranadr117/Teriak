@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
@@ -26,7 +23,8 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   late SaleController saleController;
   late CustomerController customerController;
   late Map<String, dynamic> _invoiceData;
-  Map<int, int> _selectedItems = {};
+  final Map<int, int> _selectedItems = {};
+  @override
   void initState() {
     super.initState();
     customerController = Get.put(CustomerController());
@@ -66,7 +64,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     return AppBar(
       title: Text(
-        'Invoice #${_invoiceData["customerName"]}',
+        '${'Invoice'.tr} #${_invoiceData["customerName"]}',
         style: theme.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w600,
           color: colorScheme.onPrimary,
@@ -123,7 +121,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                       size: 5.w,
                     ),
                     SizedBox(width: 3.w),
-                    const Text('Share'),
+                    Text('Share'.tr),
                   ],
                 ))
           ],
@@ -250,7 +248,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'Items (${_invoiceData['items'].length})',
+                      '${'Items'.tr}(${_invoiceData['items'].length})',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -360,7 +358,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              product['productName'] ?? "Unknown Product",
+              product['productName'] ?? "Unknown Product".tr,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),

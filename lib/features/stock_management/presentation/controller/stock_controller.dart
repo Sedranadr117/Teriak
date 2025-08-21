@@ -104,7 +104,7 @@ class StockController extends GetxController {
           }
 
           Get.snackbar(
-              'Error'.tr, 'Faild to get customer please try again later'.tr);
+              'Error'.tr, 'Faild to get stock please try again later'.tr);
         },
         (list) {
           allStokes.assignAll(list.map((e) => (e as StockModel).toEntity()));
@@ -317,7 +317,7 @@ class StockController extends GetxController {
           Get.snackbar('Error'.tr, errorMessage.value);
         },
         (_) {
-          Get.snackbar('Success'.tr, 'Customer deleted successfully!'.tr);
+          Get.snackbar('Success'.tr, 'Stock deleted successfully!'.tr);
 
           fetchStock();
         },

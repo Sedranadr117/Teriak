@@ -107,7 +107,8 @@ final Map<String, String> enUS = {
       "Use the search form above to find invoices by supplier or date range",
   "Search by Supplier": "Search by Supplier",
   "Select Supplier": "Select Supplier",
-  "Are you sure you want to delete product":"Are you sure you want to delete product",
+  "Are you sure you want to delete product":
+      "Are you sure you want to delete product",
   "Search by Date Range": "Search by Date Range",
   "Cannot delete pharmacy product. It has stock items. Please remove all stock items first":
       "Cannot delete pharmacy product. It has stock items. Please remove all stock items first",
@@ -566,6 +567,7 @@ final Map<String, String> enUS = {
   "Are you sure you want to remove": "Are you sure you want to remove",
   "from indebted customers?": "from indebted customers?",
   "Delete Customer": "Delete Customer",
+  "Qty:": "Qty:",
   "Contact Information": "Contact Information",
   "The order cannot be modified in its current state":
       "The order cannot be modified in its current state",
@@ -980,5 +982,50 @@ final Map<String, String> enUS = {
 
   // Payment Status
   "Paid": "Paid",
-  "Overdue": "Overdue"
+  "Overdue": "Overdue",
+  "Cannot delete this item because it is linked to a sale.":
+      "Cannot delete this item because it is linked to a sale.",
+  "Stock deleted successfully!": "Stock deleted successfully!",
+  "Stocks updated successfully!": "Stocks updated successfully!",
+  "Expiry date cannot be in the past": "Expiry date cannot be in the past",
+  "An unexpected error occurred while fetching Stock.":
+      "An unexpected error occurred while fetching Stock.",
+  "Failed to get stock please try again later":
+      "Failed to get stock please try again later",
+  "The nearest batch has expired": "The nearest batch has expired",
+  "The nearest batch expires at": "The nearest batch expires at",
+  "Nearest batch expires at:": "Nearest batch expires at:",
+  "Batch:": "Batch:",
+  "Bonus": "Bonus",
+  "Expiry": "Expiry",
+  "Minimum Stock Level": "Minimum Stock Level",
+  "Delete Stock": "Delete Stock",
+  "Delete From Stock": "Delete From Stock",
+  "from Stock?": "from Stock?",
+  "Employees Management": "Employees Management",
+  "Customers Management": "Customers Management",
+  "Suppliers": "Suppliers",
+  "Sign out": "Sign out",
+  "Are you sure you want to sign out? You will need to sign in again to access your account.":
+      "Are you sure you want to sign out? You will need to sign in again to access your account.",
+  "Signed out successfully": "Signed out successfully",
+  "Sign Out": "Sign Out",
+  "Sale Invoices": "Sale Invoices",
+  "POS": "POS",
+  "Invoices": "Invoices",
+  "Stock": "Stock",
+  "Loading invoices...": "Loading invoices...",
+  "No invoices found": "No invoices found",
+  "No invoices available": "No invoices available",
+  "Try adjusting your search \nInvoices will appear here when available":
+      "Try adjusting your search \nInvoices will appear here when available",
+  "Clear Filters": "Clear Filters",
+  "Invoice": "Invoice",
+  "Print": "Print",
+  "Share": "Share",
+  "Items": "Items",
+  "Unknown Product": "Unknown Product",
+  "Name": "Name",
+  "Payment Method": "Payment Method",
+  "Paid": "Paid"
 };

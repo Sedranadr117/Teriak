@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -124,13 +125,13 @@ class InvoiceCardWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Total Amount',
+                      'Total Amount'.tr,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
                     Text(
-                      '\$${totalAmount.toStringAsFixed(2)}',
+                      'SYP${totalAmount.toStringAsFixed(2)}',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: colorScheme.primary,
@@ -159,7 +160,7 @@ class InvoiceCardWidget extends StatelessWidget {
       case 'COMPLETED':
         badgeColor = Colors.green;
         textColor = Colors.white;
-        displayText = 'Paid';
+        displayText = 'Paid'.tr;
         break;
       case 'pending':
         badgeColor = Colors.orange;

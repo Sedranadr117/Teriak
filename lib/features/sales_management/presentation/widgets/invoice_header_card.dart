@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 
 class InvoiceHeaderCard extends StatelessWidget {
@@ -35,7 +36,7 @@ class InvoiceHeaderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Invoice #${invoiceData["customerName"] ?? "N/A"}',
+                        '${'Invoice'.tr} #${invoiceData["customerName"] ?? "N/A"}',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
@@ -78,7 +79,7 @@ class InvoiceHeaderCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Customer Information',
+                    'Customer Information'.tr,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
@@ -86,13 +87,13 @@ class InvoiceHeaderCard extends StatelessWidget {
                   SizedBox(height: 1.h),
                   _buildCustomerInfoRow(
                     context,
-                    'Name',
+                    'Name'.tr,
                     invoiceData["customerName"] ?? "N/A",
                   ),
                   SizedBox(height: 0.5.h),
                   _buildCustomerInfoRow(
                     context,
-                    'Payment Method',
+                    'Payment Method'.tr,
                     invoiceData["paymentMethod"] ?? "N/A",
                   ),
                 ],
@@ -106,7 +107,7 @@ class InvoiceHeaderCard extends StatelessWidget {
 
   Widget _buildPaymentStatusBadge(BuildContext context) {
     final theme = Theme.of(context);
-    final String status = invoiceData["status"] ?? "Unknown";
+    final String status = invoiceData["status"] ?? "Unknown".tr;
     final colorScheme = theme.colorScheme;
 
     Color badgeColor;
@@ -117,7 +118,7 @@ class InvoiceHeaderCard extends StatelessWidget {
       case 'COMPLETED':
         badgeColor = Colors.green;
         textColor = Colors.white;
-        displayText = 'Paid';
+        displayText = 'Paid'.tr;
         break;
       case 'pending':
         badgeColor = Colors.orange;

@@ -102,7 +102,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                       child: Text(
                         saleController.startDate.value != null
                             ? '${saleController.startDate.value!.day}/${saleController.startDate.value!.month}/${saleController.startDate.value!.year}'
-                            : 'Start Date',
+                            : 'Start Date'.tr,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
@@ -122,7 +122,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                       child: Text(
                         saleController.endDate.value != null
                             ? '${saleController.endDate.value!.day}/${saleController.endDate.value!.month}/${saleController.endDate.value!.year}'
-                            : 'End Date',
+                            : 'End Date'.tr,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
@@ -249,10 +249,10 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
     final colorScheme = theme.colorScheme;
 
     final String messageTitle =
-        isFiltering ? 'No invoices found' : 'No invoices available';
+        isFiltering ? 'No invoices found'.tr : 'No invoices available'.tr;
     final String messageBody = isFiltering
-        ? 'Try adjusting your search or filters'
-        : 'Invoices will appear here when available';
+        ? 'Try adjusting your search'.tr
+        : 'Invoices will appear here when available'.tr;
 
     return Center(
       child: Padding(

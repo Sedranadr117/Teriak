@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
             role == "PHARMACY_MANAGER"
                 ? ListTile(
                     leading: const Icon(Icons.people),
-                    title: const Text("Employees Management"),
+                    title: Text("Employees Management".tr),
                     onTap: () {
                       Get.toNamed(AppPages.employeeManagement);
                     },
@@ -102,14 +102,14 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox(),
             ListTile(
               leading: const Icon(Icons.receipt),
-              title: const Text("Sale Invoices"),
+              title: Text("Sale Invoices".tr),
               onTap: () {
                 Get.toNamed(AppPages.showInvoices);
               },
             ),
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text("Customers Management"),
+              title: Text("Customers Management".tr),
               onTap: () {
                 Get.toNamed(AppPages.indebtedManagement);
               },
@@ -118,14 +118,14 @@ class _HomePageState extends State<HomePage> {
                 ? SizedBox()
                 : ListTile(
                     leading: const Icon(Icons.person_add_alt_1_rounded),
-                    title: const Text("Suppliers"),
+                    title: Text("Suppliers".tr),
                     onTap: () {
                       Get.toNamed(AppPages.supplierList);
                     },
                   ),
             ListTile(
               leading: const Icon(Icons.settings),
-              title: const Text("Settings"),
+              title: Text("Settings".tr),
               onTap: () {
                 Get.toNamed(AppPages.settings);
               },
@@ -135,13 +135,13 @@ class _HomePageState extends State<HomePage> {
             ),
             ListTile(
               leading: const Icon(Icons.logout),
-              title: const Text("Sign out"),
+              title: Text("Sign out".tr),
               onTap: () async {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
                           title: Text(
-                            'Sign Out',
+                            'Sign Out'.tr,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           content: Text(
@@ -151,7 +151,7 @@ class _HomePageState extends State<HomePage> {
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel'),
+                              child: Text('Cancel'.tr),
                             ),
                             ElevatedButton(
                               onPressed: () async {
@@ -159,15 +159,16 @@ class _HomePageState extends State<HomePage> {
                                 await cacheHelper.removeData(key: 'token');
                                 Get.offAllNamed(AppPages.signin);
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Signed out successfully')),
+                                  SnackBar(
+                                      content:
+                                          Text('Signed out successfully'.tr)),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.errorLight,
                                 foregroundColor: AppColors.onErrorLight,
                               ),
-                              child: const Text('Sign Out'),
+                              child: Text('Sign Out'.tr),
                             ),
                           ],
                         ));

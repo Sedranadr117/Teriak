@@ -26,13 +26,13 @@ class CustomBottomNav extends StatelessWidget {
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.inventory),
-        title: ("Stock"),
+        title: ("Stock".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
-        title: ("POS"),
+        title: ("POS".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
@@ -48,7 +48,7 @@ class CustomBottomNav extends StatelessWidget {
       items.add(
         PersistentBottomNavBarItem(
           icon: Icon(Icons.receipt),
-          title: ("Invoices"),
+          title: ("Invoices".tr),
           activeColorPrimary: AppColors.primaryLight,
           inactiveColorPrimary: Colors.grey,
         ),
