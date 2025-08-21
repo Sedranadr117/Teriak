@@ -4,7 +4,6 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';
 import 'package:teriak/features/employee_management/presentation/widgets/dialogs.dart';
 
@@ -25,17 +24,23 @@ class _WorkingHoursConfigurationScreenState
   Dialogs dialogs = Dialogs();
 
   final ScrollController _scrollController = ScrollController();
+  List<WorkingHoursRequestParams> allWorkingHours = [];
 
   _showAddShiftBottomSheet({ShiftParams? existingShift, int? existingIndex}) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
+      backgroundColor: Colors.transparent,
       builder: (context) => AddShiftBottomSheetWidget(
         existingShift: existingShift,
-        onShiftAdded: (shift, {existingId}) =>
-            controller.addOrUpdateShift(shift, existingId: existingIndex),
         daysOfWeek: controller.daysOfWeek,
+        onShiftAdded: (shift, {selectedDays}) {
+          controller.addShift(
+            shift,
+            selectedDays: selectedDays ?? [],
+          );
+          setState(() {});
+        },
       ),
     );
   }
@@ -214,17 +219,20 @@ class _WorkingHoursConfigurationScreenState
                             SizedBox(height: 1.h),
                         itemBuilder: (context, index) {
                           final shift = controller.shifts[index];
+                          final shiftDays = controller.workingHoursRequests
+                              .firstWhere(
+                                (req) => req.shifts.contains(shift),
+                              )
+                              .daysOfWeek;
                           return ShiftCardWidget(
-                            shift: {
-                              'startTime': shift.startTime,
-                              'endTime': shift.endTime,
-                              'description': shift.description,
-                              'day': shift.daysOfWeek
-                            },
+                            shift: shift,
                             hasConflict: controller.hasShiftConflicts(),
-                            onEdit: () =>
-                                _showAddShiftBottomSheet(existingShift: shift),
+                            onEdit: () => _showAddShiftBottomSheet(
+                              existingShift: shift,
+                              existingIndex: index,
+                            ),
                             onDelete: () => controller.deleteShift(shift),
+                            daysOfWeek: shiftDays,
                           );
                         },
                       );
@@ -255,34 +263,7 @@ class _WorkingHoursConfigurationScreenState
                   onPressed: controller.isLoading.value
                       ? null
                       : () async {
-                          final hasWorkingHours = (controller.employee.value
-                                  ?.workingHoursRequests.isNotEmpty ??
-                              false);
-                          if (hasWorkingHours) {
-                            print("yeeeeeeees");
-                            final employeeData = {
-                              'id': controller.employee.value!.id,
-                              'firstName': controller.employee.value!.firstName,
-                              'lastName': controller.employee.value!.lastName,
-                              'phoneNumber':
-                                  controller.employee.value!.phoneNumber,
-                              'status': controller.employee.value!.status,
-                              'dateOfHire':
-                                  controller.employee.value!.dateOfHire,
-                              'roleId': controller.employee.value!.roleId,
-                              'roleName': controller.employee.value!.roleName,
-                              'workingHours': controller
-                                  .employee.value!.workingHoursRequests
-                                  .map((e) =>
-                                      (e as WorkingHoursRequestModel).toJson())
-                                  .toList()
-                            };
-                            dialogs.saveChanges(controller, employeeData);
-                            Navigator.of(context).pop();
-                          } else {
-                            print("elssssssssssss");
-                            controller.saveWorkingHours();
-                          }
+                          controller.saveWorkingHours();
                         },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,

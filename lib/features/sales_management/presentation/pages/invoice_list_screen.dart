@@ -6,7 +6,6 @@ import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
 import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
-import 'package:teriak/features/sales_management/presentation/widgets/search_bar_widget.dart';
 import '../widgets/invoice_card_widget.dart';
 
 class InvoiceListScreen extends StatefulWidget {
@@ -16,123 +15,51 @@ class InvoiceListScreen extends StatefulWidget {
   State<InvoiceListScreen> createState() => _InvoiceListScreenState();
 }
 
-class _InvoiceListScreenState extends State<InvoiceListScreen>
-    with TickerProviderStateMixin {
-  // Controllers
-  late TabController _tabController;
-  final TextEditingController _searchController = TextEditingController();
+class _InvoiceListScreenState extends State<InvoiceListScreen> {
   late SaleController saleController;
-
-  // State variables
-  final Map<String, dynamic> _activeFilters = {};
-  final List<String> _activeFilterChips = [];
-  // ignore: unused_field
-  final bool _isRefreshing = false;
-
-  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
 
-    _tabController = TabController(length: 3, vsync: this);
     saleController = Get.put(SaleController(customerTag: 'invoice_list'),
         tag: 'invoice_list');
     saleController.fetchAllInvoices();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    _searchController.dispose();
-    super.dispose();
+  Future<void> _pickStartDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: saleController.startDate.value,
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        saleController.startDate.value = picked;
+      });
+    }
+  }
+
+  Future<void> _pickEndDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: saleController.endDate.value ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null) {
+      setState(() {
+        saleController.endDate.value = picked;
+      });
+    }
   }
 
   void _onInvoiceTap(Map<String, dynamic> invoice) {
     HapticFeedback.lightImpact();
-    Get.offNamed(AppPages.showInvoicesDitails);
-  }
-
-  void _onInvoiceLongPress(Map<String, dynamic> invoice) {
-    HapticFeedback.mediumImpact();
-    _showInvoiceQuickActions(invoice);
-  }
-
-  void _showInvoiceQuickActions(Map<String, dynamic> invoice) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) => Container(
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 12.w,
-              height: 0.5.h,
-              decoration: BoxDecoration(
-                color: Theme.of(context)
-                    .colorScheme
-                    .outline
-                    .withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              'Invoice ${invoice['invoiceNumber']}',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            SizedBox(height: 2.h),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'visibility',
-                size: 24,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              title: const Text('View Details'),
-              onTap: () {
-                Navigator.pop(context);
-                _onInvoiceTap(invoice);
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'assignment_return',
-                size: 24,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              title: const Text('Process Return'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(
-                  context,
-                  '/return-processing-screen',
-                  arguments: invoice,
-                );
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'share',
-                size: 24,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              title: const Text('Share Invoice'),
-              onTap: () {
-                Navigator.pop(context);
-                Get.snackbar('', "Sharing invoice ${invoice['invoiceNumber']}");
-              },
-            ),
-            SizedBox(height: MediaQuery.of(context).padding.bottom),
-          ],
-        ),
-      ),
-    );
+    Get.toNamed(AppPages.showInvoicesDitails, arguments: invoice);
   }
 
   @override
@@ -158,24 +85,63 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
       ),
       body: Column(
         children: [
-          SearchBarWidget(
-            controller: saleController.searchController,
-            focusNode: saleController.searchFocusNode,
-            onChanged: (String) {},
-            onBarcodeScanned: () {},
-            results: const [],
-            isSearching: false,
-            itemBuilder: (product) => ListTile(
-              title: Text(product.tradeName),
+          Padding(
+            padding: EdgeInsets.all(4.w),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    onTap: _pickStartDate,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: theme.colorScheme.outline),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        saleController.startDate.value != null
+                            ? '${saleController.startDate.value!.day}/${saleController.startDate.value!.month}/${saleController.startDate.value!.year}'
+                            : 'Start Date',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 3.w),
+                Expanded(
+                  child: InkWell(
+                    onTap: _pickEndDate,
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 3.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: theme.colorScheme.outline),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        saleController.endDate.value != null
+                            ? '${saleController.endDate.value!.day}/${saleController.endDate.value!.month}/${saleController.endDate.value!.year}'
+                            : 'End Date',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 3.w),
+                IconButton(
+                  onPressed: () {
+                    saleController.searchByDateRange();
+                  },
+                  icon: Icon(Icons.search),
+                ),
+              ],
             ),
-            onItemTap: (item) {},
-            hintText: 'Search invoices by...',
-            isScanner: false,
           ),
 
           // Invoice list
           Expanded(
-            child: Obx(() => _buildInvoiceList()),
+            child: _buildInvoiceList(),
           ),
         ],
       ),
@@ -183,48 +149,34 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
   }
 
   Widget _buildInvoiceList() {
-    if (saleController.isLoading.value && saleController.invoices.isEmpty) {
-      return _buildLoadingState();
-    }
+    return Obx(() {
+      final bool isFiltering = saleController.isSearching.value;
 
-    if (saleController.invoices.isEmpty && !saleController.isLoading.value) {
-      return _buildEmptyState();
-    }
+      final listToShow =
+          isFiltering ? saleController.searchResults : saleController.invoices;
 
-    return RefreshIndicator(
-      onRefresh: saleController.refreshData,
-      color: Theme.of(context).colorScheme.primary,
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: saleController.invoices.length +
-            (saleController.isLoading.value ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index >= saleController.invoices.length) {
-            return _buildLoadingIndicator();
-          }
-          final invoiceData = saleController.invoices;
-          final invoice = invoiceData[index];
-          return InvoiceCardWidget(
-            invoice: {
-              'id': invoice.id,
-              'customerId': invoice.customerId,
-              'customerName': invoice.customerName,
-              'invoiceDate': invoice.invoiceDate,
-              'totalAmount': invoice.totalAmount,
-              'paymentType': invoice.paymentType,
-              'paymentMethod': invoice.paymentMethod,
-              'currency': invoice.currency,
-              'discount': invoice.discount,
-              'discountType': invoice.discountType,
-              'paidAmount': invoice.paidAmount,
-              'remainingAmount': invoice.remainingAmount,
-              'status': invoice.status,
-              'items': (invoice.items as List<InvoiceItemModel>)
-                  .map((item) => item.toJson())
-                  .toList(),
-            },
-            onTap: () => _onInvoiceTap(
-              {
+      if ((saleController.isLoading.value && !isFiltering) ||
+          (saleController.isSearching.value && isFiltering)) {
+        return _buildLoadingState();
+      }
+
+      if (listToShow.isEmpty) {
+        return _buildEmptyState(isFiltering: isFiltering);
+      }
+
+      return RefreshIndicator(
+        onRefresh: saleController.refreshData,
+        color: Theme.of(context).colorScheme.primary,
+        child: ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
+          itemCount: listToShow.length,
+          itemBuilder: (context, index) {
+            if (index >= listToShow.length) {
+              return _buildLoadingIndicator();
+            }
+            final invoice = listToShow[index];
+            return InvoiceCardWidget(
+              invoice: {
                 'id': invoice.id,
                 'customerId': invoice.customerId,
                 'customerName': invoice.customerName,
@@ -242,31 +194,31 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
                     .map((item) => item.toJson())
                     .toList(),
               },
-            ),
-            onLongPress: () => _onInvoiceLongPress(
-              {
-                'id': invoice.id,
-                'customerId': invoice.customerId,
-                'customerName': invoice.customerName,
-                'invoiceDate': invoice.invoiceDate,
-                'totalAmount': invoice.totalAmount,
-                'paymentType': invoice.paymentType,
-                'paymentMethod': invoice.paymentMethod,
-                'currency': invoice.currency,
-                'discount': invoice.discount,
-                'discountType': invoice.discountType,
-                'paidAmount': invoice.paidAmount,
-                'remainingAmount': invoice.remainingAmount,
-                'status': invoice.status,
-                'items': (invoice.items as List<InvoiceItemModel>)
-                    .map((item) => item.toJson())
-                    .toList(),
-              },
-            ),
-          );
-        },
-      ),
-    );
+              onTap: () => _onInvoiceTap(
+                {
+                  'id': invoice.id,
+                  'customerId': invoice.customerId,
+                  'customerName': invoice.customerName,
+                  'invoiceDate': invoice.invoiceDate,
+                  'totalAmount': invoice.totalAmount,
+                  'paymentType': invoice.paymentType,
+                  'paymentMethod': invoice.paymentMethod,
+                  'currency': invoice.currency,
+                  'discount': invoice.discount,
+                  'discountType': invoice.discountType,
+                  'paidAmount': invoice.paidAmount,
+                  'remainingAmount': invoice.remainingAmount,
+                  'status': invoice.status,
+                  'items': (invoice.items as List<InvoiceItemModel>)
+                      .map((item) => item.toJson())
+                      .toList(),
+                },
+              ),
+            );
+          },
+        ),
+      );
+    });
   }
 
   Widget _buildLoadingState() {
@@ -292,50 +244,51 @@ class _InvoiceListScreenState extends State<InvoiceListScreen>
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState({bool isFiltering = false}) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final String messageTitle =
+        isFiltering ? 'No invoices found' : 'No invoices available';
+    final String messageBody = isFiltering
+        ? 'Try adjusting your search or filters'
+        : 'Invoices will appear here when available';
+
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(8.w),
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CustomIconWidget(
               iconName: 'receipt_long',
               size: 64,
-              color: colorScheme.onSurface.withValues(alpha: 0.3),
+              color: colorScheme.onSurface.withOpacity(0.3),
             ),
             SizedBox(height: 2.h),
             Text(
-              _searchQuery.isNotEmpty || _activeFilters.isNotEmpty
-                  ? 'No invoices found'
-                  : 'No invoices available',
+              messageTitle,
               style: theme.textTheme.headlineSmall?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.7),
+                color: colorScheme.onSurface.withOpacity(0.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
             SizedBox(height: 1.h),
             Text(
-              _searchQuery.isNotEmpty || _activeFilters.isNotEmpty
-                  ? 'Try adjusting your search or filters'
-                  : 'Invoices will appear here when available',
+              messageBody,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface.withValues(alpha: 0.5),
+                color: colorScheme.onSurface.withOpacity(0.5),
               ),
               textAlign: TextAlign.center,
             ),
-            if (_searchQuery.isNotEmpty || _activeFilters.isNotEmpty) ...[
+            if (isFiltering) ...[
               SizedBox(height: 3.h),
               ElevatedButton(
                 onPressed: () {
-                  _searchController.clear();
                   setState(() {
-                    _searchQuery = '';
-                    _activeFilters.clear();
-                    _activeFilterChips.clear();
+                    saleController.startDate.value = null;
+                    saleController.endDate.value = null;
+                    saleController.searchResults.clear();
                   });
                 },
                 child: const Text('Clear Filters'),

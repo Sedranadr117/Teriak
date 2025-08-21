@@ -23,7 +23,6 @@ class _IndebtedCustomersManagementState
     extends State<IndebtedCustomersManagement> {
   CustomerController customerController = Get.put(CustomerController());
 
-  final TextEditingController _searchController = TextEditingController();
   // ignore: unused_field
   final List<Map<String, dynamic>> _allCustomers = [];
   final List<Map<String, dynamic>> _filteredCustomers = [];
@@ -34,12 +33,6 @@ class _IndebtedCustomersManagementState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       customerController.fetchCustomers();
     });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 
   void _showCustomerDetails(Map<String, dynamic> customer) {
@@ -304,13 +297,6 @@ class _IndebtedCustomersManagementState
                                       .searchController.text.isNotEmpty
                                   ? customerController.results
                                   : customerController.customers;
-                              if (customerController
-                                  .searchController.text.isNotEmpty) {
-                                print(customerController.searchController.text);
-                                print('عم استخدم نتائج البحث');
-                              } else {
-                                print('عم استخدم القائمة الأصلية');
-                              }
 
                               if (dataSource.isEmpty) {
                                 return _buildEmptyView(theme, colorScheme);
@@ -331,13 +317,15 @@ class _IndebtedCustomersManagementState
                                       "totalPaid": 0.0,
                                       "remainingDebt": 0.0,
                                       "activeDebtsCount": 0.0,
-                                      "debts": null
+                                      "debts": null,
+                                      "notes": customer.notes
                                     },
                                     onTap: () => _showCustomerDetails({
                                       "id": customer.id,
                                       "name": customer.name,
                                       "phoneNumber": customer.phoneNumber,
                                       "address": customer.address,
+                                      "notes": customer.notes
                                     }),
                                     onAddPayment: () => _showAddPaymentSheet({
                                       "id": customer.id,

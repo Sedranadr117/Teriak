@@ -407,23 +407,6 @@ class Dialogs {
     });
   }
 
-  void saveChanges(
-    EmployeeController controller,
-    Map<String, dynamic> employeeData,
-  ) {
-    final params = EmployeeParams(
-      employeeData['firstName'],
-      employeeData['lastName'],
-      employeeData['password'] ?? '',
-      employeeData['phoneNumber'],
-      employeeData['status'],
-      employeeData['dateOfHire'],
-      employeeData['roleId'],
-      employeeData['workingHoursRequests'] ?? [],
-    );
-    controller.editEmployee(employeeData['id'], params);
-  }
-
   void changeStatus(
     Map<String, dynamic> employeeData,
     BuildContext context,

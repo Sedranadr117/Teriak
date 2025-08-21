@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/config/widgets/custom_app_bar.dart';
-import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/employee_management/data/models/employee_model.dart';
 import 'package:teriak/features/employee_management/presentation/controllers/employee_controller.dart';

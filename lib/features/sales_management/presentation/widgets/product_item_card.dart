@@ -136,7 +136,8 @@ class _ProductItemCardState extends State<ProductItemCard>
                             children: [
                               Expanded(
                                 child: Text(
-                                  widget.product["name"] ?? "Unknown Product",
+                                  widget.product["productName"] ??
+                                      "Unknown Product",
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -194,7 +195,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Total: \$${((widget.product["quantity"] as int? ?? 0) * (widget.product["unitPrice"] as double? ?? 0.0)).toStringAsFixed(2)}',
+                                'Total: \$${(widget.product["subTotal"] as double? ?? 0.0)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.primary,

@@ -65,16 +65,33 @@ class EmployeeParams {
   );
 }
 
-class WorkingHoursRequestParams {
-  final List<ShiftParams> shifts;
+class WorkingHoursRequest {
+  final List<WorkingHoursRequestParams> workingHoursRequests;
 
-  const WorkingHoursRequestParams(
-    this.shifts,
-  );
+  const WorkingHoursRequest(this.workingHoursRequests,
+      {required List<String> daysOfWeek});
 
   Map<String, dynamic> toJson() {
     return {
-      'shifts': shifts.map((shift) => shift.toJson()).toList(),
+      "workingHoursRequests":
+          workingHoursRequests.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class WorkingHoursRequestParams {
+  final List<String> daysOfWeek;
+  final List<ShiftParams> shifts;
+
+  const WorkingHoursRequestParams({
+    required this.daysOfWeek,
+    required this.shifts,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "daysOfWeek": daysOfWeek,
+      "shifts": shifts.map((shift) => shift.toJson()).toList(),
     };
   }
 }
@@ -83,20 +100,18 @@ class ShiftParams {
   final String startTime;
   final String endTime;
   final String description;
-  final List<String> daysOfWeek;
 
   const ShiftParams(
     this.startTime,
     this.endTime,
     this.description,
-    this.daysOfWeek,
   );
+
   Map<String, dynamic> toJson() {
     return {
       'startTime': startTime,
       'endTime': endTime,
       'description': description,
-      'daysOfWeek': daysOfWeek
     };
   }
 }
@@ -304,24 +319,18 @@ class SaleItemParams {
   final int stockItemId;
   final int quantity;
   final double unitPrice;
-  final double discountValue;
-  final String discountType;
 
   const SaleItemParams({
     required this.stockItemId,
     required this.quantity,
     required this.unitPrice,
-    required this.discountType,
-    required this.discountValue,
   });
 
   Map<String, dynamic> toJson() {
     return {
       "stockItemId": stockItemId,
       "quantity": quantity,
-      "unitPrice": unitPrice,
-      "discountValue": discountValue,
-      "discountType": discountType,
+      "unitPrice": unitPrice
     };
   }
 }
@@ -351,9 +360,62 @@ class SearchParams {
   }
 }
 
+class SearchStockParams {
+  final String keyword;
+
+  const SearchStockParams({required this.keyword});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'keyword': keyword,
+    };
+  }
+}
+
+class SearchInvoiceByDateRangeParams {
+  final DateTime startDate;
+  final DateTime endDate;
+
+  const SearchInvoiceByDateRangeParams({
+    required this.startDate,
+    required this.endDate,
+  });
+  Map<String, dynamic> toMap() {
+    dateFormat(DateTime d) =>
+        '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+    return {
+      'startDate': dateFormat(startDate),
+      'endDate': dateFormat(endDate),
+    };
+  }
+}
+
 class StockParams {
-  int id;
+  final int id;
+  final int quantity;
+  final String expiryDate;
+  final int minStockLevel;
+  final String reasonCode;
+  final String additionalNotes;
+
   StockParams({
     required this.id,
+    required this.quantity,
+    required this.expiryDate,
+    required this.minStockLevel,
+    required this.reasonCode,
+    required this.additionalNotes,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "id": id,
+      "quantity": quantity,
+      "expiryDate": expiryDate,
+      "minStockLevel": minStockLevel,
+      "reasonCode": reasonCode,
+      "additionalNotes": additionalNotes,
+    };
+  }
 }

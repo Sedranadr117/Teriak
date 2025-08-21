@@ -55,8 +55,9 @@ class EmployeeController extends GetxController {
 
   late final AddWorkingHoursToEmployee _addWorkingHoursToEmployee;
   late final DeleteEmployee _deleteEmployee;
+  RxList<String> selectedDays = <String>[].obs;
 
-  final RxList<String> daysOfWeek = [
+  final List<String> daysOfWeek = [
     'MONDAY',
     'TUESDAY',
     'WEDNESDAY',
@@ -64,37 +65,60 @@ class EmployeeController extends GetxController {
     'FRIDAY',
     'SATURDAY',
     'SUNDAY',
-  ].obs;
+  ];
 
   final RxList<ShiftParams> shifts = <ShiftParams>[].obs;
   final RxList<EmployeeEntity> employees = <EmployeeEntity>[].obs;
   late final GetAllEmployees _getAllEmployees;
   late final EditEmployee _editEmployee;
-  var selectedDays = <String>[].obs;
 
   late final EmployeeRemoteDataSource remoteDataSource;
 
   int? lastSelectedEmployeeId;
 
-  void addOrUpdateShift(ShiftParams shiftData, {int? existingId}) {
-    if (existingId != null) {
-      final index = shifts.indexWhere((s) =>
-          s.startTime == shiftData.startTime &&
-          s.endTime == shiftData.endTime &&
-          s.description == shiftData.description &&
-          s.daysOfWeek == shiftData.daysOfWeek);
-      if (index != -1) {
-        shifts[index] = shiftData;
+  void addOrUpdateShiftForDays(ShiftParams shiftData,
+      {List<String>? selectedDays, int? existingId}) {
+    // إذا ما في أيام مختارة، ارجع فورًا
+    if (selectedDays == null || selectedDays.isEmpty) return;
+
+    // تحقق إذا فيه WorkingHoursRequest موجود لنفس الأيام
+    final existingRequestIndex = workingHoursRequests.indexWhere((req) =>
+        Set.from(req.daysOfWeek).containsAll(selectedDays) &&
+        Set.from(selectedDays).containsAll(req.daysOfWeek));
+
+    if (existingRequestIndex != -1) {
+      final request = workingHoursRequests[existingRequestIndex];
+      if (existingId != null) {
+        request.shifts[existingId] = shiftData;
+      } else {
+        request.shifts.add(shiftData);
       }
     } else {
-      shifts.add(shiftData);
+      workingHoursRequests.add(
+        WorkingHoursRequestParams(
+          daysOfWeek: selectedDays,
+          shifts: [shiftData],
+        ),
+      );
     }
+
     sortShifts();
+  }
+
+  void addShift(ShiftParams shift, {List<String>? selectedDays}) {
+    final request = WorkingHoursRequestParams(
+      daysOfWeek: selectedDays ?? [],
+      shifts: [shift],
+    );
+
+    workingHoursRequests.add(request); // RxList
+    shifts.add(shift); // RxList
   }
 
   void buildWorkingHoursRequests() {
     workingHoursRequests.clear();
-    workingHoursRequests.add(WorkingHoursRequestParams(shifts.toList()));
+    workingHoursRequests.add(WorkingHoursRequestParams(
+        daysOfWeek: daysOfWeek, shifts: shifts.toList()));
   }
 
   void sortShifts() {
@@ -108,24 +132,28 @@ class EmployeeController extends GetxController {
   }
 
   bool hasShiftConflicts() {
-    for (int i = 0; i < shifts.length; i++) {
-      for (int j = i + 1; j < shifts.length; j++) {
-        final commonDays = shifts[i]
-            .daysOfWeek
-            .toSet()
-            .intersection(shifts[j].daysOfWeek.toSet());
+    for (int i = 0; i < workingHoursRequests.length; i++) {
+      final req1 = workingHoursRequests[i];
+      for (int j = 0; j < req1.shifts.length; j++) {
+        final shift1 = req1.shifts[j];
+        for (int k = i; k < workingHoursRequests.length; k++) {
+          final req2 = workingHoursRequests[k];
+          for (int l = 0; l < req2.shifts.length; l++) {
+            final shift2 = req2.shifts[l];
 
-        if (commonDays.isEmpty) {
-          continue;
-        }
+            final commonDays =
+                req1.daysOfWeek.toSet().intersection(req2.daysOfWeek.toSet());
+            if (commonDays.isEmpty) continue;
 
-        final start1 = _parseTime(shifts[i].startTime);
-        final end1 = _parseTime(shifts[i].endTime);
-        final start2 = _parseTime(shifts[j].startTime);
-        final end2 = _parseTime(shifts[j].endTime);
+            final start1 = _parseTime(shift1.startTime);
+            final end1 = _parseTime(shift1.endTime);
+            final start2 = _parseTime(shift2.startTime);
+            final end2 = _parseTime(shift2.endTime);
 
-        if ((start1 < end2 && end1 > start2)) {
-          return true;
+            if ((start1 < end2 && end1 > start2) && !(i == k && j == l)) {
+              return true;
+            }
+          }
         }
       }
     }
@@ -138,16 +166,14 @@ class EmployeeController extends GetxController {
   }
 
   void saveWorkingHours() {
-    if (shifts.isEmpty) {
+    if (workingHoursRequests.isEmpty) {
       Get.snackbar('Error'.tr, 'Please add at least one shift'.tr);
       return;
     }
 
     if (hasShiftConflicts()) {
       Get.snackbar(
-        'Error'.tr,
-        'Please resolve shift conflicts before saving'.tr,
-      );
+          'Error'.tr, 'Please resolve shift conflicts before saving'.tr);
       return;
     }
 
@@ -156,8 +182,6 @@ class EmployeeController extends GetxController {
           'Error'.tr, 'No employee selected to assign working hours.'.tr);
       return;
     }
-
-    buildWorkingHoursRequests();
 
     addWorkingHoursToEmployee(
       employee.value!.id,
@@ -326,11 +350,17 @@ class EmployeeController extends GetxController {
   }
 
   void addWorkingHoursForDays(List<String> days, List<ShiftParams> shifts) {
-    workingHoursRequests.add(WorkingHoursRequestParams(shifts));
+    workingHoursRequests.add(
+      WorkingHoursRequestParams(
+        daysOfWeek: [], shifts: shifts, // List<String>
+      ),
+    );
   }
 
   Future<void> addWorkingHoursToEmployee(int employeeId,
       List<WorkingHoursRequestParams> workingHoursRequests) async {
+    print('✅ Working hours start');
+
     isLoading.value = true;
     try {
       final result = await _addWorkingHoursToEmployee(
@@ -390,15 +420,6 @@ class EmployeeController extends GetxController {
 
   void initTabController(TickerProvider ticker) {
     tabController = TabController(length: 2, vsync: ticker);
-  }
-
-  void toggleDaySelection(String day) {
-    selectedDays.clear();
-    if (selectedDays.contains(day)) {
-      selectedDays.remove(day);
-    } else {
-      selectedDays.add(day);
-    }
   }
 
   Future<void> fetchAllEmployees() async {
@@ -529,9 +550,7 @@ class EmployeeController extends GetxController {
     phoneNumberController.dispose();
     statusController.dispose();
     dateOfHireController.dispose();
-    shiftStartController.dispose();
-    shiftEndController.dispose();
-    shiftDescController.dispose();
+
     super.onClose();
   }
 }

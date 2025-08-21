@@ -85,6 +85,7 @@ class CustomerInformationCard extends StatelessWidget {
                                 SizedBox(width: 3.w),
                                 Expanded(
                                   child: DropdownButton<CustomerModel>(
+                                    hint: Text("Select Customer"),
                                     value: customers
                                             .contains(selectedCustomer.value)
                                         ? selectedCustomer.value

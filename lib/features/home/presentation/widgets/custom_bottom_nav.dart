@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/main.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final PersistentTabController controller;
@@ -14,7 +15,8 @@ class CustomBottomNav extends StatelessWidget {
   });
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
+    print(role);
+    final items = [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.shopping_cart),
         title: ("Orders"),
@@ -39,13 +41,20 @@ class CustomBottomNav extends StatelessWidget {
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.receipt),
-        title: ("Invoices"),
-        activeColorPrimary: AppColors.primaryLight,
-        inactiveColorPrimary: Colors.grey,
-      ),
     ];
+
+    if (role != "PHARMACY_TRAINEE") {
+      items.add(
+        PersistentBottomNavBarItem(
+          icon: Icon(Icons.receipt),
+          title: ("Invoices"),
+          activeColorPrimary: AppColors.primaryLight,
+          inactiveColorPrimary: Colors.grey,
+        ),
+      );
+    }
+
+    return items;
   }
 
   @override

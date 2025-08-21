@@ -4,19 +4,27 @@ class EndPoints {
 
   static const String template = "template/";
 
-  // Auth endpoints
+// Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
 
-  static const String createSale = "sales";
+//sale
+  static const String sales = "sales";
+  static const String searchInvoicesByRange = "sales/searchByDateRange";
+
+//customers
   static const String getCustomers = "customers";
   static const String searchCustomers = "customers/search";
 
-  static const String getStock = "sales";
-  static const String getSales = "sales";
+//stock
+  static const String getStock = "stock/products/Overall";
+  static const String searchStock = "stock/search";
+  static const String getDetailsStock = "stock/product";
 
+//user
   static const String addEmployee = "employees";
   static const String roleID = "roles";
+
   static String product = "search/all-products";
   static String pharmacyProduct = "pharmacy_products";
   static String masterProductDetails = "master_products";

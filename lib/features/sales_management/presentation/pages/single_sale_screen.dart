@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/features/Sales_management/presentation/controllers/sale_controller.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/currency_selection_card_widget.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/customer_information_card.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/invoice_items_card.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/invoice_total_card.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/payment_button_widget.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/payment_configuration_card_widget.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/payment_method_selection_widget.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/search_bar_widget.dart';
+import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/currency_selection_card_widget.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/customer_information_card.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/invoice_items_card.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/invoice_total_card.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/payment_button_widget.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/payment_configuration_card_widget.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/payment_method_selection_widget.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/search_bar_widget.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
-import 'package:teriak/features/search_product/presentation/controller/search_product_controller.dart';
 
 class SingleSaleScreen extends StatefulWidget {
   final String tabId;
@@ -29,22 +28,21 @@ class SingleSaleScreen extends StatefulWidget {
 class _SingleSaleScreenState extends State<SingleSaleScreen> {
   late SaleController saleController;
   late CustomerController customerController;
-  late SearchProductController searchController;
 
   @override
   void initState() {
     super.initState();
     customerController = Get.put(CustomerController(), tag: widget.tabId);
-
     saleController =
         Get.put(SaleController(customerTag: widget.tabId), tag: widget.tabId);
-    searchController = Get.find<SearchProductController>();
     customerController.fetchCustomers();
   }
 
   @override
   void dispose() {
     Get.delete<SaleController>(tag: widget.tabId);
+    Get.delete<CustomerController>(tag: widget.tabId);
+
     super.dispose();
   }
 
@@ -66,40 +64,57 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
           },
           child: Column(
             children: [
-              SearchBarWidget(
-                controller: saleController.searchController,
-                focusNode: saleController.searchFocusNode,
-                onChanged: (value) {
-                  searchController.search(value);
-                },
-                onBarcodeScanned: () {
-                  showBarcodeScannerBottomSheet(
-                    onScanned: (code) {
-                      print("✅ الباركود هو: $code");
-                      searchController.searchController.text = code;
-                      searchController.search(code).then((_) {
-                        if (searchController.results.isNotEmpty) {
-                          for (var item in searchController.results) {
-                            final p = item as InvoiceItemModel;
-                            saleController.addItemFromProduct(p);
+              Obx(
+                () => SearchBarWidget(
+                  controller: saleController.searchController,
+                  focusNode: saleController.searchFocusNode,
+                  onChanged: (value) {
+                    saleController.search(value);
+                  },
+                  onBarcodeScanned: () {
+                    showBarcodeScannerBottomSheet(
+                      onScanned: (code) {
+                        print("✅ الباركود هو: $code");
+                        saleController.searchController.text = code;
+                        saleController.search(code).then((_) {
+                          if (saleController.results.isNotEmpty) {
+                            for (var stock in saleController.results) {
+                              final item = InvoiceItemModel(
+                                id: stock.id,
+                                productName: stock.productName,
+                                unitPrice: stock.sellingPrice,
+                                stockItemId: stock.id,
+                                quantity: stock.totalQuantity,
+                                subTotal: 0,
+                              );
+                              saleController.addItemFromProduct(item);
+                            }
                           }
-                        }
-                      });
-                    },
-                  );
-                },
-                results: searchController.results,
-                isSearching: searchController.isSearching.value,
-                itemBuilder: (product) => ListTile(
-                  title: Text(product.tradeName),
+                        });
+                      },
+                    );
+                  },
+                  results: saleController.results,
+                  isSearching: saleController.isSearching.value,
+                  itemBuilder: (product) => ListTile(
+                    title: Text(product.productName),
+                  ),
+                  onItemTap: (stock) {
+                    final item = InvoiceItemModel(
+                      id: stock.id,
+                      productName: stock.productName,
+                      unitPrice: stock.sellingPrice,
+                      stockItemId: stock.id,
+                      quantity: stock.totalQuantity,
+                      subTotal: 0,
+                    );
+                    saleController.addItemFromProduct(item);
+                    saleController.searchController.text = item.productName;
+                    saleController.results.clear();
+                  },
+                  hintText: 'Search by product name or generic name...'.tr,
+                  isScanner: true,
                 ),
-                onItemTap: (product) {
-                  saleController.addItemFromProduct(product);
-                  saleController.searchController.text = product;
-                  searchController.results.clear();
-                },
-                hintText: 'Search by product name or generic name...'.tr,
-                isScanner: true,
               ),
               CustomerInformationCard(
                 isLoading: customerController.isLoading,
@@ -134,12 +149,13 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     saleController.calculateTotals();
                   },
                   onApplyDiscount: saleController.applyDiscount,
+                  selectedCurrency: saleController.selectedCurrency.value,
                 ),
               ),
               Obx(
                 () => PaymentConfigurationCardWidget(
                   paymentType: saleController.selectedPaymentType.value,
-                  dueDate: saleController.selectedDueDate,
+                  dueDate: saleController.startDate.value,
                   onPaymentTypeChanged: (type) {
                     setState(() {
                       saleController.selectedPaymentType.value = type;
@@ -147,7 +163,7 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                   },
                   onDueDateChanged: (date) {
                     setState(() {
-                      saleController.selectedDueDate = date;
+                      saleController.endDate.value = date;
                     });
                   },
                 ),
@@ -166,10 +182,10 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     isLoading: saleController.isLoading.value,
                     processPayment: () {
                       saleController.createSale(
-                        saleController.invoiceItems
-                            .map((e) => e.copyWith().toSaleItemParams())
-                            .toList(),
-                      );
+                          saleController.invoiceItems
+                              .map((e) => e.copyWith().toSaleItemParams())
+                              .toList(),
+                          customerController.selectedCustomer.value?.id);
                       if (saleController.done) {
                         _completeSale();
                       }

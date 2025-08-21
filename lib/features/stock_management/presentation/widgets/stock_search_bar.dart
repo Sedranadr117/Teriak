@@ -7,11 +7,13 @@ import 'package:teriak/config/themes/app_icon.dart';
 class StockSearchBar extends StatefulWidget {
   final Function(String) onSearchChanged;
   final VoidCallback onScanPressed;
+  final TextEditingController searchController;
 
   const StockSearchBar({
     super.key,
     required this.onSearchChanged,
     required this.onScanPressed,
+    required this.searchController,
   });
 
   @override
@@ -19,14 +21,6 @@ class StockSearchBar extends StatefulWidget {
 }
 
 class _StockSearchBarState extends State<StockSearchBar> {
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -59,11 +53,11 @@ class _StockSearchBarState extends State<StockSearchBar> {
                 ),
               ),
               child: TextField(
-                controller: _searchController,
+                controller: widget.searchController,
                 onChanged: widget.onSearchChanged,
                 style: theme.textTheme.bodyMedium,
                 decoration: InputDecoration(
-                  hintText: 'Search products, NDC, or lot numbers...'.tr,
+                  hintText: 'Search products by name...'.tr,
                   hintStyle: theme.textTheme.bodyMedium?.copyWith(
                     color: colorScheme.onSurface.withValues(alpha: 0.6),
                   ),
@@ -75,10 +69,10 @@ class _StockSearchBarState extends State<StockSearchBar> {
                       size: 5.w,
                     ),
                   ),
-                  suffixIcon: _searchController.text.isNotEmpty
+                  suffixIcon: widget.searchController.text.isNotEmpty
                       ? IconButton(
                           onPressed: () {
-                            _searchController.clear();
+                            widget.searchController.clear();
                             widget.onSearchChanged('');
                           },
                           icon: CustomIconWidget(

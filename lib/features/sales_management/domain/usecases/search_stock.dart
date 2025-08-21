@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
+import 'package:teriak/features/stock_management/domain/entities/stock_entity.dart'
+    show StockEntity;
 
-import 'package:teriak/features/stock_management/domain/entities/stock_entity.dart';
-import 'package:teriak/features/stock_management/domain/repositories/stock_repository.dart';
 import '../../../../../core/errors/failure.dart';
 import '../../../../../core/params/params.dart';
+import '../../../stock_management/domain/repositories/stock_repository.dart';
 
 class SearchStock {
   final StockRepository repository;

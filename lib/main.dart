@@ -11,11 +11,14 @@ import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/features/search_product/presentation/binding/search_product_binding.dart';
 
+String? role;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final cacheHelper = CacheHelper();
   await cacheHelper.init();
+  role = cacheHelper.getData(key: 'Role');
+
   await NominatimGeocoding.init(reqCacheNum: 20);
 
   Get.put(ThemeController());

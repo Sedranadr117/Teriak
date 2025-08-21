@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/config/themes/app_assets.dart';
 
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/core/params/params.dart';
 
 class StockAdjustmentSheet extends StatefulWidget {
   final Map<String, dynamic> product;
-  final Function(Map<String, dynamic>) onAdjustmentSubmitted;
+  final Function(StockParams) onAdjustmentSubmitted;
+  final bool isLoading;
 
   const StockAdjustmentSheet({
     super.key,
     required this.product,
     required this.onAdjustmentSubmitted,
+    required this.isLoading,
   });
 
   @override
@@ -20,14 +22,11 @@ class StockAdjustmentSheet extends StatefulWidget {
 }
 
 class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
-  final TextEditingController _quantityController = TextEditingController();
   final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
-  String _adjustmentType = 'Add'.tr;
   String _reasonCode = 'Damaged Goods'.tr;
 
-  final List<String> _adjustmentTypes = ['Add'.tr, 'Remove'.tr];
   final List<String> _reasonCodes = [
     'Damaged Goods'.tr,
     'Expired Products'.tr,
@@ -37,7 +36,6 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
 
   @override
   void dispose() {
-    _quantityController.dispose();
     _reasonController.dispose();
     _notesController.dispose();
     super.dispose();
@@ -47,7 +45,8 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final currentStock = (widget.product['currentStock'] as num?)?.toInt() ?? 0;
+    final currentStock =
+        (widget.product['totalQuantity'] as num?)?.toInt() ?? 0;
 
     return Container(
       height: 85.h,
@@ -66,16 +65,20 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
                 children: [
                   _buildProductInfo(theme, colorScheme, currentStock),
                   SizedBox(height: 3.h),
-                  _buildAdjustmentTypeSelector(theme, colorScheme),
-                  SizedBox(height: 3.h),
-                  _buildQuantityInput(theme, colorScheme),
+                  Row(
+                    children: [
+                      _buildQuantityInput(theme, colorScheme),
+                      SizedBox(width: 3.w),
+                      _buildMinStockLevelInput(theme, colorScheme)
+                    ],
+                  ),
                   SizedBox(height: 3.h),
                   _buildReasonCodeSelector(theme, colorScheme),
                   SizedBox(height: 3.h),
+                  _buildDateExpirySelector(theme, colorScheme),
+                  SizedBox(height: 3.h),
                   _buildNotesInput(theme, colorScheme),
                   SizedBox(height: 3.h),
-                  _buildNewStockPreview(theme, colorScheme, currentStock),
-                  SizedBox(height: 4.h),
                 ],
               ),
             ),
@@ -146,15 +149,13 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: widget.product['imageUrl'] != null
-                  ? Image.asset(Assets.assetsImagesJustLogo)
-                  : Center(
-                      child: CustomIconWidget(
-                        iconName: 'medication',
-                        color: colorScheme.onSurface.withValues(alpha: 0.4),
-                        size: 8.w,
-                      ),
-                    ),
+              child: Center(
+                child: CustomIconWidget(
+                  iconName: 'medication',
+                  color: colorScheme.onSurface.withValues(alpha: 0.4),
+                  size: 8.w,
+                ),
+              ),
             ),
           ),
           SizedBox(width: 3.w),
@@ -163,7 +164,8 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.product['name']?.toString() ?? 'Unknown Product'.tr,
+                  widget.product['productName']?.toString() ??
+                      'Unknown Product'.tr,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -186,71 +188,62 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
     );
   }
 
-  Widget _buildAdjustmentTypeSelector(
-      ThemeData theme, ColorScheme colorScheme) {
+  Widget _buildMinStockLevelInput(ThemeData theme, ColorScheme colorScheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Adjustment Type'.tr,
+          'Minimum Stock Level'.tr,
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
           ),
         ),
         SizedBox(height: 1.h),
-        Row(
-          children: _adjustmentTypes.map((type) {
-            final isSelected = _adjustmentType == type;
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(right: type == 'Add' ? 2.w : 0),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _adjustmentType = type;
-                    });
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(3.w),
+                child: IconButton(
+                  onPressed: () {
+                    if ((widget.product['minStockLevel'] ?? 0) > 0) {
+                      widget.product['minStockLevel']--;
+                      setState(() {});
+                    }
                   },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 2.h),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.surface,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.outline.withValues(alpha: 0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomIconWidget(
-                          iconName: type == 'Add' ? 'add' : 'remove',
-                          color: isSelected
-                              ? colorScheme.onPrimary
-                              : colorScheme.onSurface,
-                          size: 5.w,
-                        ),
-                        SizedBox(width: 2.w),
-                        Text(
-                          type == 'Add'.tr ? 'Add Stock'.tr : 'Remove Stock'.tr,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            color: isSelected
-                                ? colorScheme.onPrimary
-                                : colorScheme.onSurface,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                  icon: CustomIconWidget(
+                    iconName: 'remove',
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    size: 5.w,
                   ),
                 ),
               ),
-            );
-          }).toList(),
+              Text((widget.product['minStockLevel'] ?? 0).toString()),
+              Padding(
+                padding: EdgeInsets.all(3.w),
+                child: IconButton(
+                  onPressed: () {
+                    widget.product['minStockLevel'] =
+                        (widget.product['minStockLevel'] ?? 0) + 1;
+                    setState(() {});
+                  },
+                  icon: CustomIconWidget(
+                    iconName: 'add',
+                    color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    size: 5.w,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
@@ -267,35 +260,45 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
           ),
         ),
         SizedBox(height: 1.h),
-        TextField(
-          controller: _quantityController,
-          keyboardType: TextInputType.number,
-          style: theme.textTheme.bodyMedium,
-          decoration: InputDecoration(
-            hintText:
-                '${'Enter quantity to'.tr} ${_adjustmentType == 'Add'.tr ? 'add'.tr : 'remove'.tr}',
-            prefixIcon: Padding(
-              padding: EdgeInsets.all(3.w),
-              child: CustomIconWidget(
-                iconName: 'inventory_2',
-                color: colorScheme.onSurface.withValues(alpha: 0.6),
-                size: 5.w,
-              ),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: BoxBorder.all(
+              color: colorScheme.outline.withValues(alpha: 0.3),
+              width: 1,
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: colorScheme.outline.withValues(alpha: 0.3),
-                width: 1,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(
-                color: colorScheme.primary,
-                width: 2,
-              ),
-            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                  padding: EdgeInsets.all(3.w),
+                  child: IconButton(
+                    onPressed: () {
+                      widget.product['totalQuantity']--;
+                      setState(() {});
+                    },
+                    icon: CustomIconWidget(
+                      iconName: 'remove',
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      size: 5.w,
+                    ),
+                  )),
+              Text(widget.product['totalQuantity'].toString()),
+              Padding(
+                  padding: EdgeInsets.all(3.w),
+                  child: IconButton(
+                    onPressed: () {
+                      widget.product['totalQuantity']++;
+                      setState(() {});
+                    },
+                    icon: CustomIconWidget(
+                      iconName: 'add',
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      size: 5.w,
+                    ),
+                  )),
+            ],
           ),
         ),
       ],
@@ -348,6 +351,79 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
     );
   }
 
+  Widget _buildDateExpirySelector(ThemeData theme, ColorScheme colorScheme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Expiry Date'.tr,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 1.h),
+        GestureDetector(
+          onTap: () {
+            datePicker(
+                context: context,
+                initialDate: DateTime.parse(
+                    widget.product['earliestExpiryDate'].toString()));
+            setState(() {});
+          },
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 3.h),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: colorScheme.outline.withValues(alpha: 0.3),
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  _formatDate(DateTime.parse(
+                      widget.product['earliestExpiryDate'].toString())),
+                  style: theme.textTheme.bodyLarge
+                      ?.copyWith(color: colorScheme.onSurface),
+                ),
+                CustomIconWidget(
+                  iconName: 'arrow_drop_down',
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  size: 24,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> datePicker(
+      {DateTime? initialDate, BuildContext? context}) async {
+    DateTime? picked = await showDatePicker(
+      helpText: 'Edit Expiry Date'.tr,
+      cancelText: 'Cancel'.tr,
+      confirmText: 'OK'.tr,
+      context: context!,
+      initialDate: initialDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (picked != null) {
+      widget.product['earliestExpiryDate'] =
+          picked.toIso8601String().split('T')[0];
+    }
+  }
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '';
+    return '${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}-${date.year}';
+  }
+
   Widget _buildNotesInput(ThemeData theme, ColorScheme colorScheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -385,74 +461,9 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
     );
   }
 
-  Widget _buildNewStockPreview(
-      ThemeData theme, ColorScheme colorScheme, int currentStock) {
-    final quantity = int.tryParse(_quantityController.text) ?? 0;
-    final newStock = _adjustmentType == 'Add'
-        ? currentStock + quantity
-        : currentStock - quantity;
-
-    return Container(
-      padding: EdgeInsets.all(4.w),
-      decoration: BoxDecoration(
-        color: colorScheme.primary.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: colorScheme.primary.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Current Stock'.tr,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-              Text(
-                '$currentStock ${'units'.tr}',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          CustomIconWidget(
-            iconName: 'arrow_forward',
-            color: colorScheme.primary,
-            size: 6.w,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'New Stock'.tr,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-              Text(
-                '$newStock ${'units'.tr}',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: newStock < 0 ? colorScheme.error : colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildActionButtons(ThemeData theme, ColorScheme colorScheme) {
-    final quantity = int.tryParse(_quantityController.text) ?? 0;
-    final isValid = quantity > 0 && _reasonCode.isNotEmpty;
+    final isValid =
+        widget.product['totalQuantity'] > 0 && _reasonCode.isNotEmpty;
 
     return Container(
       padding: EdgeInsets.all(4.w),
@@ -477,7 +488,18 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
             flex: 2,
             child: ElevatedButton(
               onPressed: isValid ? _submitAdjustment : null,
-              child: Text('Submit Adjustment'.tr),
+              child: widget.isLoading
+                  ? SizedBox(
+                      width: 5.w,
+                      height: 5.w,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          colorScheme.onPrimary,
+                        ),
+                      ),
+                    )
+                  : Text('Submit Adjustment'.tr),
             ),
           ),
         ],
@@ -486,18 +508,24 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
   }
 
   void _submitAdjustment() {
-    final quantity = int.tryParse(_quantityController.text) ?? 0;
-    final adjustmentData = {
-      'productId': widget.product['id'],
-      'adjustmentType': _adjustmentType,
-      'quantity': quantity,
-      'reasonCode': _reasonCode,
-      'notes': _notesController.text,
-      'timestamp': DateTime.now().toIso8601String(),
-      'userId': 'current_user_id', // This would come from authentication
-    };
+    final stockParams = StockParams(
+      id: widget.product['id'],
+      quantity: widget.product['totalQuantity'],
+      reasonCode: _reasonCode,
+      additionalNotes: _notesController.text,
+      expiryDate: _formatDateForApi(widget.product['earliestExpiryDate']),
+      minStockLevel: widget.product['minStockLevel'] ?? 0,
+    );
 
-    widget.onAdjustmentSubmitted(adjustmentData);
-    Navigator.pop(context);
+    widget.onAdjustmentSubmitted(stockParams);
+  }
+
+  String _formatDateForApi(dynamic date) {
+    if (date == null) return '';
+    if (date is String) return date;
+    if (date is DateTime) {
+      return date.toIso8601String().split('T')[0];
+    }
+    return date.toString();
   }
 }

@@ -6,16 +6,18 @@ import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/features/Sales_management/data/datasources/sale_remote_data_source.dart';
-import 'package:teriak/features/Sales_management/data/repositories/sale_repository_impl.dart';
-import 'package:teriak/features/Sales_management/domain/usecases/create_sale.dart';
-import 'package:teriak/features/Sales_management/presentation/widgets/invoice_items_card.dart';
-import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
+import 'package:teriak/features/sales_management/data/datasources/sale_remote_data_source.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
+import 'package:teriak/features/sales_management/data/repositories/sale_repository_impl.dart';
 import 'package:teriak/features/sales_management/domain/entities/invoice_entity.dart';
+import 'package:teriak/features/sales_management/domain/usecases/create_sale.dart';
 import 'package:teriak/features/sales_management/domain/usecases/get_invoices.dart';
-import 'package:teriak/features/stock_management/data/models/Stock_model.dart';
+import 'package:teriak/features/sales_management/domain/usecases/search_by_range.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/invoice_items_card.dart';
+import 'package:teriak/features/stock_management/data/datasources/Stock_remote_data_source.dart';
+import 'package:teriak/features/stock_management/data/models/stock_model.dart';
 import 'package:teriak/features/stock_management/domain/usecases/search_stock.dart';
+import '../../../stock_management/data/repositories/stock_repository_impl.dart';
 
 class SaleController extends GetxController {
   final String customerTag;
@@ -27,8 +29,8 @@ class SaleController extends GetxController {
   RxString discountType = 'PERCENTAGE'.obs;
   late RxString selectedPaymentType;
   RxString selectedCurrency = 'SYP'.obs;
+  var isSearching = false.obs;
 
-  DateTime? selectedDueDate;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   RxList<InvoiceItem> invoiceItems = <InvoiceItem>[].obs;
@@ -39,23 +41,25 @@ class SaleController extends GetxController {
   RxDouble discountAmount = 0.0.obs;
   RxDouble total = 0.0.obs;
   final double taxAmount = 0.0;
+  var searchError = ''.obs;
+  var startDate = Rxn<DateTime>();
+  var endDate = Rxn<DateTime>();
 
   late final NetworkInfoImpl networkInfo;
   late final CreateSale _createSale;
   late final GetInvoices _getInvoices;
-  late RxString selectedPaymentMethod;
-  late CustomerController customerController;
-  RxList<StockModel> results = <StockModel>[].obs;
   late final SearchStock _searchStock;
+  late final SearchByRange _searchByRange;
+  late RxString selectedPaymentMethod;
+  RxList<StockModel> results = <StockModel>[].obs;
   final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
+  var searchResults = <InvoiceEntity>[].obs;
 
   bool done = false;
   @override
   void onInit() {
     super.onInit();
     _initializeDependencies();
-    customerController = Get.put(CustomerController());
-
     selectedPaymentType = 'CASH'.obs;
     selectedPaymentMethod = 'CASH'.obs;
     discountController.text = '0';
@@ -73,16 +77,76 @@ class SaleController extends GetxController {
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
     );
-
     _createSale = CreateSale(repository: repository);
-    //_searchStock = SearchStock(repository: repository);
-
     _getInvoices = GetInvoices(repository: repository);
+    _searchByRange = SearchByRange(repository: repository);
+
+    final remoteDataSource1 = StockRemoteDataSource(api: httpConsumer);
+    final stockRepository = StockRepositoryImpl(
+      remoteDataSource: remoteDataSource1,
+      networkInfo: networkInfo,
+    );
+    _searchStock = SearchStock(repository: stockRepository);
   }
 
   Future<void> refreshData() async {
     await fetchAllInvoices();
     Get.snackbar('', "Invoices refreshed successfully");
+  }
+
+  Future<void> searchByDateRange() async {
+    if (startDate.value == null || endDate.value == null) {
+      errorMessage.value = 'Please select both start and end dates'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+      return;
+    }
+
+    if (startDate.value!.isAfter(endDate.value!)) {
+      errorMessage.value = 'Start date must be before end date'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+      return;
+    }
+
+    isLoading.value = true;
+    isSearching.value = true;
+    searchResults.clear();
+    searchError.value = '';
+    errorMessage.value = '';
+
+    try {
+      final params = SearchInvoiceByDateRangeParams(
+        startDate: startDate.value!,
+        endDate: endDate.value!,
+      );
+
+      final result = await _searchByRange(params: params);
+      result.fold(
+        (failure) {
+          if (failure.statusCode == 404) {
+            errorMessage.value = "No invoices found";
+            Get.snackbar('Error'.tr, errorMessage.value);
+          } else if (failure.statusCode == "500") {
+            errorMessage.value =
+                'An unexpected error occurred. Please try again.'.tr;
+            Get.snackbar('Error'.tr, errorMessage.value);
+          } else {
+            errorMessage.value = failure.errMessage;
+            Get.snackbar('Errors'.tr, errorMessage.value);
+          }
+        },
+        (result) {
+          searchResults.value = result;
+          if (result.isEmpty) {
+            searchError.value = 'No invoices found for this date range'.tr;
+          }
+        },
+      );
+    } catch (e) {
+      searchError.value = e.toString();
+    } finally {
+      isLoading.value = false;
+      isSearching.value = false;
+    }
   }
 
   Future<void> fetchAllInvoices() async {
@@ -112,10 +176,11 @@ class SaleController extends GetxController {
   Future<void> search(String query) async {
     try {
       isLoading.value = true;
+      isSearching.value = true;
       print('Search Status: Loading');
       errorMessage.value = '';
-      final q = SearchParams(
-        name: query.trim(),
+      final q = SearchStockParams(
+        keyword: query.trim(),
       );
       print('Searching for: $query');
 
@@ -129,8 +194,7 @@ class SaleController extends GetxController {
         },
         (list) {
           results.clear();
-          results.assignAll(list.map((entity) => StockModel()).toList());
-
+          results.assignAll(list.map((e) => StockModel.fromEntity(e)).toList());
           print('Search Results: ${results.length} items');
           if (list.isEmpty) {
             results.clear();
@@ -147,6 +211,7 @@ class SaleController extends GetxController {
       print('Search Status: Error: ${e.toString()}');
     } finally {
       isLoading.value = false;
+      isSearching.value = false;
     }
   }
 
@@ -202,7 +267,7 @@ class SaleController extends GetxController {
     }
   }
 
-  Future<void> createSale(List<SaleItemParams> items) async {
+  Future<void> createSale(List<SaleItemParams> items, int? customerId) async {
     isLoading.value = true;
     errorMessage.value = '';
     try {
@@ -214,13 +279,15 @@ class SaleController extends GetxController {
             'No internet connection. Please check your network.'.tr;
         return;
       }
-      final customerId = customerController.selectedCustomer.value?.id;
-      if (customerId == null) {
+
+      final id = customerId;
+      print('✅ Using customer ID: $customerId');
+      if (id == null) {
         Get.snackbar("Error".tr, "Please select a customer first".tr);
         return;
       }
       final sale = SaleProcessParams(
-          customerId: customerId,
+          customerId: customerId!,
           paymentType: selectedPaymentType.value,
           paymentMethod: selectedPaymentMethod.value,
           currency: selectedCurrency.value,
@@ -247,7 +314,6 @@ class SaleController extends GetxController {
     }
   }
 
-//
   void addItemFromProduct(InvoiceItemModel product) {
     final existingItem =
         invoiceItems.firstWhereOrNull((item) => item.id == product.id);
@@ -261,7 +327,6 @@ class SaleController extends GetxController {
         name: product.productName,
         quantity: 1,
         unitPrice: product.unitPrice,
-        isPrescription: true,
       ));
     }
     invoiceItems.refresh();
@@ -282,7 +347,6 @@ class SaleController extends GetxController {
     selectedPaymentType.value = 'CASH';
     selectedPaymentMethod.value = 'CASH';
     selectedCurrency.value = 'SYP';
-    selectedDueDate = null;
 
     invoiceItems.clear();
     subtotal.value = 0.0;

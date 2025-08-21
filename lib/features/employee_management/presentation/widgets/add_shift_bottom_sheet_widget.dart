@@ -8,8 +8,9 @@ import 'package:teriak/features/employee_management/presentation/widgets/day_sel
 
 class AddShiftBottomSheetWidget extends StatefulWidget {
   final ShiftParams? existingShift;
-  final void Function(ShiftParams shift, {int? existingId}) onShiftAdded;
-  final RxList<String> daysOfWeek;
+  final void Function(ShiftParams shift, {List<String>? selectedDays})
+      onShiftAdded;
+  final List<String> daysOfWeek;
 
   const AddShiftBottomSheetWidget({
     Key? key,
@@ -31,15 +32,11 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
   TimeOfDay? endTime;
   bool isEditing = false;
 
-  // هنا بنعمل List محلية لإدارة الأيام المختارة (بدل widget.selectedDays)
   late List<String> selectedDaysLocal;
 
   @override
   void initState() {
     super.initState();
-
-    // تهيئة الأيام المختارة محلياً من الشفت الموجود أو فاضية لو جديد
-    selectedDaysLocal = widget.existingShift?.daysOfWeek.toList() ?? [];
 
     if (widget.existingShift != null) {
       isEditing = true;
@@ -56,6 +53,10 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
         hour: int.parse(endParts[0]),
         minute: int.parse(endParts[1]),
       );
+
+      selectedDaysLocal = List.from(widget.daysOfWeek);
+    } else {
+      selectedDaysLocal = [];
     }
   }
 
@@ -90,7 +91,6 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
     final startMinutes = startTime!.hour * 60 + startTime!.minute;
     final endMinutes = endTime!.hour * 60 + endTime!.minute;
 
-    // يسمح للشفتات اللي تمتد عبر منتصف الليل (overnight)
     return startMinutes != endMinutes;
   }
 
@@ -154,14 +154,11 @@ class _AddShiftBottomSheetWidgetState extends State<AddShiftBottomSheetWidget> {
       _formatTimeOfDay(startTime!),
       _formatTimeOfDay(endTime!),
       _descriptionController.text.trim(),
-      List<String>.from(selectedDaysLocal),
     );
 
     widget.onShiftAdded(
       shiftData,
-      existingId: widget.existingShift != null
-          ? widget.daysOfWeek.indexOf(selectedDaysLocal.first)
-          : null,
+      selectedDays: selectedDaysLocal,
     );
 
     Navigator.pop(context);

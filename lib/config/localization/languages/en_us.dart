@@ -334,7 +334,7 @@ final Map<String, String> enUS = {
   "Out of Stock": "Out of Stock",
   "Expired": "Expired",
   "Unknown Product": "Unknown Product",
-  "Lot:": "Lot:",
+  "Number of Batches:": "Number of Batches:",
   "N/A": "N/A",
   "Stock Information": "Stock Information",
   "Current Stock": "Current Stock",
@@ -368,8 +368,7 @@ final Map<String, String> enUS = {
   "Prescription Drugs": "Prescription Drugs",
   "Vitamins & Supplements": "Vitamins & Supplements",
   "Medical Devices": "Medical Devices",
-  "Search products, NDC, or lot numbers...":
-      "Search products, NDC, or lot numbers...",
+  "Search products by name...": "Search products by name...",
   "Scan Barcode": "Scan Barcode",
   "Filter Products": "Filter Products",
   "Apply Filters": "Apply Filters",

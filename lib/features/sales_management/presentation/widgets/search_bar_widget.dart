@@ -15,7 +15,7 @@ class SearchBarWidget<T> extends StatefulWidget {
   final String hintText;
 
   const SearchBarWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.focusNode,
     required this.onChanged,
@@ -27,7 +27,7 @@ class SearchBarWidget<T> extends StatefulWidget {
     required this.hintText,
     this.onClear,
     required this.isScanner,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchBarWidget<T>> createState() => _SearchBarWidgetState<T>();
@@ -89,31 +89,38 @@ class _SearchBarWidgetState<T> extends State<SearchBarWidget<T>> {
                   EdgeInsets.symmetric(horizontal: 16.sp, vertical: 16.sp),
             ),
           ),
-          if (widget.isSearching)
-            Center(
-              child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          if (widget.results.isNotEmpty)
+          if ((widget.controller.text.isNotEmpty || widget.isSearching) &&
+              widget.results.isNotEmpty)
             Container(
-              margin: const EdgeInsets.only(top: 8),
+              margin: const EdgeInsets.only(top: 0, left: 5, right: 5),
               decoration: BoxDecoration(
-                color: Theme.of(context).hintColor.withOpacity(0.2),
-                border: Border.all(color: Colors.black, width: 0.1),
-                borderRadius: BorderRadius.circular(3),
+                color: Theme.of(context).cardColor,
+                border:
+                    Border.all(color: Theme.of(context).hintColor, width: 0.1),
+                borderRadius: BorderRadius.circular(6),
               ),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: widget.results.length,
-                itemBuilder: (context, index) {
-                  final item = widget.results[index];
-                  return InkWell(
-                    onTap: () => widget.onItemTap(item),
-                    child: widget.itemBuilder(item),
-                  );
-                },
-              ),
+              child: widget.isSearching
+                  ? Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.primary,
+                          strokeWidth: 3,
+                        ),
+                      ),
+                    )
+                  : ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: widget.results.length,
+                      itemBuilder: (context, index) {
+                        final item = widget.results[index];
+                        return InkWell(
+                          onTap: () => widget.onItemTap(item),
+                          child: widget.itemBuilder(item),
+                        );
+                      },
+                    ),
             ),
         ],
       ),

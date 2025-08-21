@@ -48,7 +48,7 @@ class EmployeeRemoteDataSource {
       };
 
       print('🕒 Sending working hours for employee $employeeId: $data');
-      final response = await api.post(
+      final response = await api.put(
         'employees/$employeeId/working-hours',
         data: data,
       );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
-import 'package:teriak/features/Sales_management/presentation/pages/single_sale_screen.dart';
+import 'package:teriak/features/sales_management/presentation/pages/single_sale_screen.dart';
 
 class MultiSalesScreen extends StatefulWidget {
   const MultiSalesScreen({super.key});

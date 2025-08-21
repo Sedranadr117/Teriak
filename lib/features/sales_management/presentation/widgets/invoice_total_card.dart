@@ -5,7 +5,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
-class InvoiceTotalCard extends StatelessWidget {
+class InvoiceTotalCard extends StatefulWidget {
   final double subtotal;
   final double discountAmount;
   final double total;
@@ -13,9 +13,11 @@ class InvoiceTotalCard extends StatelessWidget {
   final String discountType;
   final Function(String) onDiscountTypeChanged;
   final VoidCallback onApplyDiscount;
+  final String selectedCurrency;
 
   const InvoiceTotalCard({
     Key? key,
+    required this.selectedCurrency,
     required this.subtotal,
     required this.discountAmount,
     required this.total,
@@ -24,6 +26,21 @@ class InvoiceTotalCard extends StatelessWidget {
     required this.onDiscountTypeChanged,
     required this.onApplyDiscount,
   }) : super(key: key);
+
+  @override
+  State<InvoiceTotalCard> createState() => _InvoiceTotalCardState();
+}
+
+class _InvoiceTotalCardState extends State<InvoiceTotalCard> {
+  String? symble(String curr) {
+    switch (curr) {
+      case 'USD':
+        return '\$';
+      case 'SYP':
+        return 'SYP';
+    }
+    return curr;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +73,7 @@ class InvoiceTotalCard extends StatelessWidget {
             _buildSummaryRow(
               context,
               'Subtotal'.tr,
-              '\$${subtotal.toStringAsFixed(2)}',
+              '${symble(widget.selectedCurrency)} ${widget.subtotal.toStringAsFixed(2)}',
               isSubtotal: true,
             ),
 
@@ -78,7 +95,7 @@ class InvoiceTotalCard extends StatelessWidget {
             _buildSummaryRow(
               context,
               'Total'.tr,
-              '\$${total.toStringAsFixed(2)}',
+              '${symble(widget.selectedCurrency)} ${widget.total.toStringAsFixed(2)}',
               isTotal: true,
             ),
           ],
@@ -160,13 +177,13 @@ class InvoiceTotalCard extends StatelessWidget {
                       context,
                       'PERCENTAGE',
                       '%',
-                      discountType == 'PERCENTAGE',
+                      widget.discountType == 'PERCENTAGE',
                     ),
                     _buildDiscountTypeButton(
                       context,
                       'FIXED_AMOUNT',
-                      '\$',
-                      discountType == 'FIXED_AMOUNT',
+                      symble(widget.selectedCurrency)!,
+                      widget.discountType == 'FIXED_AMOUNT',
                     ),
                   ],
                 ),
@@ -177,22 +194,24 @@ class InvoiceTotalCard extends StatelessWidget {
               // Discount Input
               Expanded(
                 child: TextFormField(
-                  controller: discountController,
+                  controller: widget.discountController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(
                         RegExp(r'^\d*\.?\d{0,2}')),
                   ],
                   decoration: InputDecoration(
-                    hintText: discountType == 'percentage'
+                    hintText: widget.discountType == 'PERCENTAGE'
                         ? 'Enter %'.tr
                         : 'Enter amount'.tr,
-                    suffixText: discountType == 'percentage' ? '%' : '\$',
+                    suffixText: widget.discountType == 'PERCENTAGE'
+                        ? '%'
+                        : symble(widget.selectedCurrency),
                     isDense: true,
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.w),
                   ),
-                  onChanged: (value) => onApplyDiscount(),
+                  onChanged: (value) => widget.onApplyDiscount(),
                 ),
               ),
 
@@ -200,7 +219,7 @@ class InvoiceTotalCard extends StatelessWidget {
 
               // Apply Button
               ElevatedButton(
-                onPressed: onApplyDiscount,
+                onPressed: widget.onApplyDiscount,
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.w),
                   minimumSize: Size(0, 0),
@@ -214,7 +233,7 @@ class InvoiceTotalCard extends StatelessWidget {
               ),
             ],
           ),
-          if (discountAmount > 0) ...[
+          if (widget.discountAmount > 0) ...[
             SizedBox(height: 3.w),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -237,7 +256,7 @@ class InvoiceTotalCard extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  '-\$${discountAmount.toStringAsFixed(2)}',
+                  '-${widget.discountType == 'PERCENTAGE' ? '%' : symble(widget.selectedCurrency)} ${widget.discountAmount.toStringAsFixed(2)}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.successLight,
                         fontWeight: FontWeight.w600,
@@ -254,7 +273,7 @@ class InvoiceTotalCard extends StatelessWidget {
   Widget _buildDiscountTypeButton(
       BuildContext context, String type, String symbol, bool isSelected) {
     return InkWell(
-      onTap: () => onDiscountTypeChanged(type),
+      onTap: () => widget.onDiscountTypeChanged(type),
       borderRadius: BorderRadius.circular(6),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.w),

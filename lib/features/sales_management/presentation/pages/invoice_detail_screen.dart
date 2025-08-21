@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
+import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
 
 import '../widgets/invoice_header_card.dart';
 import '../widgets/invoice_totals_card.dart';
@@ -17,93 +20,25 @@ class InvoiceDetailScreen extends StatefulWidget {
 
 class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
   late ScrollController _scrollController;
-  Map<int, int> _selectedItems = {}; // productId -> selectedQuantity
-  bool _isLoading = false;
-
-  // Mock invoice data
-  final Map<String, dynamic> _invoiceData = {
-    "invoiceNumber": "INV-2024-001",
-    "date": "Aug 09, 2024",
-    "customerName": "Sarah Johnson",
-    "customerPhone": "+1 (555) 123-4567",
-    "paymentMethod": "Insurance",
-    "paymentStatus": "Paid",
-    "outstandingBalance": 0.0,
-    "subtotal": 156.75,
-    "tax": 12.54,
-    "discount": 5.00,
-    "total": 164.29,
-    "lastSynced": "2024-08-09 18:25:00",
-  };
-
-  final List<Map<String, dynamic>> _products = [
-    {
-      "id": 1,
-      "name": "Amoxicillin 500mg Capsules",
-      "quantity": 30,
-      "unitPrice": 2.50,
-      "returnableQuantity": 25,
-      "image":
-          "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-    {
-      "id": 2,
-      "name": "Ibuprofen 200mg Tablets",
-      "quantity": 60,
-      "unitPrice": 1.25,
-      "returnableQuantity": 60,
-      "image":
-          "https://images.pexels.com/photos/3683056/pexels-photo-3683056.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-    {
-      "id": 3,
-      "name": "Vitamin D3 1000 IU Softgels",
-      "quantity": 90,
-      "unitPrice": 0.35,
-      "returnableQuantity": 0,
-      "image":
-          "https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-    {
-      "id": 4,
-      "name": "Lisinopril 10mg Tablets",
-      "quantity": 30,
-      "unitPrice": 1.80,
-      "returnableQuantity": 15,
-      "image":
-          "https://images.pexels.com/photos/3683089/pexels-photo-3683089.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-    {
-      "id": 5,
-      "name": "Metformin 500mg Extended Release",
-      "quantity": 60,
-      "unitPrice": 0.95,
-      "returnableQuantity": 45,
-      "image":
-          "https://images.pexels.com/photos/3683101/pexels-photo-3683101.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-    },
-  ];
-
-  @override
+  late SaleController saleController;
+  late CustomerController customerController;
+  late Map<String, dynamic> _invoiceData;
+  Map<int, int> _selectedItems = {};
   void initState() {
     super.initState();
+    customerController = Get.put(CustomerController());
+    saleController = Get.put(SaleController(customerTag: ''));
+    _invoiceData = Get.arguments as Map<String, dynamic>;
+
+    customerController.fetchCustomers();
     _scrollController = ScrollController();
-    _loadInvoiceData();
+    saleController.fetchAllInvoices();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadInvoiceData() async {
-    setState(() => _isLoading = true);
-
-    // Simulate loading delay
-    await Future.delayed(const Duration(milliseconds: 800));
-
-    setState(() => _isLoading = false);
   }
 
   @override
@@ -113,7 +48,11 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: _buildAppBar(context),
-      body: _isLoading ? _buildLoadingState() : _buildContent(),
+      body: Obx(
+        () => saleController.isLoading.value
+            ? _buildLoadingState()
+            : _buildContent(),
+      ),
       bottomNavigationBar: _buildStickyReturnButton(),
     );
   }
@@ -124,7 +63,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     return AppBar(
       title: Text(
-        'Invoice #${_invoiceData["invoiceNumber"]}',
+        'Invoice #${_invoiceData["customerName"]}',
         style: theme.textTheme.titleLarge?.copyWith(
           fontWeight: FontWeight.w600,
           color: colorScheme.onPrimary,
@@ -145,18 +84,6 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         },
       ),
       actions: [
-        IconButton(
-          icon: CustomIconWidget(
-            iconName: 'share',
-            color: colorScheme.onPrimary,
-            size: 6.w,
-          ),
-          onPressed: () {
-            HapticFeedback.lightImpact();
-            _shareInvoice();
-          },
-          tooltip: 'Share Invoice',
-        ),
         PopupMenuButton<String>(
           icon: CustomIconWidget(
             iconName: 'more_vert',
@@ -182,37 +109,20 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               ),
             ),
             PopupMenuItem(
-              value: 'email',
-              child: Row(
-                children: [
-                  CustomIconWidget(
-                    iconName: 'email',
-                    color: theme.brightness == Brightness.light
-                        ? const Color(0xFF212121)
-                        : const Color(0xFFFFFFFF),
-                    size: 5.w,
-                  ),
-                  SizedBox(width: 3.w),
-                  const Text('Email'),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: 'duplicate',
-              child: Row(
-                children: [
-                  CustomIconWidget(
-                    iconName: 'copy',
-                    color: theme.brightness == Brightness.light
-                        ? const Color(0xFF212121)
-                        : const Color(0xFFFFFFFF),
-                    size: 5.w,
-                  ),
-                  SizedBox(width: 3.w),
-                  const Text('Duplicate'),
-                ],
-              ),
-            ),
+                value: 'share',
+                child: Row(
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'share',
+                      color: theme.brightness == Brightness.light
+                          ? const Color(0xFF212121)
+                          : const Color(0xFFFFFFFF),
+                      size: 5.w,
+                    ),
+                    SizedBox(width: 3.w),
+                    const Text('Share'),
+                  ],
+                ))
           ],
         ),
       ],
@@ -325,7 +235,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
             controller: _scrollController,
             padding: EdgeInsets.only(
               top: 1.h,
-              bottom: 20.h, // Extra space for sticky button
+              bottom: 20.h,
             ),
             children: [
               // Invoice header
@@ -337,7 +247,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 child: Row(
                   children: [
                     Text(
-                      'Items (${_products.length})',
+                      'Items (${_invoiceData['items'].length})',
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -362,7 +272,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
               ),
 
               // Product list
-              ..._products.map((product) => ProductItemCard(
+              ..._invoiceData['items'].map((product) => ProductItemCard(
                     product: product,
                     isSelected: _selectedItems.containsKey(product["id"]),
                     selectedQuantity: _selectedItems[product["id"]] ?? 0,
@@ -447,7 +357,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              product["name"] ?? "Unknown Product",
+              product['productName'] ?? "Unknown Product",
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -497,20 +407,13 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     );
   }
 
-  void _shareInvoice() {
-    _showSnackBar('Sharing invoice #${_invoiceData["invoiceNumber"]}');
-  }
-
   void _handleMenuAction(String action) {
     switch (action) {
       case 'print':
         _showSnackBar('Printing invoice #${_invoiceData["invoiceNumber"]}');
         break;
-      case 'email':
-        _showSnackBar('Emailing invoice #${_invoiceData["invoiceNumber"]}');
-        break;
-      case 'duplicate':
-        _showSnackBar('Duplicating invoice #${_invoiceData["invoiceNumber"]}');
+      case 'share':
+        _showSnackBar('Sharing invoice #${_invoiceData["invoiceNumber"]}');
         break;
     }
   }
@@ -519,7 +422,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     if (_selectedItems.isEmpty) return;
 
     // Calculate return details
-    final selectedProducts = _products
+    final selectedProducts = _invoiceData['items']
         .where((product) => _selectedItems.containsKey(product["id"]))
         .toList();
 

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:teriak/features/stock_management/domain/entities/Stock_entity.dart';
+import 'package:teriak/features/stock_management/domain/entities/stock_entity.dart';
 import 'package:teriak/features/stock_management/domain/repositories/stock_repository.dart';
 
 import '../../../../../core/errors/failure.dart';
