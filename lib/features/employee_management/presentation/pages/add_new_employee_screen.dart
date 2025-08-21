@@ -153,8 +153,6 @@ class _AddEmployeeScreenState extends State<AddEmployeeScreen> {
                                         .addPostFrameCallback((_) {
                                       controller.addNewEmployee();
                                     });
-
-                                    print('⏰ Shifts: ${controller.shifts}');
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

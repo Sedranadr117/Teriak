@@ -14,11 +14,15 @@ class InvoiceTotalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final List items = invoiceData["items"] ?? [];
+    final double subtotal = items.fold(0.0, (sum, item) {
+      final price = (item["unitPrice"] ?? 0) as num;
+      final qty = (item["quantity"] ?? 0) as num;
+      return sum + price * qty;
+    });
 
-    final double subtotal = invoiceData["subtotal"] as double? ?? 0.0;
-    final double tax = invoiceData["tax"] as double? ?? 0.0;
     final double discount = invoiceData["discount"] as double? ?? 0.0;
-    final double total = invoiceData["total"] as double? ?? 0.0;
+    final double total = invoiceData["totalAmount"] as double? ?? 0.0;
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -51,28 +55,14 @@ class InvoiceTotalsCard extends StatelessWidget {
 
             SizedBox(height: 1.h),
 
-            // Tax
             _buildTotalRow(
               context,
-              'Tax',
-              tax,
-              isTax: true,
+              '${invoiceData["discountType"] == "PERCENTAGE" ? "%" : invoiceData["currency"] == "SYP" ? "SP" : "\$"}Discount',
+              discount,
+              isDiscount: true,
             ),
-
             SizedBox(height: 1.h),
 
-            // Discount (if applicable)
-            if (discount > 0) ...[
-              _buildTotalRow(
-                context,
-                'Discount',
-                -discount,
-                isDiscount: true,
-              ),
-              SizedBox(height: 1.h),
-            ],
-
-            // Divider
             Container(
               height: 1,
               width: double.infinity,
@@ -150,7 +140,6 @@ class InvoiceTotalsCard extends StatelessWidget {
     String label,
     double amount, {
     bool isSubtotal = false,
-    bool isTax = false,
     bool isDiscount = false,
     bool isTotal = false,
   }) {
@@ -176,14 +165,6 @@ class InvoiceTotalsCard extends StatelessWidget {
             ? const Color(0xFF4CAF50)
             : const Color(0xFF81C784),
       );
-    } else if (isTax) {
-      labelStyle = theme.textTheme.bodyMedium;
-      amountStyle = theme.textTheme.bodyMedium?.copyWith(
-        fontWeight: FontWeight.w500,
-        color: theme.brightness == Brightness.light
-            ? const Color(0xFFFF9800)
-            : const Color(0xFFFFB74D),
-      );
     } else {
       labelStyle = theme.textTheme.bodyMedium;
       amountStyle = theme.textTheme.bodyMedium?.copyWith(
@@ -196,7 +177,7 @@ class InvoiceTotalsCard extends StatelessWidget {
       children: [
         Text(label, style: labelStyle),
         Text(
-          '\$${amount.abs().toStringAsFixed(2)}',
+          amount.abs().toStringAsFixed(2),
           style: amountStyle,
         ),
       ],
@@ -205,13 +186,13 @@ class InvoiceTotalsCard extends StatelessWidget {
 
   Widget _buildPaymentStatusIndicator(BuildContext context) {
     final theme = Theme.of(context);
-    final String status = invoiceData["paymentStatus"] ?? "Unknown";
+    final String status = invoiceData["status"] ?? "Unknown";
 
     Color indicatorColor;
     IconData statusIcon;
 
-    switch (status.toLowerCase()) {
-      case 'paid':
+    switch (status) {
+      case 'COMPLETED':
         indicatorColor = theme.brightness == Brightness.light
             ? const Color(0xFF4CAF50)
             : const Color(0xFF81C784);
@@ -257,10 +238,6 @@ class InvoiceTotalsCard extends StatelessWidget {
       case 'credit card':
       case 'debit card':
         return 'credit_card';
-      case 'insurance':
-        return 'local_hospital';
-      case 'check':
-        return 'receipt';
       default:
         return 'payment';
     }

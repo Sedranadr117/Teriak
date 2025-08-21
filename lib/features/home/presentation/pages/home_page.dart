@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_colors.dart';
+import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/core/themes/app_assets.dart';
 import 'package:teriak/features/home/presentation/widgets/custom_bottom_nav.dart';
-import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
+import 'package:teriak/core/databases/cache/cache_helper.dart';
 
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
-import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/features/master_product/presentation/pages/all_product/all_product_page.dart';
+import 'package:teriak/main.dart';
 import 'package:teriak/purchaseInvoiceList.dart';
 
 class HomePage extends StatefulWidget {
@@ -33,13 +37,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildScreens() {
-    return [
+    final screns = [
       PurchaseOrderList(),
       StockManagement(),
       MultiSalesScreen(),
       AllProductPage(),
-      AllPurchaseInvoiceScreen(),
     ];
+    if (role != "PHARMACY_TRAINEE") {
+      screns.add(purchaseInvoiceList());
+    }
+
+    return screns;
   }
 
   List<String> appBarTitle = [
@@ -51,25 +59,46 @@ class _HomePageState extends State<HomePage> {
   ];
   @override
   Widget build(BuildContext context) {
+    final themeController = Get.find<ThemeController>();
+
     return Scaffold(
       drawer: Drawer(
         child: ListView(
           children: [
             DrawerHeader(
                 decoration: BoxDecoration(color: AppColors.primaryLight),
-                child: Image.asset(
-                  Assets.assetsImagesJustLogo,
-                  height: 10,
-                  width: 10,
-                  scale: 10,
+                child: Stack(
+                  children: [
+                    Image.asset(
+                      Assets.assetsImagesJustLogo,
+                      height: 10,
+                      width: 10,
+                      scale: 10,
+                    ),
+                    Obx(() => IconButton(
+                          onPressed: () => themeController.toggleTheme(),
+                          icon: CustomIconWidget(
+                            iconName: themeController.isDarkMode
+                                ? 'light_mode'
+                                : 'dark_mode',
+                            color: Theme.of(context).colorScheme.onSurface,
+                            size: 24,
+                          ),
+                          tooltip: themeController.isDarkMode
+                              ? 'Switch to Light Mode'
+                              : 'Switch to Dark Mode',
+                        )),
+                  ],
                 )),
-            ListTile(
-              leading: const Icon(Icons.people),
-              title: const Text("Employees Management"),
-              onTap: () {
-                Get.toNamed(AppPages.employeeManagement);
-              },
-            ),
+            role == "PHARMACY_MANAGER"
+                ? ListTile(
+                    leading: const Icon(Icons.people),
+                    title: const Text("Employees Management"),
+                    onTap: () {
+                      Get.toNamed(AppPages.employeeManagement);
+                    },
+                  )
+                : SizedBox(),
             ListTile(
               leading: const Icon(Icons.receipt),
               title: const Text("Sale Invoices"),
@@ -84,18 +113,63 @@ class _HomePageState extends State<HomePage> {
                 Get.toNamed(AppPages.indebtedManagement);
               },
             ),
-            ListTile(
-              leading: const Icon(Icons.person_add_alt_1_rounded),
-              title: const Text("Suppliers"),
-              onTap: () {
-                Get.toNamed(AppPages.supplierList);
-              },
-            ),
+            role == "PHARMACY_TRAINEE"
+                ? SizedBox()
+                : ListTile(
+                    leading: const Icon(Icons.person_add_alt_1_rounded),
+                    title: const Text("Suppliers"),
+                    onTap: () {
+                      Get.toNamed(AppPages.supplierList);
+                    },
+                  ),
             ListTile(
               leading: const Icon(Icons.settings),
               title: const Text("Settings"),
               onTap: () {
                 Get.toNamed(AppPages.settings);
+              },
+            ),
+            SizedBox(
+              height: 30.h,
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text("Sign out"),
+              onTap: () async {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text(
+                            'Sign Out',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          content: Text(
+                            'Are you sure you want to sign out? You will need to sign in again to access your account.',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              onPressed: () async {
+                                final cacheHelper = CacheHelper();
+                                await cacheHelper.removeData(key: 'token');
+                                Get.offAllNamed(AppPages.signin);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Signed out successfully')),
+                                );
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.errorLight,
+                                foregroundColor: AppColors.onErrorLight,
+                              ),
+                              child: const Text('Sign Out'),
+                            ),
+                          ],
+                        ));
               },
             ),
           ],

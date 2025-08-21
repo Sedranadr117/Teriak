@@ -35,7 +35,7 @@ class InvoiceHeaderCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Invoice #${invoiceData["invoiceNumber"] ?? "N/A"}',
+                        'Invoice #${invoiceData["customerName"] ?? "N/A"}',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.primary,
@@ -44,7 +44,7 @@ class InvoiceHeaderCard extends StatelessWidget {
                       ),
                       SizedBox(height: 0.5.h),
                       Text(
-                        invoiceData["date"] ?? "N/A",
+                        invoiceData["invoiceDate"] ?? "N/A",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.brightness == Brightness.light
                               ? const Color(0x99212121)
@@ -92,25 +92,9 @@ class InvoiceHeaderCard extends StatelessWidget {
                   SizedBox(height: 0.5.h),
                   _buildCustomerInfoRow(
                     context,
-                    'Phone',
-                    invoiceData["customerPhone"] ?? "N/A",
-                  ),
-                  SizedBox(height: 0.5.h),
-                  _buildCustomerInfoRow(
-                    context,
                     'Payment Method',
                     invoiceData["paymentMethod"] ?? "N/A",
                   ),
-                  if (invoiceData["outstandingBalance"] != null &&
-                      (invoiceData["outstandingBalance"] as double) > 0) ...[
-                    SizedBox(height: 0.5.h),
-                    _buildCustomerInfoRow(
-                      context,
-                      'Outstanding Balance',
-                      '\$${(invoiceData["outstandingBalance"] as double).toStringAsFixed(2)}',
-                      isHighlight: true,
-                    ),
-                  ],
                 ],
               ),
             ),
@@ -122,35 +106,38 @@ class InvoiceHeaderCard extends StatelessWidget {
 
   Widget _buildPaymentStatusBadge(BuildContext context) {
     final theme = Theme.of(context);
-    final String status = invoiceData["paymentStatus"] ?? "Unknown";
+    final String status = invoiceData["status"] ?? "Unknown";
+    final colorScheme = theme.colorScheme;
 
     Color badgeColor;
     Color textColor;
+    String displayText;
 
-    switch (status.toLowerCase()) {
-      case 'paid':
-        badgeColor = theme.brightness == Brightness.light
-            ? const Color(0xFF4CAF50)
-            : const Color(0xFF81C784);
+    switch (status) {
+      case 'COMPLETED':
+        badgeColor = Colors.green;
         textColor = Colors.white;
+        displayText = 'Paid';
         break;
       case 'pending':
-        badgeColor = theme.brightness == Brightness.light
-            ? const Color(0xFFFF9800)
-            : const Color(0xFFFFB74D);
+        badgeColor = Colors.orange;
         textColor = Colors.white;
+        displayText = 'Pending';
         break;
       case 'overdue':
-        badgeColor = theme.brightness == Brightness.light
-            ? const Color(0xFFF44336)
-            : const Color(0xFFCF6679);
+        badgeColor = colorScheme.error;
+        textColor = colorScheme.onError;
+        displayText = 'Overdue';
+        break;
+      case 'partial':
+        badgeColor = Colors.orange;
         textColor = Colors.white;
+        displayText = 'Partial';
         break;
       default:
-        badgeColor = theme.brightness == Brightness.light
-            ? const Color(0xFF9E9E9E)
-            : const Color(0xFF616161);
-        textColor = Colors.white;
+        badgeColor = colorScheme.outline;
+        textColor = colorScheme.onSurface;
+        displayText = 'Unknown';
     }
 
     return Container(
@@ -160,7 +147,7 @@ class InvoiceHeaderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Text(
-        status.toUpperCase(),
+        displayText,
         style: theme.textTheme.labelSmall?.copyWith(
           color: textColor,
           fontWeight: FontWeight.w600,
@@ -182,7 +169,7 @@ class InvoiceHeaderCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 25.w,
+          width: 30.w,
           child: Text(
             '$label:',
             style: theme.textTheme.bodyMedium?.copyWith(

@@ -211,8 +211,9 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                                 (e) => (e as WorkingHoursRequestModel).toJson())
                             .toList()
                       },
-                      onResetPassword: () => dialogs.showCredentialUpdateDialog(
-                          context, employeeData, controller),
+                      onResetPassword: () {},
+                      // onResetPassword: () => dialogs.showCredentialUpdateDialog(
+                      //     context, employeeData, controller),
                       password: employeeData['password'] ?? '',
                     ),
                     SizedBox(height: 2.h),

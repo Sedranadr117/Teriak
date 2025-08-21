@@ -8,18 +8,12 @@ class ProductCard extends StatelessWidget {
   final Map<String, dynamic> product;
   final VoidCallback onTap;
   final VoidCallback onAdjustStock;
-  final VoidCallback onReorder;
-  final VoidCallback onMarkExpired;
-  final VoidCallback onLongPress;
 
   const ProductCard({
     super.key,
     required this.product,
     required this.onTap,
     required this.onAdjustStock,
-    required this.onReorder,
-    required this.onMarkExpired,
-    required this.onLongPress,
   });
 
   @override
@@ -27,106 +21,91 @@ class ProductCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final int currentStock = (product['currentStock'] as num?)?.toInt() ?? 0;
-    final int reorderPoint = (product['reorderPoint'] as num?)?.toInt() ?? 0;
-    final DateTime? expiryDate = product['expiryDate'] != null
-        ? DateTime.tryParse(product['expiryDate'].toString())
+    final int currentStock = (product['totalQuantity'] as num?)?.toInt() ?? 0;
+    final int reorderPoint = (product['minStockLevel'] as num?)?.toInt() ?? 0;
+    print("reorderPoint $reorderPoint");
+    final DateTime? expiryDate = product['earliestExpiryDate'] != null
+        ? DateTime.tryParse(product['earliestExpiryDate'].toString())
         : null;
 
     final bool isLowStock = currentStock <= reorderPoint;
     final bool isNearExpiry = expiryDate != null &&
         expiryDate.difference(DateTime.now()).inDays <= 30;
-    final bool isExpired =
-        expiryDate != null && expiryDate.isBefore(DateTime.now());
+    final bool isExpired = product['hasExpiredItems'];
 
-    return Dismissible(
-      key: Key(product['id'].toString()),
-      background: _buildSwipeBackground(context, isLeft: true),
-      secondaryBackground: _buildSwipeBackground(context, isLeft: false),
-      onDismissed: (direction) {
-        if (direction == DismissDirection.startToEnd) {
-          // Swipe right - show details
-          onTap();
-        } else {
-          // Swipe left - show actions
-          _showQuickActions(context);
-        }
-      },
-      child: GestureDetector(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _getBorderColor(
-                  colorScheme, isLowStock, isNearExpiry, isExpired),
-              width: isLowStock || isNearExpiry || isExpired ? 2 : 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: colorScheme.shadow.withValues(alpha: 0.08),
-                offset: Offset(0, 2),
-                blurRadius: 8,
-                spreadRadius: 0,
-              ),
-            ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+        decoration: BoxDecoration(
+          color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _getBorderColor(
+                colorScheme, isLowStock, isNearExpiry, isExpired),
+            width: isLowStock || isNearExpiry || isExpired ? 2 : 1,
           ),
-          child: Padding(
-            padding: EdgeInsets.all(4.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildProductImage(colorScheme),
-                    SizedBox(width: 3.w),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            product['name']?.toString() ?? 'Unknown Product'.tr,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 0.5.h),
-                          Text(
-                            '${'Lot:'.tr} ${product['lotNumber']?.toString() ?? 'N/A'.tr}',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color:
-                                  colorScheme.onSurface.withValues(alpha: 0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    _buildStatusBadges(theme, colorScheme, isLowStock,
-                        isNearExpiry, isExpired),
-                  ],
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildStockInfo(
-                        theme, colorScheme, currentStock, reorderPoint),
-                    _buildPriceInfo(theme, colorScheme),
-                  ],
-                ),
-                if (expiryDate != null) ...[
-                  SizedBox(height: 1.h),
-                  _buildExpiryInfo(
-                      theme, colorScheme, expiryDate, isNearExpiry, isExpired),
-                ],
-              ],
+          boxShadow: [
+            BoxShadow(
+              color: colorScheme.shadow.withValues(alpha: 0.08),
+              offset: Offset(0, 2),
+              blurRadius: 8,
+              spreadRadius: 0,
             ),
+          ],
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(4.w),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildProductImage(colorScheme),
+                  SizedBox(width: 3.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          product['productName']?.toString() ??
+                              'Unknown Product'.tr,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(height: 0.5.h),
+                        Text(
+                          '${'Number of Batches:'.tr} ${product['numberOfBatches']?.toString() ?? 'N/A'.tr}',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: colorScheme.onSurface.withValues(alpha: 0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buildStatusBadges(
+                      theme, colorScheme, isLowStock, isNearExpiry, isExpired),
+                ],
+              ),
+              SizedBox(height: 2.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStockInfo(
+                      theme, colorScheme, currentStock, reorderPoint),
+                  _buildPriceInfo(theme, colorScheme),
+                ],
+              ),
+              if (expiryDate != null) ...[
+                SizedBox(height: 1.h),
+                _buildExpiryInfo(
+                    theme, colorScheme, expiryDate, isNearExpiry, isExpired),
+              ],
+            ],
           ),
         ),
       ),
@@ -173,7 +152,7 @@ class ProductCard extends StatelessWidget {
           _buildStatusBadge(
             theme,
             'NEAR EXPIRY'.tr,
-            Colors.orange,
+            AppColors.warningDark.withAlpha(220),
             Colors.white,
           ),
         if (isLowStock) ...[
@@ -181,7 +160,7 @@ class ProductCard extends StatelessWidget {
           _buildStatusBadge(
             theme,
             'LOW STOCK'.tr,
-            AppColors.errorLight,
+            AppColors.errorLight.withAlpha(220),
             Colors.white,
           ),
         ],
@@ -249,14 +228,14 @@ class ProductCard extends StatelessWidget {
           ),
         ),
         Text(
-          '\$${(product['unitPrice'] as num?)?.toStringAsFixed(2) ?? '0.00'}',
+          'SYP ${(product['sellingPrice'] as num?)?.toStringAsFixed(2) ?? '0.00'}',
           style: theme.textTheme.titleSmall?.copyWith(
             fontWeight: FontWeight.w600,
             color: colorScheme.primary,
           ),
         ),
         Text(
-          '${'Total:'.tr} \$${((product['unitPrice'] as num? ?? 0) * (product['currentStock'] as num? ?? 0)).toStringAsFixed(2)}',
+          '${'Total:'.tr} SYP ${(product['totalValue'] as double? ?? 0.0).toStringAsFixed(2)}',
           style: theme.textTheme.bodySmall?.copyWith(
             color: colorScheme.onSurface.withValues(alpha: 0.6),
           ),
@@ -276,22 +255,22 @@ class ProductCard extends StatelessWidget {
           color: isExpired
               ? colorScheme.error
               : isNearExpiry
-                  ? Colors.orange
+                  ? AppColors.warningDark.withAlpha(220)
                   : colorScheme.onSurface.withValues(alpha: 0.6),
           size: 4.w,
         ),
         SizedBox(width: 2.w),
         Text(
           isExpired
-              ? '${'Expired'.tr} ${(-daysUntilExpiry)} ${'days ago'.tr}'
+              ? '${'أقرب دفعة انتهت'.tr} ${(-daysUntilExpiry)} ${'days ago'.tr}'
               : isNearExpiry
-                  ? '${'Expires in'.tr} $daysUntilExpiry ${'days'.tr}'
-                  : '${'Expires:'.tr} ${expiryDate.day}/${expiryDate.month}/${expiryDate.year}',
+                  ? '${'اقرب دفعة تنتهي عند'.tr} $daysUntilExpiry ${'days'.tr}'
+                  : '${'اقرب دفعة تنتهي عند:'.tr} ${expiryDate.day}/${expiryDate.month}/${expiryDate.year}',
           style: theme.textTheme.bodySmall?.copyWith(
             color: isExpired
                 ? colorScheme.error
                 : isNearExpiry
-                    ? Colors.orange
+                    ? AppColors.warningDark.withAlpha(220)
                     : colorScheme.onSurface.withValues(alpha: 0.7),
             fontWeight:
                 isExpired || isNearExpiry ? FontWeight.w600 : FontWeight.w400,
@@ -301,97 +280,11 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  Widget _buildSwipeBackground(BuildContext context, {required bool isLeft}) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-      decoration: BoxDecoration(
-        color: isLeft ? colorScheme.primary : Colors.orange,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Align(
-        alignment: isLeft ? Alignment.centerLeft : Alignment.centerRight,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 6.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomIconWidget(
-                iconName: isLeft ? 'info' : 'more_horiz',
-                color: Colors.white,
-                size: 8.w,
-              ),
-              SizedBox(height: 1.h),
-              Text(
-                isLeft ? 'Details'.tr : 'Actions'.tr,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Color _getBorderColor(ColorScheme colorScheme, bool isLowStock,
       bool isNearExpiry, bool isExpired) {
     if (isExpired) return colorScheme.error;
-    if (isNearExpiry) return AppColors.warningLight;
-    if (isLowStock) return AppColors.errorLight;
+    if (isNearExpiry) return AppColors.warningLight.withOpacity(0.4);
+    if (isLowStock) return AppColors.errorLight.withOpacity(0.4);
     return colorScheme.outline.withValues(alpha: 0.2);
-  }
-
-  void _showQuickActions(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'edit',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Adjust Stock'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                onAdjustStock();
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'shopping_cart',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Reorder'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                onReorder();
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'warning',
-                color: Colors.orange,
-                size: 6.w,
-              ),
-              title: Text('Mark Expired'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                onMarkExpired();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

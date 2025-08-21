@@ -20,7 +20,7 @@ class SaleRemoteDataSource {
       "items": parms.items.map((e) => e.toJson()).toList(),
     };
 
-    final respons = await api.post(EndPoints.createSale, data: sale);
+    final respons = await api.post(EndPoints.sales, data: sale);
 
     final process = InvoiceModel.fromJson(respons);
     print('✅ sale created with ID: ${process.id}');
@@ -30,10 +30,31 @@ class SaleRemoteDataSource {
 
   Future<List<InvoiceModel>> getAllInvoices() async {
     try {
-      final response = await api.get(EndPoints.getSales);
+      final response = await api.get(EndPoints.sales);
       print('📥 Raw response from invoices: $response');
       final List data = response;
       return data.map((e) => InvoiceModel.fromJson(e)).toList();
+    } catch (e) {
+      print('❌ Error fetching invoices: $e');
+      rethrow;
+    }
+  }
+
+  Future<List<InvoiceModel>> searchInvoiceByDateRange(
+      SearchInvoiceByDateRangeParams params) async {
+    print("--------------------");
+    try {
+      final response = await api.get(
+        EndPoints.searchInvoicesByRange,
+        queryParameters: params.toMap(),
+      );
+
+      print('Raw response: $response');
+
+      return (response as List).map((item) {
+        print('Invoice item: $item');
+        return InvoiceModel.fromJson(item);
+      }).toList();
     } catch (e) {
       print('❌ Error fetching invoices: $e');
       rethrow;

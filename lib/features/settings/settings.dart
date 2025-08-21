@@ -8,8 +8,6 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/app_colors.dart';
-import 'package:teriak/features/suppliers/all_supplier/presentation/pages/supplier_list_screen.dart';
-import 'package:teriak/purchaseInvoiceList.dart';
 import './widgets/settings_item_widget.dart';
 import './widgets/settings_section_widget.dart';
 import './widgets/user_profile_header_widget.dart';

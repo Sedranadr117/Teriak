@@ -10,6 +10,7 @@ import 'package:teriak/features/auth/data/datasources/auth_remote_data_source.da
 import 'package:teriak/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:teriak/features/auth/domain/usecases/get_auth.dart';
 import 'package:teriak/features/auth/domain/entities/auth_entity.dart';
+import 'package:teriak/main.dart';
 
 class AuthController extends GetxController {
   final TextEditingController emailController = TextEditingController();
@@ -105,11 +106,12 @@ class AuthController extends GetxController {
             final cacheHelper = CacheHelper();
             await cacheHelper.saveData(key: 'token', value: authEntity.token);
             await cacheHelper.saveData(key: 'Role', value: authEntity.role);
-            print(cacheHelper.getData(key: 'Role'));
             if (authEntity.isActive == true) {
               Get.offNamed(AppPages.home);
             } else {
-              Get.offNamed(AppPages.pharmacyCompleteRegistration);
+              role == "PHARMACY_MANAGER"
+                  ? Get.offNamed(AppPages.pharmacyCompleteRegistration)
+                  : Get.offNamed(AppPages.home);
             }
           } else {
             print('⛔️ Not authenticated, will not navigate!');

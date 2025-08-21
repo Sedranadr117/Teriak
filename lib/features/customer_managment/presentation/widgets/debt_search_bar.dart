@@ -19,12 +19,6 @@ class DebtSearchBar extends StatefulWidget {
 
 class _DebtSearchBarState extends State<DebtSearchBar> {
   @override
-  void dispose() {
-    widget.searchController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;

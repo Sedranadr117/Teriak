@@ -356,7 +356,7 @@ final Map<String, String> arSY = {
   "Out of Stock": "نفذ من المخزون",
   "Expired": "منتهي الصلاحية",
   "Unknown Product": "منتج غير معروف",
-  "Lot:": "رقم الدفعة:",
+  "Number of Batches:": " عدد الدفعات:",
   "N/A": "غير متوفر",
   "Stock Information": "معلومات المخزون",
   "Current Stock": "المخزون الحالي",
@@ -389,8 +389,7 @@ final Map<String, String> arSY = {
   "Prescription Drugs": "الأدوية الموصوفة",
   "Vitamins & Supplements": "الفيتامينات والمكملات",
   "Medical Devices": "الأجهزة الطبية",
-  "Search products, NDC, or lot numbers...":
-      "ابحث عن المنتجات أو أرقام NDC أو أرقام الدفعات...",
+  "Search products by name...": "ابحث عن المنتجات حسب الاسم...",
   "Scan Barcode": "مسح الباركود",
   "Filter Products": "تصفية المنتجات",
   "Apply Filters": "تطبيق المرشحات",

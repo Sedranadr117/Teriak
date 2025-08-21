@@ -5,9 +5,11 @@ import 'package:sizer/sizer.dart';
 
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/core/params/params.dart';
 
 class ShiftCardWidget extends StatelessWidget {
-  final Map<String, dynamic> shift;
+  final ShiftParams shift;
+  final List<String> daysOfWeek;
   final bool hasConflict;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -15,6 +17,7 @@ class ShiftCardWidget extends StatelessWidget {
   const ShiftCardWidget({
     Key? key,
     required this.shift,
+    required this.daysOfWeek,
     required this.hasConflict,
     required this.onEdit,
     required this.onDelete,
@@ -25,19 +28,10 @@ class ShiftCardWidget extends StatelessWidget {
     final hour = int.parse(parts[0]);
     final minute = parts[1];
 
-    if (hour == 0) {
-      return '12:$minute AM';
-    } else if (hour < 12) {
-      return '$hour:$minute AM';
-    } else if (hour == 12) {
-      return '12:$minute PM';
-    } else {
-      return '${hour - 12}:$minute PM';
-    }
-  }
-
-  bool _isOvernightShift() {
-    return shift['isOvernight'] == true;
+    if (hour == 0) return '12:$minute AM';
+    if (hour < 12) return '$hour:$minute AM';
+    if (hour == 12) return '12:$minute PM';
+    return '${hour - 12}:$minute PM';
   }
 
   @override
@@ -51,26 +45,15 @@ class ShiftCardWidget extends StatelessWidget {
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: hasConflict
-              ? Border.all(
-                  color: AppColors.warningLight,
-                  width: 2,
-                )
+              ? Border.all(color: AppColors.warningLight, width: 2)
               : null,
-          boxShadow: [
-            BoxShadow(
-              color: hasConflict
-                  ? AppColors.warningLight.withValues(alpha: 0.2)
-                  : AppColors.shadowLight,
-              blurRadius: hasConflict ? 8 : 4,
-              offset: Offset(0, 2),
-            ),
-          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
+                // الأيام
                 Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
@@ -82,9 +65,8 @@ class ShiftCardWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    (shift['day'] as List)
-                        .map((day) =>
-                            day.toString().substring(0, 3).toUpperCase())
+                    daysOfWeek
+                        .map((day) => day.substring(0, 3).toUpperCase())
                         .join(', '),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           fontSize: 10.sp,
@@ -93,9 +75,7 @@ class ShiftCardWidget extends StatelessWidget {
                         ),
                   ),
                 ),
-
                 Spacer(),
-
                 if (hasConflict)
                   Container(
                     padding:
@@ -125,10 +105,7 @@ class ShiftCardWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-
                 SizedBox(width: 2.w),
-
-                // More Options
                 GestureDetector(
                   onTap: () => _showContextMenu(context),
                   child: Container(
@@ -152,38 +129,15 @@ class ShiftCardWidget extends StatelessWidget {
                 ),
                 SizedBox(width: 2.w),
                 Text(
-                  '${_formatTime(shift['startTime'])} - ${_formatTime(shift['endTime'])}',
+                  '${_formatTime(shift.startTime)} - ${_formatTime(shift.endTime)}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
                       ),
                 ),
-                if (_isOvernightShift()) ...[
-                  SizedBox(width: 2.w),
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .secondary
-                          .withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      'Overnight'.tr,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                    ),
-                  ),
-                ],
               ],
             ),
-            if (shift['description'] != null &&
-                shift['description'].toString().isNotEmpty) ...[
+            if (shift.description.isNotEmpty) ...[
               SizedBox(height: 1.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,7 +150,7 @@ class ShiftCardWidget extends StatelessWidget {
                   SizedBox(width: 2.w),
                   Expanded(
                     child: Text(
-                      shift['description'].toString(),
+                      shift.description,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                             fontSize: 12.sp,
                             color: AppColors.textSecondaryLight,

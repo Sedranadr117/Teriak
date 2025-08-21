@@ -7,9 +7,9 @@ class EmployeeQuickActionsCard extends StatelessWidget {
   final VoidCallback? onChangeStatus;
 
   const EmployeeQuickActionsCard({
-    Key? key,
+    super.key,
     this.onChangeStatus,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,14 +60,13 @@ class EmployeeQuickActionsCard extends StatelessWidget {
         children: [
           CustomIconWidget(
             iconName: icon,
-            color: foregroundColor,
+            color: Theme.of(context!).primaryColor,
             size: 18,
           ),
           SizedBox(width: 2.w),
           Text(
             label,
-            style: Theme.of(context!).textTheme.labelLarge?.copyWith(
-                  color: foregroundColor,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
           ),

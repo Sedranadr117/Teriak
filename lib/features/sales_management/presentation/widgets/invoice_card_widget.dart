@@ -8,13 +8,11 @@ import 'package:teriak/config/themes/app_icon.dart';
 class InvoiceCardWidget extends StatelessWidget {
   final Map<String, dynamic> invoice;
   final VoidCallback? onTap;
-  final VoidCallback? onLongPress;
 
   const InvoiceCardWidget({
     super.key,
     required this.invoice,
     this.onTap,
-    this.onLongPress,
   });
 
   @override
@@ -22,15 +20,12 @@ class InvoiceCardWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    // Extract invoice data with null safety
-    final String invoiceNumber = (invoice['invoiceNumber'] as String?) ?? 'N/A';
     final String customerName =
         (invoice['customerName'] as String?) ?? 'Unknown Customer';
-    final String date = (invoice['date'] as String?) ?? '';
+    final String date = (invoice['invoiceDate'] as String?) ?? '';
     final double totalAmount =
         (invoice['totalAmount'] as num?)?.toDouble() ?? 0.0;
-    final String paymentStatus =
-        (invoice['paymentStatus'] as String?) ?? 'unknown';
+    final String paymentStatus = (invoice['status'] as String?) ?? 'unknown';
     final String paymentMethod = (invoice['paymentMethod'] as String?) ?? '';
 
     return Container(
@@ -41,10 +36,6 @@ class InvoiceCardWidget extends StatelessWidget {
           onTap: () {
             HapticFeedback.lightImpact();
             onTap?.call();
-          },
-          onLongPress: () {
-            HapticFeedback.mediumImpact();
-            onLongPress?.call();
           },
           borderRadius: BorderRadius.circular(12),
           child: Container(
@@ -68,13 +59,17 @@ class InvoiceCardWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header row with invoice number and status
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    CustomIconWidget(
+                      iconName: 'person_outline',
+                      size: 16,
+                      color: colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
                     Expanded(
                       child: Text(
-                        invoiceNumber,
+                        "فاتورة $customerName",
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface,
@@ -84,29 +79,6 @@ class InvoiceCardWidget extends StatelessWidget {
                     ),
                     SizedBox(width: 2.w),
                     _buildPaymentStatusBadge(context, paymentStatus),
-                  ],
-                ),
-
-                SizedBox(height: 1.h),
-
-                // Customer name
-                Row(
-                  children: [
-                    CustomIconWidget(
-                      iconName: 'person_outline',
-                      size: 16,
-                      color: colorScheme.onSurface.withValues(alpha: 0.6),
-                    ),
-                    SizedBox(width: 2.w),
-                    Expanded(
-                      child: Text(
-                        customerName,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.onSurface.withValues(alpha: 0.8),
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
                   ],
                 ),
 
@@ -183,8 +155,8 @@ class InvoiceCardWidget extends StatelessWidget {
     Color textColor;
     String displayText;
 
-    switch (status.toLowerCase()) {
-      case 'paid':
+    switch (status) {
+      case 'COMPLETED':
         badgeColor = Colors.green;
         textColor = Colors.white;
         displayText = 'Paid';
@@ -211,7 +183,7 @@ class InvoiceCardWidget extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
+      padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
       decoration: BoxDecoration(
         color: badgeColor,
         borderRadius: BorderRadius.circular(12),

@@ -176,27 +176,33 @@ class CustomerDetailsSheet extends StatelessWidget {
                   SizedBox(height: 3.h),
 
                   // Notes
-                  if (customer['notes'] != null &&
-                      customer['notes'].toString().isNotEmpty)
-                    _buildDetailSection(
-                      theme,
-                      colorScheme,
-                      'Notes'.tr,
-                      [
-                        Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.all(3.w),
-                          decoration: BoxDecoration(
-                            color: colorScheme.surface,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+
+                  _buildDetailSection(
+                    theme,
+                    colorScheme,
+                    'Notes'.tr,
+                    [
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(3.w),
+                        decoration: BoxDecoration(
+                          color: colorScheme.surface,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
                           child: Text(
-                            customer['notes'].toString(),
-                            style: theme.textTheme.bodyMedium,
+                            (customer['notes'] as String?)?.trim().isNotEmpty ==
+                                    true
+                                ? customer['notes']
+                                : 'No notes available',
+                            style: theme.textTheme.bodyLarge?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
+                  ),
 
                   SizedBox(height: 4.h),
                 ],

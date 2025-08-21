@@ -57,16 +57,6 @@ class CustomerController extends GetxController {
     fetchCustomers();
   }
 
-  @override
-  void dispose() {
-    nameController.dispose();
-    phoneController.dispose();
-    addressController.dispose();
-    debtAmountController.dispose();
-    notesController.dispose();
-    super.dispose();
-  }
-
   void initializeDependencies() {
     final cacheHelper = CacheHelper();
     networkInfo = NetworkInfoImpl(InternetConnection());
@@ -122,6 +112,7 @@ class CustomerController extends GetxController {
               'Error'.tr, 'Faild to get customer please try again later'.tr);
         },
         (list) {
+          isSuccess.value = true;
           customers.assignAll(
             list.map((entity) => CustomerModel(
                   id: entity.id,
@@ -131,7 +122,6 @@ class CustomerController extends GetxController {
                   notes: entity.notes,
                 )),
           );
-
           print('✅  Successfully fetched ${list.length} customers.');
           final defaultCustomer = customers.firstWhereOrNull(
             (c) => c.name.toLowerCase() == 'cash customer',
@@ -141,6 +131,7 @@ class CustomerController extends GetxController {
           }
           for (var c in customers) {
             print('Customer: ID=${c.id}, Name=${c.name}');
+            print(c.notes);
           }
         },
       );
@@ -315,5 +306,15 @@ class CustomerController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    debtAmountController.dispose();
+    notesController.dispose();
+    super.dispose();
   }
 }

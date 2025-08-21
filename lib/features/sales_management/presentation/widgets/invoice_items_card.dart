@@ -104,16 +104,12 @@ class InvoiceItemsCard extends StatelessWidget {
         leading: Container(
           padding: EdgeInsets.all(2.w),
           decoration: BoxDecoration(
-            color: item.isPrescription
-                ? AppColors.warningLight.withAlpha(26)
-                : AppColors.successLight.withAlpha(26),
+            color: AppColors.successLight.withAlpha(26),
             borderRadius: BorderRadius.circular(8),
           ),
           child: CustomIconWidget(
-            iconName: item.isPrescription ? 'medical_services' : 'medication',
-            color: item.isPrescription
-                ? AppColors.warningLight
-                : AppColors.successLight,
+            iconName: 'medical_services',
+            color: AppColors.successLight,
             size: 20,
           ),
         ),
@@ -130,22 +126,11 @@ class InvoiceItemsCard extends StatelessWidget {
                         ),
                   ),
                   SizedBox(height: 1.w),
-                  Text(
-                    item.isPrescription
-                        ? 'Prescription Required'.tr
-                        : 'Over-the-Counter'.tr,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: item.isPrescription
-                              ? AppColors.warningLight
-                              : AppColors.successLight,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
                 ],
               ),
             ),
             Text(
-              '\$${item.total.toStringAsFixed(2)}',
+              '\SYP ${item.total.toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: Theme.of(context).colorScheme.primary,
@@ -156,7 +141,7 @@ class InvoiceItemsCard extends StatelessWidget {
         subtitle: Padding(
           padding: EdgeInsets.only(top: 1.w),
           child: Text(
-            '${item.quantity} × \$${item.unitPrice.toStringAsFixed(2)}',
+            '${item.quantity} × SYP ${item.unitPrice.toStringAsFixed(2)}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -194,7 +179,7 @@ class InvoiceItemsCard extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    '\$${item.unitPrice.toStringAsFixed(2)}',
+                    'SYP ${item.unitPrice.toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -212,7 +197,7 @@ class InvoiceItemsCard extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    '\$${item.total.toStringAsFixed(2)}',
+                    'SYP ${item.total.toStringAsFixed(2)}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Theme.of(context).colorScheme.primary,
@@ -292,14 +277,12 @@ class InvoiceItem {
   final String name;
   final int quantity;
   final double unitPrice;
-  final bool isPrescription;
 
   InvoiceItem({
     required this.id,
     required this.name,
     required this.quantity,
     required this.unitPrice,
-    required this.isPrescription,
   });
 
   double get total => quantity * unitPrice;
@@ -316,18 +299,14 @@ class InvoiceItem {
       name: name ?? this.name,
       quantity: quantity ?? this.quantity,
       unitPrice: unitPrice ?? this.unitPrice,
-      isPrescription: isPrescription ?? this.isPrescription,
     );
   }
 
-  /// ✅ تحويل InvoiceItem إلى SaleItemParams
   SaleItemParams toSaleItemParams() {
     return SaleItemParams(
       stockItemId: id,
       quantity: quantity,
       unitPrice: unitPrice,
-      discountType: "FIXED_AMOUNT", // أو dynamic إذا عندك أنواع خصم
-      discountValue: 0.0, // مبدئياً بدون خصم
     );
   }
 }

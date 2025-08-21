@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
-import 'package:teriak/features/Sales_management/presentation/pages/multi_sales_screen.dart';
+import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/auth/presentation/pages/signIn_screen.dart';
 import 'package:teriak/features/customer_managment/presentation/pages/add_new_indebted_customer.dart';
 import 'package:teriak/features/customer_managment/presentation/pages/indebted_customers_management.dart';
@@ -60,7 +60,7 @@ class AppRoutes {
       transition: Transition.fadeIn,
     ),
     GetPage(
-      name: AppPages.inventoryManagement,
+      name: AppPages.stockManagement,
       page: () => StockManagement(),
       transition: Transition.fadeIn,
     ),

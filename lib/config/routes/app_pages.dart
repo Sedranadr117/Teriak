@@ -11,7 +11,7 @@ class AppPages {
   static const String workingHours = '/workingHours';
   static const String productSearch = '/product_search';
   static const String curr = '/product_search';
-  static const String inventoryManagement = '/inventory-management';
+  static const String stockManagement = '/stock-management';
   static const String allProductPage = '/master-product-screen';
   static const String productDetailPage = '/master-product_details-screen';
   static const String addProductPage = '/add_product';

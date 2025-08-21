@@ -8,4 +8,6 @@ abstract class SaleRepository {
       SaleProcessParams parms);
   Future<Either<Failure, void>> cancelSalelProcess(int saleId);
   Future<Either<Failure, List<InvoiceEntity>>> getAllSales();
+  Future<Either<Failure, List<InvoiceEntity>>> searchInvoiceByDateRange(
+      {required SearchInvoiceByDateRangeParams params});
 }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/config/widgets/custom_tab_bar.dart';
+import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
+import 'package:teriak/features/stock_management/domain/entities/stock_item_entity.dart';
 import 'package:teriak/features/stock_management/presentation/controller/stock_controller.dart';
+import 'package:teriak/features/stock_management/presentation/widgets/product_card.dart';
+import 'package:teriak/main.dart';
 import '../widgets/stock_search_bar.dart';
-import '../widgets/product_card.dart';
 import '../widgets/stock_adjustment_sheet.dart';
 
 class StockManagement extends StatefulWidget {
@@ -19,89 +20,43 @@ class StockManagement extends StatefulWidget {
 
 class _StockManagementState extends State<StockManagement>
     with TickerProviderStateMixin {
-  late TabController _tabController;
-  StockController controller = Get.put(StockController());
-  final bool _isLoading = false;
-  final List<Map<String, dynamic>> _allProducts = [];
-  List<Map<String, dynamic>> _filteredProducts = [];
+  late StockController controller;
 
   @override
   void initState() {
     super.initState();
+    controller = Get.put(StockController());
+    controller.tabController = TabController(length: 3, vsync: this);
     controller.fetchStock();
-    _tabController =
-        TabController(length: stockController.tabs.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-        behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.all(16),
-      ),
-    );
-  }
-
-  void _applyFilters() {
-    List<Map<String, dynamic>> filtered = List.from(_allProducts);
-
-    // Apply tab-specific filters
-    switch (_tabController.index) {
-      case 1: // Low Stock
-        filtered = filtered.where((product) {
-          final currentStock = (product['currentStock'] as num?)?.toInt() ?? 0;
-          final reorderPoint = (product['reorderPoint'] as num?)?.toInt() ?? 0;
-          return currentStock <= reorderPoint;
-        }).toList();
-        break;
-      case 2: // Near Expiry
-        filtered = filtered.where((product) {
-          final expiryDate = product['expiryDate'] != null
-              ? DateTime.tryParse(product['expiryDate'].toString())
-              : null;
-          if (expiryDate == null) return false;
-          final daysUntilExpiry = expiryDate.difference(DateTime.now()).inDays;
-          return daysUntilExpiry <= 30 && daysUntilExpiry > 0;
-        }).toList();
-        break;
-    }
-
-    setState(() {
-      _filteredProducts = filtered;
-    });
   }
 
   void _showProductDetails(Map<String, dynamic> product) {
+    final productId = product['productId'];
+    final productType = product['productType'];
+    controller.fetchStockDetails(
+      productId: productId,
+      productType: productType,
+    );
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => _buildProductDetailsSheet(product),
+      builder: (context) => Obx(() {
+        return _buildProductDetailsSheetFromEndpoint(
+            controller.stockDetails, product);
+      }),
     );
   }
 
-  Widget _buildProductDetailsSheet(Map<String, dynamic> product) {
+  Widget _buildProductDetailsSheetFromEndpoint(
+      List<StockDetailsEntity> details, Map<String, dynamic> product) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    final currentStock = (product['currentStock'] as num?)?.toInt() ?? 0;
-    final reorderPoint = (product['reorderPoint'] as num?)?.toInt() ?? 0;
-    final expiryDate = product['expiryDate'] != null
-        ? DateTime.tryParse(product['expiryDate'].toString())
-        : null;
 
     return Container(
       height: 80.h,
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -136,174 +91,150 @@ class _StockManagementState extends State<StockManagement>
               ],
             ),
           ),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(4.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Product image and basic info
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 25.w,
-                        height: 25.w,
-                        decoration: BoxDecoration(
-                          color: colorScheme.surface,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: colorScheme.outline.withValues(alpha: 0.2),
-                            width: 1,
-                          ),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Center(
-                            child: CustomIconWidget(
-                              iconName: 'medication',
-                              color: colorScheme.primary,
-                              size: 12.w,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              product['name']?.toString() ??
-                                  'Unknown Product'.tr,
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 0.5.h),
-                            Text(
-                              '${'Lot:'.tr} ${product['lotNumber']?.toString() ?? 'N/A'.tr}',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: colorScheme.onSurface
-                                    .withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 3.h),
-
-                  // Stock information
-                  _buildDetailSection(
-                    theme,
-                    colorScheme,
-                    'Stock Information'.tr,
-                    [
-                      _buildDetailRow(
-                          'Current Stock'.tr, '$currentStock ${'units'.tr}'),
-                      _buildDetailRow(
-                          'Reorder Point'.tr, '$reorderPoint ${'units'.tr}'),
-                      _buildDetailRow('Unit Price'.tr,
-                          '\$${(product['unitPrice'] as num?)?.toStringAsFixed(2) ?? '0.00'}'),
-                      _buildDetailRow('Total Value'.tr,
-                          '\$${((product['unitPrice'] as num? ?? 0) * currentStock).toStringAsFixed(2)}'),
-                    ],
-                  ),
-
-                  SizedBox(height: 3.h),
-
-                  // Product information
-                  _buildDetailSection(
-                    theme,
-                    colorScheme,
-                    'Product Information'.tr,
-                    [
-                      _buildDetailRow('Category'.tr,
-                          product['category']?.toString() ?? 'N/A'.tr),
-                      _buildDetailRow('Supplier'.tr,
-                          product['supplier']?.toString() ?? 'N/A'.tr),
-                      if (expiryDate != null)
-                        _buildDetailRow('Expiry Date'.tr,
-                            '${expiryDate.day}/${expiryDate.month}/${expiryDate.year}'),
-                    ],
-                  ),
-
-                  SizedBox(height: 4.h),
-                ],
-              ),
-            ),
-          ),
-
-          // Action buttons
-          Container(
-            padding: EdgeInsets.all(4.w),
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: colorScheme.outline.withValues(alpha: 0.2),
-                  width: 1,
-                ),
-              ),
-            ),
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
             child: Row(
               children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _showStockAdjustmentSheet(product);
-                    },
-                    child: Text('Adjust Stock'.tr),
-                  ),
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _reorderProduct(product);
-                    },
-                    child: Text('Reorder'.tr),
+                Text(
+                  product['productName'].toString(),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
             ),
           ),
+          Expanded(
+            child: controller.isLoading.value
+                ? _buildLoadingView(theme, colorScheme)
+                : ListView.builder(
+                    padding: EdgeInsets.all(4.w),
+                    itemCount: details.length,
+                    itemBuilder: (context, index) {
+                      final detail = details[index];
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: detail.stockItems.map((stockItem) {
+                          return Card(
+                            color: theme.cardColor,
+                            elevation: 1,
+                            margin: EdgeInsets.symmetric(vertical: 1.h),
+                            child: Padding(
+                              padding: EdgeInsets.all(5.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildDetailRow(
+                                      'Batch:'.tr, stockItem.batchNo),
+                                  _buildDetailRow(
+                                      'Quantity:'.tr,
+                                      (stockItem.quantity as num)
+                                          .toStringAsFixed(2)),
+                                  _buildDetailRow('Bonus'.tr,
+                                      (stockItem.bonusQty as num).toString()),
+                                  _buildDetailRow(
+                                    'Supplier'.tr,
+                                    stockItem.supplier,
+                                  ),
+                                  _buildDetailRow(
+                                    'Expiry'.tr,
+                                    stockItem.expiryDate != null
+                                        ? '${stockItem.expiryDate!.day}/${stockItem.expiryDate!.month}/${stockItem.expiryDate!.year}'
+                                        : 'N/A',
+                                  ),
+                                  Divider(
+                                    thickness: 2,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .outline
+                                        .withAlpha(77),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+          ),
+          role == 'PHARMACY_TRAINEE'
+              ? SizedBox()
+              : Container(
+                  padding: EdgeInsets.all(4.w),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      top: BorderSide(
+                        color: colorScheme.outline.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            _showStockAdjustmentSheet(product);
+                          },
+                          child: Text('Adjust Stock'.tr),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 1.w,
+                      ),
+                      Expanded(
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                                color: colorScheme.error, width: 1.5),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+
+                            _deleteStock(product);
+                          },
+                          child: Text(
+                            'Delete Stock'.tr,
+                            style: TextStyle(color: colorScheme.error),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
         ],
       ),
     );
   }
 
-  Widget _buildDetailSection(ThemeData theme, ColorScheme colorScheme,
-      String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+  void _deleteStock(Map<String, dynamic> product) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete From Stock'.tr),
+        content: Text(
+            '${'Are you sure you want to remove'.tr} ${product['productName']} ${'from Stock?'.tr}'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel'.tr),
           ),
-        ),
-        SizedBox(height: 1.h),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(4.w),
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
+          ElevatedButton(
+            onPressed: () {
+              controller.deleteStock(product['id']);
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
             ),
+            child: Text('Delete'.tr),
           ),
-          child: Column(
-            children: children,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -338,122 +269,19 @@ class _StockManagementState extends State<StockManagement>
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => StockAdjustmentSheet(
-        product: product,
-        onAdjustmentSubmitted: (adjustmentData) {
-          _processStockAdjustment(adjustmentData);
-        },
-      ),
-    );
-  }
-
-  void _processStockAdjustment(Map<String, dynamic> adjustmentData) {
-    final productId = adjustmentData['productId'];
-    final adjustmentType = adjustmentData['adjustmentType'];
-    final quantity = adjustmentData['quantity'] as int;
-
-    // Find and update the product
-    final productIndex = _allProducts.indexWhere((p) => p['id'] == productId);
-    if (productIndex != -1) {
-      final currentStock =
-          (_allProducts[productIndex]['currentStock'] as num).toInt();
-      final newStock = adjustmentType == 'Add'
-          ? currentStock + quantity
-          : currentStock - quantity;
-
-      setState(() {
-        _allProducts[productIndex]['currentStock'] = newStock.clamp(0, 99999);
-      });
-
-      _applyFilters();
-
-      _showSnackBar("Stock adjusted successfully".tr);
-    }
-  }
-
-  void _reorderProduct(Map<String, dynamic> product) {
-    HapticFeedback.lightImpact();
-    _showSnackBar("${"Reorder request submitted for".tr} ${product['name']}");
-  }
-
-  void _markProductExpired(Map<String, dynamic> product) {
-    final productIndex =
-        _allProducts.indexWhere((p) => p['id'] == product['id']);
-    if (productIndex != -1) {
-      setState(() {
-        _allProducts[productIndex]['expiryDate'] =
-            DateTime.now().subtract(Duration(days: 1)).toIso8601String();
-      });
-
-      _applyFilters();
-
-      _showSnackBar("Product marked as expired".tr);
-    }
-  }
-
-  void _showProductContextMenu(Map<String, dynamic> product) {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'swap_horiz',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Transfer Between Locations'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                _transferProduct(product);
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'history',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('View Transaction History'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                _viewTransactionHistory(product);
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'notifications',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Set Alerts'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                _setProductAlerts(product);
-              },
-            ),
-          ],
+      builder: (context) => Obx(
+        () => StockAdjustmentSheet(
+          isLoading: controller.isLoading.value,
+          product: product,
+          onAdjustmentSubmitted: (StockParams params) async {
+            await controller.editStock(product['id'], params);
+            Navigator.pop(context);
+          },
         ),
       ),
     );
   }
 
-  void _transferProduct(Map<String, dynamic> product) {
-    _showSnackBar("Transfer functionality would be implemented here".tr);
-  }
-
-  void _viewTransactionHistory(Map<String, dynamic> product) {
-    _showSnackBar("${"Transaction history for".tr} ${product['name']}");
-  }
-
-  void _setProductAlerts(Map<String, dynamic> product) {
-    _showSnackBar("${"Alert settings for".tr} ${product['name']}");
-  }
-
-  StockController stockController = Get.put(StockController());
 ///////////////////////////////////////////////////////////////////////////////////////
 
   @override
@@ -467,55 +295,170 @@ class _StockManagementState extends State<StockManagement>
         children: [
           StockSearchBar(
             onSearchChanged: (query) {
-              stockController.results.clear();
-              stockController.search(query.trim());
+              controller.results.clear();
+              controller.search(query.trim());
             },
             onScanPressed: () {
               showBarcodeScannerBottomSheet(
                 onScanned: (code) {
-                  stockController.searchController.text = code;
-                  stockController.search(code);
+                  controller.searchController.text = code;
+                  controller.search(code);
                 },
               );
             },
+            searchController: controller.searchController,
           ),
-          CustomTabBar(
-            isScrollable: true,
-            tabs: stockController.tabs,
-            controller: _tabController,
-            onTap: (index) {
-              _applyFilters();
-            },
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 4.w),
+            child: TabBar(
+              isScrollable: true,
+              controller: controller.tabController,
+              onTap: (index) {},
+              tabs: [
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomIconWidget(
+                        iconName: 'inventory_2_outlined',
+                        color: controller.tabController.index == 0
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: 18,
+                      ),
+                      SizedBox(width: 2.w),
+                      Text('All Stock'.tr),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomIconWidget(
+                        iconName: 'warning_amber_outlined',
+                        color: controller.tabController.index == 1
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: 18,
+                      ),
+                      SizedBox(width: 2.w),
+                      Text('Low Stock'.tr),
+                    ],
+                  ),
+                ),
+                Tab(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CustomIconWidget(
+                        iconName: 'schedule_outlined',
+                        color: controller.tabController.index == 2
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                        size: 18,
+                      ),
+                      SizedBox(width: 2.w),
+                      Text('Near Expiry'.tr),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
           Expanded(
-            child: _isLoading
-                ? _buildLoadingView(theme, colorScheme)
-                : RefreshIndicator(
-                    onRefresh: stockController.refreshStock,
-                    child: _filteredProducts.isEmpty
-                        ? _buildEmptyView(theme, colorScheme)
-                        : ListView.builder(
-                            padding: EdgeInsets.only(bottom: 10.h),
-                            itemCount: _filteredProducts.length,
-                            itemBuilder: (context, index) {
-                              final product = _filteredProducts[index];
-                              return ProductCard(
-                                product: product,
-                                onTap: () => _showProductDetails(product),
-                                onAdjustStock: () =>
-                                    _showStockAdjustmentSheet(product),
-                                onReorder: () => _reorderProduct(product),
-                                onMarkExpired: () =>
-                                    _markProductExpired(product),
-                                onLongPress: () =>
-                                    _showProductContextMenu(product),
-                              );
-                            },
-                          ),
-                  ),
+            child: TabBarView(controller: controller.tabController, children: [
+              Obx(() => _buildStockList(
+                  controller.applyFilters(0), theme, colorScheme)),
+              Obx(() => _buildStockList(
+                  controller.applyFilters(1), theme, colorScheme)),
+              Obx(() => _buildStockList(
+                  controller.applyFilters(2), theme, colorScheme))
+            ]),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStockList(List<Map<String, dynamic>> stock, ThemeData theme,
+      ColorScheme colorScheme) {
+    List<Map<String, dynamic>> displayList =
+        controller.searchController.text.trim().isNotEmpty
+            ? controller.results
+                .map((product) => {
+                      'id': product.id,
+                      'productId': product.productId,
+                      'productName': product.productName,
+                      'productType': product.productType,
+                      'barcodes': product.barcodes,
+                      'totalQuantity': product.totalQuantity,
+                      'totalBonusQuantity': product.totalBonusQuantity,
+                      'averagePurchasePrice': product.averagePurchasePrice,
+                      'totalValue': product.totalValue,
+                      'categories': product.categories,
+                      'sellingPrice': product.sellingPrice,
+                      'minStockLevel': product.minStockLevel,
+                      'hasExpiredItems': product.hasExpiredItems,
+                      'hasExpiringSoonItems': product.hasExpiringSoonItems,
+                      'earliestExpiryDate':
+                          product.earliestExpiryDate?.toIso8601String(),
+                      'latestExpiryDate':
+                          product.latestExpiryDate?.toIso8601String(),
+                      'numberOfBatches': product.numberOfBatches,
+                      'pharmacyId': product.pharmacyId,
+                    })
+                .toList()
+            : stock;
+
+    if (controller.isLoading.value) {
+      return _buildLoadingView(theme, colorScheme);
+    }
+
+    if (displayList.isEmpty) {
+      return _buildEmptyView(theme, colorScheme);
+    }
+
+    return RefreshIndicator(
+      onRefresh: controller.refreshStock,
+      child: controller.isLoading.value
+          ? _buildLoadingView(theme, colorScheme)
+          : ListView.builder(
+              padding: EdgeInsets.only(bottom: 10.h),
+              itemCount: displayList.length,
+              itemBuilder: (context, index) {
+                final product = displayList[index];
+                print(
+                    "📦 ${product['productName']} | minStockLevel = ${product['minStockLevel']}");
+
+                final mapy = {
+                  'id': product['id'],
+                  'productId': product['productId'],
+                  'productName': product['productName'],
+                  'productType': product['productType'],
+                  'barcodes': product['barcodes'],
+                  'totalQuantity': product['totalQuantity'],
+                  'totalBonusQuantity': product['totalBonusQuantity'],
+                  'averagePurchasePrice': product['averagePurchasePrice'],
+                  'totalValue': product['totalValue'],
+                  'categories': product['categories'],
+                  'sellingPrice': product['sellingPrice'],
+                  'minStockLevel': product['minStockLevel'],
+                  'hasExpiredItems': product['hasExpiredItems'],
+                  'hasExpiringSoonItems':
+                      product['hasExpiringSoonItems'] ?? false,
+                  'earliestExpiryDate': product['earliestExpiryDate'] ?? false,
+                  'latestExpiryDate': product['latestExpiryDate'],
+                  'numberOfBatches': product['numberOfBatches'],
+                  'pharmacyId': product['pharmacyId'],
+                };
+                return ProductCard(
+                  product: mapy,
+                  onTap: () => _showProductDetails(mapy),
+                  onAdjustStock: () => _showStockAdjustmentSheet(mapy),
+                );
+              },
+            ),
     );
   }
 
@@ -527,7 +470,7 @@ class _StockManagementState extends State<StockManagement>
           CircularProgressIndicator(),
           SizedBox(height: 2.h),
           Text(
-            'Loading Stock...'.tr,
+            'Loading...'.tr,
             style: theme.textTheme.titleMedium?.copyWith(
               color: colorScheme.onSurface.withValues(alpha: 0.7),
             ),
@@ -562,6 +505,9 @@ class _StockManagementState extends State<StockManagement>
             ),
             textAlign: TextAlign.center,
           ),
+          SizedBox(height: 1.h),
+          IconButton(
+              onPressed: controller.refreshStock, icon: Icon(Icons.refresh))
         ],
       ),
     );
