@@ -935,40 +935,56 @@ final Map<String, String> arSY = {
 
   // Purchase Invoice Widgets
   "Invoice Date": "تاريخ الفاتورة",
-  "Invoice Number": "رقم الفاتورة",
-  "Total Amount": "المبلغ الإجمالي",
   "Quantity Received": "الكمية المستلمة",
-  "Unit Price": "سعر الوحدة",
-  "Total Amount": "المبلغ الإجمالي",
-  "Expiry Date": "تاريخ انتهاء الصلاحية",
-  "Batch Number": "رقم التشغيلة",
   "FREE": "مجاني",
-
+  "Qty:": "كمية",
+  "Total": "",
   // Sales Management
   "Invoices refreshed successfully": "تم تحديث الفواتير بنجاح",
   "Please select a customer first": "يرجى اختيار عميل أولاً",
-  "Failed to create sale process": "فشل في إنشاء عملية البيع",
-  "sale process added successfully!": "تمت إضافة عملية البيع بنجاح!",
   "Failed to add sale process for customer.":
       "فشل في إضافة عملية البيع للعميل.",
-  "No internet connection. Please check your network.":
-      "لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.",
-  "An unexpected error occurred. Please try again.":
-      "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
   "An unexpected error occurred while fetching Stock.":
       "حدث خطأ غير متوقع أثناء جلب المخزون.",
-  "Faild to get customer please try again later":
-      "فشل في الحصول على العميل، يرجى المحاولة لاحقاً",
-  "No internet connection. Please check your network.":
-      "لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة.",
-
-  // Stock Management Widgets
-  "Product Details": "تفاصيل المنتج",
-  "Search products, NDC, or lot numbers...":
-      "ابحث عن المنتجات أو أرقام NDC أو أرقام الدفعات...",
-  "Scan Barcode": "مسح الباركود",
 
   // Payment Status
   "Paid": "مدفوع",
-  "Overdue": "متأخر"
+  "Overdue": "متأخر",
+  "Cannot delete this item because it is linked to a sale.":
+      "لا يمكن حذف هذا العنصر لأنه مرتبط بعملية بيع.",
+  "Stock deleted successfully!": "تم حذف المخزون بنجاح!",
+  "Stocks updated successfully!": "تم تحديث المخزون بنجاح!",
+  "Expiry date cannot be in the past":
+      "تاريخ الانتهاء لا يمكن أن يكون في الماضي",
+  "Failed to get stock please try again later":
+      "فشل في جلب المخزون، يرجى المحاولة لاحقًا",
+  "The nearest batch has expired": "أقرب دفعة انتهت",
+  "The nearest batch expires at": "أقرب دفعة تنتهي عند",
+  "Nearest batch expires at:": "أقرب دفعة تنتهي عند:",
+  "Batch:": "الدفعة:",
+  "Bonus": "البونص",
+  "Expiry": "تاريخ الانتهاء",
+  "Minimum Stock Level": "الحد الأدنى للمخزون",
+  "Delete Stock": "حذف المخزون",
+  "Delete From Stock": "الحذف من المخزون",
+  "from Stock?": "من المخزون؟",
+  "Employees Management": "إدارة الموظفين",
+  "Customers Management": "إدارة الزبائن",
+  "Suppliers": "المورّدين",
+  "Sign out": "تسجيل الخروج",
+  "Are you sure you want to sign out? You will need to sign in again to access your account.":
+      "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج لتسجيل الدخول مرة أخرى للوصول إلى حسابك.",
+  "Signed out successfully": "تم تسجيل الخروج بنجاح",
+  "Sign Out": "تسجيل الخروج",
+  "Sale Invoices": "فواتير البيع",
+  "POS": "البيع",
+  "Invoices": "الفواتير",
+  "Stock": "المخزون",
+  "Loading invoices...": "جاري تحميل الفواتير...",
+  "No invoices available": "لا توجد فواتير متاحة",
+  "Try adjusting your search \nInvoices will appear here when available":
+      "جرّب تعديل بحثك\nستظهر الفواتير هنا عند توفرها",
+  "Invoice": "فاتورة",
+  "Share": "مشاركة",
+  "Name": "الاسم",
 };

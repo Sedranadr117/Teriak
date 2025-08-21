@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -161,7 +162,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                               Expanded(
                                 child: _buildInfoChip(
                                   context,
-                                  'Qty: ${widget.product["quantity"] ?? 0}',
+                                  '${'Qty:'.tr}${widget.product["quantity"] ?? 0}',
                                   CustomIconWidget(
                                     iconName: 'inventory',
                                     color: theme.brightness == Brightness.light
@@ -175,7 +176,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                               Expanded(
                                 child: _buildInfoChip(
                                   context,
-                                  '\$${(widget.product["unitPrice"] as double? ?? 0.0).toStringAsFixed(2)}',
+                                  'SYP ${(widget.product["unitPrice"] as double? ?? 0.0).toStringAsFixed(2)}',
                                   CustomIconWidget(
                                     iconName: 'attach_money',
                                     color: theme.brightness == Brightness.light
@@ -195,7 +196,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'Total: \$${(widget.product["subTotal"] as double? ?? 0.0)}',
+                                '${'Total:'.tr} \$${(widget.product["subTotal"] as double? ?? 0.0)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.primary,
