@@ -19,8 +19,8 @@ class CustomBottomNav extends StatelessWidget {
     print(role);
     final items = [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.shopping_cart),
-        title: ("Purchase Order".tr),
+        icon: Icon(Icons.science),
+        title: ("Pharmacy Product".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
@@ -37,8 +37,8 @@ class CustomBottomNav extends StatelessWidget {
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.list),
-        title: ("Pharmacy Product".tr),
+        icon: Icon(Icons.shopping_cart),
+        title: ("Purchase Order".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),

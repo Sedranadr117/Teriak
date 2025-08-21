@@ -10,7 +10,7 @@ final Map<String, String> enUS = {
 
   "Search by supplier name": "Search by supplier name",
   "Scan Barcode": "Scan Barcode",
-  "Search Purchase Invoice":"Search Purchase Invoice",
+  "Search Purchase Invoice": "Search Purchase Invoice",
   "barcode Hint": "Enter Barcode",
   "Added Barcodes": "Added Barcodes",
   "scan": "Scan the barcode with the camera.",
@@ -107,13 +107,20 @@ final Map<String, String> enUS = {
       "Use the search form above to find invoices by supplier or date range",
   "Search by Supplier": "Search by Supplier",
   "Select Supplier": "Select Supplier",
+  "Are you sure you want to delete product":"Are you sure you want to delete product",
   "Search by Date Range": "Search by Date Range",
+  "Cannot delete pharmacy product. It has stock items. Please remove all stock items first":
+      "Cannot delete pharmacy product. It has stock items. Please remove all stock items first",
+  'You cannot delete the supplier because he has purchase invoices':
+      'You cannot delete the supplier because he has purchase invoices',
   "Start Date": "Start Date",
   "End Date": "End Date",
-  'Are you sure you want to delete this order? This action cannot be undone':'Are you sure you want to delete this order? This action cannot be undone',
+  'Delete Product': 'Delete Product',
+  'Are you sure you want to delete this order? This action cannot be undone':
+      'Are you sure you want to delete this order? This action cannot be undone',
   "Select Date": "Select Date",
   "Search by Supplier": "Search by Supplier",
-  'Supplier Invoices':'Supplier Invoices',
+  'Supplier Invoices': 'Supplier Invoices',
   "Search by Date": "Search by Date",
   "Please select a supplier": "Please select a supplier",
   "Please select both start and end dates":
@@ -472,7 +479,8 @@ final Map<String, String> enUS = {
   "Select Currency": "Select Currency",
   "Currency SYP": "Syrian Pound",
   "Currency USD": "US Dollar",
-  "not found": "The product is not available, please try adding it first from the medicine button",
+  "not found":
+      "The product is not available, please try adding it first from the medicine button",
   "Product Selection": "Product Selection",
   "Select Product": "Select Product",
   "Enter or scan barcode": "Enter or scan barcode",
@@ -639,8 +647,8 @@ final Map<String, String> enUS = {
   "Supplier": "Supplier",
   "Total Amount": "Total Amount",
   "Quantity in stock": "Quantity in stock",
-  
-"Are you sure you want to delete":"Are you sure you want to delete",
+
+  "Are you sure you want to delete": "Are you sure you want to delete",
   "Date": "Date",
   "Invoice n": "Invoice number",
   "Currency": "Currency",
@@ -822,5 +830,155 @@ final Map<String, String> enUS = {
   "Support": "Support",
   "Contact Us": "Contact Us",
   "FAQ": "FAQ",
-  "User Guide": "User Guide"
+  "User Guide": "User Guide",
+
+  // Purchase Invoice Details
+  "Items": "Items",
+  "Tap to expand": "Tap to expand",
+  "Refresh Stock": "Refresh Stock",
+  "Search invoices by...": "Search invoices by...",
+  "View Details": "View Details",
+  "Process Return": "Process Return",
+  "Share Invoice": "Share Invoice",
+  "Invoice Management": "Invoice Management",
+  "Clear Filters": "Clear Filters",
+
+  // Sales Management
+  "Print": "Print",
+  "Email": "Email",
+  "Duplicate": "Duplicate",
+  "View Product Details": "View Product Details",
+  "Check Inventory": "Check Inventory",
+  "Return Item": "Return Item",
+  "Confirm Return": "Confirm Return",
+  "Are you sure you want to return this item?":
+      "Are you sure you want to return this item?",
+  "This action cannot be undone.": "This action cannot be undone.",
+  "Cancel": "Cancel",
+  "Continue": "Continue",
+
+  // Stock Management
+  "Adjust Stock": "Adjust Stock",
+  "Reorder": "Reorder",
+  "Transfer Between Locations": "Transfer Between Locations",
+  "View Transaction History": "View Transaction History",
+  "Set Alerts": "Set Alerts",
+  "Stock Management": "Stock Management",
+  "All Stock": "All Stock",
+  "Low Stock": "Low Stock",
+  "Near Expiry": "Near Expiry",
+  "Expired": "Expired",
+  "Stock Information": "Stock Information",
+  "Current Stock": "Current Stock",
+  "Reorder Point": "Reorder Point",
+  "Unit Price": "Unit Price",
+  "Total Value": "Total Value",
+  "Product Information": "Product Information",
+  "Category": "Category",
+  "Supplier": "Supplier",
+  "Expiry Date": "Expiry Date",
+  "Stock Status": "Stock Status",
+  "EXPIRED": "EXPIRED",
+  "NEAR EXPIRY": "NEAR EXPIRY",
+  "LOW STOCK": "LOW STOCK",
+  "In Stock": "In Stock",
+  "Out of Stock": "Out of Stock",
+  "Stock Adjustment": "Stock Adjustment",
+  "Current Stock:": "Current Stock:",
+  "Adjustment Type": "Adjustment Type",
+  "Add Stock": "Add Stock",
+  "Remove Stock": "Remove Stock",
+  "Enter quantity to": "Enter quantity to",
+  "add": "add",
+  "remove": "remove",
+  "Reason Code *": "Reason Code *",
+  "Additional Notes": "Additional Notes",
+  "Enter additional notes or comments...":
+      "Enter additional notes or comments...",
+  "New Stock": "New Stock",
+  "Submit Adjustment": "Submit Adjustment",
+  "Received Shipment": "Received Shipment",
+  "Damaged Goods": "Damaged Goods",
+  "Expired Products": "Expired Products",
+  "Theft/Loss": "Theft/Loss",
+  "Return to Supplier": "Return to Supplier",
+  "Customer Return": "Customer Return",
+  "Inventory Count Correction": "Inventory Count Correction",
+  "Transfer Out": "Transfer Out",
+  "Transfer In": "Transfer In",
+  "Other": "Other",
+  "Loading inventory...": "Loading inventory...",
+  "No products found": "No products found",
+  "Try adjusting your search or filters":
+      "Try adjusting your search or filters",
+  "Clear Filters": "Clear Filters",
+  "Inventory synchronized successfully": "Inventory synchronized successfully",
+  "Stock adjusted successfully": "Stock adjusted successfully",
+  "Reorder request submitted for": "Reorder request submitted for",
+  "Product marked as expired": "Product marked as expired",
+  "Transfer functionality would be implemented here":
+      "Transfer functionality would be implemented here",
+  "Transaction history for": "Transaction history for",
+  "Alert settings for": "Alert settings for",
+  "Search products, NDC, or lot numbers...":
+      "Search products, NDC, or lot numbers...",
+  "Scan Barcode": "Scan Barcode",
+  "Filter Products": "Filter Products",
+  "Apply Filters": "Apply Filters",
+  "Clear All": "Clear All",
+  "Reorder at:": "Reorder at:",
+  "Total:": "Total:",
+  "days ago": "days ago",
+  "Expires in": "Expires in",
+  "days": "days",
+  "Expires:": "Expires:",
+  "Details": "Details",
+  "Actions": "Actions",
+  "Mark Expired": "Mark Expired",
+  "Lot:": "Lot:",
+  "N/A": "N/A",
+  "units": "units",
+  "Prescription Drugs": "Prescription Drugs",
+  "Vitamins & Supplements": "Vitamins & Supplements",
+  "Medical Devices": "Medical Devices",
+  "Unknown Product": "Unknown Product",
+
+  // Purchase Invoice Widgets
+  "Invoice Date": "Invoice Date",
+  "Invoice Number": "Invoice Number",
+  "Total Amount": "Total Amount",
+  "Quantity Received": "Quantity Received",
+  "Unit Price": "Unit Price",
+  "Total Amount": "Total Amount",
+  "Expiry Date": "Expiry Date",
+  "Batch Number": "Batch Number",
+  "FREE": "FREE",
+
+  // Sales Management
+  "Invoices refreshed successfully": "Invoices refreshed successfully",
+  "Please select a customer first": "Please select a customer first",
+  "Failed to create sale process": "Failed to create sale process",
+  "sale process added successfully!": "sale process added successfully!",
+  "Failed to add sale process for customer.":
+      "Failed to add sale process for customer.",
+  "No internet connection. Please check your network.":
+      "No internet connection. Please check your network.",
+  "An unexpected error occurred. Please try again.":
+      "An unexpected error occurred. Please try again.",
+  "An unexpected error occurred while fetching Stock.":
+      "An unexpected error occurred while fetching Stock.",
+  "Faild to get customer please try again later":
+      "Failed to get customer please try again later",
+  "No internet connection. Please check your network.":
+      "No internet connection. Please check your network.",
+
+  // Stock Management Widgets
+  "Product Details": "Product Details",
+  "Search products, NDC, or lot numbers...":
+      "Search products, NDC, or lot numbers...",
+  "Scan Barcode": "Scan Barcode",
+
+  // Payment Status
+  "Paid": "Paid",
+  "Overdue": "Overdue"
 };

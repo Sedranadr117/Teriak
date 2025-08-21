@@ -46,7 +46,7 @@ class _PurchaseInvoiceDetailScreenState
     //   return Scaffold(
     //     resizeToAvoidBottomInset: false,
     //     appBar: AppBar(
-    //       title: Text('Invoice Details',
+    //       title: Text('Invoice Details'.tr,
     //           style: Theme.of(context).textTheme.titleLarge),
     //     ),
     //     body: Center(
@@ -59,7 +59,7 @@ class _PurchaseInvoiceDetailScreenState
       backgroundColor: theme.scaffoldBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: Text('Invoice Details',
+          title: Text('Invoice Details'.tr,
               style: Theme.of(context).textTheme.titleLarge),
           actions: [
             IconButton(
@@ -104,7 +104,7 @@ class _PurchaseInvoiceDetailScreenState
                         ),
                         SizedBox(width: 3.w),
                         Text(
-                          'Items (${invoiceItem.items.length})',
+                          '${'Items'.tr} (${invoiceItem.items.length})',
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -119,7 +119,7 @@ class _PurchaseInvoiceDetailScreenState
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            'Tap to expand',
+                            'Tap to expand'.tr,
                             style: theme.textTheme.labelSmall?.copyWith(
                               color: theme.colorScheme.primary,
                               fontWeight: FontWeight.w500,

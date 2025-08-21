@@ -428,7 +428,8 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
           ],
         ),
         content: Text(
-          'Are you sure you want to delete this order? This action cannot be undone'.tr,
+          'Are you sure you want to delete this order? This action cannot be undone'
+              .tr,
         ),
         actions: [
           TextButton(
@@ -456,6 +457,7 @@ class _PurchaseOrderDetailState extends State<PurchaseOrderDetail> {
         .deletePurchaseOrder(controller.purchaseOrder.value!.id);
 
     orderController.refreshPurchaseOrders();
+    orderController.getAllPendingPurchaseOrders();
 
     Get.snackbar('', 'Order deleted successfully'.tr,
         backgroundColor: Colors.red, colorText: Colors.white);

@@ -56,7 +56,6 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                         context: context,
                         errorMessage: supplierController.errorMessage.value,
                         onPressed: supplierController.refreshSuppliers,
-                        
                       );
                     }
 
@@ -89,8 +88,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                               onDelete: () async {
                                 await deleteController
                                     .deleteSupplier(supplier.id);
-                                supplierController.suppliers
-                                    .removeWhere((s) => s.id == supplier.id);
+                                supplierController.refreshSuppliers();
                               },
                             ),
                           ),
@@ -105,10 +103,9 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
 
                   if (status.isError) {
                     return CommonWidgets.buildErrorWidget(
-                      context: context,
-                      errorMessage: searchController.errorMessage.value,
-                       onPressed: supplierController.refreshSuppliers
-                    );
+                        context: context,
+                        errorMessage: searchController.errorMessage.value,
+                        onPressed: supplierController.refreshSuppliers);
                   }
 
                   if (status.isEmpty && searchController.results.isEmpty) {
@@ -141,8 +138,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                             onDelete: () async {
                               await deleteController
                                   .deleteSupplier(supplier.id);
-                              supplierController.suppliers
-                                  .removeWhere((s) => s.id == supplier.id);
+                              supplierController.refreshSuppliers();
                             },
                           ),
                         ),
@@ -157,7 +153,6 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
           ),
         ),
         floatingActionButton: AddButton(
-          
           onTap: () {
             Get.toNamed(AppPages.addSupplier);
           },

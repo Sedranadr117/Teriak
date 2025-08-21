@@ -70,7 +70,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
     return Scaffold(
       backgroundColor: colorScheme.surface,
       appBar: AppBar(
-        title: Text('Invoice Management'),
+        title: Text('Invoice Management'.tr),
         actions: [
           IconButton(
             onPressed: saleController.refreshData,
@@ -231,7 +231,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
           ),
           SizedBox(height: 2.h),
           Text(
-            'Loading invoices...',
+            'Loading invoices...'.tr,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: Theme.of(context)
                       .colorScheme
@@ -291,7 +291,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                     saleController.searchResults.clear();
                   });
                 },
-                child: const Text('Clear Filters'),
+                child: Text('Clear Filters'.tr),
               ),
             ],
           ],

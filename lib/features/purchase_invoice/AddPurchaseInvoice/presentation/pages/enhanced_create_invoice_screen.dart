@@ -6,6 +6,7 @@ import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dar
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/pages/widgets/invoice_products_table_widget.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/controller/all_purchase_invoice_controller.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/purchase_model .dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/controller/all_purchase_order_controller.dart';
 import '../controllers/add_purchase_invoice_controller.dart';
 import 'widgets/invoice_header_widget.dart';
 import 'widgets/invoice_summary_widget.dart';
@@ -23,12 +24,14 @@ class _EnhancedCreateInvoiceScreenState
   late PurchaseOrderModel orderItem;
   late final AddPurchaseInvoiceController controller;
   late final AllPurchaseInvoiceController allController;
+  late final GetAllPurchaseOrderController orderController;
 
   @override
   void initState() {
     super.initState();
     controller = Get.find<AddPurchaseInvoiceController>();
     allController = Get.find<AllPurchaseInvoiceController>();
+    orderController = Get.find<GetAllPurchaseOrderController>();
     orderItem = Get.arguments as PurchaseOrderModel;
     _loadPurchaseOrderData();
   }
@@ -161,8 +164,10 @@ class _EnhancedCreateInvoiceScreenState
                       isSaving: controller.isSaving,
                       onProceedToPayment: () async {
                         await controller.saveInvoice();
-                        _refreshUI();
+                        // _refreshUI();
                         allController.refreshPurchaseInvoices();
+                        orderController.refreshPurchaseOrders();
+                        orderController.getAllPendingPurchaseOrders();
                       },
                     ),
 

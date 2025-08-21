@@ -52,10 +52,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<String> appBarTitle = [
-    "Purchase Orders Management".tr,
+    "Pharmacy Product".tr,
     "Stock Management".tr,
     "Point of Sale".tr,
-    "Pharmacy Product".tr,
+    "Purchase Orders Management".tr,
     'Purchase Invoice Management'.tr,
   ];
   @override

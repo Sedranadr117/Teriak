@@ -214,6 +214,11 @@ class EditProductParams {
     };
   }
 }
+class DeleteProductParams {
+  final int id;
+
+  const DeleteProductParams({required this.id});
+}
 
 class ProductNamesParams {
   final int id;

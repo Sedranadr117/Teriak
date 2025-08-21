@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
@@ -104,7 +107,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                     size: 5.w,
                   ),
                   SizedBox(width: 3.w),
-                  const Text('Print'),
+                  Text('Print'.tr),
                 ],
               ),
             ),
@@ -369,7 +372,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 color: Theme.of(context).colorScheme.primary,
                 size: 6.w,
               ),
-              title: const Text('View Product Details'),
+              title: Text('View Product Details'.tr),
               onTap: () {
                 Navigator.pop(context);
                 _showSnackBar('Product details feature coming soon');
@@ -381,7 +384,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 color: Theme.of(context).colorScheme.primary,
                 size: 6.w,
               ),
-              title: const Text('Check Inventory'),
+              title: Text('Check Inventory'.tr),
               onTap: () {
                 Navigator.pop(context);
                 _showSnackBar('Inventory check feature coming soon');
@@ -394,7 +397,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                   color: Theme.of(context).colorScheme.primary,
                   size: 6.w,
                 ),
-                title: const Text('Return Item'),
+                title: Text('Return Item'.tr),
                 onTap: () {
                   Navigator.pop(context);
                   _toggleProductSelection(product);
@@ -437,7 +440,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirm Return'),
+        title: Text('Confirm Return'.tr),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -457,7 +460,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text('Cancel'.tr),
           ),
           ElevatedButton(
             onPressed: () {
@@ -472,7 +475,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 },
               );
             },
-            child: const Text('Continue'),
+            child: Text('Continue'.tr),
           ),
         ],
       ),
