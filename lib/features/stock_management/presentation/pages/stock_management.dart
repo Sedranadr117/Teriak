@@ -428,9 +428,6 @@ class _StockManagementState extends State<StockManagement>
               itemCount: displayList.length,
               itemBuilder: (context, index) {
                 final product = displayList[index];
-                print(
-                    "📦 ${product['productName']} | minStockLevel = ${product['minStockLevel']}");
-
                 final mapy = {
                   'id': product['id'],
                   'productId': product['productId'],

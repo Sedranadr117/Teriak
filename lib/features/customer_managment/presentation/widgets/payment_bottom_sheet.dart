@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/config/themes/app_assets.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
 class PaymentBottomSheet extends StatefulWidget {
@@ -23,12 +23,12 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
   final _amountController = TextEditingController();
   final _notesController = TextEditingController();
 
-  String _paymentMethod = 'Cash';
+  String _paymentMethod = 'CASH';
   bool _isSubmitting = false;
 
   final List<String> _paymentMethods = [
-    'Cash',
-    'Credit Card',
+    'CASH',
+    'BANK_ACCOUNT',
   ];
 
   @override
@@ -74,7 +74,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Add Payment',
+                  'Add Payment'.tr,
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -124,16 +124,14 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(6),
-                              child: widget.customer['profileImage'] != null
-                                  ? Image.asset(Assets.assetsImagesJustLogo)
-                                  : Center(
-                                      child: CustomIconWidget(
-                                        iconName: 'person',
-                                        color: colorScheme.onSurface
-                                            .withValues(alpha: 0.4),
-                                        size: 6.w,
-                                      ),
-                                    ),
+                              child: Center(
+                                child: CustomIconWidget(
+                                  iconName: 'person',
+                                  color: colorScheme.onSurface
+                                      .withValues(alpha: 0.4),
+                                  size: 6.w,
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(width: 3.w),
@@ -143,13 +141,13 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                               children: [
                                 Text(
                                   widget.customer['name']?.toString() ??
-                                      'Unknown Customer',
+                                      'Unknown Customer'.tr,
                                   style: theme.textTheme.titleMedium?.copyWith(
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 Text(
-                                  'Total Debt: \$${totalDebt.toStringAsFixed(2)}',
+                                  '${'Total Debt:'.tr} Sp ${totalDebt.toStringAsFixed(2)}',
                                   style: theme.textTheme.bodyMedium?.copyWith(
                                     color: colorScheme.error,
                                     fontWeight: FontWeight.w500,
@@ -166,7 +164,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
 
                     // Payment amount
                     Text(
-                      'Payment Amount',
+                      'Payment Amount'.tr,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -175,8 +173,8 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                     TextFormField(
                       controller: _amountController,
                       decoration: InputDecoration(
-                        labelText: 'Amount',
-                        prefixText: '\$',
+                        labelText: 'Amount'.tr,
+                        prefixText: 'Sp ',
                         hintText: '0.00',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -190,71 +188,24 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                       ],
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter payment amount';
+                          return 'Please enter payment amount'.tr;
                         }
                         final amount = double.tryParse(value);
                         if (amount == null || amount <= 0) {
-                          return 'Please enter a valid amount';
+                          return 'Please enter a valid amount'.tr;
                         }
                         if (amount > totalDebt) {
-                          return 'Payment cannot exceed total debt';
+                          return 'Payment cannot exceed total debt'.tr;
                         }
                         return null;
                       },
-                    ),
-
-                    SizedBox(height: 2.h),
-
-                    // Quick amount buttons
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              _amountController.text =
-                                  (totalDebt * 0.25).toStringAsFixed(2);
-                            },
-                            child: Text('25%'),
-                          ),
-                        ),
-                        SizedBox(width: 2.w),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              _amountController.text =
-                                  (totalDebt * 0.5).toStringAsFixed(2);
-                            },
-                            child: Text('50%'),
-                          ),
-                        ),
-                        SizedBox(width: 2.w),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              _amountController.text =
-                                  (totalDebt * 0.75).toStringAsFixed(2);
-                            },
-                            child: Text('75%'),
-                          ),
-                        ),
-                        SizedBox(width: 2.w),
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              _amountController.text =
-                                  totalDebt.toStringAsFixed(2);
-                            },
-                            child: Text('Full'),
-                          ),
-                        ),
-                      ],
                     ),
 
                     SizedBox(height: 3.h),
 
                     // Payment method
                     Text(
-                      'Payment Method',
+                      'Payment Method'.tr,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -270,12 +221,12 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                       items: _paymentMethods.map((method) {
                         return DropdownMenuItem(
                           value: method,
-                          child: Text(method),
+                          child: Text(method.tr),
                         );
                       }).toList(),
                       onChanged: (value) {
                         setState(() {
-                          _paymentMethod = value ?? 'Cash';
+                          _paymentMethod = value ?? 'CASH';
                         });
                       },
                     ),
@@ -284,7 +235,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
 
                     // Notes
                     Text(
-                      'Notes (Optional)',
+                      'Notes (Optional)'.tr,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -293,8 +244,8 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                     TextFormField(
                       controller: _notesController,
                       decoration: InputDecoration(
-                        labelText: 'Payment notes',
-                        hintText: 'Add any notes about this payment...',
+                        labelText: 'Payment notes'.tr,
+                        hintText: 'Add any notes about this payment...'.tr,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -323,7 +274,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Cancel'),
+                    child: Text('Cancel'.tr),
                   ),
                 ),
                 SizedBox(width: 4.w),
@@ -341,7 +292,7 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
                               ),
                             ),
                           )
-                        : Text('Record Payment'),
+                        : Text('Record Payment'.tr),
                   ),
                 ),
               ],
@@ -363,21 +314,16 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
 
     HapticFeedback.lightImpact();
 
-    // Simulate API call
-    await Future.delayed(Duration(milliseconds: 1000));
-
     final amount = double.parse(_amountController.text);
 
     final paymentData = {
       'customerId': widget.customer['id'],
-      'amount': amount,
+      'totalPaymentAmount': amount,
       'paymentMethod': _paymentMethod,
       'notes': _notesController.text,
-      'date': DateTime.now().toIso8601String(),
     };
 
     widget.onPaymentSubmitted(paymentData);
-    Navigator.pop(context);
 
     setState(() {
       _isSubmitting = false;

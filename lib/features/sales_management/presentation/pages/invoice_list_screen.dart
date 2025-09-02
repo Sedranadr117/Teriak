@@ -189,7 +189,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                 'discountType': invoice.discountType,
                 'paidAmount': invoice.paidAmount,
                 'remainingAmount': invoice.remainingAmount,
-                'status': invoice.status,
+                'paymentStatus': invoice.status,
                 'items': (invoice.items as List<InvoiceItemModel>)
                     .map((item) => item.toJson())
                     .toList(),
@@ -208,7 +208,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                   'discountType': invoice.discountType,
                   'paidAmount': invoice.paidAmount,
                   'remainingAmount': invoice.remainingAmount,
-                  'status': invoice.status,
+                  'paymentStatus': invoice.status,
                   'items': (invoice.items as List<InvoiceItemModel>)
                       .map((item) => item.toJson())
                       .toList(),

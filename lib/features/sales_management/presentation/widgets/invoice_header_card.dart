@@ -107,7 +107,7 @@ class InvoiceHeaderCard extends StatelessWidget {
 
   Widget _buildPaymentStatusBadge(BuildContext context) {
     final theme = Theme.of(context);
-    final String status = invoiceData["status"] ?? "Unknown".tr;
+    final String status = invoiceData["paymentStatus"] ?? "Unknown".tr;
     final colorScheme = theme.colorScheme;
 
     Color badgeColor;
@@ -115,30 +115,30 @@ class InvoiceHeaderCard extends StatelessWidget {
     String displayText;
 
     switch (status) {
-      case 'COMPLETED':
+      case 'FULLY_PAID':
         badgeColor = Colors.green;
         textColor = Colors.white;
         displayText = 'Paid'.tr;
         break;
-      case 'pending':
+      case 'UNPAID':
         badgeColor = Colors.orange;
         textColor = Colors.white;
-        displayText = 'Pending';
+        displayText = 'Pending'.tr;
         break;
-      case 'overdue':
+      case 'OVERDUE':
         badgeColor = colorScheme.error;
         textColor = colorScheme.onError;
         displayText = 'Overdue';
         break;
-      case 'partial':
-        badgeColor = Colors.orange;
+      case 'PARTIALLY_PAID':
+        badgeColor = Color(0xFFFFD54F); // Material Design Amber 400
         textColor = Colors.white;
-        displayText = 'Partial';
+        displayText = 'Partial'.tr;
         break;
       default:
         badgeColor = colorScheme.outline;
         textColor = colorScheme.onSurface;
-        displayText = 'Unknown';
+        displayText = 'Unknown'.tr;
     }
 
     return Container(

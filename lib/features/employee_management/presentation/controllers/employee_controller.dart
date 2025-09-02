@@ -78,10 +78,8 @@ class EmployeeController extends GetxController {
 
   void addOrUpdateShiftForDays(ShiftParams shiftData,
       {List<String>? selectedDays, int? existingId}) {
-    // إذا ما في أيام مختارة، ارجع فورًا
     if (selectedDays == null || selectedDays.isEmpty) return;
 
-    // تحقق إذا فيه WorkingHoursRequest موجود لنفس الأيام
     final existingRequestIndex = workingHoursRequests.indexWhere((req) =>
         Set.from(req.daysOfWeek).containsAll(selectedDays) &&
         Set.from(selectedDays).containsAll(req.daysOfWeek));

@@ -15,7 +15,8 @@ class InvoiceModel extends InvoiceEntity {
       required super.paidAmount,
       required super.remainingAmount,
       required super.status,
-      required super.items});
+      required super.items,
+      required super.debtDueDate});
 
   factory InvoiceModel.fromJson(Map<String, dynamic> json) {
     return InvoiceModel(
@@ -31,10 +32,11 @@ class InvoiceModel extends InvoiceEntity {
       discountType: json['discountType'] as String,
       paidAmount: (json['paidAmount'] as num).toDouble(),
       remainingAmount: (json['remainingAmount'] as num).toDouble(),
-      status: json['status'] as String,
+      status: json['paymentStatus'] as String,
       items: (json['items'] as List<dynamic>)
           .map((item) => InvoiceItemModel.fromJson(item))
           .toList(),
+      debtDueDate: json['debtDueDate'] as String?,
     );
   }
 
@@ -52,7 +54,8 @@ class InvoiceModel extends InvoiceEntity {
       'discountType': discountType,
       'paidAmount': paidAmount,
       'remainingAmount': remainingAmount,
-      'status': status,
+      'paymentStatus': status,
+      'debtDueDate': debtDueDate,
       'items': (items as List<InvoiceItemModel>)
           .map((item) => item.toJson())
           .toList(),

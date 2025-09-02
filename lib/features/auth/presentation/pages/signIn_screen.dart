@@ -4,7 +4,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:teriak/features/auth/presentation/pages/widgets/signIn_form_widget.dart';
-import 'package:teriak/features/settings/widgets/settings_item_widget.dart';
+import 'package:teriak/features/settings/presentation/widgets/settings_item_widget.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});

@@ -4,8 +4,11 @@ import 'package:teriak/core/errors/failure.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/customer_managment/data/datasources/customer_remote_data_source.dart';
+import 'package:teriak/features/customer_managment/domain/entities/customer_debts_entity.dart';
 import 'package:teriak/features/customer_managment/domain/entities/customer_entity.dart';
 import 'package:teriak/features/customer_managment/domain/repositories/customer_repository.dart';
+
+import '../../domain/entities/payment_entity.dart';
 
 class CustomerRepositoryImpl implements CustomerRepository {
   final CustomerRemoteDataSource remoteDataSource;
@@ -20,15 +23,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
   Future<Either<Failure, List<CustomerEntity>>> getCustomers() async {
     try {
       final result = await remoteDataSource.getAllCustomers();
-      return Right(result
-          .map((model) => CustomerEntity(
-                id: model.id,
-                name: model.name,
-                phoneNumber: model.phoneNumber,
-                address: model.address,
-                notes: model.notes,
-              ))
-          .toList());
+      return Right(result);
     } catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }
@@ -76,6 +71,29 @@ class CustomerRepositoryImpl implements CustomerRepository {
       final updatedCustomer =
           await remoteDataSource.editCustomerInfo(customereId, params);
       return Right(updatedCustomer);
+    } on ServerException catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaymentEntity>> addPayment(
+      int customerId, PaymentParams params) async {
+    try {
+      final payment = await remoteDataSource.addPayment(customerId, params);
+      return Right(payment);
+    } on ServerException catch (e) {
+      return Left(Failure(errMessage: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<CustomerDebtEntity>>> getCustomersDebts(
+      int customerId) async {
+    try {
+      final customerDebts =
+          await remoteDataSource.getCustomersDebts(customerId);
+      return Right(customerDebts);
     } on ServerException catch (e) {
       return Left(Failure(errMessage: e.toString()));
     }

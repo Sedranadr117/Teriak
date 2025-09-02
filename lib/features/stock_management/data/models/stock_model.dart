@@ -31,10 +31,16 @@ class StockModel extends StockEntity {
       barcodes: List<String>.from(json['barcodes'] ?? []),
       totalQuantity: json['totalQuantity'] ?? 0,
       totalBonusQuantity: json['totalBonusQuantity'] ?? 0,
-      averagePurchasePrice: (json['averagePurchasePrice'] ?? 0).toDouble(),
-      totalValue: (json['totalValue'] ?? 0).toDouble(),
+      averagePurchasePrice: json['averagePurchasePrice'] is num
+          ? (json['averagePurchasePrice'] as num).toDouble()
+          : double.tryParse(json['averagePurchasePrice'].toString()) ?? 0.0,
+      totalValue: json['totalValue'] is num
+          ? (json['totalValue'] as num).toDouble()
+          : double.tryParse(json['totalValue'].toString()) ?? 0.0,
       categories: List<String>.from(json['categories'] ?? []),
-      sellingPrice: (json['sellingPrice'] ?? 0).toDouble(),
+      sellingPrice: json['sellingPrice'] is num
+          ? (json['sellingPrice'] as num).toDouble()
+          : double.tryParse(json['sellingPrice'].toString()) ?? 0.0,
       minStockLevel: json['minStockLevel'] as int?, // ✅
       hasExpiredItems: (json['hasExpiredItems'] as bool?) ?? false,
       hasExpiringSoonItems: (json['hasExpiringSoonItems'] as bool?) ?? false,

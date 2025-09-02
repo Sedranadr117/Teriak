@@ -1,7 +1,9 @@
 import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/customer_managment/data/models/customer_debts_model.dart';
 import 'package:teriak/features/customer_managment/data/models/customer_model.dart';
+import 'package:teriak/features/customer_managment/data/models/payment_model.dart';
 
 class CustomerRemoteDataSource {
   final ApiConsumer api;
@@ -22,7 +24,8 @@ class CustomerRemoteDataSource {
       'address': params.address,
       'notes': params.notes
     };
-    final response = await api.post(EndPoints.getCustomers, data: customerData);
+    final response =
+        await api.post(EndPoints.createCustomer, data: customerData);
     final customer = CustomerModel.fromJson(response);
 
     return customer;
@@ -72,5 +75,26 @@ class CustomerRemoteDataSource {
       print('❌ Error in customer employee : $e');
       rethrow;
     }
+  }
+
+  Future<PaymentModel> addPayment(int customerId, PaymentParams params) async {
+    final paymentData = {
+      "totalPaymentAmount": params.totalPaymentAmount,
+      "paymentMethod": params.paymentMethod,
+      "notes": params.notes,
+    };
+    final response = await api
+        .post('${EndPoints.addPayment}$customerId/autoPay', data: paymentData);
+    final payment = PaymentModel.fromJson(response);
+
+    return payment;
+  }
+
+  Future<List<CustomerDebtsModel>> getCustomersDebts(int customerId) async {
+    final response = await api.get('${EndPoints.getCustomerDebts}/$customerId');
+    print('${EndPoints.getCustomerDebts}/$customerId');
+    return (response as List)
+        .map((json) => CustomerDebtsModel.fromJson(json))
+        .toList();
   }
 }
