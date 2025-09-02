@@ -23,8 +23,8 @@ class ProductItemModel extends ProductItemEntity {
       barcode: json[ApiKeys.barcode],
       productId: json[ApiKeys.productItemId],
       productType: json[ApiKeys.productItemType],
-      refSellingPrice: json[ApiKeys.refSellingPrice],
-      minStockLevel: json[ApiKeys.minStockLevel],
+      refSellingPrice: json[ApiKeys.refSellingPrice]??0,
+      minStockLevel: json[ApiKeys.minStockLevel]?? 0,
     );
   }
 

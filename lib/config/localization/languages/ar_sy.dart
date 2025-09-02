@@ -472,7 +472,7 @@ final Map<String, String> arSY = {
   "Select Product": "اختر المنتج",
   "Enter or scan barcode": "أدخل أو امسح الباركود",
   "Enter Quantity": "أدخل الكمية",
-  "Enter Price": "أدخل السعر",
+  "Enter Price": "أدخل سعرالشراء",
   "Line Total": "الإجمالي",
   "Remove Product": "حذف المنتج",
   "Order Total": "إجمالي الطلبية",
@@ -722,11 +722,13 @@ final Map<String, String> arSY = {
   "Update Error": "فشل في تحديث الفاتورة",
 
   // Details
-  "Invoice Details": "تفاصيل الفاتورة",
+  "Invoice Details": "تفاصيل فاتورة الشراء",
   "Invoice Information": "معلومات الفاتورة",
   "Supplier Information": "معلومات المورد",
   "Product Details": "تفاصيل المنتجات",
   "Payment Information": "معلومات الدفع",
+  "Invoice created successfully":"تم إنشاء الفاتورة بنجاح",
+
 
   // Actions
   "Actions": "الإجراءات",

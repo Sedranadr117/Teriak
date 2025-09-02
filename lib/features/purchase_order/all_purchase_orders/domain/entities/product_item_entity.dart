@@ -6,7 +6,7 @@ class ProductItemEntity {
   final String barcode;
   final int productId;
   final String productType;
-  final double refSellingPrice;
+  final double? refSellingPrice;
   final int? minStockLevel;
 
   const ProductItemEntity({

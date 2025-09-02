@@ -56,7 +56,7 @@ class _StockManagementState extends State<StockManagement>
     return Container(
       height: 80.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(

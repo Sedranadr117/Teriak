@@ -1,7 +1,5 @@
 class EndPoints {
-  static const String baserUrl = "http://159.198.75.161:13000/api/v1/";
-  static const String baserUrl1 = "http://159.198.75.161:13000/api/";
-
+  static const String baserUrl = "https://b2175de248ef.ngrok-free.app/api/v1/";
   static const String template = "template/";
 
 // Auth endpoints

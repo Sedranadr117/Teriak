@@ -279,10 +279,11 @@ class AddPurchaseInvoiceController extends GetxController {
       return result.fold(
         (failure) {
           if (failure.statusCode == 409) {
-            Get.snackbar('Error', "ExpireDate  is required");
+            Get.snackbar('Error', failure.errMessage);
+            print(failure.errMessage.toString());
           } else {
             Get.snackbar(
-              'خطأ',
+              'Error',
               failure.errMessage,
               snackPosition: SnackPosition.TOP,
               backgroundColor: Colors.red.shade400,
@@ -292,8 +293,8 @@ class AddPurchaseInvoiceController extends GetxController {
         },
         (savedInvoice) {
           Get.snackbar(
-            'تم الحفظ',
-            'تم إنشاء الفاتورة بنجاح (${savedInvoice.invoiceNumber})',
+            'Successful',
+            "Invoice created successfully".tr,
             snackPosition: SnackPosition.TOP,
           );
           _hasUnsavedChanges.value = false;

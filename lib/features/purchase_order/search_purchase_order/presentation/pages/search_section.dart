@@ -36,7 +36,7 @@ class _SearchSectionState extends State<SearchSection> {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -52,19 +52,18 @@ class _SearchSectionState extends State<SearchSection> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 1.h),
 
           // Supplier Search Section
           _buildSupplierSearch(context),
-          SizedBox(height: 2.h),
+          SizedBox(height: 1.h),
 
           // Date Range Search Section
           _buildDateRangeSearch(context),
-          SizedBox(height: 2.h),
+          SizedBox(height: 0.5.h),
 
           // Search Buttons
           _buildSearchButtons(context),
-          SizedBox(height: 0.3.h),
 
           // Error Display
           Obx(() {
@@ -89,7 +88,7 @@ class _SearchSectionState extends State<SearchSection> {
                 fontWeight: FontWeight.w600,
               ),
         ),
-        SizedBox(height: 1.h),
+        SizedBox(height: 0.5.h),
         Container(
           decoration: BoxDecoration(
             border: Border.all(
@@ -106,7 +105,7 @@ class _SearchSectionState extends State<SearchSection> {
               hintText: 'Select Supplier'.tr,
               hintStyle: TextStyle(
                 color: Colors.grey.shade500,
-                fontSize: 12.sp,
+                fontSize: 8.sp,
               ),
             ),
             items: widget.suppliers.map((supplier) {
@@ -233,7 +232,7 @@ class _SearchSectionState extends State<SearchSection> {
           },
           child: Container(
             width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
             decoration: BoxDecoration(
               border: Border.all(
                 color: errorText != null
@@ -261,7 +260,7 @@ class _SearchSectionState extends State<SearchSection> {
                 ),
                 Icon(
                   Icons.calendar_today,
-                  size: 16.sp,
+                  size: 11.sp,
                   color: Theme.of(context)
                       .colorScheme
                       .onSurface
@@ -280,15 +279,16 @@ class _SearchSectionState extends State<SearchSection> {
       children: [
         Expanded(
           child: Obx(() {
-            final isSearching = widget.searchController.isSearchingSupplier.value;
+            final isSearching =
+                widget.searchController.isSearchingSupplier.value;
             return ElevatedButton.icon(
               onPressed: isSearching
                   ? null
                   : () => widget.searchController.searchBySupplier(),
               icon: isSearching
                   ? SizedBox(
-                      width: 16.sp,
-                      height: 16.sp,
+                      width: 11.sp,
+                      height: 11.sp,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -296,7 +296,7 @@ class _SearchSectionState extends State<SearchSection> {
                         ),
                       ),
                     )
-                  : Icon(Icons.search, size: 16.sp),
+                  : Icon(Icons.search, size: 11.sp),
               label: Text(
                 isSearching ? 'Searching...'.tr : 'Search by Supplier'.tr,
                 style: TextStyle(fontSize: 11.sp),
@@ -304,7 +304,7 @@ class _SearchSectionState extends State<SearchSection> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.secondaryVariantLight,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 2.h),
+                padding: EdgeInsets.symmetric(vertical: 1.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -322,8 +322,8 @@ class _SearchSectionState extends State<SearchSection> {
                   : () => widget.searchController.searchByDateRange(),
               icon: isSearching
                   ? SizedBox(
-                      width: 16.sp,
-                      height: 16.sp,
+                      width: 11.sp,
+                      height: 11.sp,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         valueColor: AlwaysStoppedAnimation<Color>(
@@ -331,7 +331,7 @@ class _SearchSectionState extends State<SearchSection> {
                         ),
                       ),
                     )
-                  : Icon(Icons.date_range, size: 16.sp),
+                  : Icon(Icons.date_range, size: 11.sp),
               label: Text(
                 isSearching ? 'Searching...'.tr : 'Search by Date'.tr,
                 style: TextStyle(fontSize: 11.sp),
@@ -339,7 +339,7 @@ class _SearchSectionState extends State<SearchSection> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.secondaryLight,
                 foregroundColor: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 2.h),
+                padding: EdgeInsets.symmetric(vertical: 1.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

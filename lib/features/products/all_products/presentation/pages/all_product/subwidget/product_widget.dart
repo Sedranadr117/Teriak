@@ -38,7 +38,7 @@ class ProductWidget extends StatelessWidget {
               : AppColors.cardLight,
           border: Border(
             left: BorderSide(
-              color:( productSource == "Master" ||productSource == "مركزي")
+              color: (productSource == "Master" || productSource == "مركزي")
                   ? (Theme.of(context).brightness == Brightness.dark
                       ? AppColors.primaryDark
                       : AppColors.primaryLight)
@@ -101,7 +101,8 @@ class ProductWidget extends StatelessWidget {
                         horizontal: context.w * 0.02,
                         vertical: context.h * 0.005),
                     decoration: BoxDecoration(
-              color:( productSource == "Master" ||productSource == "مركزي")
+                      color: (productSource == "Master" ||
+                              productSource == "مركزي")
                           ? (Theme.of(context).brightness == Brightness.dark
                               ? AppColors.primaryDark
                               : AppColors.primaryLight)
@@ -207,34 +208,38 @@ class ProductWidget extends StatelessWidget {
                             size: 16,
                           ),
                           SizedBox(width: context.w * 0.01),
-                          Text(
-                            prescriptionRequired
-                                ? 'Prescription Required'.tr
-                                : 'No Prescription'.tr,
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall
-                                ?.copyWith(
-                                  color: prescriptionRequired
-                                      ? (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? AppColors.warningDark
-                                          : AppColors.warningLight)
-                                      : (Theme.of(context).brightness ==
-                                              Brightness.dark
-                                          ? AppColors.successDark
-                                          : AppColors.successLight),
-                                  fontWeight: FontWeight.w500,
-                                ),
+                          Expanded(
+                            child: Text(
+                              prescriptionRequired
+                                  ? 'Prescription Required'.tr
+                                  : 'No Prescription'.tr,
+                              overflow: TextOverflow
+                                  .ellipsis,    
+                              softWrap: true,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    color: prescriptionRequired
+                                        ? (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? AppColors.warningDark
+                                            : AppColors.warningLight)
+                                        : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? AppColors.successDark
+                                            : AppColors.successLight),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
 
-                  SizedBox(width: context.w * 0.04),
+                  // SizedBox(width: context.w * 0.04),
 
-                
                   Flexible(
                     child: Container(
                       padding: EdgeInsets.symmetric(

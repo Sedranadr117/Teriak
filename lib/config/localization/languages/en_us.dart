@@ -486,7 +486,7 @@ final Map<String, String> enUS = {
   "Select Product": "Select Product",
   "Enter or scan barcode": "Enter or scan barcode",
   "Enter Quantity": "Enter Quantity",
-  "Enter Price": "Enter Price",
+  "Enter Price": "Enter Purchase Price",
   "Line Total": "Line Total",
   "Remove Product": "Remove Product",
   "Order Total": "Order Total",
@@ -732,11 +732,12 @@ final Map<String, String> enUS = {
   "Update Error": "Update Error",
 
   // Details
-  "Invoice Details": "Invoice Details",
+  "Invoice Details": "Purchase Invoice Details",
   "Invoice Information": "Invoice Information",
   "Supplier Information": "Supplier Information",
   "Product Details": "Product Details",
   "Payment Information": "Payment Information",
+  "Invoice created successfully":"Invoice created successfully",
 
   // Actions
   "Actions": "Actions",

@@ -77,8 +77,7 @@ class EditProductController extends GetxController {
   // Original data
 
   Future<void> loadProductData(ProductModel product) async {
-
-    originalProduct = product; 
+    originalProduct = product;
 
     selectedForm.value = product.form;
     selectedManufacturer.value = product.manufacturer;
@@ -132,9 +131,9 @@ class EditProductController extends GetxController {
       }).where((id) => id != -1),
     );
 
-     final namesController = Get.find<ProductNamesController>();
+    final namesController = Get.put(ProductNamesController());
 
-     await namesController.getProductNames(product.productType, product.id);
+    await namesController.getProductNames(product.productType, product.id);
     final fetchedNames = namesController.productNames.value;
     if (fetchedNames != null) {
       arabicTradeNameController.text = fetchedNames.tradeNameAr;
@@ -183,18 +182,18 @@ class EditProductController extends GetxController {
     }).join(', ');
   }
 
-  @override
-  void onClose() {
-    arabicTradeNameController.dispose();
-    englishTradeNameController.dispose();
-    sizeController.dispose();
-    barcodeController.dispose();
-    arabicScientificNameController.dispose();
-    englishScientificNameController.dispose();
-    dosageController.dispose();
-    notesController.dispose();
-    super.onClose();
-  }
+  // @override
+  // void onClose() {
+  //   arabicTradeNameController.dispose();
+  //   englishTradeNameController.dispose();
+  //   sizeController.dispose();
+  //   barcodeController.dispose();
+  //   arabicScientificNameController.dispose();
+  //   englishScientificNameController.dispose();
+  //   dosageController.dispose();
+  //   notesController.dispose();
+  //   super.onClose();
+  // }
 
   Map<String, dynamic> buildRequestBody() {
     return {

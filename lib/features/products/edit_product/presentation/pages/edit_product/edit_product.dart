@@ -30,7 +30,7 @@ class _EditProductPageState extends State<EditProductPage> {
   late ProductModel product;
   final editController = Get.put(EditProductController());
   final productDataController = Get.put(ProductDataController());
-  final namesController = Get.put(ProductNamesController());
+  final namesController =Get.find<ProductNamesController>();
   final productController = Get.find<GetAllProductController>();
   final productDetailsController = Get.find<GetProductDetailsController>();
 

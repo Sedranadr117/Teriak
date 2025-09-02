@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart' show AppPages;
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/config/widgets/custom_binding_widget.dart';
 import '../../controller/all_purchase_invoice_controller.dart';
 import 'invoice_card_widget.dart';
 
@@ -50,12 +51,14 @@ class InvoicesListWidget extends StatelessWidget {
               Spacer(),
               IconButton(
                 onPressed: () {
-                  Get.toNamed( AppPages.searchPurchaseInvoice,);
+                  Get.toNamed(
+                    AppPages.searchPurchaseInvoice,
+                  );
                 },
                 icon: CustomIconWidget(
                   iconName: 'search',
                   color: theme.colorScheme.onSurfaceVariant,
-                  size:7.w,
+                  size: 7.w,
                 ),
               ),
             ],
@@ -74,39 +77,11 @@ class InvoicesListWidget extends StatelessWidget {
 
               if (controller.errorMessageInvoices.value.isNotEmpty) {
                 return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.error_outline,
-                        size: 48,
-                        color: theme.colorScheme.error,
-                      ),
-                      SizedBox(height: 2.h),
-                      Text(
-                        'Failed to load invoices'.tr,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: theme.colorScheme.error,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 1.h),
-                      Text(
-                        controller.errorMessageInvoices.value,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(height: 2.h),
-                      ElevatedButton(
+                    child: CommonWidgets.buildErrorWidget(
+                        context: context,
+                        errorMessage: controller.errorMessageInvoices.value,
                         onPressed: () =>
-                            controller.getPurchaseInvoices(refresh: true),
-                        child: Text('Retry'.tr),
-                      ),
-                    ],
-                  ),
-                );
+                            controller.getPurchaseInvoices(refresh: true)));
               }
 
               if (controller.invoices.isEmpty) {

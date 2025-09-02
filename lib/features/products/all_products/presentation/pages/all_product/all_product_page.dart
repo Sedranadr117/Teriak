@@ -134,7 +134,6 @@ class ProductList extends StatelessWidget {
     return Obx(() {
       final status = searchController.searchStatus.value;
 
-      // بدون بحث
       if (status == null) {
         if (allController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

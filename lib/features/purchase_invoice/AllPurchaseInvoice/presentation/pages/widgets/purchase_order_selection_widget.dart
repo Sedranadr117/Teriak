@@ -189,7 +189,9 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 1.h),
                 DropdownButtonFormField<int>(
-                  value: invoiceController.selectedOrderId.value,
+                  value:  pendingOrders.any((o) => o.id == invoiceController.selectedOrderId.value)
+      ? invoiceController.selectedOrderId.value
+      : null,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Select Purchase Order'.tr,

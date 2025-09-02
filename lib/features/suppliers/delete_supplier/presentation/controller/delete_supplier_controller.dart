@@ -52,7 +52,7 @@ class DeleteSupplierController extends GetxController {
 
       result.fold(
         (failure) {
-          if (failure.statusCode == 500) {
+          if (failure.statusCode == 409) {
             Get.snackbar(
                 'Error',
                 'You cannot delete the supplier because he has purchase invoices'
@@ -66,16 +66,7 @@ class DeleteSupplierController extends GetxController {
         },
       );
     } catch (e) {
-      if (e.hashCode == 500) {
-        Get.snackbar(
-            'Error',
-            'You cannot delete the supplier because he has purchase invoices'
-                .tr);
-      } else {
-        Get.snackbar('Error', e.toString());
-      }
-      // Get.snackbar('Error', e.toString());
-      // print(e.toString());
+       Get.snackbar('Error', e.toString());
     } finally {
       isLoading.value = false;
     }

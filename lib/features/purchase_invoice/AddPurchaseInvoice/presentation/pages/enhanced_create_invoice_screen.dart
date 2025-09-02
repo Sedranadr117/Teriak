@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
+import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/pages/widgets/invoice_products_table_widget.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/controller/all_purchase_invoice_controller.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/purchase_model .dart';
@@ -25,6 +26,7 @@ class _EnhancedCreateInvoiceScreenState
   late final AddPurchaseInvoiceController controller;
   late final AllPurchaseInvoiceController allController;
   late final GetAllPurchaseOrderController orderController;
+  late final GetAllProductController allProductController;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _EnhancedCreateInvoiceScreenState
     controller = Get.find<AddPurchaseInvoiceController>();
     allController = Get.find<AllPurchaseInvoiceController>();
     orderController = Get.find<GetAllPurchaseOrderController>();
+    allProductController = Get.put(GetAllProductController());
     orderItem = Get.arguments as PurchaseOrderModel;
     _loadPurchaseOrderData();
   }
@@ -168,6 +171,7 @@ class _EnhancedCreateInvoiceScreenState
                         allController.refreshPurchaseInvoices();
                         orderController.refreshPurchaseOrders();
                         orderController.getAllPendingPurchaseOrders();
+                        allProductController.refreshProducts();
                       },
                     ),
 

@@ -156,6 +156,7 @@ class GetAllPurchaseOrderController extends GetxController {
               .where((order) => order.status == 'PENDING')
               .toList();
           pendingPurchaseOrders.value = allPendingOrders;
+          
         },
       );
     } catch (e) {

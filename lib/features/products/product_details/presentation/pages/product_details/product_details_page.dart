@@ -6,6 +6,7 @@ import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/products/delete_product/presentation/controller/delete_product_controller.dart';
+import 'package:teriak/features/products/product_data/presentation/controller/product_names_controller.dart';
 import 'package:teriak/features/products/product_details/presentation/controller/get_product_details_controller.dart';
 import 'package:teriak/features/products/product_details/presentation/pages/product_details/widget/product_details-body.dart';
 import 'package:teriak/features/products/product_details/presentation/pages/product_details/widget/product_details_header.dart';
@@ -24,6 +25,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
     final detailsController = Get.put(GetProductDetailsController());
     final deleteController = Get.put(DeleteProductController());
     final allController = Get.find<GetAllProductController>();
+    Get.put(ProductNamesController());
 
     Future<bool> _showDeleteConfirmation(
         BuildContext context, void Function()? onPressed) async {
@@ -72,7 +74,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
             return Row(
               children: [
-                    if ((drugData.productType == "Pharmacy" ||
+                if ((drugData.productType == "Pharmacy" ||
                         drugData.productType == "صيدلية") &&
                     (role != "PHARMACY_TRAINEE"))
                   IconButton(

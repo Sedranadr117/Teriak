@@ -39,11 +39,14 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _buildScreens() {
     final screns = [
-      PurchaseOrderList(),
+      AllProductPage(),
       StockManagement(),
       MultiSalesScreen(),
-      AllProductPage(),
+      
     ];
+     if (role != "PHARMACY_TRAINEE") {
+      screns.add(  PurchaseOrderList());
+    }
     if (role != "PHARMACY_TRAINEE") {
       screns.add(AllPurchaseInvoiceScreen());
     }
@@ -52,11 +55,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<String> appBarTitle = [
-    "Pharmacy Product".tr,
-    "Stock Management".tr,
-    "Point of Sale".tr,
-    "Purchase Orders Management".tr,
-    'Purchase Invoice Management'.tr,
+    "Pharmacy Product",
+    "Stock Management",
+    "Point of Sale",
+    "Purchase Orders Management",
+    'Purchase Invoice Management',
   ];
   @override
   Widget build(BuildContext context) {
@@ -179,9 +182,9 @@ class _HomePageState extends State<HomePage> {
       ),
       appBar: AppBar(
         centerTitle:
-            appBarTitle[_controller.index] == "Point of Sale".tr ? true : false,
+            appBarTitle[_controller.index].tr == "Point of Sale".tr ? true : false,
         title: Text(appBarTitle[_controller.index],
-            style: appBarTitle[_controller.index] == "Point of Sale".tr
+            style: appBarTitle[_controller.index].tr == "Point of Sale".tr
                 ? Theme.of(context)
                     .textTheme
                     .titleLarge!

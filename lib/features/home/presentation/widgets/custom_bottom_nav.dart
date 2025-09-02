@@ -37,6 +37,16 @@ class CustomBottomNav extends StatelessWidget {
         inactiveColorPrimary: Colors.grey,
       ),
     ];
+        if (role != "PHARMACY_TRAINEE") {
+      items.add(
+        PersistentBottomNavBarItem(
+          icon: Icon(Icons.shopping_cart),
+          title: ("Purchase Order".tr),
+          activeColorPrimary: AppColors.primaryLight,
+          inactiveColorPrimary: Colors.grey,
+        ),
+      );
+    }
 
     if (role != "PHARMACY_TRAINEE") {
       items.add(
@@ -48,16 +58,7 @@ class CustomBottomNav extends StatelessWidget {
         ),
       );
     }
-    if (role != "PHARMACY_TRAINEE") {
-      items.add(
-        PersistentBottomNavBarItem(
-          icon: Icon(Icons.shopping_cart),
-          title: ("Purchase Order".tr),
-          activeColorPrimary: AppColors.primaryLight,
-          inactiveColorPrimary: Colors.grey,
-        ),
-      );
-    }
+
 
     return items;
   }
