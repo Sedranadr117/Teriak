@@ -10,8 +10,7 @@ class CommonWidgets {
     void Function()? onPressed,
     String iconName = 'error',
   }) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    Theme.of(context);
 
     return Center(
       child: Column(

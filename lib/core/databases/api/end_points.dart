@@ -1,6 +1,5 @@
 class EndPoints {
-  static const String baserUrl = "http://159.198.75.161:13000/api/v1/";
-  static const String baserUrl1 = "http://159.198.75.161:13000/api/";
+  static const String baserUrl = "https://b2175de248ef.ngrok-free.app/api/v1/";
 
   static const String template = "template/";
 
@@ -13,8 +12,11 @@ class EndPoints {
   static const String searchInvoicesByRange = "sales/searchByDateRange";
 
 //customers
-  static const String getCustomers = "customers";
+  static const String getCustomers = "customers/with-debts";
+  static const String createCustomer = "customers";
   static const String searchCustomers = "customers/search";
+  static const String addPayment = "customer-debts/";
+  static const String getCustomerDebts = "customer-debts/customer";
 
 //stock
   static const String getStock = "stock/products/Overall";
@@ -24,6 +26,7 @@ class EndPoints {
 //user
   static const String addEmployee = "employees";
   static const String roleID = "roles";
+  static const String getUserProfile = "users/me";
 
   static String product = "search/all-products";
   static String pharmacyProduct = "pharmacy_products";
@@ -42,7 +45,8 @@ class EndPoints {
   static String purchaseOrderSearchBySupplier = "purchase-orders/supplier";
   static String purchaseOrderSearchByDateRange = "purchase-orders/time-range";
   static String purchaseInvoicesSearchBySupplier = "purchase-invoices/supplier";
-  static String purchaseInvoicesSearchByDateRange = "purchase-invoices/time-range";
+  static String purchaseInvoicesSearchByDateRange =
+      "purchase-invoices/time-range";
 }
 
 class ApiKeys {
@@ -77,7 +81,7 @@ class ApiKeys {
   // Orders
 
   static const String supplierName = "supplierName";
-  static const String  supplierId = "supplierId";
+  static const String supplierId = "supplierId";
   static const String total = "total";
   static const String status = "status";
   static const String currency = "currency";
@@ -93,7 +97,7 @@ class ApiKeys {
   static const String cancelSale = 'cancel';
   static const String refPurchasePrice = "refPurchasePrice";
   static const String refSellingPrice = "refSellingPrice";
-  static const String minStockLevel="minStockLevel";
+  static const String minStockLevel = "minStockLevel";
   static const String tax = "tax";
 
   // Purchase Invoice
@@ -101,7 +105,6 @@ class ApiKeys {
   static const String invoiceNumber = 'invoiceNumber';
   static const String createdAt = 'createdAt';
   static const String createdBy = 'createdBy';
-
 
   // Item keys
   static const String productName = 'productName';

@@ -22,12 +22,7 @@ class IndebtedCustomerCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final double totalDebt = customer['totalDebt'] ?? 0.0;
-    final bool isOverdue = customer['isOverdue'] as bool? ?? false;
-    final int daysPastDue = (customer['daysPastDue'] as num?)?.toInt() ?? 0;
-    final DateTime? dueDate =
-        DateTime.tryParse(customer['dueDate'] as String? ?? '');
-
+    final double totalDebt = (customer['totalDebt'] as num?)?.toDouble() ?? 0.0;
     return Dismissible(
       key: Key(customer['id'].toString()),
       background: _buildSwipeBackground(context, isLeft: true),
@@ -48,10 +43,6 @@ class IndebtedCustomerCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: _getBorderColor(colorScheme, isOverdue),
-              width: isOverdue ? 2 : 1,
-            ),
             boxShadow: [
               BoxShadow(
                 color: colorScheme.shadow.withValues(alpha: 0.08),
@@ -89,13 +80,6 @@ class IndebtedCustomerCard extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              if (isOverdue)
-                                _buildStatusBadge(
-                                  theme,
-                                  'OVERDUE'.tr,
-                                  colorScheme.error,
-                                  colorScheme.onError,
-                                ),
                             ],
                           ),
                           SizedBox(height: 0.5.h),
@@ -113,17 +97,11 @@ class IndebtedCustomerCard extends StatelessWidget {
                 ),
                 SizedBox(height: 2.h),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     _buildDebtInfo(theme, colorScheme, totalDebt),
-                    _buildLastPaymentInfo(theme, colorScheme),
                   ],
                 ),
-                if (dueDate != null) ...[
-                  SizedBox(height: 1.h),
-                  _buildDueDateInfo(
-                      theme, colorScheme, dueDate, isOverdue, daysPastDue),
-                ],
                 SizedBox(height: 2.h),
                 _buildActionButtons(theme, colorScheme),
               ],
@@ -159,25 +137,6 @@ class IndebtedCustomerCard extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusBadge(
-      ThemeData theme, String text, Color backgroundColor, Color textColor) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Text(
-        text,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 8.sp,
-        ),
-      ),
-    );
-  }
-
   Widget _buildDebtInfo(
       ThemeData theme, ColorScheme colorScheme, double totalDebt) {
     return Column(
@@ -190,75 +149,10 @@ class IndebtedCustomerCard extends StatelessWidget {
           ),
         ),
         Text(
-          '\$${totalDebt.toStringAsFixed(2)}',
+          'Sp ${totalDebt.toStringAsFixed(2)}',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
             color: totalDebt > 0 ? colorScheme.error : colorScheme.primary,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLastPaymentInfo(ThemeData theme, ColorScheme colorScheme) {
-    final lastPayment = customer['lastPayment'] as String?;
-    final paymentDate =
-        lastPayment != null ? DateTime.tryParse(lastPayment) : null;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text(
-          'Last Payment'.tr,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: colorScheme.onSurface.withValues(alpha: 0.7),
-          ),
-        ),
-        Text(
-          paymentDate != null
-              ? '${paymentDate.day}/${paymentDate.month}/${paymentDate.year}'
-              : 'No payments'.tr,
-          style: theme.textTheme.bodySmall?.copyWith(
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface.withValues(alpha: 0.8),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDueDateInfo(ThemeData theme, ColorScheme colorScheme,
-      DateTime dueDate, bool isOverdue, int daysPastDue) {
-    final now = DateTime.now();
-    final daysUntilDue = dueDate.difference(now).inDays;
-
-    return Row(
-      children: [
-        CustomIconWidget(
-          iconName: 'schedule',
-          color: isOverdue
-              ? colorScheme.error
-              : daysUntilDue <= 7
-                  ? Colors.orange
-                  : colorScheme.onSurface.withValues(alpha: 0.6),
-          size: 4.w,
-        ),
-        SizedBox(width: 2.w),
-        Text(
-          isOverdue
-              ? 'Overdue by $daysPastDue days'
-              : daysUntilDue <= 7
-                  ? 'Due in $daysUntilDue days'
-                  : 'Due: ${dueDate.day}/${dueDate.month}/${dueDate.year}',
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: isOverdue
-                ? colorScheme.error
-                : daysUntilDue <= 7
-                    ? Colors.orange
-                    : colorScheme.onSurface.withValues(alpha: 0.7),
-            fontWeight: isOverdue || daysUntilDue <= 7
-                ? FontWeight.w600
-                : FontWeight.w400,
           ),
         ),
       ],
@@ -337,10 +231,5 @@ class IndebtedCustomerCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getBorderColor(ColorScheme colorScheme, bool isOverdue) {
-    if (isOverdue) return colorScheme.error;
-    return colorScheme.outline.withValues(alpha: 0.2);
   }
 }

@@ -274,7 +274,7 @@ class AddPharmacyController extends GetxController {
         await cacheHelper.saveData(
             key: 'isPharmacyRegistrationComplete', value: true);
 
-        Get.offNamed(AppPages.employeeManagement);
+        Get.offNamed(AppPages.home);
 
         managerFirstNameController.clear();
         managerLastNameController.clear();

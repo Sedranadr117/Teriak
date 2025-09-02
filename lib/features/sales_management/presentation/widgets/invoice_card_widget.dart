@@ -4,8 +4,6 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
-/// Individual invoice card widget displaying invoice summary information
-/// Optimized for pharmacy staff quick browsing and selection
 class InvoiceCardWidget extends StatelessWidget {
   final Map<String, dynamic> invoice;
   final VoidCallback? onTap;
@@ -25,8 +23,11 @@ class InvoiceCardWidget extends StatelessWidget {
         (invoice['customerName'] as String?) ?? 'Unknown Customer';
     final String date = (invoice['invoiceDate'] as String?) ?? '';
     final double totalAmount =
-        (invoice['totalAmount'] as num?)?.toDouble() ?? 0.0;
-    final String paymentStatus = (invoice['status'] as String?) ?? 'unknown';
+        (invoice['paidAmount'] as num?)?.toDouble() ?? 0.0;
+    final double remainingAmount =
+        (invoice['remainingAmount'] as num?)?.toDouble() ?? 0.0;
+    final String paymentStatus =
+        (invoice['paymentStatus'] as String?) ?? 'unknown';
     final String paymentMethod = (invoice['paymentMethod'] as String?) ?? '';
 
     return Container(
@@ -70,7 +71,7 @@ class InvoiceCardWidget extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "فاتورة $customerName",
+                        "${"invoice".tr} $customerName",
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: colorScheme.onSurface,
@@ -131,7 +132,25 @@ class InvoiceCardWidget extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'SYP${totalAmount.toStringAsFixed(2)}',
+                      '+  Sp ${totalAmount.toStringAsFixed(2)}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Remaining Amount'.tr,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurface.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    Text(
+                      '-  Sp ${remainingAmount.toStringAsFixed(2)}',
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: colorScheme.primary,
@@ -147,7 +166,6 @@ class InvoiceCardWidget extends StatelessWidget {
     );
   }
 
-  /// Builds payment status badge with appropriate color coding
   Widget _buildPaymentStatusBadge(BuildContext context, String status) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -157,30 +175,30 @@ class InvoiceCardWidget extends StatelessWidget {
     String displayText;
 
     switch (status) {
-      case 'COMPLETED':
+      case 'FULLY_PAID':
         badgeColor = Colors.green;
         textColor = Colors.white;
         displayText = 'Paid'.tr;
         break;
-      case 'pending':
+      case 'UNPAID':
         badgeColor = Colors.orange;
         textColor = Colors.white;
-        displayText = 'Pending';
+        displayText = 'Pending'.tr;
         break;
-      case 'overdue':
+      case 'OVERDUE':
         badgeColor = colorScheme.error;
         textColor = colorScheme.onError;
         displayText = 'Overdue';
         break;
-      case 'partial':
-        badgeColor = Colors.orange;
+      case 'PARTIALLY_PAID':
+        badgeColor = Color(0xFFFFD54F);
         textColor = Colors.white;
-        displayText = 'Partial';
+        displayText = 'Partial'.tr;
         break;
       default:
         badgeColor = colorScheme.outline;
         textColor = colorScheme.onSurface;
-        displayText = 'Unknown';
+        displayText = 'Unknown'.tr;
     }
 
     return Container(
@@ -199,7 +217,6 @@ class InvoiceCardWidget extends StatelessWidget {
     );
   }
 
-  /// Gets appropriate icon for payment method
   String _getPaymentMethodIcon(String paymentMethod) {
     switch (paymentMethod.toLowerCase()) {
       case 'cash':

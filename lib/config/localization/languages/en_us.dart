@@ -98,10 +98,25 @@ final Map<String, String> enUS = {
   "Unexpected error occurred while fetching roles":
       "Unexpected error occurred while fetching roles",
   "Working hours saved successfully": "Working hours saved successfully",
+
+  // Payment Bottom Sheet
+  "Add Payment": "Add Payment",
+  "Payment Amount": "Payment Amount",
+  "Amount": "Amount",
+  "Payment Method": "Payment Method",
+  "Notes (Optional)": "Notes (Optional)",
+  "Payment notes": "Payment notes",
+  "Add any notes about this payment...": "Add any notes about this payment...",
+  "Record Payment": "Record Payment",
+  "Total Debt:": "Total Debt:",
+  "units": "units",
+  "Unknown Customer": "Unknown Customer",
+  "Please enter payment amount": "Please enter payment amount",
+  "Please enter a valid amount": "Please enter a valid amount",
+  "Payment cannot exceed total debt": "Payment cannot exceed total debt",
   "Please resolve shift conflicts before saving":
       "Please resolve shift conflicts before saving",
   "Search Purchase Orders": "Search Purchase Orders",
-  "Search Purchase Invoice": "Search Purchase Invoice",
   "Search for Purchase Invoices": "Search for Purchase Invoices",
   "Use the search form above to find invoices by supplier or date range":
       "Use the search form above to find invoices by supplier or date range",
@@ -120,7 +135,6 @@ final Map<String, String> enUS = {
   'Are you sure you want to delete this order? This action cannot be undone':
       'Are you sure you want to delete this order? This action cannot be undone',
   "Select Date": "Select Date",
-  "Search by Supplier": "Search by Supplier",
   'Supplier Invoices': 'Supplier Invoices',
   "Search by Date": "Search by Date",
   "Please select a supplier": "Please select a supplier",
@@ -344,7 +358,6 @@ final Map<String, String> enUS = {
   "Payment Terms": "Payment Terms",
   "Due Date": "Due Date",
   "Select due date": "Select due date",
-  "Payment Method": "Payment Method",
   "Choose payment option": "Choose payment option",
   "Cash": "Cash",
   "Processing Payment...": "Processing Payment...",
@@ -373,7 +386,6 @@ final Map<String, String> enUS = {
   "Reorder Point": "Reorder Point",
   "Unit Price": "Unit Price",
   "Total Value": "Total Value",
-  "units": "units",
   "Product Information": "Product Information",
   "Category": "Category",
   "Supplier": "Supplier",
@@ -401,7 +413,6 @@ final Map<String, String> enUS = {
   "Vitamins & Supplements": "Vitamins & Supplements",
   "Medical Devices": "Medical Devices",
   "Search products by name...": "Search products by name...",
-  "Scan Barcode": "Scan Barcode",
   "Filter Products": "Filter Products",
   "Apply Filters": "Apply Filters",
   "Clear All": "Clear All",
@@ -451,6 +462,7 @@ final Map<String, String> enUS = {
   "Supplier Name": "Supplier Name",
   "Order Status": "Order Status",
   "Total Amount": "Total Amount",
+  "Remaining Amount": "Remaining Amount",
   "Creation Date": "Creation Date",
   "Pending": "Pending",
   "Completed": "Completed",
@@ -475,8 +487,6 @@ final Map<String, String> enUS = {
   // Add Purchase Order
   "Create Purchase Order": "Create Purchase Order",
   "Supplier Selection": "Supplier Selection",
-  "Select Supplier": "Select Supplier",
-  "Please select a supplier": "Please select a supplier",
   "Select Currency": "Select Currency",
   "Currency SYP": "Syrian Pound",
   "Currency USD": "US Dollar",
@@ -513,7 +523,7 @@ final Map<String, String> enUS = {
   "Pay directly with cash": "Pay directly with cash",
   "Pay with account": "Pay with bank account",
   "Credit Card": "Credit Card",
-  "Sale Tab": "'Sales Tab",
+  "Sale Tab": "Sales Tab",
   "Failed to create sale process": "Failed to create sale process",
   "sale process added successfully!": "sale process added successfully!",
   "Faild to get customer please try again later":
@@ -522,13 +532,11 @@ final Map<String, String> enUS = {
   "Search customers by name.....": "Search customers by name.....",
   "Loading customers...": "Loading customers...",
   "No indebted customers found": "No indebted customers found",
-  "Unknown Customer": "Unknown Customer",
   "OVERDUE": "OVERDUE",
   "No phone": "No phone",
   "Total Debt": "Total Debt",
   "Last Payment": "Last Payment",
   "No payments": "No payments",
-  "Add Payment": "Add Payment",
   "Edit Customer": "Edit Customer",
   "Add New Indebted Customer": "Add New Indebted Customer",
   "Enter the basic customer details to create their profile.":
@@ -581,9 +589,6 @@ final Map<String, String> enUS = {
   "Save Supplier": "Save Supplier",
   "Supplier Management": "Supplier Management",
   "New Supplier": "New Supplier",
-  "Supplier Name": "Supplier Name",
-  "Phone Number": "Phone Number",
-  "Address": "Address",
   "Preferred Currency": "Preferred Currency",
   "Enter supplier name": "Enter supplier name",
   "Enter supplier address": "Enter supplier address",
@@ -592,12 +597,8 @@ final Map<String, String> enUS = {
   "Editing Supplier": "Editing Supplier",
   "Make changes to supplier information":
       "Make changes to supplier information",
-  "Contact Information": "Contact Information",
-  "Phone": "Phone",
-  "No phone": "No phone",
   "Unknown Supplier": "Unknown Supplier",
   "Delete Supplier": "Delete Supplier",
-  "Are you sure you want to delete": "Are you sure you want to delete",
   "This action cannot be undone.": "This action cannot be undone.",
   "Supplier deleted successfully": "Supplier deleted successfully",
   "Supplier added successfully": "Supplier added successfully",
@@ -605,7 +606,6 @@ final Map<String, String> enUS = {
   "Error Suppliers Loading": "Error Suppliers Loading",
   "Error Searching Suppliers": "Error Searching Suppliers",
   "No suppliers found": "No suppliers found",
-  "Search suppliers": "Search suppliers",
   "Search suppliers...": "Search suppliers...",
   'All Purchase Orders': 'All Purchase Orders',
   "View all records feature coming soon":
@@ -629,13 +629,7 @@ final Map<String, String> enUS = {
   "Payment": "Payment",
   "Debt": "Debt",
   "Edit": "Edit",
-  "Delete": "Delete",
-  "Cancel": "Cancel",
-  "OK": "OK",
-  "Retry": "Retry",
-  "Clear search": "Clear search",
-  "No results found": "No results found",
-  "Create new order": "Create new order",
+  "Partial": "Partial",
 
   // All Purchase Invoice
   "Purchase Invoice Management": "Purchase Invoice Management",
@@ -646,18 +640,11 @@ final Map<String, String> enUS = {
   "All Invoices": "All Invoices",
   "No invoices found": "No invoices found",
   "Invoice Number": "Enter Invoice Number",
-  "Supplier": "Supplier",
-  "Total Amount": "Total Amount",
   "Quantity in stock": "Quantity in stock",
 
-  "Are you sure you want to delete": "Are you sure you want to delete",
   "Date": "Date",
   "Invoice n": "Invoice number",
-  "Currency": "Currency",
   "Status": "Status",
-  "Pending": "Pending",
-  "Completed": "Completed",
-  "Cancelled": "Cancelled",
   "Purchase Invoices": "Purchase Invoices",
   "item": "item",
   "items": "items",
@@ -696,17 +683,14 @@ final Map<String, String> enUS = {
   "Last Barcode": "Last Barcode",
 
   // Invoice Summary
-  "Invoice Summary": "Invoice Summary",
   "Received Items": "Received Items",
   "Bonus Items": "Bonus Items",
   "Total Items": "Total Items",
-  "Total Amount": "Total Amount",
   "Continue to Payment": "Continue to Payment",
 
   // Products Table
   "No Products": "No Products",
   "No Products Found": "No products found in the selected purchase order",
-  "Barcode": "Barcode",
   "Required Quantity": "Required Quantity",
   "Actual Purchase Price": "Actual Purchase Price",
   "Receipt Data": "Receipt Data",
@@ -714,8 +698,6 @@ final Map<String, String> enUS = {
   "Bonus Quantity": "Bonus Quantity",
   "Min Stock Level": "Min Stock Level",
   "Batch Number": "Batch Number",
-  "Expiry Date": "Expiry Date",
-  "Unit Price": "Unit Price",
   "Choose Date": "Choose Date",
   "Required": "Required",
 
@@ -735,15 +717,12 @@ final Map<String, String> enUS = {
   "Invoice Details": "Invoice Details",
   "Invoice Information": "Invoice Information",
   "Supplier Information": "Supplier Information",
-  "Product Details": "Product Details",
   "Payment Information": "Payment Information",
 
   // Actions
-  "Actions": "Actions",
   "View": "View",
   "Approve": "Approve",
   "Reject": "Reject",
-  "Confirm": "Confirm",
 
   // Messages
   "Confirm Delete": "Are you sure you want to delete this invoice?",
@@ -762,7 +741,6 @@ final Map<String, String> enUS = {
   // Common
   "Yes": "Yes",
   "No": "No",
-  "Close": "Close",
   "Back": "Back",
   "Next": "Next",
   "Previous": "Previous",
@@ -776,8 +754,6 @@ final Map<String, String> enUS = {
   "DateTime Format": "dd/MM/yyyy HH:mm",
 
   // Currency
-  "Amount": "Amount",
-  "Subtotal": "Subtotal",
   "Tax": "Tax",
   "Discount": "Discount",
   "Grand Total": "Grand Total",
@@ -791,8 +767,6 @@ final Map<String, String> enUS = {
 
   // Filters
   "Filters": "Filters",
-  "Apply Filters": "Apply Filters",
-  "Clear Filters": "Clear Filters",
   "Date Range": "Date Range",
   "Status Filter": "Status Filter",
   "Supplier Filter": "Supplier Filter",
@@ -839,15 +813,11 @@ final Map<String, String> enUS = {
   "Tap to expand": "Tap to expand",
   "Refresh Stock": "Refresh Stock",
   "Search invoices by...": "Search invoices by...",
-  "View Details": "View Details",
   "Process Return": "Process Return",
   "Share Invoice": "Share Invoice",
   "Invoice Management": "Invoice Management",
-  "Clear Filters": "Clear Filters",
 
   // Sales Management
-  "Print": "Print",
-  "Email": "Email",
   "Duplicate": "Duplicate",
   "View Product Details": "View Product Details",
   "Check Inventory": "Check Inventory",
@@ -855,130 +825,20 @@ final Map<String, String> enUS = {
   "Confirm Return": "Confirm Return",
   "Are you sure you want to return this item?":
       "Are you sure you want to return this item?",
-  "This action cannot be undone.": "This action cannot be undone.",
-  "Cancel": "Cancel",
   "Continue": "Continue",
-
-  // Stock Management
-  "Adjust Stock": "Adjust Stock",
-  "Reorder": "Reorder",
-  "Transfer Between Locations": "Transfer Between Locations",
-  "View Transaction History": "View Transaction History",
-  "Set Alerts": "Set Alerts",
-  "Stock Management": "Stock Management",
-  "All Stock": "All Stock",
-  "Low Stock": "Low Stock",
-  "Near Expiry": "Near Expiry",
-  "Expired": "Expired",
-  "Stock Information": "Stock Information",
-  "Current Stock": "Current Stock",
-  "Reorder Point": "Reorder Point",
-  "Unit Price": "Unit Price",
-  "Total Value": "Total Value",
-  "Product Information": "Product Information",
-  "Category": "Category",
-  "Supplier": "Supplier",
-  "Expiry Date": "Expiry Date",
-  "Stock Status": "Stock Status",
-  "EXPIRED": "EXPIRED",
-  "NEAR EXPIRY": "NEAR EXPIRY",
-  "LOW STOCK": "LOW STOCK",
-  "In Stock": "In Stock",
-  "Out of Stock": "Out of Stock",
-  "Stock Adjustment": "Stock Adjustment",
-  "Current Stock:": "Current Stock:",
-  "Adjustment Type": "Adjustment Type",
-  "Add Stock": "Add Stock",
-  "Remove Stock": "Remove Stock",
-  "Enter quantity to": "Enter quantity to",
-  "add": "add",
-  "remove": "remove",
-  "Reason Code *": "Reason Code *",
-  "Additional Notes": "Additional Notes",
-  "Enter additional notes or comments...":
-      "Enter additional notes or comments...",
-  "New Stock": "New Stock",
-  "Submit Adjustment": "Submit Adjustment",
-  "Received Shipment": "Received Shipment",
-  "Damaged Goods": "Damaged Goods",
-  "Expired Products": "Expired Products",
-  "Theft/Loss": "Theft/Loss",
-  "Return to Supplier": "Return to Supplier",
-  "Customer Return": "Customer Return",
-  "Inventory Count Correction": "Inventory Count Correction",
-  "Transfer Out": "Transfer Out",
-  "Transfer In": "Transfer In",
-  "Other": "Other",
-  "Loading inventory...": "Loading inventory...",
-  "No products found": "No products found",
-  "Try adjusting your search or filters":
-      "Try adjusting your search or filters",
-  "Clear Filters": "Clear Filters",
-  "Inventory synchronized successfully": "Inventory synchronized successfully",
-  "Stock adjusted successfully": "Stock adjusted successfully",
-  "Reorder request submitted for": "Reorder request submitted for",
-  "Product marked as expired": "Product marked as expired",
-  "Transfer functionality would be implemented here":
-      "Transfer functionality would be implemented here",
-  "Transaction history for": "Transaction history for",
-  "Alert settings for": "Alert settings for",
-  "Search products, NDC, or lot numbers...":
-      "Search products, NDC, or lot numbers...",
-  "Scan Barcode": "Scan Barcode",
-  "Filter Products": "Filter Products",
-  "Apply Filters": "Apply Filters",
-  "Clear All": "Clear All",
-  "Reorder at:": "Reorder at:",
-  "Total:": "Total:",
-  "days ago": "days ago",
-  "Expires in": "Expires in",
-  "days": "days",
-  "Expires:": "Expires:",
-  "Details": "Details",
-  "Actions": "Actions",
-  "Mark Expired": "Mark Expired",
-  "Lot:": "Lot:",
-  "N/A": "N/A",
-  "units": "units",
-  "Prescription Drugs": "Prescription Drugs",
-  "Vitamins & Supplements": "Vitamins & Supplements",
-  "Medical Devices": "Medical Devices",
-  "Unknown Product": "Unknown Product",
 
   // Purchase Invoice Widgets
   "Invoice Date": "Invoice Date",
-  "Invoice Number": "Invoice Number",
-  "Total Amount": "Total Amount",
   "Quantity Received": "Quantity Received",
-  "Unit Price": "Unit Price",
-  "Total Amount": "Total Amount",
-  "Expiry Date": "Expiry Date",
-  "Batch Number": "Batch Number",
   "FREE": "FREE",
 
   // Sales Management
   "Invoices refreshed successfully": "Invoices refreshed successfully",
   "Please select a customer first": "Please select a customer first",
-  "Failed to create sale process": "Failed to create sale process",
-  "sale process added successfully!": "sale process added successfully!",
   "Failed to add sale process for customer.":
       "Failed to add sale process for customer.",
-  "No internet connection. Please check your network.":
-      "No internet connection. Please check your network.",
-  "An unexpected error occurred. Please try again.":
-      "An unexpected error occurred. Please try again.",
   "An unexpected error occurred while fetching Stock.":
       "An unexpected error occurred while fetching Stock.",
-  "Faild to get customer please try again later":
-      "Failed to get customer please try again later",
-  "No internet connection. Please check your network.":
-      "No internet connection. Please check your network.",
-
-  // Stock Management Widgets
-  "Product Details": "Product Details",
-  "Search products, NDC, or lot numbers...":
-      "Search products, NDC, or lot numbers...",
-  "Scan Barcode": "Scan Barcode",
 
   // Payment Status
   "Paid": "Paid",
@@ -988,8 +848,6 @@ final Map<String, String> enUS = {
   "Stock deleted successfully!": "Stock deleted successfully!",
   "Stocks updated successfully!": "Stocks updated successfully!",
   "Expiry date cannot be in the past": "Expiry date cannot be in the past",
-  "An unexpected error occurred while fetching Stock.":
-      "An unexpected error occurred while fetching Stock.",
   "Failed to get stock please try again later":
       "Failed to get stock please try again later",
   "The nearest batch has expired": "The nearest batch has expired",
@@ -1015,17 +873,72 @@ final Map<String, String> enUS = {
   "Invoices": "Invoices",
   "Stock": "Stock",
   "Loading invoices...": "Loading invoices...",
-  "No invoices found": "No invoices found",
   "No invoices available": "No invoices available",
   "Try adjusting your search \nInvoices will appear here when available":
       "Try adjusting your search \nInvoices will appear here when available",
-  "Clear Filters": "Clear Filters",
   "Invoice": "Invoice",
-  "Print": "Print",
   "Share": "Share",
-  "Items": "Items",
-  "Unknown Product": "Unknown Product",
   "Name": "Name",
-  "Payment Method": "Payment Method",
-  "Paid": "Paid"
+  "Stock Management": "Stock Management",
+  "Add the deferred amount": "Add the deferred amount",
+  "Select Indebted Customer": "Select Indebted Customer",
+
+  // Dialog Translations
+  "Delete Debts": "Delete Debts",
+  "Are you sure you want to delete Debts of":
+      "Are you sure you want to delete Debts of",
+  "invoice": "invoice",
+
+  // Settings Page
+  "Refresh Profile": "Refresh Profile",
+  "Profile refreshed successfully": "Profile refreshed successfully",
+
+  // User Profile
+  "Unknown": "Unknown",
+  "Unknown User": "Unknown User",
+  "No email": "No email",
+  "Never": "Never",
+  "Loading Profile...": "Loading Profile...",
+
+  // User Profile Fields
+  "No Position": "No Position",
+  "Loading...": "Loading...",
+
+  // Settings Sections
+  "Account Settings": "Account Settings",
+  "Pharmacy Preferences": "Pharmacy Preferences",
+  "Security Options": "Security Options",
+  "App Configuration": "App Configuration",
+  "Advanced": "Advanced",
+  "Help & Support": "Help & Support",
+
+  // Settings Items
+  "Default Pharmacy Location": "Default Pharmacy Location",
+  "Set your primary pharmacy": "Set your primary pharmacy",
+  "Manage pharmacy alerts and updates": "Manage pharmacy alerts and updates",
+  "Language": "Language",
+  "Theme": "Theme",
+  "Offline Storage": "Offline Storage",
+  "Store data for offline access": "Store data for offline access",
+  "Contact Support": "Contact Support",
+  "App Version": "App Version",
+
+  // Settings Dialogs
+  "Select Language": "Select Language",
+  "Coming Soon": "Coming Soon",
+  "feature is coming soon in the next update.":
+      "feature is coming soon in the next update.",
+  "Opening email client...": "Opening email client...",
+  "Get in touch with our support team:": "Get in touch with our support team:",
+  "24/7 Support Available": "24/7 Support Available",
+  "Version 1.0.0": "Version 1.0.0",
+
+  // Language Change Messages
+  "Language changed to Arabic": "Language changed to Arabic",
+  "Language changed to English": "Language changed to English",
+
+  // Theme Names
+  "Dark": "Dark",
+  "Light": "Light",
+  "Total Paid Amount": "Total Paid Amount"
 };

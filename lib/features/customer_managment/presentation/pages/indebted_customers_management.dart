@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/config/widgets/custom_app_bar.dart';
+import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/customer_managment/presentation/widgets/customer_details_sheet.dart';
 import 'package:teriak/features/customer_managment/presentation/widgets/debt_search_bar.dart';
@@ -23,10 +23,6 @@ class _IndebtedCustomersManagementState
     extends State<IndebtedCustomersManagement> {
   CustomerController customerController = Get.put(CustomerController());
 
-  // ignore: unused_field
-  final List<Map<String, dynamic>> _allCustomers = [];
-  final List<Map<String, dynamic>> _filteredCustomers = [];
-
   @override
   void initState() {
     super.initState();
@@ -36,6 +32,7 @@ class _IndebtedCustomersManagementState
   }
 
   void _showCustomerDetails(Map<String, dynamic> customer) {
+    customerController.fetchDebts(customer['id']);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -45,6 +42,8 @@ class _IndebtedCustomersManagementState
         onAddPayment: () => _showAddPaymentSheet(customer),
         onEditCustomer: () => _editCustomer(customer),
         onDeleteCustomer: () => _deleteCustomer(customer),
+        onDeactivatePressed: () {},
+        controller: customerController,
       ),
     );
   }
@@ -58,53 +57,15 @@ class _IndebtedCustomersManagementState
       builder: (context) => PaymentBottomSheet(
         customer: customer,
         onPaymentSubmitted: (paymentData) {
-          _processPayment(paymentData);
+          final param = PaymentParams(
+            totalPaymentAmount: paymentData['totalPaymentAmount'],
+            paymentMethod: paymentData['paymentMethod'],
+            notes: paymentData['notes'],
+          );
+          customerController.addPayment(paymentData['customerId'], param);
         },
       ),
     );
-  }
-
-  void _processPayment(Map<String, dynamic> paymentData) {
-    final customerId = paymentData['customerId'];
-    final amount = paymentData['amount'] as double;
-
-    final customerIndex =
-        customerController.customers.indexWhere((c) => c.id == customerId);
-    if (customerIndex != -1) {
-      final currentDebt =
-          (_allCustomers[customerIndex]['totalDebt'] as num).toDouble();
-      final newDebt = (currentDebt - amount).clamp(0.0, double.infinity);
-
-      setState(() {
-        _allCustomers[customerIndex]['totalDebt'] = newDebt;
-        _allCustomers[customerIndex]['lastPayment'] =
-            DateTime.now().toIso8601String().split('T')[0];
-
-        // Update overdue status if debt is paid or reduced
-        if (newDebt == 0) {
-          _allCustomers[customerIndex]['isOverdue'] = false;
-          _allCustomers[customerIndex]['daysPastDue'] = 0;
-        }
-
-        // Add to payment history
-        final paymentHistory = _allCustomers[customerIndex]['paymentHistory']
-            as List<Map<String, dynamic>>;
-        paymentHistory.insert(0, {
-          'date': DateTime.now().toIso8601String().split('T')[0],
-          'amount': amount,
-          'type': 'Payment',
-        });
-      });
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              "Payment of \$${amount.toStringAsFixed(2)} recorded successfully"
-                  .tr),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
   }
 
   void _editCustomer(Map<String, dynamic> customer) {
@@ -154,86 +115,6 @@ class _IndebtedCustomersManagementState
     );
   }
 
-  void _showBulkActions() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => Container(
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'notifications',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Send Bulk Reminders'),
-              onTap: () {
-                Navigator.pop(context);
-                _sendBulkReminders();
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'assessment',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Generate Debt Report'),
-              onTap: () {
-                Navigator.pop(context);
-                _generateDebtReport();
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'payment',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Process Bulk Payments'),
-              onTap: () {
-                Navigator.pop(context);
-                _processBulkPayments();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _sendBulkReminders() {
-    final overdueCustomers =
-        _filteredCustomers.where((c) => c['isOverdue'] == true).length;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content:
-            Text("Reminders sent to $overdueCustomers overdue customers".tr),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _generateDebtReport() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Debt report generated successfully".tr),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _processBulkPayments() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Bulk payment processing initiated".tr),
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
 /////////////////////////////////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {
@@ -242,19 +123,11 @@ class _IndebtedCustomersManagementState
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      appBar: CustomAppBar(
-        title: 'Indebted Customers'.tr,
+      appBar: AppBar(
+        title: Text('Indebted Customers'.tr),
         actions: [
           IconButton(
-            onPressed: _showBulkActions,
-            icon: CustomIconWidget(
-              iconName: 'more_vert',
-              color: colorScheme.onSurface,
-              size: 6.w,
-            ),
-          ),
-          IconButton(
-            onPressed: customerController.refresh,
+            onPressed: () => customerController.refreshData(),
             icon: CustomIconWidget(
               iconName: 'refresh',
               color: colorScheme.onSurface,
@@ -284,7 +157,7 @@ class _IndebtedCustomersManagementState
                   ? _buildLoadingView(theme, colorScheme)
                   : RefreshIndicator(
                       onRefresh: () async {
-                        customerController.refresh;
+                        customerController.refreshData;
                       },
                       child: customerController.customers.isEmpty
                           ? _buildEmptyView(theme, colorScheme)
@@ -307,17 +180,19 @@ class _IndebtedCustomersManagementState
                                 itemCount: dataSource.length,
                                 itemBuilder: (context, index) {
                                   final customer = dataSource[index];
+                                  print('--------0--${customer.totalDebt}');
                                   return IndebtedCustomerCard(
                                     customer: {
                                       "id": customer.id,
                                       "name": customer.name,
                                       "phoneNumber": customer.phoneNumber,
                                       "address": customer.address,
-                                      "totalDebt": 0.0,
-                                      "totalPaid": 0.0,
-                                      "remainingDebt": 0.0,
-                                      "activeDebtsCount": 0.0,
-                                      "debts": null,
+                                      "totalDebt": customer.totalDebt,
+                                      "totalPaid": customer.totalPaid,
+                                      "remainingDebt": customer.remainingDebt,
+                                      "activeDebtsCount":
+                                          customer.activeDebtsCount,
+                                      "debts": customer.debts,
                                       "notes": customer.notes
                                     },
                                     onTap: () => _showCustomerDetails({
@@ -325,11 +200,26 @@ class _IndebtedCustomersManagementState
                                       "name": customer.name,
                                       "phoneNumber": customer.phoneNumber,
                                       "address": customer.address,
+                                      "totalDebt": customer.totalDebt,
+                                      "totalPaid": customer.totalPaid,
+                                      "remainingDebt": customer.remainingDebt,
+                                      "activeDebtsCount":
+                                          customer.activeDebtsCount,
+                                      "debts": customer.debts,
                                       "notes": customer.notes
                                     }),
                                     onAddPayment: () => _showAddPaymentSheet({
                                       "id": customer.id,
                                       "name": customer.name,
+                                      "phoneNumber": customer.phoneNumber,
+                                      "address": customer.address,
+                                      "totalDebt": customer.totalDebt,
+                                      "totalPaid": customer.totalPaid,
+                                      "remainingDebt": customer.remainingDebt,
+                                      "activeDebtsCount":
+                                          customer.activeDebtsCount,
+                                      "debts": customer.debts,
+                                      "notes": customer.notes
                                     }),
                                     onSendReminder: () => _sendPaymentReminder({
                                       "name": customer.name,

@@ -214,6 +214,7 @@ class EditProductParams {
     };
   }
 }
+
 class DeleteProductParams {
   final int id;
 
@@ -396,13 +397,14 @@ class PaginationParams {
 }
 
 class SaleProcessParams {
-  final int customerId;
+  final int? customerId;
   final String paymentType;
   final String paymentMethod;
   final String currency;
   final String discountType;
   final double discountValue;
   final double? paidAmount;
+  final String debtDueDate;
   final List<SaleItemParams> items;
 
   const SaleProcessParams({
@@ -412,7 +414,8 @@ class SaleProcessParams {
     required this.currency,
     required this.discountType,
     required this.discountValue,
-    this.paidAmount,
+    required this.paidAmount,
+    required this.debtDueDate,
     required this.items,
   });
 
@@ -425,6 +428,7 @@ class SaleProcessParams {
       "invoiceDiscountType": discountType,
       "invoiceDiscountValue": discountValue,
       "paidAmount": paidAmount,
+      'debtDueDate': debtDueDate,
       "items": items.map((e) => e.toJson()).toList(),
     };
   }
@@ -531,6 +535,26 @@ class StockParams {
       "minStockLevel": minStockLevel,
       "reasonCode": reasonCode,
       "additionalNotes": additionalNotes,
+    };
+  }
+}
+
+class PaymentParams {
+  final double totalPaymentAmount;
+  final String paymentMethod;
+  final String notes;
+
+  PaymentParams({
+    required this.totalPaymentAmount,
+    required this.paymentMethod,
+    this.notes = '',
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      "totalPaymentAmount": totalPaymentAmount,
+      "paymentMethod": paymentMethod,
+      if (notes.isNotEmpty) "notes": notes, // اختياري
     };
   }
 }

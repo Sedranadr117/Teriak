@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:teriak/features/sales_management/presentation/widgets/debt_details_section.dart';
 
 class PaymentConfigurationCardWidget extends StatefulWidget {
   final String paymentType;
-  final DateTime? dueDate;
+  final DateTime dueDate;
   final Function(String) onPaymentTypeChanged;
-  final Function(DateTime?) onDueDateChanged;
+  final Function() onDateTap;
+  final TextEditingController controller;
+  final FocusNode focusNode;
 
   const PaymentConfigurationCardWidget({
     super.key,
     required this.paymentType,
     required this.dueDate,
     required this.onPaymentTypeChanged,
-    required this.onDueDateChanged,
+    required this.controller,
+    required this.focusNode,
+    required this.onDateTap,
   });
 
   @override
@@ -23,74 +28,6 @@ class PaymentConfigurationCardWidget extends StatefulWidget {
 
 class _PaymentConfigurationCardWidgetState
     extends State<PaymentConfigurationCardWidget> {
-  // final List<String> _paymentTerms = [
-  //   'Net 15'.tr,
-  //   'Net 30'.tr,
-  //   'Net 60'.tr,
-  //   'Net 90'.tr,
-  //   'Custom'.tr
-  // ];
-  // String _selectedTerm = 'Net 30'.tr;
-
-  // Future<void> _selectDueDate() async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate:
-  //         widget.dueDate ?? DateTime.now().add(const Duration(days: 30)),
-  //     firstDate: DateTime.now(),
-  //     lastDate: DateTime.now().add(const Duration(days: 365)),
-  //     helpText: 'Select Due Date'.tr,
-  //     cancelText: 'Cancel'.tr,
-  //     confirmText: 'Select'.tr,
-  //   );
-
-  //   if (picked != null) {
-  //     widget.onDueDateChanged(picked);
-  //     _updatePaymentTerm(picked);
-  //   }
-  // }
-
-  // void _updatePaymentTerm(DateTime dueDate) {
-  //   final daysDifference = dueDate.difference(DateTime.now()).inDays;
-  //   if (daysDifference <= 15) {
-  //     _selectedTerm = 'Net 15';
-  //   } else if (daysDifference <= 30) {
-  //     _selectedTerm = 'Net 30';
-  //   } else if (daysDifference <= 60) {
-  //     _selectedTerm = 'Net 60';
-  //   } else if (daysDifference <= 90) {
-  //     _selectedTerm = 'Net 90';
-  //   } else {
-  //     _selectedTerm = 'Custom'.tr;
-  //   }
-  //   setState(() {});
-  // }
-
-  // void _onPaymentTermChanged(String term) {
-  //   setState(() {
-  //     _selectedTerm = term;
-  //   });
-
-  //   DateTime newDueDate;
-  //   switch (term.tr) {
-  //     case 'Net 15':
-  //       newDueDate = DateTime.now().add(const Duration(days: 15));
-  //       break;
-  //     case 'Net 30':
-  //       newDueDate = DateTime.now().add(const Duration(days: 30));
-  //       break;
-  //     case 'Net 60':
-  //       newDueDate = DateTime.now().add(const Duration(days: 60));
-  //       break;
-  //     case 'Net 90':
-  //       newDueDate = DateTime.now().add(const Duration(days: 90));
-  //       break;
-  //     default:
-  //       return;
-  //   }
-  //   widget.onDueDateChanged(newDueDate);
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -162,94 +99,21 @@ class _PaymentConfigurationCardWidgetState
                     title: 'Deferred Payment'.tr,
                     subtitle: 'Pay later terms'.tr,
                     icon: Icons.schedule,
-                    isSelected: widget.paymentType == 'DEFERRED'.tr,
-                    onTap: () => widget.onPaymentTypeChanged('DEFERRED'.tr),
+                    isSelected: widget.paymentType == 'CREDIT'.tr,
+                    onTap: () => widget.onPaymentTypeChanged('CREDIT'.tr),
                   ),
                 ),
               ],
             ),
-            // if (widget.paymentType == 'DEFERRED') ...[
-            //   const SizedBox(height: 16),
-
-            //   DropdownButtonFormField<String>(
-            //     value: _selectedTerm,
-            //     decoration: InputDecoration(
-            //       labelText: 'Payment Terms'.tr,
-            //       border: OutlineInputBorder(
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //       prefixIcon: const Icon(Icons.calendar_today),
-            //     ),
-            //     items: _paymentTerms.map((term) {
-            //       return DropdownMenuItem(
-            //         value: term,
-            //         child: Text(
-            //           term,
-            //           style: Theme.of(context).textTheme.titleMedium,
-            //         ),
-            //       );
-            //     }).toList(),
-            //     onChanged: (String? newValue) {
-            //       if (newValue != null) {
-            //         _onPaymentTermChanged(newValue);
-            //       }
-            //     },
-            //   ),
-
-            //   const SizedBox(height: 16),
-
-            //   // Due Date Selection
-            //   InkWell(
-            //     onTap: _selectDueDate,
-            //     borderRadius: BorderRadius.circular(12),
-            //     child: Container(
-            //       padding: const EdgeInsets.all(16),
-            //       decoration: BoxDecoration(
-            //         border: Border.all(color: Colors.grey[300]!),
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //       child: Row(
-            //         children: [
-            //           const Icon(Icons.date_range, color: Colors.grey),
-            //           const SizedBox(width: 12),
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'Due Date'.tr,
-            //                 style:
-            //                     Theme.of(context).textTheme.bodySmall?.copyWith(
-            //                           color: Colors.grey[600],
-            //                           fontWeight: FontWeight.w400,
-            //                         ),
-            //               ),
-            //               const SizedBox(height: 2),
-            //               Text(
-            //                 widget.dueDate != null
-            //                     ? '${widget.dueDate!.day}/${widget.dueDate!.month}/${widget.dueDate!.year}'
-            //                     : 'Select due date'.tr,
-            //                 style: Theme.of(context)
-            //                     .textTheme
-            //                     .titleMedium
-            //                     ?.copyWith(
-            //                       color: widget.dueDate != null
-            //                           ? Colors.black
-            //                           : Colors.grey[500],
-            //                       fontWeight: FontWeight.w500,
-            //                     ),
-            //               ),
-            //             ],
-            //           ),
-            //           const Spacer(),
-            //           const Icon(Icons.arrow_forward_ios,
-            //               size: 16, color: Colors.grey),
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-
-            //   const SizedBox(height: 16),
-            // ],
+            if (widget.paymentType == 'CREDIT') ...[
+              const SizedBox(height: 16),
+              DebtDetailsSection(
+                debtAmountController: widget.controller,
+                dueDate: widget.dueDate,
+                onDueDateChanged: widget.onDateTap,
+                focusNode: widget.focusNode,
+              ),
+            ],
           ],
         ),
       ),

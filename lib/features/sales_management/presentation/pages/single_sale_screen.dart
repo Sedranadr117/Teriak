@@ -14,7 +14,6 @@ import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dar
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
 
-
 class SingleSaleScreen extends StatefulWidget {
   final String tabId;
   final VoidCallback? onSaleCompleted;
@@ -156,20 +155,28 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
               Obx(
                 () => PaymentConfigurationCardWidget(
                   paymentType: saleController.selectedPaymentType.value,
-                  dueDate: saleController.startDate.value,
+                  dueDate: saleController.dueDateController.text.isNotEmpty
+                      ? (DateTime.tryParse(
+                              saleController.dueDateController.text) ??
+                          DateTime.now())
+                      : DateTime.now(),
                   onPaymentTypeChanged: (type) {
-                    setState(() {
-                      saleController.selectedPaymentType.value = type;
-                    });
+                    saleController.selectedPaymentType.value = type;
                   },
-                  onDueDateChanged: (date) {
-                    setState(() {
-                      saleController.endDate.value = date;
-                    });
+                  controller: saleController.deferredAmountController,
+                  focusNode: saleController.searchFocusNode,
+                  onDateTap: () async {
+                    await saleController.selectDueDate(
+                        initialDate:
+                            saleController.dueDateController.text.isNotEmpty
+                                ? DateTime.parse(
+                                    saleController.dueDateController.text)
+                                : DateTime.now(),
+                        context: context);
+                    setState(() {});
                   },
                 ),
               ),
-              // PaymentProcessingScreen(),
               Obx(
                 () => PaymentMethodSelectionWidget(
                   selectedMethod: saleController.selectedPaymentMethod.value,
@@ -193,7 +200,10 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     },
                     currencySymbol: saleController.getCurrencySymbol(
                         saleController.selectedCurrency.value),
-                    totalAmount: saleController.total.value),
+                    totalAmount:
+                        saleController.selectedPaymentType.value == "CREDIT"
+                            ? saleController.defferredAmount.value
+                            : saleController.total.value),
               )
             ],
           ),

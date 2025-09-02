@@ -17,6 +17,7 @@ class SaleRemoteDataSource {
       "invoiceDiscountType": parms.discountType,
       "invoiceDiscountValue": parms.discountValue,
       "paidAmount": parms.paidAmount,
+      'debtDueDate': parms.debtDueDate,
       "items": parms.items.map((e) => e.toJson()).toList(),
     };
 

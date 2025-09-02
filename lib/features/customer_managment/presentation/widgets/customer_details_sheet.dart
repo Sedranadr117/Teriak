@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 
 class CustomerDetailsSheet extends StatelessWidget {
   final Map<String, dynamic> customer;
   final VoidCallback onAddPayment;
   final VoidCallback onEditCustomer;
   final VoidCallback onDeleteCustomer;
+  final VoidCallback onDeactivatePressed;
+  final CustomerController controller;
 
   const CustomerDetailsSheet({
     super.key,
@@ -15,6 +18,8 @@ class CustomerDetailsSheet extends StatelessWidget {
     required this.onAddPayment,
     required this.onEditCustomer,
     required this.onDeleteCustomer,
+    required this.onDeactivatePressed,
+    required this.controller,
   });
 
   @override
@@ -23,10 +28,6 @@ class CustomerDetailsSheet extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     final totalDebt = (customer['totalDebt'] as num?)?.toDouble() ?? 0.0;
-    final isOverdue = customer['isOverdue'] as bool? ?? false;
-    final daysPastDue = (customer['daysPastDue'] as num?)?.toInt() ?? 0;
-    final paymentHistory =
-        customer['paymentHistory'] as List<Map<String, dynamic>>? ?? [];
 
     return Container(
       height: 90.h,
@@ -109,23 +110,6 @@ class CustomerDetailsSheet extends StatelessWidget {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            SizedBox(height: 0.5.h),
-                            if (isOverdue)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 2.w, vertical: 0.5.h),
-                                decoration: BoxDecoration(
-                                  color: colorScheme.error,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  'OVERDUE $daysPastDue DAYS',
-                                  style: theme.textTheme.labelSmall?.copyWith(
-                                    color: colorScheme.onError,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
                           ],
                         ),
                       ),
@@ -148,35 +132,9 @@ class CustomerDetailsSheet extends StatelessWidget {
                           customer['address']?.toString() ?? 'Not provided'.tr),
                     ],
                   ),
-
-                  SizedBox(height: 3.h),
-
-                  // Debt information
-                  _buildDetailSection(
-                    theme,
-                    colorScheme,
-                    'Debt Information',
-                    [
-                      _buildDetailRow(
-                          'Total Debt', '\$${totalDebt.toStringAsFixed(2)}'),
-                      _buildDetailRow(
-                          'Last Payment', _formatDate(customer['lastPayment'])),
-                      _buildDetailRow(
-                          'Due Date', _formatDate(customer['dueDate'])),
-                      _buildDetailRow('Payment Terms',
-                          customer['paymentTerms']?.toString() ?? 'N/A'),
-                    ],
-                  ),
-
-                  SizedBox(height: 3.h),
-
-                  // Payment history
-                  _buildPaymentHistory(theme, colorScheme, paymentHistory),
-
                   SizedBox(height: 3.h),
 
                   // Notes
-
                   _buildDetailSection(
                     theme,
                     colorScheme,
@@ -203,8 +161,86 @@ class CustomerDetailsSheet extends StatelessWidget {
                       ),
                     ],
                   ),
+                  SizedBox(height: 3.h),
 
-                  SizedBox(height: 4.h),
+                  //Debt information
+                  _buildDetailSection(
+                    theme,
+                    colorScheme,
+                    'Debt Information',
+                    [
+                      //debt
+                      Obx(
+                        () => controller.isLoading.value
+                            ? _buildLoadingView(theme, colorScheme)
+                            : SizedBox(
+                                height: 25.h,
+                                child: ListView.builder(
+                                  itemCount: controller.debts.length,
+                                  itemBuilder: (context, index) {
+                                    final detail = controller.debts[index];
+                                    return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Card(
+                                            color: theme.cardColor,
+                                            elevation: 2,
+                                            margin: EdgeInsets.symmetric(
+                                                vertical: 1.h),
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5.w),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  _buildDetailRow(
+                                                      'Amount:',
+                                                      detail.amount
+                                                          .toStringAsFixed(2)),
+                                                  _buildDetailRow(
+                                                      'Paid:',
+                                                      detail.paidAmount
+                                                          .toStringAsFixed(2)),
+                                                  _buildDetailRow(
+                                                      'Remaining:',
+                                                      detail.remainingAmount
+                                                          .toStringAsFixed(2)),
+                                                  _buildDetailRow(
+                                                      'Status:', detail.status),
+                                                  _buildDetailRow(
+                                                      'Notes:',
+                                                      _formatDate(
+                                                          detail.notes)),
+                                                  _buildDetailRow(
+                                                      'Due Date:',
+                                                      _formatDate(
+                                                          detail.dueDate)),
+                                                  Divider(
+                                                      thickness: 2,
+                                                      color: colorScheme.outline
+                                                          .withAlpha(77)),
+                                                  Divider(
+                                                    thickness: 2,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .outline
+                                                        .withAlpha(77),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        ]);
+                                  },
+                                ),
+                              ),
+                      ),
+                      _buildDetailRow(
+                          'Total Debt', 'Sp ${totalDebt.toStringAsFixed(2)}'),
+                    ],
+                  ),
+                  SizedBox(height: 2.h),
                 ],
               ),
             ),
@@ -330,117 +366,6 @@ class CustomerDetailsSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentHistory(ThemeData theme, ColorScheme colorScheme,
-      List<Map<String, dynamic>> paymentHistory) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Payment History',
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        SizedBox(height: 1.h),
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: colorScheme.outline.withValues(alpha: 0.2),
-              width: 1,
-            ),
-          ),
-          child: paymentHistory.isEmpty
-              ? Padding(
-                  padding: EdgeInsets.all(4.w),
-                  child: Center(
-                    child: Text(
-                      'No payment history available',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurface.withValues(alpha: 0.6),
-                      ),
-                    ),
-                  ),
-                )
-              : Column(
-                  children: paymentHistory.take(5).map((payment) {
-                    final date = _formatDate(payment['date']);
-                    final amount =
-                        (payment['amount'] as num?)?.toDouble() ?? 0.0;
-                    final type = payment['type']?.toString() ?? 'Unknown';
-                    final isPayment = type == 'Payment';
-
-                    return Container(
-                      padding: EdgeInsets.all(3.w),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: colorScheme.outline.withValues(alpha: 0.1),
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 8.w,
-                            height: 8.w,
-                            decoration: BoxDecoration(
-                              color: isPayment
-                                  ? colorScheme.primary.withValues(alpha: 0.1)
-                                  : colorScheme.error.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: CustomIconWidget(
-                              iconName: isPayment ? 'payment' : 'shopping_cart',
-                              color: isPayment
-                                  ? colorScheme.primary
-                                  : colorScheme.error,
-                              size: 4.w,
-                            ),
-                          ),
-                          SizedBox(width: 3.w),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  type,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  date,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colorScheme.onSurface
-                                        .withValues(alpha: 0.6),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            '${isPayment ? "-" : "+"}\$${amount.toStringAsFixed(2)}',
-                            style: theme.textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: isPayment
-                                  ? colorScheme.primary
-                                  : colorScheme.error,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-        ),
-      ],
-    );
-  }
-
   String _formatDate(dynamic date) {
     if (date == null) return 'Not available';
 
@@ -450,5 +375,26 @@ class CustomerDetailsSheet extends StatelessWidget {
     } catch (e) {
       return date.toString();
     }
+  }
+
+  Widget _buildLoadingView(ThemeData theme, ColorScheme colorScheme) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 6.h),
+            child: CircularProgressIndicator(),
+          ),
+          SizedBox(height: 2.h),
+          Text(
+            'Loading Debts...'.tr,
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: colorScheme.onSurface.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

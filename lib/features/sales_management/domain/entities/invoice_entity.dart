@@ -10,12 +10,14 @@ class InvoiceEntity {
   final double discount;
   final String discountType;
   final double paidAmount;
+  final String? debtDueDate;
   final double remainingAmount;
   final String status;
   final List<InvoiceItemEntity> items;
 
   InvoiceEntity({
     required this.id,
+    required this.debtDueDate,
     required this.customerId,
     required this.customerName,
     required this.invoiceDate,

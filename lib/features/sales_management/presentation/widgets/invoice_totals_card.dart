@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
 class InvoiceTotalsCard extends StatelessWidget {
@@ -15,15 +16,17 @@ class InvoiceTotalsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final List items = invoiceData["items"] ?? [];
-    final double subtotal = items.fold(0.0, (sum, item) {
-      final price = (item["unitPrice"] ?? 0) as num;
-      final qty = (item["quantity"] ?? 0) as num;
+    final double subtotal =
+        (invoiceData["items"] as List<dynamic>? ?? []).fold(0.0, (sum, item) {
+      final price =
+          double.tryParse(item["unitPrice"]?.toString() ?? '0') ?? 0.0;
+      final qty = double.tryParse(item["quantity"]?.toString() ?? '0') ?? 0.0;
       return sum + price * qty;
     });
 
     final double discount = invoiceData["discount"] as double? ?? 0.0;
-    final double total = invoiceData["totalAmount"] as double? ?? 0.0;
+    final double total = invoiceData["paidAmount"] as double? ?? 0.0;
+    final double remaining = invoiceData["remainingAmount"] as double? ?? 0.0;
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -62,6 +65,7 @@ class InvoiceTotalsCard extends StatelessWidget {
               discount,
               isDiscount: true,
             ),
+
             SizedBox(height: 1.h),
 
             Container(
@@ -76,11 +80,16 @@ class InvoiceTotalsCard extends StatelessWidget {
             // Total
             _buildTotalRow(
               context,
-              'Total Amount'.tr,
+              'Total Paid Amount'.tr,
               total,
               isTotal: true,
             ),
-
+            _buildTotalRow(
+              context,
+              'Remaining Amount'.tr,
+              remaining,
+              isremaining: true,
+            ),
             SizedBox(height: 2.h),
 
             // Payment method and status
@@ -143,6 +152,7 @@ class InvoiceTotalsCard extends StatelessWidget {
     bool isSubtotal = false,
     bool isDiscount = false,
     bool isTotal = false,
+    bool isremaining = false,
   }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
@@ -165,6 +175,14 @@ class InvoiceTotalsCard extends StatelessWidget {
         color: theme.brightness == Brightness.light
             ? const Color(0xFF4CAF50)
             : const Color(0xFF81C784),
+      );
+    } else if (isremaining) {
+      labelStyle = theme.textTheme.bodyMedium;
+      amountStyle = theme.textTheme.bodyMedium?.copyWith(
+        fontWeight: FontWeight.w500,
+        color: theme.brightness == Brightness.light
+            ? AppColors.errorLight
+            : AppColors.errorDark,
       );
     } else {
       labelStyle = theme.textTheme.bodyMedium;
@@ -193,22 +211,29 @@ class InvoiceTotalsCard extends StatelessWidget {
     IconData statusIcon;
 
     switch (status) {
-      case 'COMPLETED':
+      case 'FULLY_PAID':
         indicatorColor = theme.brightness == Brightness.light
             ? const Color(0xFF4CAF50)
             : const Color(0xFF81C784);
         statusIcon = Icons.check_circle;
         break;
-      case 'pending':
+      case 'UNPAID':
         indicatorColor = theme.brightness == Brightness.light
             ? const Color(0xFFFF9800)
             : const Color(0xFFFFB74D);
         statusIcon = Icons.schedule;
         break;
-      case 'overdue':
+
+      case 'OVERDUE':
         indicatorColor = theme.brightness == Brightness.light
             ? const Color(0xFFF44336)
             : const Color(0xFFCF6679);
+        statusIcon = Icons.warning;
+        break;
+      case 'PARTIALLY_PAID':
+        indicatorColor = theme.brightness == Brightness.light
+            ? const Color(0xFFFFD54F)
+            : const Color(0xFFFFD54F);
         statusIcon = Icons.warning;
         break;
       default:
@@ -237,7 +262,6 @@ class InvoiceTotalsCard extends StatelessWidget {
       case 'cash':
         return 'payments';
       case 'credit card':
-      case 'debit card':
         return 'credit_card';
       default:
         return 'payment';

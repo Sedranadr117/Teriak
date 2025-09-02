@@ -56,7 +56,7 @@ class _StockManagementState extends State<StockManagement>
     return Container(
       height: 80.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -428,9 +428,6 @@ class _StockManagementState extends State<StockManagement>
               itemCount: displayList.length,
               itemBuilder: (context, index) {
                 final product = displayList[index];
-                print(
-                    "📦 ${product['productName']} | minStockLevel = ${product['minStockLevel']}");
-
                 final mapy = {
                   'id': product['id'],
                   'productId': product['productId'],

@@ -87,9 +87,9 @@ class PaymentMethodSelectionWidget extends StatelessWidget {
                       subtitle: "Pay with bank".tr,
                       icon: Icons.credit_card_rounded,
                       color: Colors.blue),
-                )
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

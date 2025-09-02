@@ -24,7 +24,13 @@ class SaleController extends GetxController {
   SaleController({required this.customerTag});
   final TextEditingController discountController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController dateOfHireController = TextEditingController();
+  final TextEditingController dueDateController = TextEditingController();
+
   final RxList<InvoiceEntity> invoices = <InvoiceEntity>[].obs;
+  RxDouble defferredAmount = 0.0.obs;
+  final TextEditingController deferredAmountController =
+      TextEditingController();
 
   RxString discountType = 'PERCENTAGE'.obs;
   late RxString selectedPaymentType;
@@ -63,6 +69,12 @@ class SaleController extends GetxController {
     selectedPaymentType = 'CASH'.obs;
     selectedPaymentMethod = 'CASH'.obs;
     discountController.text = '0';
+    deferredAmountController.text = "0";
+    dueDateController.text = DateTime.now().toString();
+    deferredAmountController.addListener(() {
+      final value = double.tryParse(deferredAmountController.text) ?? 0.0;
+      defferredAmount.value = value;
+    });
   }
 
   void _initializeDependencies() {
@@ -87,6 +99,20 @@ class SaleController extends GetxController {
       networkInfo: networkInfo,
     );
     _searchStock = SearchStock(repository: stockRepository);
+  }
+
+  Future<void> selectDueDate(
+      {required DateTime initialDate, required BuildContext context}) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+    );
+
+    if (picked != null) {
+      dueDateController.text = picked.toIso8601String().split('T')[0];
+    }
   }
 
   Future<void> refreshData() async {
@@ -277,23 +303,25 @@ class SaleController extends GetxController {
       if (!isConnected) {
         errorMessage.value =
             'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
+
         return;
       }
 
-      final id = customerId;
-      print('✅ Using customer ID: $customerId');
-      if (id == null) {
-        Get.snackbar("Error".tr, "Please select a customer first".tr);
-        return;
-      }
       final sale = SaleProcessParams(
-          customerId: customerId!,
+          debtDueDate: selectedPaymentType.value == "CREDIT"
+              ? dueDateController.text
+              : '',
+          customerId: customerId,
           paymentType: selectedPaymentType.value,
           paymentMethod: selectedPaymentMethod.value,
           currency: selectedCurrency.value,
           discountType: discountType.value,
           discountValue: double.tryParse(discountController.text) ?? 0.0,
-          items: items);
+          items: items,
+          paidAmount: selectedPaymentType.value == "CREDIT"
+              ? defferredAmount.value
+              : total.value);
       final result = await _createSale(sale);
       result.fold((failure) {
         print(
@@ -302,7 +330,9 @@ class SaleController extends GetxController {
         done = false;
       }, (addedSale) {
         print('✅ sale process added for customer $customerId');
+
         Get.snackbar('Success'.tr, 'sale process added successfully!'.tr);
+
         resetSaleData();
         done = true;
       });
@@ -360,6 +390,7 @@ class SaleController extends GetxController {
   void dispose() {
     searchController.dispose();
     searchFocusNode.dispose();
+    deferredAmountController.dispose();
     super.dispose();
   }
 }

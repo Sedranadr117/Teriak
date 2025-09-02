@@ -130,6 +130,13 @@ class _HomePageState extends State<HomePage> {
                 Get.toNamed(AppPages.settings);
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: Text("Settings".tr),
+              onTap: () {
+                Get.toNamed(AppPages.pharmacyCompleteRegistration);
+              },
+            ),
             SizedBox(
               height: 30.h,
             ),

@@ -8,17 +8,22 @@ import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/customer_managment/data/datasources/customer_remote_data_source.dart';
+import 'package:teriak/features/customer_managment/data/models/customer_debts_model.dart';
 import 'package:teriak/features/customer_managment/data/models/customer_model.dart';
 import 'package:teriak/features/customer_managment/data/repositories/customer_repository_impl.dart';
 import 'package:teriak/features/customer_managment/domain/entities/customer_entity.dart';
+import 'package:teriak/features/customer_managment/domain/usecases/add_payment.dart';
 import 'package:teriak/features/customer_managment/domain/usecases/create_customer.dart';
 import 'package:teriak/features/customer_managment/domain/usecases/delete_employee.dart';
 import 'package:teriak/features/customer_managment/domain/usecases/edit_employee.dart';
+import 'package:teriak/features/customer_managment/domain/usecases/get_customer_debts.dart';
 import 'package:teriak/features/customer_managment/domain/usecases/search_customer.dart';
 import '../../domain/usecases/get_customers.dart';
 
 class CustomerController extends GetxController {
   RxList<CustomerModel> customers = <CustomerModel>[].obs;
+  RxList<CustomerDebtsModel> debts = <CustomerDebtsModel>[].obs;
+
   Rx<CustomerModel?> selectedCustomer = Rx<CustomerModel?>(null);
   TextEditingController searchController = TextEditingController();
   final Rx<CustomerEntity?> customer = Rx<CustomerEntity?>(null);
@@ -29,6 +34,8 @@ class CustomerController extends GetxController {
   late final CreateCustomer _createCustomer;
   late final DeleteCustomer _deleteCustomer;
   late final EditCustomer _editCustomer;
+  late final AddPayment _addPayment;
+  late final GetCustomerDebts _customerDebts;
   RxBool isSuccess = false.obs;
   var isLoading = false.obs;
   var isEditing = false;
@@ -53,7 +60,7 @@ class CustomerController extends GetxController {
     fetchCustomers();
   }
 
-  void refresh() {
+  void refreshData() {
     fetchCustomers();
   }
 
@@ -75,6 +82,8 @@ class CustomerController extends GetxController {
     _searchCustomer = SearchCustomer(repository: repository);
     _deleteCustomer = DeleteCustomer(repository);
     _editCustomer = EditCustomer(repository: repository);
+    _addPayment = AddPayment(repository: repository);
+    _customerDebts = GetCustomerDebts(repository: repository);
   }
 
   void selectCustomer(CustomerEntity newEmployee) {
@@ -113,26 +122,11 @@ class CustomerController extends GetxController {
         },
         (list) {
           isSuccess.value = true;
-          customers.assignAll(
-            list.map((entity) => CustomerModel(
-                  id: entity.id,
-                  name: entity.name,
-                  phoneNumber: entity.phoneNumber,
-                  address: entity.address,
-                  notes: entity.notes,
-                )),
-          );
+          customers.assignAll(list.cast<CustomerModel>());
+          for (var cu in customers) {
+            print("--------------${cu.id}");
+          }
           print('✅  Successfully fetched ${list.length} customers.');
-          final defaultCustomer = customers.firstWhereOrNull(
-            (c) => c.name.toLowerCase() == 'cash customer',
-          );
-          if (defaultCustomer != null) {
-            selectedCustomer.value = defaultCustomer;
-          }
-          for (var c in customers) {
-            print('Customer: ID=${c.id}, Name=${c.name}');
-            print(c.notes);
-          }
         },
       );
     } catch (e) {
@@ -145,7 +139,99 @@ class CustomerController extends GetxController {
     }
   }
 
+  Future<void> fetchDebts(int customerId) async {
+    print('🚀  Starting fetch Debts process...');
+    isLoading.value = true;
+    errorMessage.value = '';
+
+    try {
+      print('🌐  Checking internet connectivity...');
+      final isConnected = await networkInfo.isConnected;
+      print('📡  Network connected: $isConnected');
+
+      if (!isConnected) {
+        errorMessage.value =
+            '⚠️ No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr,
+            'No internet connection. Please check your network.'.tr);
+        print('❌ No internet connection detected!');
+        return;
+      }
+
+      print('📥  Fetching customer Debts list from API...');
+      final result = await _customerDebts(customerId: customerId);
+
+      result.fold(
+        (failure) {
+          errorMessage.value = failure.errMessage;
+          print('❌  Failed to fetch customers Debts: ${failure.errMessage}');
+          Get.snackbar('Error'.tr,
+              'Faild to get customer Debts please try again later'.tr);
+        },
+        (list) {
+          isSuccess.value = true;
+          debts.assignAll(
+            list.map((entity) => CustomerDebtsModel(
+                  id: entity.id,
+                  customerId: entity.customerId,
+                  customerName: entity.customerName,
+                  pharmacyId: entity.pharmacyId,
+                  amount: entity.amount,
+                  paidAmount: entity.paidAmount,
+                  remainingAmount: entity.remainingAmount,
+                  dueDate: entity.dueDate != null
+                      ? DateTime.parse(entity.dueDate.toString())
+                      : null,
+                  createdAt: DateTime.parse(entity.createdAt.toString()),
+                  paidAt: entity.paidAt != null
+                      ? DateTime.parse(entity.paidAt.toString())
+                      : null,
+                  notes: entity.notes,
+                  status: entity.status,
+                  paymentMethod: entity.paymentMethod,
+                )),
+          );
+          for (var de in debts) {
+            print("---------------${de.id}");
+          }
+          print('✅  Successfully fetched ${list.length} debts.');
+        },
+      );
+    } catch (e) {
+      print('💥  Exception occurred while fetching debts: $e');
+      errorMessage.value =
+          'An unexpected error occurred while fetching debts.'.tr;
+    } finally {
+      isLoading.value = false;
+      print('🔚  Fetch debts process finished.');
+    }
+  }
+
   Future<void> deleteCustomer(int id) async {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      final result = await _deleteCustomer(id);
+      result.fold(
+        (failure) {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Error'.tr, failure.errMessage);
+        },
+        (_) {
+          Get.snackbar('Success'.tr, 'Customer deleted successfully!'.tr);
+          fetchCustomers();
+        },
+      );
+    } catch (e) {
+      print('❌ Error deleting Customer: $e');
+      errorMessage.value = 'Failed to delete Customer.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteDebt(int id) async {
     isLoading.value = true;
     errorMessage.value = '';
     try {
@@ -237,6 +323,18 @@ class CustomerController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     try {
+      print('🌐  Checking internet connectivity...');
+      final isConnected = await networkInfo.isConnected;
+      print('📡  Network connected: $isConnected');
+
+      if (!isConnected) {
+        errorMessage.value =
+            '⚠️ No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr,
+            'No internet connection. Please check your network.'.tr);
+        print('❌ No internet connection detected!');
+        return;
+      }
       final result = await _editCustomer(
           id: customerId,
           name: params.name,
@@ -256,6 +354,46 @@ class CustomerController extends GetxController {
     } catch (e) {
       print('❌ Error editing customer: $e');
       errorMessage.value = 'Failed to update customer.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> addPayment(int customerId, PaymentParams params) async {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      print('🌐  Checking internet connectivity...');
+      final isConnected = await networkInfo.isConnected;
+      print('📡  Network connected: $isConnected');
+
+      if (!isConnected) {
+        errorMessage.value =
+            '⚠️ No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr,
+            'No internet connection. Please check your network.'.tr);
+        print('❌ No internet connection detected!');
+        return;
+      }
+      final result = await _addPayment(
+          customerId: customerId,
+          totalPaymentAmount: params.totalPaymentAmount,
+          paymentMethod: params.paymentMethod,
+          notes: params.notes);
+      result.fold(
+        (failure) {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Error'.tr, failure.errMessage);
+        },
+        (updatedEmployee) {
+          Get.snackbar('Success'.tr, 'Payment added successfully!'.tr);
+          Get.offNamed(AppPages.indebtedManagement);
+        },
+      );
+    } catch (e) {
+      print('❌ Error adding payment: $e');
+      errorMessage.value = 'Failed to add payment.'.tr;
       Get.snackbar('Error'.tr, errorMessage.value);
     } finally {
       isLoading.value = false;
@@ -288,6 +426,11 @@ class CustomerController extends GetxController {
                 phoneNumber: entity.phoneNumber,
                 address: entity.address,
                 notes: entity.notes,
+                totalDebt: entity.totalDebt,
+                remainingDebt: entity.remainingDebt,
+                totalPaid: entity.totalPaid,
+                activeDebtsCount: entity.activeDebtsCount,
+                debts: entity.debts,
               )));
           print('Search Results: ${results.length} items');
           if (list.isEmpty) {
