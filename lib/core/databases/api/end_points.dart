@@ -1,29 +1,29 @@
 class EndPoints {
-  static const String baserUrl = "https://b2175de248ef.ngrok-free.app/api/v1/";
+  static const String baserUrl = "https://d10b5ffc0da1.ngrok-free.app/api/v1/";
 
   static const String template = "template/";
 
-// Auth endpoints
+  // Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
 
-//sale
+  //sale
   static const String sales = "sales";
   static const String searchInvoicesByRange = "sales/searchByDateRange";
 
-//customers
+  //customers
   static const String getCustomers = "customers/with-debts";
   static const String createCustomer = "customers";
   static const String searchCustomers = "customers/search";
   static const String addPayment = "customer-debts/";
   static const String getCustomerDebts = "customer-debts/customer";
 
-//stock
+  //stock
   static const String getStock = "stock/products/Overall";
   static const String searchStock = "stock/search";
   static const String getDetailsStock = "stock/product";
 
-//user
+  //user
   static const String addEmployee = "employees";
   static const String roleID = "roles";
   static const String getUserProfile = "users/me";
