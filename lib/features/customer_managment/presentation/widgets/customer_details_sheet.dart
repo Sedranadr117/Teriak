@@ -370,11 +370,11 @@ class CustomerDetailsSheet extends StatelessWidget {
   Widget _buildDebtRow(String label, String value, {String? status}) {
     Color statusColor = Colors.grey;
     if (status != null) {
-      switch (status.toLowerCase()) {
+      switch (status) {
         case 'paid':
           statusColor = Colors.green;
           break;
-        case 'pending':
+        case 'ACTIVE':
           statusColor = Colors.orange;
           break;
         case 'overdue':
