@@ -30,7 +30,7 @@ class ProductDataController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = ProductDataRemoteDataSource(api: httpConsumer);
 

@@ -38,7 +38,7 @@ class AuthController extends GetxController {
     final cacheHelper = CacheHelper();
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = AuthRemoteDataSource(api: httpConsumer);
 

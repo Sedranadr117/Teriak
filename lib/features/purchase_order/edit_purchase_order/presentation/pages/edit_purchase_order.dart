@@ -10,7 +10,7 @@ import 'package:teriak/features/purchase_order/add_purchase_order/presentation/p
 import 'package:teriak/features/purchase_order/add_purchase_order/presentation/pages/widgets/create_order_button.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity .dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/controller/all_purchase_order_controller.dart';
-import 'package:teriak/features/purchase_order/purchase_order_deatails/presentation/controller/purchase_order_details_controller.dart';
+import 'package:teriak/features/purchase_order/purchase_order_details/presentation/controller/purchase_order_details_controller.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 

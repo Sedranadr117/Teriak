@@ -641,6 +641,8 @@ final Map<String, String> enUS = {
   "No invoices found": "No invoices found",
   "Invoice Number": "Enter Invoice Number",
   "Quantity in stock": "Quantity in stock",
+  "Supplier name must be unique within this pharmacy":
+      "Supplier name must be unique within this pharmacy",
 
   "Date": "Date",
   "Invoice n": "Invoice number",
@@ -718,7 +720,7 @@ final Map<String, String> enUS = {
   "Invoice Information": "Invoice Information",
   "Supplier Information": "Supplier Information",
   "Payment Information": "Payment Information",
-  "Invoice created successfully":"Invoice created successfully",
+  "Invoice created successfully": "Invoice created successfully",
 
   // Actions
   "View": "View",
@@ -941,5 +943,56 @@ final Map<String, String> enUS = {
   // Theme Names
   "Dark": "Dark",
   "Light": "Light",
-  "Total Paid Amount": "Total Paid Amount"
+  "Total Paid Amount": "Total Paid Amount",
+
+  // Money Box
+  "Money Box": "Money Box",
+  "Please enter notes": "Please enter notes",
+  "Open Money Box": "Open Money Box",
+  "Initial Balance": "Initial Balance",
+  "Enter initial balance": "Enter initial balance",
+  "Open Box": "Open Box",
+  "Money box opened successfully": "Money box opened successfully",
+  "Failed to open money box": "Failed to open money box",
+  "Please enter initial balance": "Please enter initial balance",
+  "Please select currency": "Please select currency",
+  "Click here to open money box for the first time":
+      "Click here to open money box for the first time",
+  "Money Box Information": "Money Box Information",
+  "Money Box Transactions": "Money Box Transactions",
+  "Total Balance": "Total Balance",
+  "Status": "Status",
+  "Last Reconciled": "Last Reconciled",
+  "Transaction Type": "Transaction Type",
+  "Amount": "Amount",
+  "Balance Before": "Balance Before",
+  "Balance After": "Balance After",
+  "Description": "Description",
+  "No transactions found": "No transactions found",
+  "Transactions will appear here once created":
+      "Transactions will appear here once created",
+  "Total": "Total",
+  "transactions": "transactions",
+  "Page": "Page",
+  "of": "of",
+  "Next": "Next",
+  "Previous": "Previous",
+  "Refresh": "Refresh",
+
+  // Add Transaction Dialog
+  "Add Transaction": "Add Transaction",
+  "Enter amount": "Enter amount",
+  "Enter transaction notes (optional)": "Enter transaction notes (optional)",
+  "Transaction added successfully": "Transaction added successfully",
+  "Please enter amount": "Please enter amount",
+  "Please enter a valid amount": "Please enter a valid amount",
+
+  // Add Reconcile Dialog
+  "Reconcile Money Box": "Reconcile Money Box",
+  "Actual Amount": "Actual Amount",
+  "Enter actual cash count": "Enter actual cash count",
+  "Enter reconciliation notes": "Enter reconciliation notes",
+  "Reconcile": "Reconcile",
+  "Money box reconciled successfully": "Money box reconciled successfully",
+  "Please enter actual amount": "Please enter actual amount"
 };

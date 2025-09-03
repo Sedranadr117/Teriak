@@ -16,7 +16,7 @@ import 'package:teriak/features/products/search_product/domain/usecases/search_p
 class SearchProductController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocus = FocusNode();
-  
+
   late final NetworkInfoImpl networkInfo;
   late final SearchProduct searchProductUseCase;
 
@@ -61,7 +61,7 @@ class SearchProductController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = SearchProductRemoteDataSource(api: httpConsumer);
 
@@ -130,7 +130,8 @@ class SearchProductController extends GetxController {
   }
 
   Future<void> loadNextPage() async {
-    if (!hasNext.value || isLoadingMore.value || searchController.text.isEmpty) return;
+    if (!hasNext.value || isLoadingMore.value || searchController.text.isEmpty)
+      return;
 
     try {
       isLoadingMore.value = true;

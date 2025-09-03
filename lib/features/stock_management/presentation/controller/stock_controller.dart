@@ -47,7 +47,7 @@ class StockController extends GetxController {
 
   void initializeDependencies() {
     final cacheHelper = CacheHelper();
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 

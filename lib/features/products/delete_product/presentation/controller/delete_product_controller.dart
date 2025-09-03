@@ -26,7 +26,7 @@ class DeleteProductController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = DeleteProductRemoteDataSource(api: httpConsumer);
 
@@ -55,7 +55,8 @@ class DeleteProductController extends GetxController {
           if (failure.statusCode == 409) {
             Get.snackbar(
                 'Error',
-                'Cannot delete pharmacy product. It has stock items. Please remove all stock items first'.tr
+                'Cannot delete pharmacy product. It has stock items. Please remove all stock items first'
+                    .tr
                     .tr);
           } else {
             Get.snackbar('Error', failure.errMessage);
@@ -67,7 +68,6 @@ class DeleteProductController extends GetxController {
       );
     } catch (e) {
       Get.snackbar('Error', e.toString());
-
     } finally {
       isLoading.value = false;
     }

@@ -26,7 +26,7 @@ class DeletePurchaseOrderController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource =
         DeletePurchaseOrderRemoteDataSource(api: httpConsumer);

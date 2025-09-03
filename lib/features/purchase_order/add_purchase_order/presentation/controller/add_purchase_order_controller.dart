@@ -81,7 +81,7 @@ class AddPurchaseOrderController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource =
         AddPurchaseOrderRemoteDataSource(api: httpConsumer);
@@ -331,8 +331,7 @@ class AddPurchaseOrderController extends GetxController {
               "productId": item.product.id,
               "quantity": item.quantity,
               "price": item.price,
-              "productType":
-                  mapProductType(item.product.productType),
+              "productType": mapProductType(item.product.productType),
             })
         .toList();
 

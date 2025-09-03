@@ -624,6 +624,8 @@ final Map<String, String> arSY = {
   "All Invoices": "جميع الفواتير",
   "Are you sure you want to delete product": "هل أنت متأكد من حذف المنتج",
   "No invoices found": "لا توجد فواتير",
+  "Supplier name must be unique within this pharmacy":
+      "يجب ان يكون اسم المورد غير مكرر في هذه الصيدلية",
   "Cannot delete pharmacy product. It has stock items. Please remove all stock items first":
       "لا يمكن حذف منتج الصيدلية. يحتوي على أصناف متوفرة. يُرجى إزالة جميع الأصناف المتوفرة أولًا",
   'You cannot delete the supplier because he has purchase invoices':
@@ -709,8 +711,7 @@ final Map<String, String> arSY = {
   "Invoice Information": "معلومات الفاتورة",
   "Supplier Information": "معلومات المورد",
   "Payment Information": "معلومات الدفع",
-  "Invoice created successfully":"تم إنشاء الفاتورة بنجاح",
-
+  "Invoice created successfully": "تم إنشاء الفاتورة بنجاح",
 
   // Actions
   "View": "عرض",
@@ -925,5 +926,61 @@ final Map<String, String> arSY = {
   // User Profile Fields
   "No Position": "لا يوجد منصب",
   "Loading...": "جاري التحميل...",
-  "Total Paid Amount": "المبلغ الإجمالي المدفوع"
+  "Total Paid Amount": "المبلغ الإجمالي المدفوع",
+
+  // Money Box
+  "Money Box": "صندوق الصيدلية",
+  "Open Money Box": "فتح صندوق الصيدلية",
+  "Initial Balance": "الرصيد الافتتاحي",
+  "Enter initial balance": "أدخل الرصيد الافتتاحي",
+  "Currency": "العملة",
+  "Select Currency": "اختر العملة",
+  "USD": "دولار أمريكي",
+  "SYP": "ليرة سورية",
+  "Open Box": "فتح الصندوق",
+  "Money box opened successfully": "تم فتح صندوق الصيدلية بنجاح",
+  "Failed to open money box": "فشل في فتح صندوق الصيدلية",
+  "Please enter initial balance": "يرجى إدخال الرصيد الافتتاحي",
+  "Please select currency": "يرgى اختيار العملة",
+  "Click here to open money box for the first time":
+      "اضغط هنا لفتح صندوق الصيدلية لأول مرة",
+  "Money Box Information": "معلومات صندوق الصيدلية",
+  "Money Box Transactions": "معاملات صندوق الصيدلية",
+  "Total Balance": "الرصيد الإجمالي",
+  "Status": "الحالة",
+  "Please enter notes": "ادخل الملاحظات",
+
+  "Last Reconciled": "آخر تسوية",
+  "Transaction Type": "نوع المعاملة",
+  "Amount": "المبلغ",
+  "Balance Before": "الرصيد قبل",
+  "Balance After": "الرصيد بعد",
+  "Description": "الوصف",
+  "No transactions found": "لم يتم العثور على معاملات",
+  "Transactions will appear here once created":
+      "ستظهر المعاملات هنا عند إنشائها",
+  "Total": "الإجمالي",
+  "transactions": "معاملات",
+  "Page": "الصفحة",
+  "of": "من",
+  "Next": "التالي",
+  "Previous": "السابق",
+  "Refresh": "تحديث",
+
+  // Add Transaction Dialog
+  "Add Transaction": "إضافة معاملة",
+  "Enter amount": "أدخل المبلغ",
+  "Enter transaction notes (optional)": "أدخل ملاحظات المعاملة (اختياري)",
+  "Transaction added successfully": "تمت إضافة المعاملة بنجاح",
+  "Please enter amount": "يرجى إدخال المبلغ",
+  "Please enter a valid amount": "يرجى إدخال مبلغ صحيح",
+
+  // Add Reconcile Dialog
+  "Reconcile Money Box": "تسوية صندوق الصيدلية",
+  "Actual Amount": "المبلغ الفعلي",
+  "Enter actual cash count": "أدخل المبلغ النقدي الفعلي",
+  "Enter reconciliation notes": "أدخل ملاحظات التسوية",
+  "Reconcile": "تسوية",
+  "Money box reconciled successfully": "تمت تسوية صندوق الصيدلية بنجاح",
+  "Please enter actual amount": "يرجى إدخال المبلغ الفعلي"
 };

@@ -29,7 +29,7 @@ class GetAllSupplierController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = AllSupplierRemoteDataSource(api: httpConsumer);
 

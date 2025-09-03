@@ -42,10 +42,9 @@ class _HomePageState extends State<HomePage> {
       AllProductPage(),
       StockManagement(),
       MultiSalesScreen(),
-      
     ];
-     if (role != "PHARMACY_TRAINEE") {
-      screns.add(  PurchaseOrderList());
+    if (role != "PHARMACY_TRAINEE") {
+      screns.add(PurchaseOrderList());
     }
     if (role != "PHARMACY_TRAINEE") {
       screns.add(AllPurchaseInvoiceScreen());
@@ -181,16 +180,17 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
-        centerTitle:
-            appBarTitle[_controller.index].tr == "Point of Sale".tr ? true : false,
-        title: Text(appBarTitle[_controller.index],
+        centerTitle: appBarTitle[_controller.index].tr == "Point of Sale".tr
+            ? true
+            : false,
+        title: Text(appBarTitle[_controller.index].tr,
             style: appBarTitle[_controller.index].tr == "Point of Sale".tr
                 ? Theme.of(context)
                     .textTheme
                     .titleLarge!
                     .copyWith(color: AppColors.backgroundLight)
                 : Theme.of(context).textTheme.titleLarge),
-        backgroundColor: appBarTitle[_controller.index] == "Point of Sale".tr
+        backgroundColor: appBarTitle[_controller.index].tr == "Point of Sale".tr
             ? Theme.of(context).colorScheme.primary
             : null,
       ),

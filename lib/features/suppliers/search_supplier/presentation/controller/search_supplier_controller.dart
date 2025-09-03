@@ -12,7 +12,7 @@ import 'package:teriak/features/suppliers/search_supplier/data/repositories/sear
 import 'package:teriak/features/suppliers/search_supplier/domain/usecases/search_supplier.dart';
 
 class SearchSupplierController extends GetxController {
-    final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final FocusNode searchFocus = FocusNode();
   late final NetworkInfoImpl networkInfo;
@@ -34,7 +34,7 @@ class SearchSupplierController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = SearchSupplierRemoteDataSource(api: httpConsumer);
 

@@ -33,7 +33,7 @@ class AddSupplierController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = AddSupplierRemoteDataSource(api: httpConsumer);
 
@@ -103,14 +103,14 @@ class AddSupplierController extends GetxController {
       result.fold(
         (failure) {
           if (failure.statusCode == 409) {
-            Get.snackbar(
-                'Error', "Supplier name must be unique within this pharmacy");
+            Get.snackbar('Error',
+                "Supplier name must be unique within this pharmacy".tr);
           } else {
             Get.snackbar('Error', failure.errMessage);
           }
         },
         (product) {
-          Get.snackbar('Success', 'Supplier added successfully');
+          Get.snackbar('Success', 'Supplier added successfully'.tr);
           resetForm();
         },
       );

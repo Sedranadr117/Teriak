@@ -47,7 +47,7 @@ class AllPurchaseInvoiceController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource =
         AllPurchaseInvoiceRemoteDataSource(api: httpConsumer);
@@ -152,8 +152,6 @@ class AllPurchaseInvoiceController extends GetxController {
   void selectPurchaseOrder(int orderId) {
     selectedOrderId.value = orderId;
   }
-
-
 
   // Clear errors
   void clearErrors() {

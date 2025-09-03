@@ -28,7 +28,7 @@ class GetAllPurchaseOrderController extends GetxController {
   var hasPrevious = false.obs;
   var isLoadingMore = false.obs;
 
-   var pendingPurchaseOrders = <PurchaseOrderEntity>[].obs;
+  var pendingPurchaseOrders = <PurchaseOrderEntity>[].obs;
   var isLoadingPendingOrders = false.obs;
   var errorMessagePendingOrders = ''.obs;
 
@@ -43,7 +43,7 @@ class GetAllPurchaseOrderController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource =
         AllPurchaseOrdersRemoteDataSource(api: httpConsumer);
@@ -133,16 +133,17 @@ class GetAllPurchaseOrderController extends GetxController {
       }
     }
   }
+
   Future<void> getAllPendingPurchaseOrders() async {
     try {
       isLoadingPendingOrders.value = true;
       errorMessagePendingOrders.value = '';
 
       String currentLanguageCode = LocaleController.to.locale.languageCode;
-      
+
       final params = PaginationParams(
         page: 0,
-        size: 1000, 
+        size: 1000,
         languageCode: currentLanguageCode,
       );
 
@@ -156,7 +157,6 @@ class GetAllPurchaseOrderController extends GetxController {
               .where((order) => order.status == 'PENDING')
               .toList();
           pendingPurchaseOrders.value = allPendingOrders;
-          
         },
       );
     } catch (e) {
@@ -175,5 +175,4 @@ class GetAllPurchaseOrderController extends GetxController {
       isRefreshing.value = false;
     }
   }
-
 }

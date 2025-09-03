@@ -48,6 +48,14 @@ class _SettingsState extends State<Settings> {
             icon: const Icon(Icons.refresh),
             tooltip: 'Refresh Profile'.tr,
           ),
+           IconButton(
+            onPressed: () => Get.toNamed(AppPages.moneyBox),
+            icon: const Icon(Icons.car_crash),
+          ),
+           IconButton(
+            onPressed: () => Get.toNamed(AppPages.moneyBoxInfo),
+            icon: const Icon(Icons.dangerous),
+          ),
         ],
       ),
       body: Obx(() {

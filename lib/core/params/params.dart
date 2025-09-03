@@ -491,6 +491,51 @@ class SearchStockParams {
   }
 }
 
+class ReconcileMoneyBoxParams {
+  final double actualCashCount;
+  final String notes;
+
+  const ReconcileMoneyBoxParams(
+      {required this.actualCashCount, required this.notes});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'actualCashCount': actualCashCount.toString(),
+      'notes': notes,
+    };
+  }
+}
+
+class MoneyBoxTransactionParams {
+  final double amount;
+  final String description;
+
+  const MoneyBoxTransactionParams(
+      {required this.amount, required this.description});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'amount': amount.toString(),
+      'description': description,
+    };
+  }
+}
+
+class GetMoneyBoxTransactionParams {
+  final int page;
+  final int size;
+
+  const GetMoneyBoxTransactionParams(
+      {required this.page, required this.size});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'page': page.toString(),
+      'size': size.toString(),
+    };
+  }
+}
+
 class SearchInvoiceByDateRangeParams {
   final DateTime startDate;
   final DateTime endDate;

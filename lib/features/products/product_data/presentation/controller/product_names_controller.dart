@@ -30,7 +30,7 @@ class ProductNamesController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = ProductDataRemoteDataSource(api: httpConsumer);
 
@@ -55,11 +55,12 @@ class ProductNamesController extends GetxController {
       final result = await getProductDataUseCase.callNames(params: params);
       result.fold(
         (failure) {
-          errorMessage.value = failure.errMessage;;
+          errorMessage.value = failure.errMessage;
+          ;
           productNames.value = null;
         },
         (data) {
-         productNames.value = data;
+          productNames.value = data;
         },
       );
     } catch (e) {

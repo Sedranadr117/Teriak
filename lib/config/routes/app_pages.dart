@@ -37,4 +37,7 @@ class AppPages {
   static const String purchaseOrderSelection = '/purchase-order-selection';
   static const String editPurchaseInvoice = '/edit-purchase-invoice';
   static const String searchPurchaseInvoice = '/search-purchase-invoice';
+  //money box routes
+  static const String moneyBox = '/money-box';
+  static const String moneyBoxInfo = '/money-box-info';
 }

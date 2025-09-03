@@ -1,8 +1,6 @@
 class EndPoints {
-  static const String baserUrl = "https://d10b5ffc0da1.ngrok-free.app/api/v1/";
-
+  static const String baserUrl = "http://89.116.236.10:13000/api/v1/";
   static const String template = "template/";
-
   // Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
@@ -47,6 +45,11 @@ class EndPoints {
   static String purchaseInvoicesSearchBySupplier = "purchase-invoices/supplier";
   static String purchaseInvoicesSearchByDateRange =
       "purchase-invoices/time-range";
+  static String moneyBox = "moneybox";
+  static String moneyBoxTransactions = "moneybox/transactions";
+  static String moneyBoxReconcile = "moneybox/reconcile";
+  static String moneyBoxCurrencyRates = "moneybox/currency/rates";
+  static String moneyBoxCurrencyConvert = "moneybox/currency/convert";
 }
 
 class ApiKeys {
@@ -105,6 +108,7 @@ class ApiKeys {
   static const String invoiceNumber = 'invoiceNumber';
   static const String createdAt = 'createdAt';
   static const String createdBy = 'createdBy';
+  static const String page = 'page';
 
   // Item keys
   static const String productName = 'productName';
@@ -114,4 +118,14 @@ class ApiKeys {
   static const String actualPrice = 'actualPrice';
   static const String batchNo = 'batchNo';
   static const String expiryDate = 'expiryDate';
+
+  static const String lastReconciled = 'lastReconciled';
+  static const String totalBalanceInSYP = 'totalBalanceInSYP';
+  static const String totalBalanceInUSD = 'totalBalanceInUSD';
+
+  static const String balanceAfter = 'balanceAfter';
+  static const String balanceBefore = 'balanceBefore';
+  static const String amount = 'amount';
+  static const String transactionType = 'transactionType';
+  static const String description = 'description';
 }

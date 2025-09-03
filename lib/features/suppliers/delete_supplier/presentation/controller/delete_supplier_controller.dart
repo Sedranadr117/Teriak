@@ -26,7 +26,7 @@ class DeleteSupplierController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = DeleteSupplierRemoteDataSource(api: httpConsumer);
 
@@ -66,7 +66,7 @@ class DeleteSupplierController extends GetxController {
         },
       );
     } catch (e) {
-       Get.snackbar('Error', e.toString());
+      Get.snackbar('Error', e.toString());
     } finally {
       isLoading.value = false;
     }

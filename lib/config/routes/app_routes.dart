@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/features/money_box/presentation/pages/money_box_page.dart';
+import 'package:teriak/features/money_box/presentation/pages/money_box_info_page.dart';
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/auth/presentation/pages/signIn_screen.dart';
 import 'package:teriak/features/customer_managment/presentation/pages/add_new_indebted_customer.dart';
@@ -22,12 +24,11 @@ import 'package:teriak/features/sales_management/presentation/pages/invoice_deta
 import 'package:teriak/features/sales_management/presentation/pages/invoice_list_screen.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/bindings/add_purchase_invoice_binding.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/pages/enhanced_create_invoice_screen.dart';
-import 'package:teriak/features/purchase_invoice/EditPurchaseInvoice/presentation/pages/invoice_editing.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/presentation/pages/create_purchase_order.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/purchase_order/edit_purchase_order/presentation/pages/edit_purchase_order.dart';
 import 'package:teriak/features/purchase_order/edit_purchase_order/presentation/binding/edit_purchase_order_binding.dart';
-import 'package:teriak/features/purchase_order/purchase_order_deatails/presentation/pages/purchase_order_detail.dart';
+import 'package:teriak/features/purchase_order/purchase_order_details/presentation/pages/purchase_order_detail.dart';
 import 'package:teriak/features/settings/presentation/pages/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
 import 'package:teriak/features/suppliers/add_supplier/presentation/pages/add_supplier_screen.dart';
@@ -180,11 +181,6 @@ class AppRoutes {
       binding: AddPurchaseInvoiceBinding(),
     ),
     GetPage(
-      name: AppPages.editPurchaseInvoice,
-      page: () => InvoiceEditing(),
-      transition: Transition.fadeIn,
-    ),
-    GetPage(
       name: AppPages.invoiceDetail,
       page: () => PurchaseInvoiceDetailScreen(),
       transition: Transition.fadeIn,
@@ -198,6 +194,15 @@ class AppRoutes {
     GetPage(
       name: AppPages.searchPurchaseInvoice,
       page: () => const SearchPurchaseInvoicePage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.moneyBox,
+      page: () => const MoneyBoxPage(),
+    ),
+    GetPage(
+      name: AppPages.moneyBoxInfo,
+      page: () => const MoneyBoxInfoPage(),
       transition: Transition.fadeIn,
     ),
   ];

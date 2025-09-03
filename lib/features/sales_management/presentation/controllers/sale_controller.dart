@@ -79,7 +79,7 @@ class SaleController extends GetxController {
 
   void _initializeDependencies() {
     final cacheHelper = CacheHelper();
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 

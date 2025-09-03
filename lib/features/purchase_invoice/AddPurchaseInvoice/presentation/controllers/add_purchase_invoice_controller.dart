@@ -50,7 +50,7 @@ class AddPurchaseInvoiceController extends GetxController {
     final cacheHelper = CacheHelper();
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
     final remoteDataSource =
         AddPurchaseInvoiceRemoteDataSource(api: httpConsumer);
     final repository = AddPurchaseInvoiceRepositoryImpl(
@@ -275,7 +275,7 @@ class AddPurchaseInvoiceController extends GetxController {
         params: langParam,
         body: body,
       );
-      print(body);
+
       return result.fold(
         (failure) {
           if (failure.statusCode == 409) {
