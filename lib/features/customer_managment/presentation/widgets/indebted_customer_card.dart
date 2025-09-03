@@ -179,20 +179,6 @@ class IndebtedCustomerCard extends StatelessWidget {
           ),
         ),
         SizedBox(width: 2.w),
-        Expanded(
-          child: OutlinedButton(
-            onPressed: onSendReminder,
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 1.h),
-              side: BorderSide(color: colorScheme.outline, width: 1),
-            ),
-            child: CustomIconWidget(
-              iconName: 'notifications',
-              color: colorScheme.onSurface,
-              size: 4.w,
-            ),
-          ),
-        ),
       ],
     );
   }

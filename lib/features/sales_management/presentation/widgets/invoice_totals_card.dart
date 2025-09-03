@@ -205,7 +205,7 @@ class InvoiceTotalsCard extends StatelessWidget {
 
   Widget _buildPaymentStatusIndicator(BuildContext context) {
     final theme = Theme.of(context);
-    final String status = invoiceData["status"] ?? "Unknown";
+    final String status = invoiceData["paymentStatus"] ?? "Unknown";
 
     Color indicatorColor;
     IconData statusIcon;

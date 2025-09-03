@@ -1,5 +1,5 @@
 class EndPoints {
-  static const String baserUrl = "https://d10b5ffc0da1.ngrok-free.app/api/v1/";
+  static const String baserUrl = "http://89.116.236.10:13000/api/v1/";
 
   static const String template = "template/";
 
@@ -10,9 +10,10 @@ class EndPoints {
   //sale
   static const String sales = "sales";
   static const String searchInvoicesByRange = "sales/searchByDateRange";
+  static const String salesRefunds = "sales/refunds";
 
   //customers
-  static const String getCustomers = "customers/with-debts";
+  static const String getCustomers = "customers";
   static const String createCustomer = "customers";
   static const String searchCustomers = "customers/search";
   static const String addPayment = "customer-debts/";

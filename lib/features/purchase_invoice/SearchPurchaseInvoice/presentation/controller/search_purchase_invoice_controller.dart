@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -9,18 +7,17 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/domain/entities/purchase_invoice_entity.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/domain/usecases/get_search_purchase_invoice.dart';
-import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity%20.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/data/datasources/search_purchase_invoice_remote_data_source.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/data/repositories/search_purchase_invoice_repository_impl.dart';
 
 class SearchPurchaseInvoiceController extends GetxController {
-   final supplierController = Get.find<GetAllSupplierController>();
+  final supplierController = Get.find<GetAllSupplierController>();
 
   // Search state
- var isSearchingSupplier = false.obs;
-var isSearchingDate = false.obs;
+  var isSearchingSupplier = false.obs;
+  var isSearchingDate = false.obs;
 
   var searchResults = <PurchaseInvoiceEntity>[].obs;
   var searchError = ''.obs;
@@ -56,7 +53,7 @@ var isSearchingDate = false.obs;
     final cacheHelper = CacheHelper();
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
-    final networkInfo = NetworkInfoImpl(InternetConnection());
+    final networkInfo = NetworkInfoImpl();
 
     final remoteDataSource =
         SearchPurchaseInvoiceRemoteDataSource(api: httpConsumer);
@@ -88,7 +85,7 @@ var isSearchingDate = false.obs;
     dateError.value = null;
   }
 
- Future<void> searchBySupplier() async {
+  Future<void> searchBySupplier() async {
     if (selectedSupplier.value == null) {
       supplierError.value = 'Please select a supplier'.tr;
       return;
@@ -107,7 +104,8 @@ var isSearchingDate = false.obs;
         language: languageCode,
       );
 
-      final result = await searchBySupplierUseCase.callBySupplier(params: params);
+      final result =
+          await searchBySupplierUseCase.callBySupplier(params: params);
       result.fold(
         (failure) {
           searchError.value = failure.errMessage;
@@ -155,7 +153,8 @@ var isSearchingDate = false.obs;
         language: languageCode,
       );
 
-      final result = await searchByDateRangeUseCase.callByDateRange(params: params);
+      final result =
+          await searchByDateRangeUseCase.callByDateRange(params: params);
       result.fold(
         (failure) {
           searchError.value = failure.errMessage;
@@ -178,71 +177,71 @@ var isSearchingDate = false.obs;
     }
   }
 
- Future<void> loadNextPage() async {
-  if (!hasNext.value) return;
+  Future<void> loadNextPage() async {
+    if (!hasNext.value) return;
 
-  try {
-    currentPage.value++;
-    final languageCode = LocaleController.to.locale.languageCode;
+    try {
+      currentPage.value++;
+      final languageCode = LocaleController.to.locale.languageCode;
 
-    if (selectedSupplier.value != null) {
-      if (isSearchingSupplier.value) return;
-      isSearchingSupplier.value = true;
+      if (selectedSupplier.value != null) {
+        if (isSearchingSupplier.value) return;
+        isSearchingSupplier.value = true;
 
-      final params = SearchBySupplierParams(
-          supplierId: selectedSupplier.value!.id,
+        final params = SearchBySupplierParams(
+            supplierId: selectedSupplier.value!.id,
+            page: currentPage.value,
+            size: 5,
+            language: languageCode);
+
+        final result =
+            await searchBySupplierUseCase.callBySupplier(params: params);
+        result.fold(
+          (failure) {
+            searchError.value = failure.errMessage;
+            currentPage.value--;
+          },
+          (paginatedResult) {
+            searchResults.addAll(paginatedResult.content);
+            hasNext.value = paginatedResult.hasNext;
+          },
+        );
+
+        isSearchingSupplier.value = false;
+      } else if (startDate.value != null && endDate.value != null) {
+        if (isSearchingDate.value) return;
+        isSearchingDate.value = true;
+
+        final params = SearchByDateRangeParams(
+          startDate: startDate.value!,
+          endDate: endDate.value!,
           page: currentPage.value,
           size: 5,
-          language: languageCode);
+          language: languageCode,
+        );
 
-      final result =
-          await searchBySupplierUseCase.callBySupplier(params: params);
-      result.fold(
-        (failure) {
-          searchError.value = failure.errMessage;
-          currentPage.value--;
-        },
-        (paginatedResult) {
-          searchResults.addAll(paginatedResult.content);
-          hasNext.value = paginatedResult.hasNext;
-        },
-      );
+        final result =
+            await searchByDateRangeUseCase.callByDateRange(params: params);
+        result.fold(
+          (failure) {
+            searchError.value = failure.errMessage;
+            currentPage.value--;
+          },
+          (paginatedResult) {
+            searchResults.addAll(paginatedResult.content);
+            hasNext.value = paginatedResult.hasNext;
+          },
+        );
 
+        isSearchingDate.value = false;
+      }
+    } catch (e) {
+      searchError.value = e.toString();
+      currentPage.value--;
       isSearchingSupplier.value = false;
-    } 
-    else if (startDate.value != null && endDate.value != null) {
-      if (isSearchingDate.value) return;
-      isSearchingDate.value = true;
-
-      final params = SearchByDateRangeParams(
-        startDate: startDate.value!,
-        endDate: endDate.value!,
-        page: currentPage.value,
-        size: 5,
-        language: languageCode,
-      );
-
-      final result = await searchByDateRangeUseCase.callByDateRange(params: params);
-      result.fold(
-        (failure) {
-          searchError.value = failure.errMessage;
-          currentPage.value--;
-        },
-        (paginatedResult) {
-          searchResults.addAll(paginatedResult.content);
-          hasNext.value = paginatedResult.hasNext;
-        },
-      );
-
       isSearchingDate.value = false;
     }
-  } catch (e) {
-    searchError.value = e.toString();
-    currentPage.value--;
-    isSearchingSupplier.value = false;
-    isSearchingDate.value = false;
   }
-}
 
   void clearSearch() {
     searchResults.clear();

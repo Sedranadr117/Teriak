@@ -316,7 +316,7 @@ final Map<String, String> arSY = {
       "أضف منتجات لبدء إنشاء الفاتورة",
   "Over-the-Counter": "بدون وصفة طبية",
   "Quantity:": "الكمية:",
-  "Unit Price:": "سعر الوحدة:",
+  "Unit Price:": "سعر  الوحدة:",
   "Line Total:": "الإجمالي:",
   "Currency Selection": "اختيار العملة",
   "Select your preferred transaction currency": "اختر العملة المفضلة للمعاملة",
@@ -324,6 +324,8 @@ final Map<String, String> arSY = {
   "Please select a currency": "يرجى اختيار العملة",
   "Invoice Summary": "ملخص الفاتورة",
   "Subtotal": "الإجمالي الفرعي",
+  "Subtotal:": "الإجمالي الفرعي:",
+
   "Total": "الإجمالي",
   "Apply Discount": "تطبيق الخصم",
   "Enter %": "أدخل النسبة %",
@@ -691,13 +693,13 @@ final Map<String, String> arSY = {
   "Batch Number": "رقم التشغيلة",
   "Choose Date": "اختر التاريخ",
   "Required": "مطلوب",
-
+  "Clear Selection": "مسح التحديد",
   // Search
   "Search": "البحث",
   "Search Invoices": "البحث في الفواتير",
   "Search Results": "نتائج البحث",
   "No Results Found": "لم يتم العثور على نتائج",
-
+  "Refund Status": "حالة الإرجاع",
   // Edit
   "Edit Purchase Invoice": "تعديل فاتورة الشراء",
   "Update Invoice": "تحديث الفاتورة",
@@ -709,8 +711,7 @@ final Map<String, String> arSY = {
   "Invoice Information": "معلومات الفاتورة",
   "Supplier Information": "معلومات المورد",
   "Payment Information": "معلومات الدفع",
-  "Invoice created successfully":"تم إنشاء الفاتورة بنجاح",
-
+  "Invoice created successfully": "تم إنشاء الفاتورة بنجاح",
 
   // Actions
   "View": "عرض",
@@ -749,8 +750,9 @@ final Map<String, String> arSY = {
   // Currency
   "Tax": "الضريبة",
   "Discount": "الخصم",
+  "Discount:": "الخصم:",
   "Grand Total": "المجموع الكلي",
-
+  "TOTAL:": "الإجمالي",
   // Navigation
   "Home": "الرئيسية",
   "Dashboard": "لوحة التحكم",
@@ -809,7 +811,17 @@ final Map<String, String> arSY = {
   "Process Return": "معالجة الإرجاع",
   "Share Invoice": "مشاركة الفاتورة",
   "Invoice Management": "إدارة الفواتير",
-
+  "This item cannot be returned":
+      "لا يمكن إرجاع هذا العنصر لانه تم ارجاعه من قبل ",
+  "Selection cleared": "تم مسح التحديد",
+  "Refund reason": "سبب الإرجاع",
+  "Return": "إرجاع",
+  "Return items?": "هل تريد إرجاع العناصر؟",
+  "Estimated refund": "المبلغ المتوقع استرداده",
+  "Damaged": "متضرر",
+  "Wrong item": "عنصر خاطئ",
+  "Customer changed mind": "غيّر الزبون رأيه",
+  "Returnable:": "قابل للارجاع:",
   // Sales Management
   "Duplicate": "نسخ",
   "View Product Details": "عرض تفاصيل المنتج",
@@ -819,12 +831,14 @@ final Map<String, String> arSY = {
   "Are you sure you want to return this item?":
       "هل أنت متأكد من رغبتك في إرجاع هذا العنصر؟",
   "Continue": "متابعة",
-
+  "Returned sales invoices": "فواتير البيع المستردة",
   // Purchase Invoice Widgets
   "Invoice Date": "تاريخ الفاتورة",
   "Quantity Received": "الكمية المستلمة",
   "FREE": "مجاني",
   "Qty:": "كمية",
+  "Qty": "كمية",
+  "Product": "المنتج",
   // Sales Management
   "Invoices refreshed successfully": "تم تحديث الفواتير بنجاح",
   "Please select a customer first": "يرجى اختيار عميل أولاً",
@@ -836,6 +850,10 @@ final Map<String, String> arSY = {
   // Payment Status
   "Paid": "مدفوع",
   "Overdue": "متأخر",
+  // Refund Status Labels
+  "Fully refunded": "مسترد بالكامل",
+  "Partially refunded": "مسترد جزئياً",
+  "No refund": "بدون استرداد",
   "Cannot delete this item because it is linked to a sale.":
       "لا يمكن حذف هذا العنصر لأنه مرتبط بعملية بيع.",
   "Stock deleted successfully!": "تم حذف المخزون بنجاح!",
@@ -862,9 +880,14 @@ final Map<String, String> arSY = {
       "هل أنت متأكد أنك تريد تسجيل الخروج؟ ستحتاج لتسجيل الدخول مرة أخرى للوصول إلى حسابك.",
   "Signed out successfully": "تم تسجيل الخروج بنجاح",
   "Sign Out": "تسجيل الخروج",
-  "Sale Invoices": "فواتير البيع",
+  "Sales Invoices": "فواتير البيع",
   "POS": "البيع",
+  "Refund created successfully!": "تم إنشاء فواتير الاسترداد بنجاح!",
+  "Total Refund Amount": "إجمالي المبلغ المسترد",
+  "Invoices will appear here when available": "ستظهر الفواتير هنا عند توفرها",
   "Invoices": "الفواتير",
+  "Customer:": "الزبون:",
+  "Date:": "التاريخ:",
   "Stock": "المخزون",
   "Loading invoices...": "جاري تحميل الفواتير...",
   "No invoices available": "لا توجد فواتير متاحة",
@@ -925,5 +948,8 @@ final Map<String, String> arSY = {
   // User Profile Fields
   "No Position": "لا يوجد منصب",
   "Loading...": "جاري التحميل...",
-  "Total Paid Amount": "المبلغ الإجمالي المدفوع"
+  "Total Paid Amount": "المبلغ الإجمالي المدفوع",
+  "⚠️ Cannot add product": "⚠️ لا يمكن اضافة المنتج",
+  'Available quantity:': 'الكمية المتوفرة:',
+  ', Requested:': ', المطلوبة:'
 };

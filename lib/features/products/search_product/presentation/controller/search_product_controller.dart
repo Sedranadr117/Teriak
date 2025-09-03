@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -16,7 +15,7 @@ import 'package:teriak/features/products/search_product/domain/usecases/search_p
 class SearchProductController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final FocusNode searchFocus = FocusNode();
-  
+
   late final NetworkInfoImpl networkInfo;
   late final SearchProduct searchProductUseCase;
 
@@ -61,7 +60,7 @@ class SearchProductController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = SearchProductRemoteDataSource(api: httpConsumer);
 
@@ -130,7 +129,11 @@ class SearchProductController extends GetxController {
   }
 
   Future<void> loadNextPage() async {
-    if (!hasNext.value || isLoadingMore.value || searchController.text.isEmpty) return;
+    if (!hasNext.value ||
+        isLoadingMore.value ||
+        searchController.text.isEmpty) {
+      return;
+    }
 
     try {
       isLoadingMore.value = true;

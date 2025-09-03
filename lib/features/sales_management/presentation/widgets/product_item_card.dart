@@ -146,7 +146,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                                   maxLines: 2,
                                 ),
                               ),
-                              if ((widget.product["returnableQuantity"]
+                              if ((widget.product["availableForRefund"]
                                           as int? ??
                                       0) >
                                   0)
@@ -162,7 +162,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                               Expanded(
                                 child: _buildInfoChip(
                                   context,
-                                  '${'Qty:'.tr}${widget.product["quantity"] ?? 0}',
+                                  '${'Qty:'.tr} ${widget.product["quantity"] ?? 0}',
                                   CustomIconWidget(
                                     iconName: 'inventory',
                                     color: theme.brightness == Brightness.light
@@ -176,7 +176,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                               Expanded(
                                 child: _buildInfoChip(
                                   context,
-                                  'SYP ${(widget.product["unitPrice"] as double? ?? 0.0).toStringAsFixed(2)}',
+                                  'Sp ${(widget.product["unitPrice"] as double? ?? 0.0).toStringAsFixed(2)}',
                                   CustomIconWidget(
                                     iconName: 'attach_money',
                                     color: theme.brightness == Brightness.light
@@ -221,7 +221,7 @@ class _ProductItemCardState extends State<ProductItemCard>
 
   Widget _buildReturnableBadge(BuildContext context) {
     final theme = Theme.of(context);
-    final int returnableQty = widget.product["returnableQuantity"] as int? ?? 0;
+    final int returnableQty = widget.product["availableForRefund"] as int? ?? 0;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
@@ -232,7 +232,7 @@ class _ProductItemCardState extends State<ProductItemCard>
         borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
-        'Returnable: $returnableQty',
+        '${'Returnable:'.tr} $returnableQty',
         style: theme.textTheme.labelSmall?.copyWith(
           color: Colors.white,
           fontWeight: FontWeight.w600,
@@ -274,7 +274,7 @@ class _ProductItemCardState extends State<ProductItemCard>
   Widget _buildQuantitySelector(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final int maxQuantity = widget.product["returnableQuantity"] as int? ?? 0;
+    final int maxQuantity = widget.product["availableForRefund"] as int? ?? 0;
 
     return Container(
       decoration: BoxDecoration(

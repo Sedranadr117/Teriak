@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:teriak/core/errors/exceptions.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/features/suppliers/all_supplier/domain/entities/supplier_entity.dart';
 import 'package:teriak/features/suppliers/delete_supplier/data/datasources/delete_supplier_remote_data_source.dart';
 import 'package:teriak/features/suppliers/delete_supplier/domain/repositories/delete_supplier_repository.dart';
 import '../../../../../core/connection/network_info.dart';

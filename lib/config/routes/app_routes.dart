@@ -28,12 +28,14 @@ import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/
 import 'package:teriak/features/purchase_order/edit_purchase_order/presentation/pages/edit_purchase_order.dart';
 import 'package:teriak/features/purchase_order/edit_purchase_order/presentation/binding/edit_purchase_order_binding.dart';
 import 'package:teriak/features/purchase_order/purchase_order_deatails/presentation/pages/purchase_order_detail.dart';
+import 'package:teriak/features/sales_management/presentation/pages/redunds_details.dart';
 import 'package:teriak/features/settings/presentation/pages/settings.dart';
 import 'package:teriak/features/splash/presentation/pages/splash_screen.dart';
 import 'package:teriak/features/suppliers/add_supplier/presentation/pages/add_supplier_screen.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/pages/supplier_list_screen.dart';
 import 'package:teriak/features/suppliers/edit_supplier/presentation/pages/edit_supplier_screen.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
+import 'package:teriak/features/sales_management/presentation/pages/refunds_list_screan.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/products/product_details/presentation/pages/product_details/product_details_page.dart';
 
@@ -47,6 +49,11 @@ class AppRoutes {
     GetPage(
       name: AppPages.splash,
       page: () => const SplashScreen(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.refundsDetails,
+      page: () => const RefundDetailScreen(),
       transition: Transition.fadeIn,
     ),
     GetPage(
@@ -198,6 +205,11 @@ class AppRoutes {
     GetPage(
       name: AppPages.searchPurchaseInvoice,
       page: () => const SearchPurchaseInvoicePage(),
+      transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.refundsList,
+      page: () => const RefundsListScreen(),
       transition: Transition.fadeIn,
     ),
   ];

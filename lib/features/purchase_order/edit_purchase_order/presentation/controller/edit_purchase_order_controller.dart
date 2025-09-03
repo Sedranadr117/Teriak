@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -118,7 +117,7 @@ class EditPurchaseOrderController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource =
         EditPurchaseOrdersRemoteDataSource(api: httpConsumer);
@@ -193,24 +192,22 @@ class EditPurchaseOrderController extends GetxController {
     // Set currency
     selectedCurrency.value = order.currency;
 
-    if (order.items != null) {
-      orderItems.value = order.items!
-          .map((item) {
-            final product =
-                products.firstWhereOrNull((p) => p.id == item.productId);
-            if (product != null) {
-              return EditPurchaseOrderItem(
-                product: product,
-                quantity: item.quantity,
-                price: item.price,
-                productType: mapProductType(product.productType),
-              );
-            }
-            return null;
-          })
-          .whereType<EditPurchaseOrderItem>()
-          .toList();
-    }
+    orderItems.value = order.items
+        .map((item) {
+          final product =
+              products.firstWhereOrNull((p) => p.id == item.productId);
+          if (product != null) {
+            return EditPurchaseOrderItem(
+              product: product,
+              quantity: item.quantity,
+              price: item.price,
+              productType: mapProductType(product.productType),
+            );
+          }
+          return null;
+        })
+        .whereType<EditPurchaseOrderItem>()
+        .toList();
 
     isInitializing.value = false;
   }
@@ -259,7 +256,7 @@ class EditPurchaseOrderController extends GetxController {
       selectProduct(product);
       barcodeController.text = barcode;
     } else {
-       Get.snackbar(
+      Get.snackbar(
         'Error'.tr,
         'not found'.tr,
         snackPosition: SnackPosition.BOTTOM,
@@ -367,15 +364,13 @@ class EditPurchaseOrderController extends GetxController {
       return true;
     }
 
-    if (orderItems.length != (originalOrder!.items?.length ?? 0)) {
+    if (orderItems.length != (originalOrder!.items.length ?? 0)) {
       return true;
     }
 
     for (int i = 0; i < orderItems.length; i++) {
       final currentItem = orderItems[i];
-      final originalItem = originalOrder!.items?[i];
-
-      if (originalItem == null) return true;
+      final originalItem = originalOrder!.items[i];
       if (currentItem.product.id != originalItem.productId ||
           currentItem.quantity != originalItem.quantity ||
           currentItem.price != originalItem.price) {
@@ -386,21 +381,22 @@ class EditPurchaseOrderController extends GetxController {
     return false;
   }
 
-String mapProductType(String type) {
-  final normalized = type.toLowerCase();
+  String mapProductType(String type) {
+    final normalized = type.toLowerCase();
 
-  switch (normalized) {
-    case "صيدلية":
-    case "pharmacy":
-      return "PHARMACY";
-    case "مركزي":
-    case "master":
-      return "MASTER";
-    default:
-      throw Exception("Unknown productType: $type");
+    switch (normalized) {
+      case "صيدلية":
+      case "pharmacy":
+        return "PHARMACY";
+      case "مركزي":
+      case "master":
+        return "MASTER";
+      default:
+        throw Exception("Unknown productType: $type");
+    }
   }
-}
-Map<String, dynamic> buildRequestBody() {
+
+  Map<String, dynamic> buildRequestBody() {
     final items = orderItems
         .map((item) => {
               "productId": item.product.id,
@@ -417,65 +413,63 @@ Map<String, dynamic> buildRequestBody() {
     };
   }
 
+  Future<void> updatePurchaseOrder() async {
+    if (!canUpdateOrder) return;
 
-Future<void> updatePurchaseOrder() async {
-  if (!canUpdateOrder) return;
+    isLoading.value = true;
+    final languageCode = LocaleController.to.locale.languageCode;
 
-  isLoading.value = true;
-  final languageCode = LocaleController.to.locale.languageCode;
+    try {
+      final params = EditPurchaseOrdersParams(
+        id: orderId!,
+        languageCode: languageCode,
+      );
 
-  try {
-    final params = EditPurchaseOrdersParams(
-      id: orderId!,
-      languageCode: languageCode,
-    );
+      final body = buildRequestBody();
+      // 🐞 Debug Prints
+      print("==================================");
+      print("📡 Update Purchase Order Request");
+      print("➡️ URL: ${EndPoints.baserUrl}/api/v1/purchase-orders/$orderId");
+      print("➡️ Method: PUT");
+      print("➡️ Headers: {Content-Type: application/json}");
+      print("➡️ Params: ${params.toString()}");
+      print("➡️ Body: ${body.toString()}");
+      print("==================================");
 
-  final body = buildRequestBody();
-    // 🐞 Debug Prints
-    print("==================================");
-    print("📡 Update Purchase Order Request");
-    print("➡️ URL: ${EndPoints.baserUrl}/api/v1/purchase-orders/$orderId");
-    print("➡️ Method: PUT");
-    print("➡️ Headers: {Content-Type: application/json}");
-    print("➡️ Params: ${params.toString()}");
-    print("➡️ Body: ${body.toString()}");
-    print("==================================");
+      final result = await editPurchaseOrderUseCase(params: params, body: body);
 
-    final result = await editPurchaseOrderUseCase(params: params, body: body);
+      print("📥 Result: $result");
 
-    print("📥 Result: $result");
-
-    result.fold(
-      (failure) {
-        print("💥 HTTP Error: $failure");
-        Get.snackbar(
-          'Error'.tr,
-          'Failed to update purchase order'.tr,
-          snackPosition: SnackPosition.TOP,
-        );
-      },
-      (updatedOrder) {
-        print("✅ Success: Purchase order updated");
-        Get.snackbar(
-          'Success'.tr,
-          'Purchase order updated successfully'.tr,
-          snackPosition: SnackPosition.TOP,
-        );
-      },
-    );
-  } catch (e, stacktrace) {
-    print("❌ Exception: $e");
-    print("📌 Stacktrace: $stacktrace");
-    Get.snackbar(
-      'Error'.tr,
-      'An unexpected error occurred'.tr,
-      snackPosition: SnackPosition.BOTTOM,
-    );
-  } finally {
-    isLoading.value = false;
+      result.fold(
+        (failure) {
+          print("💥 HTTP Error: $failure");
+          Get.snackbar(
+            'Error'.tr,
+            'Failed to update purchase order'.tr,
+            snackPosition: SnackPosition.TOP,
+          );
+        },
+        (updatedOrder) {
+          print("✅ Success: Purchase order updated");
+          Get.snackbar(
+            'Success'.tr,
+            'Purchase order updated successfully'.tr,
+            snackPosition: SnackPosition.TOP,
+          );
+        },
+      );
+    } catch (e, stacktrace) {
+      print("❌ Exception: $e");
+      print("📌 Stacktrace: $stacktrace");
+      Get.snackbar(
+        'Error'.tr,
+        'An unexpected error occurred'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
+    }
   }
-}
-
 
   @override
   void onClose() {

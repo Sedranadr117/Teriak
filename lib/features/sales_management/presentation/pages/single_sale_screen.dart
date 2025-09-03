@@ -86,6 +86,8 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                                 stockItemId: stock.id,
                                 quantity: stock.totalQuantity,
                                 subTotal: 0,
+                                refundedQuantity: 0,
+                                availableForRefund: stock.totalQuantity,
                               );
                               saleController.addItemFromProduct(item);
                             }
@@ -107,6 +109,8 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                       stockItemId: stock.id,
                       quantity: stock.totalQuantity,
                       subTotal: 0,
+                      refundedQuantity: 0,
+                      availableForRefund: stock.totalQuantity,
                     );
                     saleController.addItemFromProduct(item);
                     saleController.searchController.text = item.productName;

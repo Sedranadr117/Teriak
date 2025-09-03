@@ -558,3 +558,40 @@ class PaymentParams {
     };
   }
 }
+
+class RefundItemParams {
+  final int itemId;
+  final int quantity;
+  final String itemRefundReason;
+
+  RefundItemParams({
+    required this.itemId,
+    required this.quantity,
+    required this.itemRefundReason,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'itemId': itemId,
+      'quantity': quantity,
+      'itemRefundReason': itemRefundReason,
+    };
+  }
+}
+
+class SaleRefundParams {
+  final List<RefundItemParams> refundItems;
+  final String refundReason;
+
+  SaleRefundParams({
+    required this.refundItems,
+    required this.refundReason,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'refundItems': refundItems.map((e) => e.toJson()).toList(),
+      'refundReason': refundReason,
+    };
+  }
+}

@@ -3,7 +3,7 @@ import 'package:teriak/core/params/params.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/connection/network_info.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/features/products/product_data/data/datasources/product_data_remote_data_source.dart';
 import 'package:teriak/features/products/product_data/data/repositories/product_data_repository_impl.dart';
@@ -30,7 +30,7 @@ class ProductNamesController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = ProductDataRemoteDataSource(api: httpConsumer);
 
@@ -55,11 +55,12 @@ class ProductNamesController extends GetxController {
       final result = await getProductDataUseCase.callNames(params: params);
       result.fold(
         (failure) {
-          errorMessage.value = failure.errMessage;;
+          errorMessage.value = failure.errMessage;
+          ;
           productNames.value = null;
         },
         (data) {
-         productNames.value = data;
+          productNames.value = data;
         },
       );
     } catch (e) {

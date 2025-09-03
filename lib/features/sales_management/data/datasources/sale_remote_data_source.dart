@@ -2,6 +2,7 @@ import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
+import 'package:teriak/features/sales_management/data/models/refund_model.dart';
 
 class SaleRemoteDataSource {
   final ApiConsumer api;
@@ -60,5 +61,22 @@ class SaleRemoteDataSource {
       print('❌ Error fetching invoices: $e');
       rethrow;
     }
+  }
+
+  Future<SaleRefundModel> createRefund({
+    required int saleInvoiceId,
+    required SaleRefundParams params,
+  }) async {
+    final response = await api.post(
+      '${EndPoints.sales}/$saleInvoiceId/refund',
+      data: params.toJson(),
+    );
+    return SaleRefundModel.fromJson(response);
+  }
+
+  Future<List<SaleRefundModel>> getRefunds() async {
+    final response = await api.get(EndPoints.salesRefunds);
+    final List data = response;
+    return data.map((e) => SaleRefundModel.fromJson(e)).toList();
   }
 }

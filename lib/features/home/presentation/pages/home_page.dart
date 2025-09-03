@@ -42,10 +42,9 @@ class _HomePageState extends State<HomePage> {
       AllProductPage(),
       StockManagement(),
       MultiSalesScreen(),
-      
     ];
-     if (role != "PHARMACY_TRAINEE") {
-      screns.add(  PurchaseOrderList());
+    if (role != "PHARMACY_TRAINEE") {
+      screns.add(PurchaseOrderList());
     }
     if (role != "PHARMACY_TRAINEE") {
       screns.add(AllPurchaseInvoiceScreen());
@@ -55,11 +54,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<String> appBarTitle = [
-    "Pharmacy Product",
-    "Stock Management",
-    "Point of Sale",
-    "Purchase Orders Management",
-    'Purchase Invoice Management',
+    "Pharmacy Product".tr,
+    "Stock Management".tr,
+    "Point of Sale".tr,
+    "Purchase Orders Management".tr,
+    'Purchase Invoice Management'.tr,
   ];
   @override
   Widget build(BuildContext context) {
@@ -105,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox(),
             ListTile(
               leading: const Icon(Icons.receipt),
-              title: Text("Sale Invoices".tr),
+              title: Text("Sales Invoices".tr),
               onTap: () {
                 Get.toNamed(AppPages.showInvoices);
               },
@@ -115,6 +114,13 @@ class _HomePageState extends State<HomePage> {
               title: Text("Customers Management".tr),
               onTap: () {
                 Get.toNamed(AppPages.indebtedManagement);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.undo_rounded),
+              title: Text("Returned sales invoices".tr),
+              onTap: () {
+                Get.toNamed(AppPages.refundsList);
               },
             ),
             role == "PHARMACY_TRAINEE"
@@ -134,7 +140,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             SizedBox(
-              height: 30.h,
+              height: 25.h,
             ),
             ListTile(
               leading: const Icon(Icons.logout),
@@ -181,16 +187,17 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
-        centerTitle:
-            appBarTitle[_controller.index].tr == "Point of Sale".tr ? true : false,
-        title: Text(appBarTitle[_controller.index],
+        centerTitle: appBarTitle[_controller.index].tr == "Point of Sale".tr
+            ? true
+            : false,
+        title: Text(appBarTitle[_controller.index].tr,
             style: appBarTitle[_controller.index].tr == "Point of Sale".tr
                 ? Theme.of(context)
                     .textTheme
                     .titleLarge!
                     .copyWith(color: AppColors.backgroundLight)
                 : Theme.of(context).textTheme.titleLarge),
-        backgroundColor: appBarTitle[_controller.index] == "Point of Sale".tr
+        backgroundColor: appBarTitle[_controller.index].tr == "Point of Sale".tr
             ? Theme.of(context).colorScheme.primary
             : null,
       ),

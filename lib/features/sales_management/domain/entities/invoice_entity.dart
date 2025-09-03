@@ -13,6 +13,8 @@ class InvoiceEntity {
   final String? debtDueDate;
   final double remainingAmount;
   final String status;
+  final String paymentStatus;
+  final String refundStatus;
   final List<InvoiceItemEntity> items;
 
   InvoiceEntity({
@@ -30,6 +32,8 @@ class InvoiceEntity {
     required this.paidAmount,
     required this.remainingAmount,
     required this.status,
+    required this.paymentStatus,
+    required this.refundStatus,
     required this.items,
   });
 }
@@ -39,6 +43,8 @@ class InvoiceItemEntity {
   final int stockItemId;
   final String productName;
   final int quantity;
+  final int refundedQuantity;
+  final int availableForRefund;
   final double unitPrice;
   final double subTotal;
 
@@ -47,6 +53,8 @@ class InvoiceItemEntity {
     required this.stockItemId,
     required this.productName,
     required this.quantity,
+    required this.refundedQuantity,
+    required this.availableForRefund,
     required this.unitPrice,
     required this.subTotal,
   });

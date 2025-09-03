@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
@@ -12,7 +11,7 @@ import 'package:teriak/features/suppliers/search_supplier/data/repositories/sear
 import 'package:teriak/features/suppliers/search_supplier/domain/usecases/search_supplier.dart';
 
 class SearchSupplierController extends GetxController {
-    final TextEditingController searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final FocusNode searchFocus = FocusNode();
   late final NetworkInfoImpl networkInfo;
@@ -34,7 +33,7 @@ class SearchSupplierController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    networkInfo = NetworkInfoImpl(InternetConnection());
+    networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = SearchSupplierRemoteDataSource(api: httpConsumer);
 

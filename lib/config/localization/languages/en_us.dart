@@ -7,7 +7,7 @@ final Map<String, String> enUS = {
   "Trade Name": "Trade Name",
   "Scientific Name": "Scientific Name",
   "Barcode": "Barcode",
-
+  "Product": "Product",
   "Search by supplier name": "Search by supplier name",
   "Scan Barcode": "Scan Barcode",
   "Search Purchase Invoice": "Search Purchase Invoice",
@@ -333,6 +333,8 @@ final Map<String, String> enUS = {
   "Please select a currency": "Please select a currency",
   "Invoice Summary": "Invoice Summary",
   "Subtotal": "Subtotal",
+  "Subtotal:": "Subtotal:",
+
   "Total": "Total",
   "Apply Discount": "Apply Discount",
   "Enter %": "Enter %",
@@ -523,7 +525,7 @@ final Map<String, String> enUS = {
   "Pay directly with cash": "Pay directly with cash",
   "Pay with account": "Pay with bank account",
   "Credit Card": "Credit Card",
-  "Sale Tab": "Sales Tab",
+  "Sale Tab": "Sale Tab",
   "Failed to create sale process": "Failed to create sale process",
   "sale process added successfully!": "sale process added successfully!",
   "Faild to get customer please try again later":
@@ -576,6 +578,7 @@ final Map<String, String> enUS = {
   "from indebted customers?": "from indebted customers?",
   "Delete Customer": "Delete Customer",
   "Qty:": "Qty:",
+  "Qty": "Qty",
   "Contact Information": "Contact Information",
   "The order cannot be modified in its current state":
       "The order cannot be modified in its current state",
@@ -718,7 +721,7 @@ final Map<String, String> enUS = {
   "Invoice Information": "Invoice Information",
   "Supplier Information": "Supplier Information",
   "Payment Information": "Payment Information",
-  "Invoice created successfully":"Invoice created successfully",
+  "Invoice created successfully": "Invoice created successfully",
 
   // Actions
   "View": "View",
@@ -757,8 +760,9 @@ final Map<String, String> enUS = {
   // Currency
   "Tax": "Tax",
   "Discount": "Discount",
+  "Discount:": "Discount:",
   "Grand Total": "Grand Total",
-
+  "TOTAL": "TOTAL:",
   // Navigation
   "Home": "Home",
   "Dashboard": "Dashboard",
@@ -817,7 +821,17 @@ final Map<String, String> enUS = {
   "Process Return": "Process Return",
   "Share Invoice": "Share Invoice",
   "Invoice Management": "Invoice Management",
-
+  "This item cannot be returned because it has already been returned.":
+      "This item cannot be returned because it has already been returned.",
+  "Selection cleared": "Selection cleared",
+  "Refund reason": "Refund reason",
+  "Return": "Return",
+  "Return items?": "Return items?",
+  "Estimated refund": "Estimated refund",
+  "Damaged": "Damaged",
+  "Wrong item": "Wrong item",
+  "Customer changed mind": "Customer changed mind",
+  "Returned sales invoices": "Returned sales invoices",
   // Sales Management
   "Duplicate": "Duplicate",
   "View Product Details": "View Product Details",
@@ -827,11 +841,12 @@ final Map<String, String> enUS = {
   "Are you sure you want to return this item?":
       "Are you sure you want to return this item?",
   "Continue": "Continue",
-
+  "Clear Selection": "Clear Selection",
   // Purchase Invoice Widgets
   "Invoice Date": "Invoice Date",
   "Quantity Received": "Quantity Received",
   "FREE": "FREE",
+  "Refund Status": "Refund Status",
 
   // Sales Management
   "Invoices refreshed successfully": "Invoices refreshed successfully",
@@ -844,6 +859,10 @@ final Map<String, String> enUS = {
   // Payment Status
   "Paid": "Paid",
   "Overdue": "Overdue",
+  // Refund Status Labels
+  "Fully refunded": "Fully refunded",
+  "Partially refunded": "Partially refunded",
+  "No refund": "No refund",
   "Cannot delete this item because it is linked to a sale.":
       "Cannot delete this item because it is linked to a sale.",
   "Stock deleted successfully!": "Stock deleted successfully!",
@@ -869,16 +888,22 @@ final Map<String, String> enUS = {
       "Are you sure you want to sign out? You will need to sign in again to access your account.",
   "Signed out successfully": "Signed out successfully",
   "Sign Out": "Sign Out",
-  "Sale Invoices": "Sale Invoices",
+  "Sales Invoices": "Sales Invoices",
   "POS": "POS",
   "Invoices": "Invoices",
+  "Total Refund Amount": "Total Refund Amount",
   "Stock": "Stock",
   "Loading invoices...": "Loading invoices...",
   "No invoices available": "No invoices available",
   "Try adjusting your search \nInvoices will appear here when available":
       "Try adjusting your search \nInvoices will appear here when available",
+  "Invoices will appear here when available":
+      "Invoices will appear here when available",
   "Invoice": "Invoice",
   "Share": "Share",
+  "Customer:": "Customer:",
+  "Date:": "Date:",
+  "Refund created successfully!": "Refund created successfully!",
   "Name": "Name",
   "Stock Management": "Stock Management",
   "Add the deferred amount": "Add the deferred amount",
@@ -923,7 +948,7 @@ final Map<String, String> enUS = {
   "Store data for offline access": "Store data for offline access",
   "Contact Support": "Contact Support",
   "App Version": "App Version",
-
+  "Returnable:": "Returnable:",
   // Settings Dialogs
   "Select Language": "Select Language",
   "Coming Soon": "Coming Soon",
@@ -941,5 +966,8 @@ final Map<String, String> enUS = {
   // Theme Names
   "Dark": "Dark",
   "Light": "Light",
-  "Total Paid Amount": "Total Paid Amount"
+  "Total Paid Amount": "Total Paid Amount",
+  "⚠️ Cannot add product": "⚠️ Cannot add product",
+  'Available quantity:': 'Available quantity:',
+  ', Requested:': ', Requested:'
 };
