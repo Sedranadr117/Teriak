@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
-import 'package:teriak/config/themes/app_theme.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 
 class FinancialOverviewCard extends StatelessWidget {

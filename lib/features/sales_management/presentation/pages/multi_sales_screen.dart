@@ -167,7 +167,7 @@ class _MultiSalesScreenState extends State<MultiSalesScreen>
                         SizedBox(width: 10),
                         Flexible(
                           child: Text(
-                            '${tab['name'.tr]}',
+                            '${tab['name']}',
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme

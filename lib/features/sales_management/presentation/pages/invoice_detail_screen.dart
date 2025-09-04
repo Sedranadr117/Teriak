@@ -5,11 +5,16 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
+import 'package:teriak/core/params/params.dart';
 
 import '../widgets/invoice_header_card.dart';
 import '../widgets/invoice_totals_card.dart';
 import '../widgets/product_item_card.dart';
 import '../widgets/sticky_return_button.dart';
+
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class InvoiceDetailScreen extends StatefulWidget {
   const InvoiceDetailScreen({super.key});
@@ -33,7 +38,9 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
     customerController.fetchCustomers();
     _scrollController = ScrollController();
-    saleController.fetchAllInvoices();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      saleController.fetchAllInvoices();
+    });
   }
 
   @override
@@ -109,21 +116,6 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                 ],
               ),
             ),
-            PopupMenuItem(
-                value: 'share',
-                child: Row(
-                  children: [
-                    CustomIconWidget(
-                      iconName: 'share',
-                      color: theme.brightness == Brightness.light
-                          ? const Color(0xFF212121)
-                          : const Color(0xFFFFFFFF),
-                      size: 5.w,
-                    ),
-                    SizedBox(width: 3.w),
-                    Text('Share'.tr),
-                  ],
-                ))
           ],
         ),
       ],
@@ -258,7 +250,7 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                       TextButton(
                         onPressed: _clearSelection,
                         child: Text(
-                          'Clear Selection',
+                          'Clear Selection'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -278,7 +270,6 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                     isSelected: _selectedItems.containsKey(product["id"]),
                     selectedQuantity: _selectedItems[product["id"]] ?? 0,
                     onTap: () => _toggleProductSelection(product),
-                    onLongPress: () => _showProductContextMenu(product),
                     onQuantityChanged: (quantity) =>
                         _updateSelectedQuantity(product["id"], quantity),
                   )),
@@ -309,10 +300,12 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
 
   void _toggleProductSelection(Map<String, dynamic> product) {
     final int productId = product["id"];
-    final int returnableQty = product["returnableQuantity"] as int? ?? 0;
+    final int returnableQty = product["availableForRefund"] as int? ?? 0;
 
     if (returnableQty == 0) {
-      _showSnackBar('This item cannot be returned');
+      _showSnackBar(
+          'This item cannot be returned because it has already been returned.'
+              .tr);
       return;
     }
 
@@ -342,79 +335,351 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
       _selectedItems.clear();
     });
     HapticFeedback.lightImpact();
-    _showSnackBar('Selection cleared');
+    _showSnackBar('Selection cleared'.tr);
   }
 
-  void _showProductContextMenu(Map<String, dynamic> product) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (context) => Container(
-        padding: EdgeInsets.all(4.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              product['productName'] ?? "Unknown Product".tr,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
+  Future<void> printInvoice() async {
+    final pdf = pw.Document();
+
+    // Load Arabic font
+    final arabicFont = await loadArabicFont();
+    final double subtotal =
+        (_invoiceData["items"] as List<dynamic>? ?? []).fold(0.0, (sum, item) {
+      final price =
+          double.tryParse(item["unitPrice"]?.toString() ?? '0') ?? 0.0;
+      final qty = double.tryParse(item["quantity"]?.toString() ?? '0') ?? 0.0;
+      return sum + price * qty;
+    });
+    pdf.addPage(
+      pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        margin: pw.EdgeInsets.all(20),
+        build: (pw.Context context) {
+          return pw.Directionality(
+              textDirection: pw.TextDirection.rtl,
+              child: pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  // Header Section
+                  pw.Container(
+                    width: double.infinity,
+                    padding: pw.EdgeInsets.all(20),
+                    decoration: pw.BoxDecoration(
+                      color: PdfColors.grey100,
+                      borderRadius: pw.BorderRadius.circular(8),
+                    ),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text(
+                          '${'Invoice'.tr} #${_invoiceData["customerName"] ?? "N/A"}',
+                          style: pw.TextStyle(
+                            fontSize: 24,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.black,
+                            font: arabicFont,
+                          ),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.Text(
+                          "${"Customer:".tr} ${_invoiceData["customerName"] ?? "N/A"}",
+                          style: pw.TextStyle(
+                            fontSize: 16,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.black,
+                            font: arabicFont,
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          "${"Date:".tr} ${_invoiceData["createdAt"] ?? DateTime.now().toString().split(' ')[0]}",
+                          style: pw.TextStyle(
+                            fontSize: 14,
+                            color: PdfColors.grey700,
+                            font: arabicFont,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-            ),
-            SizedBox(height: 2.h),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'info',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('View Product Details'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                _showSnackBar('Product details feature coming soon');
-              },
-            ),
-            ListTile(
-              leading: CustomIconWidget(
-                iconName: 'inventory',
-                color: Theme.of(context).colorScheme.primary,
-                size: 6.w,
-              ),
-              title: Text('Check Inventory'.tr),
-              onTap: () {
-                Navigator.pop(context);
-                _showSnackBar('Inventory check feature coming soon');
-              },
-            ),
-            if ((product["returnableQuantity"] as int? ?? 0) > 0)
-              ListTile(
-                leading: CustomIconWidget(
-                  iconName: 'assignment_return',
-                  color: Theme.of(context).colorScheme.primary,
-                  size: 6.w,
-                ),
-                title: Text('Return Item'.tr),
-                onTap: () {
-                  Navigator.pop(context);
-                  _toggleProductSelection(product);
-                },
-              ),
-            SizedBox(height: 2.h),
-          ],
-        ),
+
+                  pw.SizedBox(height: 20),
+
+                  // Items Section Header
+                  pw.Container(
+                    width: double.infinity,
+                    padding:
+                        pw.EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: pw.BoxDecoration(
+                      color: PdfColors.grey200,
+                      borderRadius: pw.BorderRadius.circular(6),
+                    ),
+                    child: pw.Row(
+                      children: [
+                        pw.Text(
+                          "${'Items'.tr}  (${_invoiceData['items']?.length ?? 0})",
+                          style: pw.TextStyle(
+                            fontSize: 18,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.black,
+                            font: arabicFont,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  pw.SizedBox(height: 15),
+
+                  // Items Table
+                  pw.Table(
+                    border:
+                        pw.TableBorder.all(color: PdfColors.grey400, width: 1),
+                    columnWidths: {
+                      0: pw.FlexColumnWidth(0.4), // Product name
+                      1: pw.FlexColumnWidth(0.2), // Quantity
+                      2: pw.FlexColumnWidth(0.2), // Unit price
+                      3: pw.FlexColumnWidth(0.2), // Total
+                    },
+                    children: [
+                      // Table header
+                      pw.TableRow(
+                        decoration: pw.BoxDecoration(color: PdfColors.grey200),
+                        children: [
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Product'.tr,
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Qty'.tr,
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                              textAlign: pw.TextAlign.center,
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Unit Price'.tr,
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                              textAlign: pw.TextAlign.center,
+                            ),
+                          ),
+                          pw.Padding(
+                            padding: pw.EdgeInsets.all(8),
+                            child: pw.Text(
+                              'Total'.tr,
+                              style: pw.TextStyle(
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                              textAlign: pw.TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Table rows
+                      ...(_invoiceData['items'] as List<dynamic>? ?? [])
+                          .map<pw.TableRow>((product) {
+                        final quantity = product["quantity"] as int? ?? 0;
+                        final unitPrice =
+                            (product["unitPrice"] as num?)?.toDouble() ?? 0.0;
+                        final total = quantity * unitPrice;
+
+                        return pw.TableRow(
+                          children: [
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                product["productName"]?.toString() ?? "N/A",
+                                style: pw.TextStyle(
+                                  fontSize: 12,
+                                  color: PdfColors.black,
+                                  font: arabicFont,
+                                ),
+                              ),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                quantity.toString(),
+                                style: pw.TextStyle(
+                                  fontSize: 12,
+                                  color: PdfColors.black,
+                                  font: arabicFont,
+                                ),
+                                textAlign: pw.TextAlign.center,
+                              ),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                "Sp ${unitPrice.toStringAsFixed(2)}",
+                                style: pw.TextStyle(
+                                  fontSize: 12,
+                                  color: PdfColors.black,
+                                  font: arabicFont,
+                                ),
+                                textAlign: pw.TextAlign.center,
+                              ),
+                            ),
+                            pw.Padding(
+                              padding: pw.EdgeInsets.all(8),
+                              child: pw.Text(
+                                "Sp ${total.toStringAsFixed(2)}",
+                                style: pw.TextStyle(
+                                  fontSize: 12,
+                                  color: PdfColors.black,
+                                  font: arabicFont,
+                                ),
+                                textAlign: pw.TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+                    ],
+                  ),
+
+                  pw.SizedBox(height: 20),
+
+                  // Totals Section
+                  pw.Container(
+                    width: double.infinity,
+                    padding: pw.EdgeInsets.all(20),
+                    decoration: pw.BoxDecoration(
+                      color: PdfColors.grey50,
+                      borderRadius: pw.BorderRadius.circular(8),
+                      border: pw.Border.all(color: PdfColors.grey300),
+                    ),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.end,
+                      children: [
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text(
+                              'Subtotal:'.tr,
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                            pw.Text(
+                              'Sp $subtotal',
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text(
+                              'Discount:'.tr,
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                            pw.Text(
+                              'Sp ${_invoiceData["discount"]?.toStringAsFixed(2) ?? "0.00"}',
+                              style: pw.TextStyle(
+                                fontSize: 16,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                          ],
+                        ),
+                        pw.SizedBox(height: 8),
+                        pw.Divider(color: PdfColors.grey400, height: 20),
+                        pw.Row(
+                          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                          children: [
+                            pw.Text(
+                              'TOTAL:'.tr,
+                              style: pw.TextStyle(
+                                fontSize: 20,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                            pw.Text(
+                              'Sp ${_invoiceData["totalAmount"]?.toStringAsFixed(2) ?? "0.00"}',
+                              style: pw.TextStyle(
+                                fontSize: 20,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.black,
+                                font: arabicFont,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  pw.SizedBox(height: 20),
+
+                  // Footer
+                  pw.Container(
+                    width: double.infinity,
+                    padding: pw.EdgeInsets.all(15),
+                    child: pw.Text(
+                      'Thank you for your business!',
+                      style: pw.TextStyle(
+                        fontSize: 14,
+                        color: PdfColors.grey600,
+                        fontStyle: pw.FontStyle.italic,
+                        font: arabicFont,
+                      ),
+                      textAlign: pw.TextAlign.center,
+                    ),
+                  ),
+                ],
+              ));
+        },
       ),
+    );
+
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
 
   void _handleMenuAction(String action) {
     switch (action) {
       case 'print':
-        _showSnackBar('Printing invoice #${_invoiceData["invoiceNumber"]}');
-        break;
-      case 'share':
-        _showSnackBar('Sharing invoice #${_invoiceData["invoiceNumber"]}');
+        printInvoice();
         break;
     }
   }
@@ -437,46 +702,87 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
     // Show confirmation dialog
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Confirm Return'.tr),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                'Return ${_selectedItems.length} item${_selectedItems.length == 1 ? '' : 's'}?'),
-            SizedBox(height: 1.h),
-            Text(
-              'Estimated refund: \$${totalReturnAmount.toStringAsFixed(2)}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+      builder: (context) {
+        final theme = Theme.of(context);
+        final colorScheme = theme.colorScheme;
+        const reasons = <String>[
+          'Damaged',
+          'Expired',
+          'Wrong item',
+          'Customer changed mind',
+          'Other',
+        ];
+
+        String selectedReason = 'Customer changed mind'.tr;
+
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            title: Text('Confirm Return'.tr),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                    '${'Return'.tr} ${_selectedItems.length} ${_selectedItems.length == 1 ? 'item'.tr : 'items'.tr}${'?'.tr}'),
+                SizedBox(height: 1.h),
+                Text(
+                  '${'Estimated refund'.tr}: Sp ${totalReturnAmount.toStringAsFixed(2)}',
+                  style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: colorScheme.primary,
                   ),
+                ),
+                SizedBox(height: 2.h),
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    labelText: 'Refund reason'.tr,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  items: reasons
+                      .map((r) => DropdownMenuItem<String>(
+                            value: r.tr,
+                            child: Text(r.tr),
+                          ))
+                      .toList(),
+                  value: selectedReason,
+                  onChanged: (v) => setState(() => selectedReason = v!),
+                ),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'.tr),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(
-                context,
-                '/return-processing-screen',
-                arguments: {
-                  'invoiceData': _invoiceData,
-                  'selectedItems': _selectedItems,
-                  'products': selectedProducts,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text('Cancel'.tr),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  final int saleInvoiceId = _invoiceData['id'] as int;
+                  final List<Map<String, dynamic>> products =
+                      List<Map<String, dynamic>>.from(selectedProducts);
+                  final List<RefundItemParams> items = products.map((p) {
+                    final int id = p['id'] as int;
+                    final int qty = _selectedItems[id] ?? 0;
+                    return RefundItemParams(
+                      itemId: id,
+                      quantity: qty,
+                      itemRefundReason: selectedReason,
+                    );
+                  }).toList();
+                  await saleController.createRefund(
+                    saleInvoiceId: saleInvoiceId,
+                    items: items,
+                    refundReason: selectedReason,
+                  );
                 },
-              );
-            },
-            child: Text('Continue'.tr),
+                child: Text('Continue'.tr),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -488,5 +794,19 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
         duration: const Duration(seconds: 2),
       ),
     );
+  }
+
+  /// Loads Arabic font for PDF generation
+  Future<pw.Font?> loadArabicFont() async {
+    try {
+      // Try to load a custom Arabic font if available
+      final fontData =
+          await rootBundle.load('assets/fonts/Tajawal-Regular.ttf');
+      return pw.Font.ttf(fontData);
+    } catch (e) {
+      // Use a built-in font that supports Arabic characters
+      // Times New Roman has better Arabic support than Helvetica
+      return pw.Font.times();
+    }
   }
 }

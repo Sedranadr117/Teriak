@@ -30,7 +30,8 @@ class AppPages {
   static const String showInvoices = '/show_invoices';
   static const String showInvoicesDitails = '/show_invoicesDetails';
   static const String enhancedCreateInvoice = '/enhanced-create-invoice-screen';
-
+  static const String refundsList = '/refunds-list';
+  static const String refundsDetails = '/refunds-details';
   // Purchase Invoice Routes
   static const String purchaseInvoiceList = '/purchase-invoice-list';
   static const String invoiceDetail = '/invoice-detail';

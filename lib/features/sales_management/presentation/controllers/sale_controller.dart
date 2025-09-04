@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
+import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
@@ -12,11 +13,14 @@ import 'package:teriak/features/sales_management/data/repositories/sale_reposito
 import 'package:teriak/features/sales_management/domain/entities/invoice_entity.dart';
 import 'package:teriak/features/sales_management/domain/usecases/create_sale.dart';
 import 'package:teriak/features/sales_management/domain/usecases/get_invoices.dart';
+import 'package:teriak/features/sales_management/domain/usecases/get_refunds.dart';
 import 'package:teriak/features/sales_management/domain/usecases/search_by_range.dart';
+import 'package:teriak/features/sales_management/domain/usecases/create_refund.dart';
 import 'package:teriak/features/sales_management/presentation/widgets/invoice_items_card.dart';
 import 'package:teriak/features/stock_management/data/datasources/Stock_remote_data_source.dart';
 import 'package:teriak/features/stock_management/data/models/stock_model.dart';
 import 'package:teriak/features/stock_management/domain/usecases/search_stock.dart';
+import 'package:teriak/features/sales_management/domain/entities/refund_entity.dart';
 import '../../../stock_management/data/repositories/stock_repository_impl.dart';
 
 class SaleController extends GetxController {
@@ -36,6 +40,7 @@ class SaleController extends GetxController {
   late RxString selectedPaymentType;
   RxString selectedCurrency = 'SYP'.obs;
   var isSearching = false.obs;
+  var isFilterActive = false.obs;
 
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
@@ -56,10 +61,13 @@ class SaleController extends GetxController {
   late final GetInvoices _getInvoices;
   late final SearchStock _searchStock;
   late final SearchByRange _searchByRange;
+  late final GetRefundsUseCase _getRefunds;
+  late final CreateRefund _createRefund;
   late RxString selectedPaymentMethod;
   RxList<StockModel> results = <StockModel>[].obs;
   final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
   var searchResults = <InvoiceEntity>[].obs;
+  var refunds = <SaleRefundEntity>[].obs;
 
   bool done = false;
   @override
@@ -92,6 +100,8 @@ class SaleController extends GetxController {
     _createSale = CreateSale(repository: repository);
     _getInvoices = GetInvoices(repository: repository);
     _searchByRange = SearchByRange(repository: repository);
+    _getRefunds = GetRefundsUseCase(repository: repository);
+    _createRefund = CreateRefund(repository: repository);
 
     final remoteDataSource1 = StockRemoteDataSource(api: httpConsumer);
     final stockRepository = StockRepositoryImpl(
@@ -99,6 +109,43 @@ class SaleController extends GetxController {
       networkInfo: networkInfo,
     );
     _searchStock = SearchStock(repository: stockRepository);
+  }
+
+  Future<void> createRefund({
+    required int saleInvoiceId,
+    required List<RefundItemParams> items,
+    required String refundReason,
+  }) async {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
+        return;
+      }
+
+      final params =
+          SaleRefundParams(refundItems: items, refundReason: refundReason);
+      final result =
+          await _createRefund(saleInvoiceId: saleInvoiceId, params: params);
+      result.fold((failure) {
+        errorMessage.value = failure.errMessage;
+        Get.snackbar('Error'.tr, errorMessage.value);
+        done = false;
+      }, (refund) {
+        Get.snackbar('Success'.tr, 'Refund created successfully!'.tr);
+        done = true;
+        Get.toNamed(AppPages.showInvoices);
+      });
+    } catch (e) {
+      errorMessage.value = e.toString();
+      Get.snackbar('Error'.tr, 'Failed to create refund'.tr);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   Future<void> selectDueDate(
@@ -117,7 +164,6 @@ class SaleController extends GetxController {
 
   Future<void> refreshData() async {
     await fetchAllInvoices();
-    Get.snackbar('', "Invoices refreshed successfully".tr);
   }
 
   Future<void> searchByDateRange() async {
@@ -135,6 +181,7 @@ class SaleController extends GetxController {
 
     isLoading.value = true;
     isSearching.value = true;
+    isFilterActive.value = true;
     searchResults.clear();
     searchError.value = '';
     errorMessage.value = '';
@@ -151,7 +198,7 @@ class SaleController extends GetxController {
           if (failure.statusCode == 404) {
             errorMessage.value = "No invoices found";
             Get.snackbar('Error'.tr, errorMessage.value);
-          } else if (failure.statusCode == "500") {
+          } else if (failure.statusCode == 500) {
             errorMessage.value =
                 'An unexpected error occurred. Please try again.'.tr;
             Get.snackbar('Error'.tr, errorMessage.value);
@@ -192,6 +239,25 @@ class SaleController extends GetxController {
       });
     } catch (e) {
       print('💥 Unexpected error while fetching invoices: $e');
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchRefunds() async {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      final result = await _getRefunds();
+      result.fold((failure) {
+        errorMessage.value = failure.errMessage;
+        Get.snackbar('Error'.tr, errorMessage.value);
+      }, (data) {
+        refunds.assignAll(data);
+      });
+    } catch (e) {
       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar('Error'.tr, errorMessage.value);
     } finally {
@@ -326,7 +392,47 @@ class SaleController extends GetxController {
       result.fold((failure) {
         print(
             '❌ Error creating sale process for customer $customerId: ${failure.errMessage}');
-        Get.snackbar('Error'.tr, 'Failed to create sale process'.tr);
+
+        if (failure.statusCode == 400 &&
+            failure.errMessage.contains('Insufficient stock')) {
+          final match = RegExp(
+                  r'product: (.+) \(ID: (\d+)\)\. Available: (\d+), Requested: (\d+)')
+              .firstMatch(failure.errMessage);
+
+          if (match != null) {
+            final productName = match.group(1);
+            final available = match.group(3);
+            final requested = match.group(4);
+            errorMessage.value = '⚠️ Cannot add product'.tr +
+                " $productName " +
+                'Available quantity:'.tr +
+                ' $available '.tr +
+                ', Requested:'.tr +
+                ' $requested. ';
+          } else {
+            errorMessage.value =
+                '⚠️ There is an error in adding the products. Please check the quantity.'
+                    .tr;
+          }
+          Get.snackbar(
+            'Error'.tr,
+            errorMessage.value,
+          );
+        } else if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar(
+            'Error'.tr,
+            errorMessage.value,
+          );
+        } else {
+          errorMessage.value = '⚠️ فشل في معالجة العملية. الرجاء المحاولة.';
+          Get.snackbar(
+            'خطأ',
+            errorMessage.value,
+          );
+        }
+
         done = false;
       }, (addedSale) {
         print('✅ sale process added for customer $customerId');

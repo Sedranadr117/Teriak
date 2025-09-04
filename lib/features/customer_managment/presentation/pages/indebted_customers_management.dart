@@ -53,7 +53,7 @@ class _IndebtedCustomersManagementState
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color.fromRGBO(0, 0, 0, 0),
       builder: (context) => PaymentBottomSheet(
         customer: customer,
         onPaymentSubmitted: (paymentData) {
@@ -62,7 +62,10 @@ class _IndebtedCustomersManagementState
             paymentMethod: paymentData['paymentMethod'],
             notes: paymentData['notes'],
           );
-          customerController.addPayment(paymentData['customerId'], param);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            customerController.addPayment(paymentData['customerId'], param);
+          });
+          Navigator.pop(context);
         },
       ),
     );

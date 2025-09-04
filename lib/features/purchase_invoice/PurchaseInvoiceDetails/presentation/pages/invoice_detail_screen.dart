@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:sizer/sizer.dart';
-import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
@@ -65,18 +62,17 @@ class _PurchaseInvoiceDetailScreenState
           actions: [
             (role == "PHARMACY_MANAGER")
                 ? Container()
-                :
-            IconButton(
-                icon: CustomIconWidget(
-                  iconName: 'edit',
-                  size: 24,
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? AppColors.primaryDark
-                      : AppColors.primaryLight,
-                ),
-                onPressed: () {
-                  // Get.toNamed(AppPages.editPurchaseInvoice);
-                }),
+                : IconButton(
+                    icon: CustomIconWidget(
+                      iconName: 'edit',
+                      size: 24,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? AppColors.primaryDark
+                          : AppColors.primaryLight,
+                    ),
+                    onPressed: () {
+                      // Get.toNamed(AppPages.editPurchaseInvoice);
+                    }),
           ]),
       body: Column(
         children: [

@@ -28,7 +28,6 @@ class _SettingsState extends State<Settings> {
   late UserProfileController _userProfileController;
 
   bool _notificationsEnabled = true;
-  bool _offlineStorageEnabled = true;
 
   @override
   void initState() {
@@ -126,45 +125,10 @@ class _SettingsState extends State<Settings> {
                           },
                         ),
                       )),
-                  SettingsItemWidget(
-                    icon: 'storage',
-                    title: 'Offline Storage'.tr,
-                    subtitle: 'Store data for offline access'.tr,
-                    trailing: Switch(
-                      value: _offlineStorageEnabled,
-                      onChanged: (value) {
-                        setState(() {
-                          _offlineStorageEnabled = value;
-                        });
-                      },
-                    ),
-                  ),
                 ],
               ),
 
               SizedBox(height: 2.h),
-
-              // Help & Support Section
-              SettingsSectionWidget(
-                title: 'Help & Support'.tr,
-                children: [
-                  SettingsItemWidget(
-                    icon: 'contact_support',
-                    title: 'Contact Support'.tr,
-                    subtitle: 'support@tiryaq.com',
-                    //      onTap: () => _showContactDialog(context),
-                    showArrow: false,
-                  ),
-                  SettingsItemWidget(
-                    icon: 'info',
-                    title: 'App Version'.tr,
-                    subtitle: 'Version 1.0.0'.tr,
-                    showArrow: false,
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 4.h),
 
               // Sign Out Button
               Container(

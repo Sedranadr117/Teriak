@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -102,44 +103,6 @@ class _StickyReturnButtonState extends State<StickyReturnButton>
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Selected items indicator
-                    if (widget.selectedItemsCount > 0) ...[
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 4.w,
-                          vertical: 1.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colorScheme.primary.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: colorScheme.primary.withValues(alpha: 0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomIconWidget(
-                              iconName: 'shopping_cart',
-                              color: colorScheme.primary,
-                              size: 5.w,
-                            ),
-                            SizedBox(width: 2.w),
-                            Text(
-                              '${widget.selectedItemsCount} item${widget.selectedItemsCount == 1 ? '' : 's'} selected for return',
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 2.h),
-                    ],
-
                     // Process Return Button
                     SizedBox(
                       width: double.infinity,
@@ -184,8 +147,8 @@ class _StickyReturnButtonState extends State<StickyReturnButton>
                             SizedBox(width: 3.w),
                             Text(
                               widget.selectedItemsCount > 0
-                                  ? 'Process Return (${widget.selectedItemsCount})'
-                                  : 'Process Return',
+                                  ? '${'Process Return'.tr} (${widget.selectedItemsCount})'
+                                  : 'Process Return'.tr,
                               style: theme.textTheme.titleMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.5,

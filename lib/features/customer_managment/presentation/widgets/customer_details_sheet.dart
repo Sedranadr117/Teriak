@@ -167,7 +167,7 @@ class CustomerDetailsSheet extends StatelessWidget {
                   _buildDetailSection(
                     theme,
                     colorScheme,
-                    'Debt Information',
+                    'Debt Information'.tr,
                     [
                       //debt
                       Obx(
@@ -206,8 +206,9 @@ class CustomerDetailsSheet extends StatelessWidget {
                                                       'Remaining:',
                                                       detail.remainingAmount
                                                           .toStringAsFixed(2)),
-                                                  _buildDetailRow(
-                                                      'Status:', detail.status),
+                                                  _buildDebtRow(
+                                                      'Status:', detail.status,
+                                                      status: detail.status),
                                                   _buildDetailRow(
                                                       'Notes:',
                                                       _formatDate(
@@ -357,6 +358,58 @@ class CustomerDetailsSheet extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDebtRow(String label, String value, {String? status}) {
+    Color statusColor = Colors.grey;
+    if (status != null) {
+      switch (status) {
+        case 'paid':
+          statusColor = Colors.green;
+          break;
+        case 'ACTIVE':
+          statusColor = Colors.orange;
+          break;
+        case 'overdue':
+          statusColor = Colors.red;
+          break;
+        default:
+          statusColor = Colors.grey;
+      }
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0.5.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 14,
+              ),
+            ),
+          ),
+          SizedBox(width: 3.w),
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: status != null ? statusColor : Colors.black,
               ),
               textAlign: TextAlign.right,
             ),

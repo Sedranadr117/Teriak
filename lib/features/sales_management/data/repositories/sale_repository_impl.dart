@@ -7,6 +7,7 @@ import 'package:teriak/features/sales_management/data/datasources/sale_remote_da
 import 'package:teriak/features/sales_management/domain/repositories/sale_repository.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
 import 'package:teriak/features/sales_management/domain/entities/invoice_entity.dart';
+import 'package:teriak/features/sales_management/domain/entities/refund_entity.dart';
 
 class SaleRepositoryImpl extends SaleRepository {
   final NetworkInfo networkInfo;
@@ -27,7 +28,9 @@ class SaleRepositoryImpl extends SaleRepository {
       final remoteSale = await remoteDataSource.createSale(parms);
       return Right(remoteSale);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status));
     }
   }
 
@@ -51,6 +54,34 @@ class SaleRepositoryImpl extends SaleRepository {
     } on ServerException catch (e) {
       return Left(
           Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
+    }
+  }
+
+  @override
+  Future<Either<Failure, SaleRefundEntity>> createRefund({
+    required int saleInvoiceId,
+    required SaleRefundParams params,
+  }) async {
+    try {
+      final remoteRefund = await remoteDataSource.createRefund(
+          saleInvoiceId: saleInvoiceId, params: params);
+      return Right(remoteRefund);
+    } on ServerException catch (e) {
+      return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<SaleRefundEntity>>> getRefunds() async {
+    try {
+      final remote = await remoteDataSource.getRefunds();
+      return Right(remote);
+    } on ServerException catch (e) {
+      return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status));
     }
   }
 }

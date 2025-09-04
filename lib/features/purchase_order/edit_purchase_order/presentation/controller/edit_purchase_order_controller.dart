@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -193,24 +192,22 @@ class EditPurchaseOrderController extends GetxController {
     // Set currency
     selectedCurrency.value = order.currency;
 
-    if (order.items != null) {
-      orderItems.value = order.items!
-          .map((item) {
-            final product =
-                products.firstWhereOrNull((p) => p.id == item.productId);
-            if (product != null) {
-              return EditPurchaseOrderItem(
-                product: product,
-                quantity: item.quantity,
-                price: item.price,
-                productType: mapProductType(product.productType),
-              );
-            }
-            return null;
-          })
-          .whereType<EditPurchaseOrderItem>()
-          .toList();
-    }
+    orderItems.value = order.items
+        .map((item) {
+          final product =
+              products.firstWhereOrNull((p) => p.id == item.productId);
+          if (product != null) {
+            return EditPurchaseOrderItem(
+              product: product,
+              quantity: item.quantity,
+              price: item.price,
+              productType: mapProductType(product.productType),
+            );
+          }
+          return null;
+        })
+        .whereType<EditPurchaseOrderItem>()
+        .toList();
 
     isInitializing.value = false;
   }
@@ -367,15 +364,13 @@ class EditPurchaseOrderController extends GetxController {
       return true;
     }
 
-    if (orderItems.length != (originalOrder!.items?.length ?? 0)) {
+    if (orderItems.length != (originalOrder!.items.length ?? 0)) {
       return true;
     }
 
     for (int i = 0; i < orderItems.length; i++) {
       final currentItem = orderItems[i];
-      final originalItem = originalOrder!.items?[i];
-
-      if (originalItem == null) return true;
+      final originalItem = originalOrder!.items[i];
       if (currentItem.product.id != originalItem.productId ||
           currentItem.quantity != originalItem.quantity ||
           currentItem.price != originalItem.price) {

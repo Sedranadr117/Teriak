@@ -15,6 +15,8 @@ class InvoiceModel extends InvoiceEntity {
       required super.paidAmount,
       required super.remainingAmount,
       required super.status,
+      required super.paymentStatus,
+      required super.refundStatus,
       required super.items,
       required super.debtDueDate});
 
@@ -32,7 +34,9 @@ class InvoiceModel extends InvoiceEntity {
       discountType: json['discountType'] as String,
       paidAmount: (json['paidAmount'] as num).toDouble(),
       remainingAmount: (json['remainingAmount'] as num).toDouble(),
-      status: json['paymentStatus'] as String,
+      status: json['status'] as String? ?? json['paymentStatus'] as String,
+      paymentStatus: json['paymentStatus'] as String? ?? '',
+      refundStatus: json['refundStatus'] as String? ?? '',
       items: (json['items'] as List<dynamic>)
           .map((item) => InvoiceItemModel.fromJson(item))
           .toList(),
@@ -54,7 +58,9 @@ class InvoiceModel extends InvoiceEntity {
       'discountType': discountType,
       'paidAmount': paidAmount,
       'remainingAmount': remainingAmount,
-      'paymentStatus': status,
+      'status': status,
+      'paymentStatus': paymentStatus,
+      'refundStatus': refundStatus,
       'debtDueDate': debtDueDate,
       'items': (items as List<InvoiceItemModel>)
           .map((item) => item.toJson())
@@ -69,6 +75,8 @@ class InvoiceItemModel extends InvoiceItemEntity {
       required super.stockItemId,
       required super.productName,
       required super.quantity,
+      required super.refundedQuantity,
+      required super.availableForRefund,
       required super.unitPrice,
       required super.subTotal});
 
@@ -78,6 +86,8 @@ class InvoiceItemModel extends InvoiceItemEntity {
       stockItemId: json['stockItemId'] as int,
       productName: json['productName'] as String,
       quantity: json['quantity'] as int,
+      refundedQuantity: json['refundedQuantity'] as int? ?? 0,
+      availableForRefund: json['availableForRefund'] as int? ?? 0,
       unitPrice: (json['unitPrice'] as num).toDouble(),
       subTotal: (json['subTotal'] as num).toDouble(),
     );
@@ -89,6 +99,8 @@ class InvoiceItemModel extends InvoiceItemEntity {
       'stockItemId': stockItemId,
       'productName': productName,
       'quantity': quantity,
+      'refundedQuantity': refundedQuantity,
+      'availableForRefund': availableForRefund,
       'unitPrice': unitPrice,
       'subTotal': subTotal,
     };

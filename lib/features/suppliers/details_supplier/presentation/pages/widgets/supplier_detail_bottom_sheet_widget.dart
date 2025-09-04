@@ -5,8 +5,6 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/features/purchase_invoice/SearchPurchaseInvoice/presentation/controller/search_purchase_invoice_controller.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
-import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/financial_overview_card.dart';
-import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/financial_records_card.dart';
 import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/supplier_action_widget.dart';
 import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/supplier_header_widget.dart';
 import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/supplier_info_widget.dart';

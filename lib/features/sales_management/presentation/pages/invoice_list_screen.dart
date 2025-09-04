@@ -24,7 +24,9 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
 
     saleController = Get.put(SaleController(customerTag: 'invoice_list'),
         tag: 'invoice_list');
-    saleController.fetchAllInvoices();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      saleController.fetchAllInvoices();
+    });
   }
 
   Future<void> _pickStartDate() async {
@@ -129,12 +131,24 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                   ),
                 ),
                 SizedBox(width: 3.w),
-                IconButton(
-                  onPressed: () {
-                    saleController.searchByDateRange();
-                  },
-                  icon: Icon(Icons.search),
-                ),
+                Obx(() {
+                  final active = saleController.isFilterActive.value;
+                  return IconButton(
+                    onPressed: () async {
+                      if (active) {
+                        saleController.startDate.value = null;
+                        saleController.endDate.value = null;
+                        saleController.searchResults.clear();
+                        saleController.isFilterActive.value = false;
+                        await saleController.fetchAllInvoices();
+                      } else {
+                        await saleController.searchByDateRange();
+                      }
+                    },
+                    icon: Icon(active ? Icons.close : Icons.search),
+                    tooltip: active ? 'Clear Filters'.tr : 'Search'.tr,
+                  );
+                }),
               ],
             ),
           ),
@@ -150,7 +164,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
 
   Widget _buildInvoiceList() {
     return Obx(() {
-      final bool isFiltering = saleController.isSearching.value;
+      final bool isFiltering = saleController.isFilterActive.value;
 
       final listToShow =
           isFiltering ? saleController.searchResults : saleController.invoices;
@@ -164,19 +178,37 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
         return _buildEmptyState(isFiltering: isFiltering);
       }
 
-      return RefreshIndicator(
-        onRefresh: saleController.refreshData,
-        color: Theme.of(context).colorScheme.primary,
-        child: ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: listToShow.length,
-          itemBuilder: (context, index) {
-            if (index >= listToShow.length) {
-              return _buildLoadingIndicator();
-            }
-            final invoice = listToShow[index];
-            return InvoiceCardWidget(
-              invoice: {
+      return ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: listToShow.length,
+        itemBuilder: (context, index) {
+          if (index >= listToShow.length) {
+            return _buildLoadingIndicator();
+          }
+          final invoice = listToShow[index];
+          return InvoiceCardWidget(
+            invoice: {
+              'id': invoice.id,
+              'customerId': invoice.customerId,
+              'customerName': invoice.customerName,
+              'invoiceDate': invoice.invoiceDate,
+              'totalAmount': invoice.totalAmount,
+              'paymentType': invoice.paymentType,
+              'paymentMethod': invoice.paymentMethod,
+              'currency': invoice.currency,
+              'discount': invoice.discount,
+              'discountType': invoice.discountType,
+              'paidAmount': invoice.paidAmount,
+              'remainingAmount': invoice.remainingAmount,
+              'status': invoice.status,
+              'paymentStatus': invoice.paymentStatus,
+              'refundStatus': invoice.refundStatus,
+              'items': (invoice.items as List<InvoiceItemModel>)
+                  .map((item) => item.toJson())
+                  .toList(),
+            },
+            onTap: () => _onInvoiceTap(
+              {
                 'id': invoice.id,
                 'customerId': invoice.customerId,
                 'customerName': invoice.customerName,
@@ -189,34 +221,16 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                 'discountType': invoice.discountType,
                 'paidAmount': invoice.paidAmount,
                 'remainingAmount': invoice.remainingAmount,
-                'paymentStatus': invoice.status,
+                'status': invoice.status,
+                'paymentStatus': invoice.paymentStatus,
+                'refundStatus': invoice.refundStatus,
                 'items': (invoice.items as List<InvoiceItemModel>)
                     .map((item) => item.toJson())
                     .toList(),
               },
-              onTap: () => _onInvoiceTap(
-                {
-                  'id': invoice.id,
-                  'customerId': invoice.customerId,
-                  'customerName': invoice.customerName,
-                  'invoiceDate': invoice.invoiceDate,
-                  'totalAmount': invoice.totalAmount,
-                  'paymentType': invoice.paymentType,
-                  'paymentMethod': invoice.paymentMethod,
-                  'currency': invoice.currency,
-                  'discount': invoice.discount,
-                  'discountType': invoice.discountType,
-                  'paidAmount': invoice.paidAmount,
-                  'remainingAmount': invoice.remainingAmount,
-                  'paymentStatus': invoice.status,
-                  'items': (invoice.items as List<InvoiceItemModel>)
-                      .map((item) => item.toJson())
-                      .toList(),
-                },
-              ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       );
     });
   }
@@ -289,6 +303,7 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                     saleController.startDate.value = null;
                     saleController.endDate.value = null;
                     saleController.searchResults.clear();
+                    saleController.isFilterActive.value = false;
                   });
                 },
                 child: Text('Clear Filters'.tr),
