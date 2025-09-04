@@ -56,19 +56,9 @@ class _SplashScreenState extends State<SplashScreen>
           if (mounted) {
             final cacheHelper = CacheHelper();
             final token = await cacheHelper.getData(key: 'token');
-            final isComplete = await cacheHelper.getData(
-                    key: 'isPharmacyRegistrationComplete') ??
-                false;
-            print('🧪 Token: $token');
-            print('🧪 isPharmacyRegistrationComplete: $isComplete');
 
             if (token != null && token is String && token.isNotEmpty) {
-              if (isComplete) {
-                //   Get.offAllNamed(AppPages.multiSales);
-                Get.offAllNamed(AppPages.home);
-              } else {
-                Get.offAllNamed(AppPages.pharmacyCompleteRegistration);
-              }
+              Get.offAllNamed(AppPages.home);
             } else {
               Get.offAllNamed(AppPages.signin);
             }
