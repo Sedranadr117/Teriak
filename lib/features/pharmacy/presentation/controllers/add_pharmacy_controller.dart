@@ -197,7 +197,7 @@ class AddPharmacyController extends GetxController {
     final cacheHelper = CacheHelper();
     networkInfo = NetworkInfoImpl();
     final httpConsumer =
-        HttpConsumer(baseUrl: EndPoints.baserUrl1, cacheHelper: cacheHelper);
+        HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
     final remoteDataSource = PharmacyRemoteDataSource(api: httpConsumer);
 
