@@ -4,6 +4,7 @@ import 'package:teriak/core/errors/exceptions.dart';
 import 'package:teriak/core/errors/failure.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/pharmacy/data/datasources/pharmacy_remote_data_source.dart';
+import 'package:teriak/features/pharmacy/domain/entities/area_entity.dart';
 import 'package:teriak/features/pharmacy/domain/entities/pharmacy_entity.dart';
 import 'package:teriak/features/pharmacy/domain/repositories/pharmacy_repository.dart';
 
@@ -37,7 +38,21 @@ class PharmacyRepositoryImpl implements PharmacyRepository {
       final pharmacies = await remoteDataSource.getAllPharmacies();
       return Right(pharmacies);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<AreaEntity>>> getAreas() async {
+    try {
+      final remoteAreas = await remoteDataSource.getAllAreas();
+      return Right(remoteAreas);
+    } on ServerException catch (e) {
+      return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status));
     }
   }
 

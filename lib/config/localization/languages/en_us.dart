@@ -536,6 +536,7 @@ final Map<String, String> enUS = {
   "No indebted customers found": "No indebted customers found",
   "OVERDUE": "OVERDUE",
   "No phone": "No phone",
+  "Select Area": "Select Area",
   "Total Debt": "Total Debt",
   "Last Payment": "Last Payment",
   "No payments": "No payments",

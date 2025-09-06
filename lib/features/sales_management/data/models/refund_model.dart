@@ -25,8 +25,11 @@ class RefundItemModel extends RefundItemEntity {
   Map<String, dynamic> toJson() {
     return {
       'itemId': itemId,
+      "productName": productName,
+      "unitPrice": unitPrice,
       'quantity': quantity,
       'itemRefundReason': itemRefundReason,
+      "subtotal": subtotal
     };
   }
 }
@@ -50,6 +53,7 @@ class SaleRefundModel extends SaleRefundEntity {
     required super.currency,
     required super.customerTotalDebt,
     required super.customerActiveDebtsCount,
+    required super.refundStatus,
   });
 
   factory SaleRefundModel.fromJson(Map<String, dynamic> json) {
@@ -91,6 +95,7 @@ class SaleRefundModel extends SaleRefundEntity {
       currency: json['currency'] ?? '',
       customerTotalDebt: (json['customerTotalDebt'] ?? 0).toDouble(),
       customerActiveDebtsCount: json['customerActiveDebtsCount'] ?? 0,
+      refundStatus: json['refundStatus'] ?? '',
     );
   }
 
@@ -103,6 +108,7 @@ class SaleRefundModel extends SaleRefundEntity {
       "customerName": customerName,
       "paymentMethod": paymentMethod,
       "refundDate": refundDate,
+      "refundStatus": refundStatus
     };
   }
 }

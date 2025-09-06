@@ -8,7 +8,7 @@ import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
-import 'package:teriak/features/sales_management/data/datasources/sale_remote_data_source.dart';
+import 'package:teriak/features/sales_management/data/models/hive_invoice_model.dart';
 import 'package:teriak/features/sales_management/data/models/invoice_model.dart';
 import 'package:teriak/features/sales_management/data/repositories/sale_repository_impl.dart';
 import 'package:teriak/features/sales_management/domain/entities/invoice_entity.dart';
@@ -26,15 +26,12 @@ import '../../../stock_management/data/repositories/stock_repository_impl.dart';
 
 class SaleController extends GetxController {
   final String customerTag;
-  SaleController({required this.customerTag}) {
-    print(
-        '🏗️ SaleController initialized with currency: ${selectedCurrency.value}');
-  }
+  SaleController({required this.customerTag});
+
   final TextEditingController discountController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final TextEditingController dateOfHireController = TextEditingController();
   final TextEditingController dueDateController = TextEditingController();
-
   final RxList<InvoiceEntity> invoices = <InvoiceEntity>[].obs;
   RxDouble defferredAmount = 0.0.obs;
   final TextEditingController deferredAmountController =
@@ -69,10 +66,12 @@ class SaleController extends GetxController {
   late final GetRefundsUseCase _getRefunds;
   late final CreateRefund _createRefund;
   late RxString selectedPaymentMethod;
+
   RxList<StockModel> results = <StockModel>[].obs;
   final Rx<RxStatus?> searchStatus = Rx<RxStatus?>(null);
   var searchResults = <InvoiceEntity>[].obs;
   var refunds = <SaleRefundEntity>[].obs;
+  final SaleRepositoryImpl repository = Get.find<SaleRepositoryImpl>();
 
   bool done = false;
   @override
@@ -95,12 +94,6 @@ class SaleController extends GetxController {
     final httpConsumer =
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-    final remoteDataSource = SaleRemoteDataSource(api: httpConsumer);
-
-    final repository = SaleRepositoryImpl(
-      remoteDataSource: remoteDataSource,
-      networkInfo: networkInfo,
-    );
     _createSale = CreateSale(repository: repository);
     _getInvoices = GetInvoices(repository: repository);
     _searchByRange = SearchByRange(repository: repository);
@@ -391,6 +384,10 @@ class SaleController extends GetxController {
     selectedPaymentType.value = type;
   }
 
+  Future<void> createSaleOffline(HiveSaleInvoice invoice) async {
+    await repository.localDataSource.addInvoice(invoice);
+  }
+
   void onCurrencyChanged(String currency) {
     selectedCurrency.value = currency;
     updateItemPricesForCurrency();
@@ -434,16 +431,6 @@ class SaleController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     try {
-      print('🌐 Testing network connectivity...');
-      final isConnected = await networkInfo.isConnected;
-      print('📡 Network connected: $isConnected');
-      if (!isConnected) {
-        errorMessage.value =
-            'No internet connection. Please check your network.'.tr;
-        Get.snackbar('Error'.tr, errorMessage.value);
-
-        return;
-      }
       String? dueDate;
       if (selectedPaymentType.value == "CREDIT" &&
           dueDateController.text.isNotEmpty) {
@@ -452,8 +439,9 @@ class SaleController extends GetxController {
           dueDate = date.toIso8601String().split('T').first;
         }
       }
+
       final sale = SaleProcessParams(
-          debtDueDate: dueDate!,
+          debtDueDate: dueDate,
           customerId: customerId,
           paymentType: selectedPaymentType.value,
           paymentMethod: selectedPaymentMethod.value,
@@ -464,63 +452,83 @@ class SaleController extends GetxController {
           paidAmount: selectedPaymentType.value == "CREDIT"
               ? defferredAmount.value
               : total.value);
-      final result = await _createSale(sale);
-      result.fold((failure) {
-        print(
-            '❌ Error creating sale process for customer $customerId: ${failure.errMessage}');
+      final connected = await networkInfo.isConnected;
 
-        if (failure.statusCode == 400 &&
-            failure.errMessage.contains('Insufficient stock')) {
-          final match = RegExp(
-                  r'product: (.+) \(ID: (\d+)\)\. Available: (\d+), Requested: (\d+)')
-              .firstMatch(failure.errMessage);
+      if (connected) {
+        final result = await _createSale(sale);
+        result.fold((failure) {
+          if (failure.statusCode == 400 &&
+              failure.errMessage.contains('Insufficient stock')) {
+            final match = RegExp(
+                    r'product: (.+) \(ID: (\d+)\)\. Available: (\d+), Requested: (\d+)')
+                .firstMatch(failure.errMessage);
 
-          if (match != null) {
-            final productName = match.group(1);
-            final available = match.group(3);
-            final requested = match.group(4);
-            errorMessage.value = '⚠️ Cannot add product'.tr +
-                " $productName " +
-                'Available quantity:'.tr +
-                ' $available '.tr +
-                ', Requested:'.tr +
-                ' $requested. ';
-          } else {
+            if (match != null) {
+              final productName = match.group(1);
+              final available = match.group(3);
+              final requested = match.group(4);
+              errorMessage.value = '⚠️ Cannot add product'.tr +
+                  " $productName " +
+                  'Available quantity:'.tr +
+                  ' $available '.tr +
+                  ', Requested:'.tr +
+                  ' $requested. ';
+            } else {
+              errorMessage.value =
+                  '⚠️ There is an error in adding the products. Please check the quantity.'
+                      .tr;
+            }
+
+            Get.snackbar(
+              'Error'.tr,
+              errorMessage.value,
+            );
+          } else if (failure.statusCode == 500) {
             errorMessage.value =
-                '⚠️ There is an error in adding the products. Please check the quantity.'
-                    .tr;
+                'An unexpected error occurred. Please try again.'.tr;
+            Get.snackbar(
+              'Error'.tr,
+              errorMessage.value,
+            );
+          } else {
+            errorMessage.value = '⚠️ فشل في معالجة العملية. الرجاء المحاولة.';
+            Get.snackbar(
+              'خطأ',
+              errorMessage.value,
+            );
           }
 
-          Get.snackbar(
-            'Error'.tr,
-            errorMessage.value,
-          );
-        } else if (failure.statusCode == 500) {
-          errorMessage.value =
-              'An unexpected error occurred. Please try again.'.tr;
-          Get.snackbar(
-            'Error'.tr,
-            errorMessage.value,
-          );
+          done = false;
+        }, (addedSale) {
+          print('✅ sale process added for customer $customerId');
+
+          Get.snackbar('Success'.tr, 'sale process added successfully!'.tr);
+
+          resetSaleData();
+          done = true;
+        });
+      } else {
+        // أضف الفاتورة أوفلاين باستخدام Hive
+        final hiveInvoice = HiveSaleInvoice.fromSaleParams(sale);
+        print(
+            '📦 Attempting to store offline invoice: ${hiveInvoice.toJson()}');
+
+        final success =
+            await repository.localDataSource.addInvoice(hiveInvoice);
+        if (success) {
+          print("✅ الفاتورة تخزنت أوفلاين");
+          Get.snackbar('Success'.tr, 'تم تخزين الفاتورة أوفلاين');
+          resetSaleData();
+          done = true;
         } else {
-          errorMessage.value = '⚠️ فشل في معالجة العملية. الرجاء المحاولة.';
-          Get.snackbar(
-            'خطأ',
-            errorMessage.value,
-          );
+          errorMessage.value = '❌ خطأ بتخزين الفاتورة أوفلاين'.tr;
+          Get.snackbar('Error'.tr, errorMessage.value);
+          print(errorMessage.value);
         }
-
-        done = false;
-      }, (addedSale) {
-        print('✅ sale process added for customer $customerId');
-
-        Get.snackbar('Success'.tr, 'sale process added successfully!'.tr);
-
-        resetSaleData();
-        done = true;
-      });
+      }
     } catch (e) {
       print('❌ Exception adding sale process for customer : $e');
+      print(customerId);
       Get.snackbar('Error'.tr, 'Failed to add sale process for customer.'.tr);
     } finally {
       isLoading.value = false;

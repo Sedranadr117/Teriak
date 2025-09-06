@@ -1,3 +1,4 @@
+import 'package:teriak/features/sales_management/data/models/hive_invoice_model.dart';
 import 'package:teriak/features/sales_management/domain/entities/invoice_entity.dart';
 
 class InvoiceModel extends InvoiceEntity {
@@ -66,6 +67,39 @@ class InvoiceModel extends InvoiceEntity {
           .map((item) => item.toJson())
           .toList(),
     };
+  }
+
+  static InvoiceModel fromHiveInvoice(HiveSaleInvoice hiveInvoice) {
+    return InvoiceModel(
+      id: hiveInvoice.id,
+      customerId: hiveInvoice.customerId,
+      customerName: hiveInvoice.customerName,
+      invoiceDate: hiveInvoice.invoiceDate,
+      totalAmount: hiveInvoice.totalAmount,
+      paymentType: hiveInvoice.paymentType,
+      paymentMethod: hiveInvoice.paymentMethod,
+      currency: hiveInvoice.currency,
+      discount: hiveInvoice.discount,
+      discountType: hiveInvoice.discountType,
+      paidAmount: hiveInvoice.paidAmount,
+      remainingAmount: hiveInvoice.remainingAmount,
+      status: hiveInvoice.status,
+      paymentStatus: hiveInvoice.paymentStatus,
+      refundStatus: hiveInvoice.refundStatus,
+      debtDueDate: hiveInvoice.debtDueDate,
+      items: hiveInvoice.items
+          .map((item) => InvoiceItemModel(
+                id: item.id,
+                productName: item.productName,
+                quantity: item.quantity,
+                refundedQuantity: item.refundedQuantity,
+                availableForRefund: item.availableForRefund,
+                unitPrice: item.unitPrice,
+                subTotal: item.subTotal,
+                stockItemId: item.productId,
+              ))
+          .toList(),
+    );
   }
 }
 

@@ -83,6 +83,7 @@ class _RefundsListScreenState extends State<RefundsListScreen>
                   "customerName": invoice.customerName,
                   "paymentMethod": invoice.paymentMethod,
                   "refundDate": invoice.refundDate,
+                  "refundStatus": invoice.refundStatus,
                 },
                 onTap: () => _onInvoiceTap(
                   {
@@ -94,6 +95,7 @@ class _RefundsListScreenState extends State<RefundsListScreen>
                     "customerName": invoice.customerName,
                     "paymentMethod": invoice.paymentMethod,
                     "refundDate": invoice.refundDate,
+                    "refundStatus": invoice.refundStatus
                   },
                 ),
               );

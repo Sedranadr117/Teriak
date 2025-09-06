@@ -32,7 +32,7 @@ class PhaParams {
   final String? pharmacyPhone;
   final String? pharmacyEmail;
   final String? openingHours;
-
+  final int? areaId;
   PhaParams(
       this.newPassword,
       this.location,
@@ -40,7 +40,8 @@ class PhaParams {
       this.managerLastName,
       this.pharmacyPhone,
       this.pharmacyEmail,
-      this.openingHours);
+      this.openingHours,
+      this.areaId);
 }
 
 class EmployeeParams {
@@ -404,7 +405,7 @@ class SaleProcessParams {
   final String discountType;
   final double discountValue;
   final double? paidAmount;
-  final String debtDueDate;
+  final String? debtDueDate;
   final List<SaleItemParams> items;
 
   const SaleProcessParams({

@@ -13,8 +13,11 @@ class PharmacyModel extends PharmacyEntity {
     required super.managerEmail,
     required super.managerFirstName,
     required super.managerLastName,
-    required super.newPassword,
-    required super.isActive,
+    super.areaId,
+    super.areaName,
+    super.areaArabicName,
+    super.isActive,
+    super.newPassword,
   });
 
   factory PharmacyModel.fromJson(Map<String, dynamic> json) {
@@ -30,8 +33,11 @@ class PharmacyModel extends PharmacyEntity {
       managerEmail: json['managerEmail'],
       managerFirstName: json['managerFirstName'],
       managerLastName: json['managerLastName'],
-      newPassword: '',
-      isActive: json['isActive'],
+      areaId: json['areaId'],
+      areaName: json['areaName'],
+      areaArabicName: json['areaArabicName'],
+      isActive: json['isActive'] ?? true,
+      newPassword: '', // أو null حسب الاستخدام
     );
   }
 
@@ -48,7 +54,11 @@ class PharmacyModel extends PharmacyEntity {
       'managerEmail': managerEmail,
       'managerFirstName': managerFirstName,
       'managerLastName': managerLastName,
-      'newPassword': newPassword,
+      'areaId': areaId,
+      'areaName': areaName,
+      'areaArabicName': areaArabicName,
+      'isActive': isActive,
+      'newPassword': newPassword ?? '',
     };
   }
 }

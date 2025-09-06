@@ -59,7 +59,11 @@ class InvoiceHeaderCard extends StatelessWidget {
                     spacing: 2.w,
                     runSpacing: 1.h,
                     children: [
-                      _buildPaymentStatusBadge(context),
+                      if (((invoiceData["paymentStatus"] as String?) ?? '')
+                          .trim()
+                          .isNotEmpty) ...[
+                        _buildPaymentStatusBadge(context),
+                      ],
                       if (((invoiceData["refundStatus"] as String?) ?? '')
                           .trim()
                           .isNotEmpty) ...[

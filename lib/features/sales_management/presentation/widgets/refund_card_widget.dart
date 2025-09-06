@@ -22,8 +22,8 @@ class RefundCardWidget extends StatelessWidget {
     final String customerName =
         (invoice['customerName'] as String?) ?? 'Unknown Customer';
     final double totalAmount = invoice['totalRefundAmount'];
-    final String paymentStatus =
-        (invoice['paymentStatus'] as String?) ?? 'unknown';
+    final String refundStatus =
+        (invoice['refundStatus'] as String?) ?? 'unknown';
     final String paymentMethod = (invoice['paymentMethod'] as String?) ?? '';
     final String? refundReason = invoice['refundReason'] as String?;
 
@@ -77,7 +77,7 @@ class RefundCardWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 2.w),
-                    _buildPaymentStatusBadge(context, paymentStatus),
+                    _buildrefundStatusBadge(context, refundStatus),
                   ],
                 ),
 
@@ -182,7 +182,7 @@ class RefundCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentStatusBadge(BuildContext context, String status) {
+  Widget _buildrefundStatusBadge(BuildContext context, String status) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
@@ -191,29 +191,24 @@ class RefundCardWidget extends StatelessWidget {
     String displayText;
 
     switch (status) {
-      case 'FULLY_PAID':
+      case 'FULLY_REFUNDED':
         badgeColor = Colors.green;
-        textColor = Colors.white;
-        displayText = 'Paid'.tr;
+        textColor = Colors.green.shade900;
+        displayText = 'Fully refunded'.tr;
         break;
-      case 'UNPAID':
+      case 'NO_REFUND':
         badgeColor = Colors.orange;
-        textColor = Colors.white;
-        displayText = 'Pending'.tr;
+        textColor = Colors.orange.shade900;
+        displayText = 'No refund'.tr;
         break;
-      case 'OVERDUE':
-        badgeColor = colorScheme.error;
-        textColor = colorScheme.onError;
-        displayText = 'Overdue';
-        break;
-      case 'PARTIALLY_PAID':
-        badgeColor = Color(0xFFFFD54F);
-        textColor = Colors.white;
-        displayText = 'Partial'.tr;
+      case 'PARTIALLY_REFUNDED':
+        badgeColor = const Color(0xFFFFD54F);
+        textColor = const Color(0xFF8A6D00);
+        displayText = 'Partially refunded'.tr;
         break;
       default:
         badgeColor = colorScheme.outline;
-        textColor = colorScheme.onSurface;
+        textColor = colorScheme.onSurfaceVariant;
         displayText = 'Unknown'.tr;
     }
 

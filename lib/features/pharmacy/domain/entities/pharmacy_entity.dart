@@ -10,8 +10,11 @@ class PharmacyEntity {
   final String managerEmail;
   final String managerFirstName;
   final String managerLastName;
-  final String newPassword;
+  final int? areaId;
+  final String? areaName;
+  final String? areaArabicName;
   final bool isActive;
+  final String? newPassword;
 
   PharmacyEntity({
     this.id,
@@ -25,7 +28,10 @@ class PharmacyEntity {
     required this.managerEmail,
     required this.managerFirstName,
     required this.managerLastName,
-    required this.newPassword,
-    required this.isActive,
+    this.areaId,
+    this.areaName,
+    this.areaArabicName,
+    this.isActive = true,
+    this.newPassword,
   });
 }

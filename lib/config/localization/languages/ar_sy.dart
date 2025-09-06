@@ -1012,4 +1012,5 @@ final Map<String, String> arSY = {
   "Please select a customer for credit payment": "يرجى اختيار عميل للدفع الآجل",
   "Refresh Customers": "تحديث العملاء",
   "Contact Information": "معلومات التواصل",
+  "Select Area": "اختر منطقة"
 };

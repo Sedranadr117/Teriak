@@ -196,7 +196,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${'Total:'.tr} Sp ${(widget.product["subTotal"] as double? ?? 0.0)}',
+                                '${'Total:'.tr} Sp ${(widget.product["subtotal"] as double? ?? 0.0)}',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.primary,

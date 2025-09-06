@@ -319,9 +319,14 @@ class EmployeeController extends GetxController {
       );
 
       await result.fold((failure) {
-        print('❌ Employee addition failed: ${failure.errMessage}');
-        errorMessage.value = failure.errMessage;
-        Get.snackbar('Error'.tr, errorMessage.value);
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar('Error'.tr, errorMessage.value);
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (addedEmployee) async {
         print('✅ Employee added successfully!');
         employee.value = addedEmployee;
