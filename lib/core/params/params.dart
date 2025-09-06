@@ -32,7 +32,7 @@ class PhaParams {
   final String? pharmacyPhone;
   final String? pharmacyEmail;
   final String? openingHours;
-
+  final int? areaId;
   PhaParams(
       this.newPassword,
       this.location,
@@ -40,7 +40,8 @@ class PhaParams {
       this.managerLastName,
       this.pharmacyPhone,
       this.pharmacyEmail,
-      this.openingHours);
+      this.openingHours,
+      this.areaId);
 }
 
 class EmployeeParams {
@@ -406,7 +407,7 @@ class SaleProcessParams {
   final String discountType;
   final double discountValue;
   final double? paidAmount;
-  final String debtDueDate;
+  final String? debtDueDate;
   final List<SaleItemParams> items;
 
   const SaleProcessParams({
@@ -471,7 +472,6 @@ class CustomerParams {
 
 class SearchParams {
   final String name;
-
   const SearchParams({required this.name});
 
   Map<String, dynamic> toMap() {
@@ -483,13 +483,12 @@ class SearchParams {
 
 class SearchStockParams {
   final String keyword;
+  final String lang;
 
-  const SearchStockParams({required this.keyword});
+  const SearchStockParams({required this.lang, required this.keyword});
 
   Map<String, dynamic> toMap() {
-    return {
-      'keyword': keyword,
-    };
+    return {'keyword': keyword, 'lang': lang};
   }
 }
 

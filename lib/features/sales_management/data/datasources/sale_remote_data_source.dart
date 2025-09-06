@@ -67,16 +67,26 @@ class SaleRemoteDataSource {
     required int saleInvoiceId,
     required SaleRefundParams params,
   }) async {
-    final response = await api.post(
-      '${EndPoints.sales}/$saleInvoiceId/refund',
-      data: params.toJson(),
-    );
-    return SaleRefundModel.fromJson(response);
+    try {
+      final response = await api.post(
+        '${EndPoints.sales}/$saleInvoiceId/refund',
+        data: params.toJson(),
+      );
+      return SaleRefundModel.fromJson(response);
+    } catch (e) {
+      print('❌ Error create refund: $e');
+      rethrow;
+    }
   }
 
   Future<List<SaleRefundModel>> getRefunds() async {
-    final response = await api.get(EndPoints.salesRefunds);
-    final List data = response;
-    return data.map((e) => SaleRefundModel.fromJson(e)).toList();
+    try {
+      final response = await api.get(EndPoints.salesRefunds);
+      final List data = response;
+      return data.map((e) => SaleRefundModel.fromJson(e)).toList();
+    } catch (e) {
+      print('❌ Error fetching refunds: $e');
+      rethrow;
+    }
   }
 }

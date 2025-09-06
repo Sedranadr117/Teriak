@@ -6,7 +6,7 @@ class StockEntity {
   final List<String> barcodes;
   final int totalQuantity;
   final int totalBonusQuantity;
-  final double averagePurchasePrice;
+  final double actualPurchasePrice;
   final double totalValue;
   final List<String> categories;
   final double sellingPrice;
@@ -17,6 +17,13 @@ class StockEntity {
   final DateTime? latestExpiryDate;
   final int numberOfBatches;
   final int pharmacyId;
+  final bool dualCurrencyDisplay;
+  final double actualPurchasePriceUSD;
+  final double totalValueUSD;
+  final double sellingPriceUSD;
+  final double exchangeRateSYPToUSD;
+  final DateTime? conversionTimestampSYPToUSD;
+  final String rateSource;
 
   const StockEntity({
     required this.id,
@@ -26,7 +33,7 @@ class StockEntity {
     required this.barcodes,
     required this.totalQuantity,
     required this.totalBonusQuantity,
-    required this.averagePurchasePrice,
+    required this.actualPurchasePrice,
     required this.totalValue,
     required this.categories,
     required this.sellingPrice,
@@ -37,5 +44,12 @@ class StockEntity {
     required this.latestExpiryDate,
     required this.numberOfBatches,
     required this.pharmacyId,
+    required this.dualCurrencyDisplay,
+    required this.actualPurchasePriceUSD,
+    required this.totalValueUSD,
+    required this.sellingPriceUSD,
+    required this.exchangeRateSYPToUSD,
+    required this.conversionTimestampSYPToUSD,
+    required this.rateSource,
   });
 }

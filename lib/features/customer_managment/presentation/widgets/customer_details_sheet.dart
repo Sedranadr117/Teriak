@@ -152,7 +152,7 @@ class CustomerDetailsSheet extends StatelessWidget {
                             (customer['notes'] as String?)?.trim().isNotEmpty ==
                                     true
                                 ? customer['notes']
-                                : 'No notes available',
+                                : 'No notes available'.tr,
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.onSurfaceVariant,
                             ),
@@ -195,26 +195,26 @@ class CustomerDetailsSheet extends StatelessWidget {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   _buildDetailRow(
-                                                      'Amount:',
+                                                      'Amount:'.tr,
                                                       detail.amount
                                                           .toStringAsFixed(2)),
                                                   _buildDetailRow(
-                                                      'Paid:',
+                                                      'Paid:'.tr,
                                                       detail.paidAmount
                                                           .toStringAsFixed(2)),
                                                   _buildDetailRow(
-                                                      'Remaining:',
+                                                      'Remaining:'.tr,
                                                       detail.remainingAmount
                                                           .toStringAsFixed(2)),
-                                                  _buildDebtRow(
-                                                      'Status:', detail.status,
+                                                  _buildDebtRow('Status:'.tr,
+                                                      detail.status,
                                                       status: detail.status),
                                                   _buildDetailRow(
-                                                      'Notes:',
+                                                      'Notes'.tr,
                                                       _formatDate(
                                                           detail.notes)),
                                                   _buildDetailRow(
-                                                      'Due Date:',
+                                                      'Due Date:'.tr,
                                                       _formatDate(
                                                           detail.dueDate)),
                                                   Divider(
@@ -237,8 +237,8 @@ class CustomerDetailsSheet extends StatelessWidget {
                                 ),
                               ),
                       ),
-                      _buildDetailRow(
-                          'Total Debt', 'Sp ${totalDebt.toStringAsFixed(2)}'),
+                      _buildDetailRow('Total Debt'.tr,
+                          'Sp ${totalDebt.toStringAsFixed(2)}'),
                     ],
                   ),
                   SizedBox(height: 2.h),
@@ -371,13 +371,13 @@ class CustomerDetailsSheet extends StatelessWidget {
     Color statusColor = Colors.grey;
     if (status != null) {
       switch (status) {
-        case 'paid':
+        case 'PAID':
           statusColor = Colors.green;
           break;
         case 'ACTIVE':
           statusColor = Colors.orange;
           break;
-        case 'overdue':
+        case 'OVERDUE':
           statusColor = Colors.red;
           break;
         default:

@@ -40,6 +40,17 @@ class _RefundsListScreenState extends State<RefundsListScreen>
     return Scaffold(
       appBar: AppBar(
         title: Text('Returned sales invoices'.tr),
+        actions: [
+          IconButton(
+            onPressed: saleController.refreshRefund,
+            icon: CustomIconWidget(
+              iconName: 'refresh',
+              color: Theme.of(context).colorScheme.onSurface,
+              size: 6.w,
+            ),
+            tooltip: 'Refresh Stock'.tr,
+          ),
+        ],
       ),
       body: Obx(() {
         if (saleController.isLoading.value) {
@@ -50,27 +61,20 @@ class _RefundsListScreenState extends State<RefundsListScreen>
             child: _buildEmptyState(),
           );
         }
-        return ListView.builder(
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemCount: saleController.refunds.length,
-          itemBuilder: (context, index) {
-            if (index >= saleController.refunds.length) {
-              return _buildLoadingIndicator();
-            }
-            final invoice = saleController.refunds[index];
-            return RefundCardWidget(
-              invoice: {
-                'refundItems': invoice.refundedItems
-                    .map((e) => (e as RefundItemModel).toJson())
-                    .toList(),
-                'refundReason': invoice.refundReason,
-                'totalRefundAmount': invoice.totalRefundAmount,
-                "customerName": invoice.customerName,
-                "paymentMethod": invoice.paymentMethod,
-                "refundDate": invoice.refundDate,
-              },
-              onTap: () => _onInvoiceTap(
-                {
+        return RefreshIndicator(
+          onRefresh: () async {
+            saleController.refreshRefund();
+          },
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: saleController.refunds.length,
+            itemBuilder: (context, index) {
+              if (index >= saleController.refunds.length) {
+                return _buildLoadingIndicator();
+              }
+              final invoice = saleController.refunds[index];
+              return RefundCardWidget(
+                invoice: {
                   'refundItems': invoice.refundedItems
                       .map((e) => (e as RefundItemModel).toJson())
                       .toList(),
@@ -79,10 +83,24 @@ class _RefundsListScreenState extends State<RefundsListScreen>
                   "customerName": invoice.customerName,
                   "paymentMethod": invoice.paymentMethod,
                   "refundDate": invoice.refundDate,
+                  "refundStatus": invoice.refundStatus,
                 },
-              ),
-            );
-          },
+                onTap: () => _onInvoiceTap(
+                  {
+                    'refundItems': invoice.refundedItems
+                        .map((e) => (e as RefundItemModel).toJson())
+                        .toList(),
+                    'refundReason': invoice.refundReason,
+                    'totalRefundAmount': invoice.totalRefundAmount,
+                    "customerName": invoice.customerName,
+                    "paymentMethod": invoice.paymentMethod,
+                    "refundDate": invoice.refundDate,
+                    "refundStatus": invoice.refundStatus
+                  },
+                ),
+              );
+            },
+          ),
         );
       }),
     );

@@ -17,6 +17,7 @@ class RefundItemEntity {
 }
 
 class SaleRefundEntity {
+  final String refundStatus;
   final int refundId;
   final int saleInvoiceId;
   final double totalRefundAmount;
@@ -38,6 +39,7 @@ class SaleRefundEntity {
   final int customerActiveDebtsCount;
 
   SaleRefundEntity({
+    required this.refundStatus,
     required this.refundId,
     required this.saleInvoiceId,
     required this.totalRefundAmount,

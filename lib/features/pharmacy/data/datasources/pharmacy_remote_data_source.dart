@@ -1,6 +1,7 @@
 import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/pharmacy/data/models/area_model.dart';
 import 'package:teriak/features/pharmacy/data/models/pharmacy_model.dart';
 
 class PharmacyRemoteDataSource {
@@ -27,6 +28,11 @@ class PharmacyRemoteDataSource {
     return PharmacyModel.fromJson(response);
   }
 
+  Future<List<AreaModel>> getAllAreas() async {
+    final response = await api.get(EndPoints.getAreas);
+    final data = response as List<dynamic>;
+    return data.map((e) => AreaModel.fromJson(e)).toList();
+  }
   // @override
   // Future<List<PharmacyModel>> getAllPharmacies() async {
   //   final response = await api.get(EndPoints.getAllPharmacies);

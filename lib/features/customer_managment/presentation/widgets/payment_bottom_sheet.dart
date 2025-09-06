@@ -34,8 +34,8 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
   @override
   void initState() {
     super.initState();
-    // Pre-fill with total debt amount
-    final totalDebt = (widget.customer['totalDebt'] as num?)?.toDouble() ?? 0.0;
+    final totalDebt =
+        (widget.customer['remainingDebt'] as num?)?.toDouble() ?? 0.0;
     _amountController.text = totalDebt.toStringAsFixed(2);
   }
 
@@ -50,7 +50,8 @@ class _PaymentBottomSheetState extends State<PaymentBottomSheet> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    final totalDebt = (widget.customer['totalDebt'] as num?)?.toDouble() ?? 0.0;
+    final totalDebt =
+        (widget.customer['remainingDebt'] as num?)?.toDouble() ?? 0.0;
 
     return Container(
       height: 85.h,

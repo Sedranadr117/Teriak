@@ -536,6 +536,7 @@ final Map<String, String> enUS = {
   "No indebted customers found": "No indebted customers found",
   "OVERDUE": "OVERDUE",
   "No phone": "No phone",
+  "Select Area": "Select Area",
   "Total Debt": "Total Debt",
   "Last Payment": "Last Payment",
   "No payments": "No payments",
@@ -563,6 +564,18 @@ final Map<String, String> enUS = {
   "Not provided": "Not provided",
   "Address": "Address",
   "Debt Information": "Debt Information",
+  "Amount:": "Amount:",
+  "Paid:": "Paid:",
+  "Remaining:": "Remaining:",
+  "Status:": "Status:",
+  "Due Date:": "Due Date:",
+  "No notes available": "No notes available",
+  "Not available": "Not available",
+  "Loading Debts...": "Loading Debts...",
+  "Please select payment type": "Please select payment type",
+  "Please select a customer for credit payment":
+      "Please select a customer for credit payment",
+  "Refresh Customers": "Refresh Customers",
   "'Faild to get customer please try again later'":
       "'Faild to get customer please try again later'",
   "An unexpected error occurred while fetching customers.":
@@ -994,31 +1007,23 @@ final Map<String, String> enUS = {
   "Money Box Information": "Money Box Information",
   "Money Box Transactions": "Money Box Transactions",
   "Total Balance": "Total Balance",
-  "Status": "Status",
   "Last Reconciled": "Last Reconciled",
   "Transaction Type": "Transaction Type",
-  "Amount": "Amount",
   "Balance Before": "Balance Before",
   "Balance After": "Balance After",
   "Description": "Description",
   "No transactions found": "No transactions found",
   "Transactions will appear here once created":
       "Transactions will appear here once created",
-  "Total": "Total",
   "transactions": "transactions",
   "Page": "Page",
   "of": "of",
-  "Next": "Next",
-  "Previous": "Previous",
-  "Refresh": "Refresh",
 
   // Add Transaction Dialog
   "Add Transaction": "Add Transaction",
-  "Enter amount": "Enter amount",
   "Enter transaction notes (optional)": "Enter transaction notes (optional)",
   "Transaction added successfully": "Transaction added successfully",
   "Please enter amount": "Please enter amount",
-  "Please enter a valid amount": "Please enter a valid amount",
 
   // Add Reconcile Dialog
   "Reconcile Money Box": "Reconcile Money Box",
@@ -1032,4 +1037,6 @@ final Map<String, String> enUS = {
   'Available quantity:': 'Available quantity:',
   ', Requested:': ', Requested:',
   'Supplier deleted successfully':'Supplier deleted successfully',
+  "Cannot delete customer with active debts. Please settle all debts first.":
+      "Cannot delete customer with active debts. Please settle all debts first.",
 };

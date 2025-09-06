@@ -136,10 +136,12 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
                   return IconButton(
                     onPressed: () async {
                       if (active) {
-                        saleController.startDate.value = null;
-                        saleController.endDate.value = null;
-                        saleController.searchResults.clear();
-                        saleController.isFilterActive.value = false;
+                        setState(() {
+                          saleController.startDate.value = null;
+                          saleController.endDate.value = null;
+                          saleController.searchResults.clear();
+                          saleController.isFilterActive.value = false;
+                        });
                         await saleController.fetchAllInvoices();
                       } else {
                         await saleController.searchByDateRange();
@@ -155,7 +157,11 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
 
           // Invoice list
           Expanded(
-            child: _buildInvoiceList(),
+            child: RefreshIndicator(
+                onRefresh: () async {
+                  saleController.refreshData();
+                },
+                child: _buildInvoiceList()),
           ),
         ],
       ),
@@ -298,13 +304,14 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
             if (isFiltering) ...[
               SizedBox(height: 3.h),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
                     saleController.startDate.value = null;
                     saleController.endDate.value = null;
                     saleController.searchResults.clear();
                     saleController.isFilterActive.value = false;
                   });
+                  await saleController.fetchAllInvoices();
                 },
                 child: Text('Clear Filters'.tr),
               ),

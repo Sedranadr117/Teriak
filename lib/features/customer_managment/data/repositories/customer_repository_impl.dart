@@ -59,8 +59,10 @@ class CustomerRepositoryImpl implements CustomerRepository {
       await remoteDataSource.deleteCustomer(id);
 
       return const Right(null);
-    } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+    } on ServerException catch (e) {
+      return Left(Failure(
+          errMessage: e.errorModel.errorMessage,
+          statusCode: e.errorModel.status));
     }
   }
 

@@ -9,14 +9,11 @@ class DebtDetailsSection extends StatelessWidget {
   final DateTime dueDate;
   final Function() onDueDateChanged;
 
-  final FocusNode focusNode;
-
   const DebtDetailsSection({
     super.key,
     required this.debtAmountController,
     required this.dueDate,
     required this.onDueDateChanged,
-    required this.focusNode,
   });
 
   @override
@@ -29,14 +26,12 @@ class DebtDetailsSection extends StatelessWidget {
       children: [
         TextField(
           controller: debtAmountController,
-          focusNode: focusNode,
           onChanged: (value) {
             final parsed = double.tryParse(value) ?? 0.0;
             final saleController = Get.put(SaleController(customerTag: ''));
             saleController.defferredAmount.value = parsed;
           },
-          keyboardType:
-              const TextInputType.numberWithOptions(decimal: true), // ✅
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
           inputFormatters: [
             FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
           ],
@@ -78,7 +73,7 @@ class DebtDetailsSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Due Date',
+                      'Due Date'.tr,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: colorScheme.onSurface.withValues(alpha: 0.6),
                       ),

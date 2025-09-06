@@ -10,6 +10,7 @@ class CustomerInformationCard extends StatelessWidget {
   final Rx<CustomerModel?> selectedCustomer;
   final RxBool isLoading;
   final CustomerController customerController;
+  final VoidCallback? onRefresh;
 
   const CustomerInformationCard({
     super.key,
@@ -17,6 +18,7 @@ class CustomerInformationCard extends StatelessWidget {
     required this.selectedCustomer,
     required this.isLoading,
     required this.customerController,
+    this.onRefresh,
   });
 
   @override
@@ -39,6 +41,16 @@ class CustomerInformationCard extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
             ),
+            const Spacer(),
+            if (onRefresh != null)
+              IconButton(
+                onPressed: onRefresh,
+                icon: Icon(
+                  Icons.refresh,
+                  size: 20,
+                ),
+                tooltip: 'Refresh Customers'.tr,
+              ),
           ],
         ),
         SizedBox(height: 4.w),
@@ -55,17 +67,6 @@ class CustomerInformationCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Obx(
-                () => customerController.isSuccess.value == false
-                    ? Center(
-                        child: IconButton(
-                            onPressed: () {
-                              customerController.fetchCustomers();
-                            },
-                            icon: Icon(Icons.refresh)),
-                      )
-                    : SizedBox(),
-              ),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

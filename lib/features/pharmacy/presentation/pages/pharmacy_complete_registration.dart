@@ -205,7 +205,119 @@ class _PharmacyCompleteRegistrationState
                               )),
                         ],
                       ),
-
+                      SizedBox(height: 3.h),
+                      PharmacyFormSectionWidget(
+                        title: 'Select Area'.tr,
+                        isExpanded: true,
+                        children: [
+                          Obx(() => InkWell(
+                                onTap: () async {
+                                  addPharmacyController
+                                          .isAreaDropdownOpen.value =
+                                      !addPharmacyController
+                                          .isAreaDropdownOpen.value;
+                                  if (addPharmacyController
+                                      .isAreaDropdownOpen.value) {
+                                    FocusScope.of(context)
+                                        .unfocus(); // يغلق الكيبورد
+                                  }
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 3.w, vertical: 2.h),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.grey.shade400),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        addPharmacyController
+                                                    .selectedArea.value ==
+                                                null
+                                            ? 'Select Area'.tr
+                                            : (addPharmacyController
+                                                        .languageCode ==
+                                                    "en"
+                                                ? addPharmacyController
+                                                    .selectedArea.value!.name
+                                                : addPharmacyController
+                                                    .selectedArea
+                                                    .value!
+                                                    .localizedName),
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: addPharmacyController
+                                                      .selectedArea.value !=
+                                                  null
+                                              ? Colors.black
+                                              : Colors.grey,
+                                        ),
+                                      ),
+                                      Icon(addPharmacyController
+                                              .isAreaDropdownOpen.value
+                                          ? Icons.keyboard_arrow_up
+                                          : Icons.keyboard_arrow_down),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Obx(() => addPharmacyController
+                                  .isAreaDropdownOpen.value
+                              ? Container(
+                                  margin: EdgeInsets.only(top: 1.h),
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.grey.shade300),
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 4,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: SizedBox(
+                                    height: 205,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount:
+                                          addPharmacyController.areas.length,
+                                      itemBuilder: (context, index) {
+                                        final area =
+                                            addPharmacyController.areas[index];
+                                        return ListTile(
+                                          dense: true,
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 12, vertical: 0),
+                                          minVerticalPadding: 0,
+                                          visualDensity:
+                                              VisualDensity(vertical: -2),
+                                          title: addPharmacyController
+                                                      .languageCode ==
+                                                  "en"
+                                              ? Text(area.name)
+                                              : Text(area.localizedName),
+                                          onTap: () {
+                                            addPharmacyController
+                                                .selectedArea.value = area;
+                                            addPharmacyController
+                                                .isAreaDropdownOpen
+                                                .value = false;
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                )
+                              : SizedBox.shrink()),
+                        ],
+                      ),
                       SizedBox(height: 3.h),
 
                       // Contact Details Section
@@ -570,7 +682,9 @@ class _PharmacyCompleteRegistrationState
                                 addPharmacyController.isEmailValid.value &&
                                 addPharmacyController.isPasswordValid.value &&
                                 !addPharmacyController.isLoading.value &&
-                                _passwordStrength == 'Strong'.tr)
+                                _passwordStrength == 'Strong'.tr &&
+                                addPharmacyController.selectedArea.value !=
+                                    null)
                             ? addPharmacyController.addPharmacy
                             : null,
                         child: addPharmacyController.isLoading.value

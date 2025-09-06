@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -8,8 +9,10 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/pharmacy/data/datasources/pharmacy_remote_data_source.dart';
 import 'package:teriak/features/pharmacy/data/repositories/pharmacy_repository_impl.dart';
+import 'package:teriak/features/pharmacy/domain/entities/area_entity.dart';
 import 'package:teriak/features/pharmacy/domain/entities/pharmacy_entity.dart';
 import 'package:teriak/features/pharmacy/domain/usecases/add_pharmacy.dart';
+import 'package:teriak/features/pharmacy/domain/usecases/get_areas.dart';
 
 class AddPharmacyController extends GetxController {
   final Rx<PharmacyEntity?> pharmacy = Rx<PharmacyEntity?>(null);
@@ -46,15 +49,19 @@ class AddPharmacyController extends GetxController {
   final FocusNode phoneFocus = FocusNode();
   final FocusNode emailFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
-
+  var selectedArea = Rxn<AreaEntity>(); // المنطقة المحددة
+  var areas = <AreaEntity>[].obs; // قائمة المناطق
+  var isAreaDropdownOpen = false.obs;
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   final RxBool isDraftSaved = false.obs;
   final Rx<TimeOfDay?> openingTime = Rx<TimeOfDay?>(null);
   final Rx<TimeOfDay?> closingTime = Rx<TimeOfDay?>(null);
+  final languageCode = LocaleController.to.locale.languageCode;
 
   late final NetworkInfoImpl networkInfo;
   late final AddPharmacy _addPharmacy;
+  late final GetAreas _getAreas;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -62,6 +69,45 @@ class AddPharmacyController extends GetxController {
     super.onInit();
     _initializeDependencies();
     setupFormListeners();
+    fetchAreas();
+  }
+
+  void fetchAreas() async {
+    isLoading.value = true;
+    errorMessage.value = '';
+    try {
+      final isConnected = await networkInfo.isConnected;
+
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error', errorMessage.value);
+        return;
+      }
+      final result = await _getAreas();
+      result.fold(
+        (failure) {
+          if (failure.statusCode == 500) {
+            errorMessage.value =
+                'An unexpected error occurred. Please try again.'.tr;
+            Get.snackbar('Error'.tr, errorMessage.value);
+          } else {
+            errorMessage.value = failure.errMessage;
+            Get.snackbar('Errors'.tr, errorMessage.value);
+          }
+        },
+        (list) {
+          areas.value = list;
+        },
+      );
+      isLoading.value = false;
+    } catch (e) {
+      print('💥 Unexpected error while fetching invoices: $e');
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar('Error'.tr, errorMessage.value);
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   String formatTime(TimeOfDay? time) {
@@ -161,6 +207,7 @@ class AddPharmacyController extends GetxController {
     );
 
     _addPharmacy = AddPharmacy(repository: repository);
+    _getAreas = GetAreas(repository: repository);
   }
 
   Future<bool> onWillPop(BuildContext? context) async {
@@ -234,14 +281,14 @@ class AddPharmacyController extends GetxController {
       }
 
       final pharmacyParams = PhaParams(
-        passwordController.text.trim(), // newPassword
-        locationController.text.trim(), // location
-        managerFirstNameController.text.trim(), // managerFirstName
-        managerLastNameController.text.trim(), // managerLastName
-        phoneController.text.trim(), // pharmacyPhone
-        emailController.text.trim(), // pharmacyEmail
-        openingHoursString, // openingHours
-      );
+          passwordController.text.trim(), // newPassword
+          locationController.text.trim(), // location
+          managerFirstNameController.text.trim(), // managerFirstName
+          managerLastNameController.text.trim(), // managerLastName
+          phoneController.text.trim(), // pharmacyPhone
+          emailController.text.trim(), // pharmacyEmail
+          openingHoursString, // openingHours
+          selectedArea.value!.id);
 
       print('🔍 Created PhaParams:');
       print('  - newPassword: ${pharmacyParams.newPassword}');
@@ -252,17 +299,17 @@ class AddPharmacyController extends GetxController {
       print('  - pharmacyEmail: ${pharmacyParams.pharmacyEmail}');
       print('  - openingHours: ${pharmacyParams.openingHours}');
       print('-------------openingHours: $openingHoursString');
+      print('-------------selectedArea: ${selectedArea.value!.id}');
       final result = await _addPharmacy(pharmacyParams);
       result.fold((failure) {
-        print('❌ Pharmacy addition failed: ${failure.errMessage}');
-
-        errorMessage.value = 'Failed to add pharmacy: ${failure.errMessage}'.tr;
-        Get.snackbar('Error', errorMessage.value);
-
-        Get.snackbar(
-          'Error'.tr,
-          errorMessage.value,
-        );
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar('Error'.tr, errorMessage.value);
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (addedPharmacy) async {
         print('✅ Pharmacy added successfully!');
         print('🆔 Pharmacy ID: ${addedPharmacy.id}');

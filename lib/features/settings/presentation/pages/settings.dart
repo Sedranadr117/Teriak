@@ -69,14 +69,6 @@ class _SettingsState extends State<Settings> {
                 title: 'Pharmacy Preferences'.tr,
                 children: [
                   SettingsItemWidget(
-                    icon: 'store',
-                    title: 'Default Pharmacy Location'.tr,
-                    subtitle: 'Set your primary pharmacy'.tr,
-                    onTap: () => _showComingSoonDialog(
-                        context, 'Default Pharmacy Location'.tr),
-                    showArrow: true,
-                  ),
-                  SettingsItemWidget(
                     icon: 'notifications',
                     title: 'Notifications'.tr,
                     subtitle: 'Manage pharmacy alerts and updates'.tr,
@@ -328,28 +320,6 @@ class _SettingsState extends State<Settings> {
               foregroundColor: AppColors.onErrorLight,
             ),
             child: Text('Sign Out'.tr),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context, String feature) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Coming Soon'.tr,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        content: Text(
-          '\$feature feature is coming soon in the next update.'.tr,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'.tr),
           ),
         ],
       ),

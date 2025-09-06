@@ -8,12 +8,25 @@ import 'package:teriak/core/params/params.dart';
 class InvoiceItemsCard extends StatelessWidget {
   final List<InvoiceItem> items;
   final Function(int itemId, int newQuantity) onQuantityChanged;
+  final String selectedCurrency;
 
   const InvoiceItemsCard({
     super.key,
     required this.items,
     required this.onQuantityChanged,
+    required this.selectedCurrency,
   });
+
+  String getCurrencySymbol(String currencyCode) {
+    switch (currencyCode) {
+      case 'USD':
+        return '\$';
+      case 'SYP':
+        return 'Sp';
+      default:
+        return 'Sp';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +105,9 @@ class InvoiceItemsCard extends StatelessWidget {
   }
 
   Widget _buildInvoiceItemTile(BuildContext context, InvoiceItem item) {
+    // Use more decimal places for USD to show small values like 0.0007
+    final priceFormat = selectedCurrency == 'USD' ? 4 : 2;
+
     return Container(
       margin: EdgeInsets.only(bottom: 3.w),
       decoration: BoxDecoration(
@@ -130,7 +146,8 @@ class InvoiceItemsCard extends StatelessWidget {
               ),
             ),
             Text(
-              '\SYP ${item.total.toStringAsFixed(2)}',
+              '${getCurrencySymbol(selectedCurrency)} ' +
+                  '${item.total.toStringAsFixed(priceFormat)}',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: Theme.of(context).colorScheme.primary,
@@ -141,7 +158,7 @@ class InvoiceItemsCard extends StatelessWidget {
         subtitle: Padding(
           padding: EdgeInsets.only(top: 1.w),
           child: Text(
-            '${item.quantity} × SYP ${item.unitPrice.toStringAsFixed(2)}',
+            '${item.quantity} × ${getCurrencySymbol(selectedCurrency)} ${item.unitPrice.toStringAsFixed(priceFormat)}',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
@@ -179,7 +196,7 @@ class InvoiceItemsCard extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    'SYP ${item.unitPrice.toStringAsFixed(2)}',
+                    '${getCurrencySymbol(selectedCurrency)} ${item.unitPrice.toStringAsFixed(priceFormat)}',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
@@ -197,7 +214,7 @@ class InvoiceItemsCard extends StatelessWidget {
                   ),
                   Spacer(),
                   Text(
-                    'SYP ${item.total.toStringAsFixed(2)}',
+                    '${getCurrencySymbol(selectedCurrency)} ${item.total.toStringAsFixed(priceFormat)}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                           color: Theme.of(context).colorScheme.primary,

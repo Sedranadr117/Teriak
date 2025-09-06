@@ -14,7 +14,7 @@ class CurrencySelectionCardWidget extends StatelessWidget {
 
   final List<Map<String, String>> _currencies = const [
     {'code': 'USD', 'name': 'US Dollar', 'flag': '🇺🇸', 'symbol': '\$'},
-    {'code': 'SYP', 'name': 'Syrian Pound', 'flag': '🇸🇾', 'symbol': 'SYP'},
+    {'code': 'SYP', 'name': 'Syrian Pound', 'flag': '🇸🇾', 'symbol': 'Sp'},
   ];
 
   @override
@@ -91,7 +91,7 @@ class CurrencySelectionCardWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            currency['symbol']!,
+                            currency['code']!,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium

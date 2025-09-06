@@ -9,7 +9,6 @@ class PaymentConfigurationCardWidget extends StatefulWidget {
   final Function(String) onPaymentTypeChanged;
   final Function() onDateTap;
   final TextEditingController controller;
-  final FocusNode focusNode;
 
   const PaymentConfigurationCardWidget({
     super.key,
@@ -17,7 +16,6 @@ class PaymentConfigurationCardWidget extends StatefulWidget {
     required this.dueDate,
     required this.onPaymentTypeChanged,
     required this.controller,
-    required this.focusNode,
     required this.onDateTap,
   });
 
@@ -111,7 +109,6 @@ class _PaymentConfigurationCardWidgetState
                 debtAmountController: widget.controller,
                 dueDate: widget.dueDate,
                 onDueDateChanged: widget.onDateTap,
-                focusNode: widget.focusNode,
               ),
             ],
           ],
