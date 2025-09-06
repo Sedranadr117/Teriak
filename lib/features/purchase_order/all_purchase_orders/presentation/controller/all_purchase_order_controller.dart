@@ -125,8 +125,11 @@ class GetAllPurchaseOrderController extends GetxController {
           },
         );
       } catch (e) {
-        errorMessage.value = e.toString();
-        print(errorMessage.value);
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
       } finally {
         isLoadingMore.value = false;
       }
@@ -159,7 +162,12 @@ class GetAllPurchaseOrderController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessagePendingOrders.value = e.toString();
+        errorMessagePendingOrders.value = 'An unexpected error occurred. Please try again.'.tr;
+
+      Get.snackbar(
+        'Error'.tr,
+        errorMessagePendingOrders.value,
+      );
     } finally {
       isLoadingPendingOrders.value = false;
     }

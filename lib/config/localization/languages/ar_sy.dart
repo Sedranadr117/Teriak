@@ -592,6 +592,8 @@ final Map<String, String> arSY = {
   "Delete Supplier": "حذف المورد",
   "This action cannot be undone.": "لا يمكن التراجع عن هذا الإجراء.",
   "Supplier deleted successfully": "تم حذف المورد بنجاح",
+    'Product deleted successfully':'تم حذف الدواء بنجاح',
+
   "Supplier added successfully": "تم إضافة المورد بنجاح",
   "Supplier updated successfully": "تم تحديث المورد بنجاح",
   "Error Suppliers Loading": "خطأ في تحميل الموردين",
@@ -655,7 +657,7 @@ final Map<String, String> arSY = {
   "Edit Purchase Order": "تعديل طلبية الشراء",
   "Invoices will appear here once created": "ستظهر الفواتير هنا بمجرد إنشائها",
   "Available Orders": "الطلبات المتاحة",
-  "Create Invoice": "إنشاء فاتورة",
+  "Create Invoice": "استلام طلبية شراء",
   "No pending purchase orders available": "لا توجد طلبات شراء معلقة",
   "Pending Orders": "الطلبات المعلقة",
   "Choose a pending purchase order to create invoice":
@@ -665,9 +667,14 @@ final Map<String, String> arSY = {
 
   // Add Purchase Invoice
   "Create Purchase Invoice": "إنشاء فاتورة شراء",
+  "Purchase Invoice": "فاتورة شراء",
+  "current USD To SYP Rate": "سعر الدولار الأمريكي الحالي مقابل الليرة السورية",
   "Products from Purchase Order": "المنتجات من طلب الشراء",
   "Proceed to Payment": "متابعة الدفع",
+    "Purchase order updated successfully": "تم تعديل الطلبية بنجاح",
   "Saving...": "جاري الحفظ...",
+   "Withdraw": "سحب",
+  "deposit": "إيداع",
   "Save Success": "تم الحفظ بنجاح",
   "Save Error": "فشل في حفظ الفاتورة",
   "Please try again": "الرجاء المحاولة مرة أخرى",
@@ -681,7 +688,11 @@ final Map<String, String> arSY = {
   "Received Items": "العناصر المستلمة",
   "Bonus Items": "العناصر المجانية",
   "Total Items": "إجمالي العناصر",
-  "Continue to Payment": "متابعة الدفع",
+  "Continue to Payment": "انشاء فاتورة شراء",
+  "Invoice Number2":"رقم الفاتورة",
+  "Please select a valid order":"اختر طلبية شراء صحيحة",
+
+
 
   // Products Table
   "No Products": "لا توجد منتجات",
@@ -1009,5 +1020,6 @@ final Map<String, String> arSY = {
   "Please enter actual amount": "يرجى إدخال المبلغ الفعلي",
   "⚠️ Cannot add product": "⚠️ لا يمكن اضافة المنتج",
   'Available quantity:': 'الكمية المتوفرة:',
-  ', Requested:': ', المطلوبة:'
+  ', Requested:': ', المطلوبة:',
+   'Supplier deleted successfully':'تم حذف المورد بنجاح',
 };

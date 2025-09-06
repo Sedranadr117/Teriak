@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
@@ -7,6 +8,8 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/features/money_box/data/datasources/post_money_box_remote_data_source.dart';
 import 'package:teriak/features/money_box/data/repositories/add_money_box_repository_impl.dart';
 import 'package:teriak/features/money_box/domain/usecases/add_money_box.dart';
+import 'package:teriak/features/money_box/presentation/controller/get_money_box_controlller.dart';
+import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 
 class AddMoneyBoxController extends GetxController {
   // Form controllers
@@ -130,10 +133,17 @@ class AddMoneyBoxController extends GetxController {
             colorText: Colors.white,
           );
           hideForm();
+          final getMoneyBoxController = Get.find<GetMoneyBoxController>();
+          getMoneyBoxController.getMoneyBoxData();
+          Get.offAllNamed(AppPages.home);
         },
       );
     } catch (e) {
-      errorMessage.value = 'An unexpected error occurred'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

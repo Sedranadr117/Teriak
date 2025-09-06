@@ -65,6 +65,7 @@ class AddPurchaseOrderController extends GetxController {
   var products = <ProductModel>[].obs;
   final productController = Get.find<GetAllProductController>();
   final supplierController = Get.find<GetAllSupplierController>();
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -100,6 +101,9 @@ class AddPurchaseOrderController extends GetxController {
 
   void selectCurrency(String currency) {
     selectedCurrency.value = currency;
+    if (selectedProduct.value != null) {
+      _handleProductPriceLogic(selectedProduct.value!);
+    }
   }
 
   List<String> get availableCurrencies => ['SYP', 'USD'];
@@ -137,14 +141,24 @@ class AddPurchaseOrderController extends GetxController {
   void _handleProductPriceLogic(ProductEntity product) {
     final productType = product.productType;
     final isMasterProduct = productType == "Master" || productType == "مركزي";
-    if (isMasterProduct) {
-      double price =
-          (product.refPurchasePrice > 0) ? product.refPurchasePrice : 2.0;
-      currentPrice.value = price;
-      priceController.text = price.toStringAsFixed(2);
+
+    double price;
+
+    if (selectedCurrency.value == "USD") {
+      // إذا العملة دولار
+      price =
+          product.refPurchasePriceUSD > 0 ? product.refPurchasePriceUSD : 2.0;
     } else {
-      currentPrice.value = product.refPurchasePrice;
-      priceController.text = product.refPurchasePrice.toStringAsFixed(2);
+      // إذا العملة ليرة
+      price = product.refPurchasePrice > 0 ? product.refPurchasePrice : 2.0;
+    }
+
+    if (isMasterProduct) {
+      currentPrice.value = price;
+      priceController.text = price.toString();
+    } else {
+      currentPrice.value = price;
+      priceController.text = price.toString();
     }
   }
 
@@ -378,10 +392,10 @@ class AddPurchaseOrderController extends GetxController {
         },
       );
     } catch (e) {
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
-        'An unexpected error occurred. Please try again.'.tr,
-        snackPosition: SnackPosition.TOP,
+        errorMessage.value,
       );
     } finally {
       isLoading.value = false;

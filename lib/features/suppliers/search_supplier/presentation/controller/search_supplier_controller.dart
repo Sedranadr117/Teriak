@@ -76,9 +76,15 @@ class SearchSupplierController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = e.toString();
-      searchStatus.value = RxStatus.error(e.toString());
-      print('Search Status: Error: ${e.toString()}');
+        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+         searchStatus.value = RxStatus.error('An unexpected error occurred. Please try again.'.tr);
+
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
+     
+
     }
   }
 }

@@ -7,7 +7,7 @@ import 'package:teriak/features/suppliers/delete_supplier/presentation/controlle
 import 'package:teriak/features/suppliers/details_supplier/presentation/pages/widgets/supplier_detail_bottom_sheet_widget.dart';
 
 class SupplierDetailBottomSheet {
-  static void show({
+   void show({
     required BuildContext context,
     required SupplierModel supplier,
   }) {
@@ -32,13 +32,45 @@ class SupplierDetailBottomSheet {
                 arguments: supplier,
               );
             },
-            onDelete: () async {
-              await deleteController.deleteSupplier(supplier.id);
-              supplierController.refreshSuppliers();
+            onDelete: () async  {
+              final confirm = await _showDeleteConfirmation(context, supplier);
+              if (confirm) {
+                await deleteController.deleteSupplier(supplier.id);
+                supplierController.refreshSuppliers();
+              }
             },
           ),
         ),
       ),
     );
+  
   }
+        Future<bool> _showDeleteConfirmation(BuildContext context,SupplierModel supplier) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Delete Supplier'.tr),
+            content: Text(
+              '${"Are you sure you want to delete".tr} "${supplier.name}"'
+                  .tr,
+            ),
+
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('Cancel'.tr),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.error,
+                ),
+                child: Text('Delete'.tr),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
 }

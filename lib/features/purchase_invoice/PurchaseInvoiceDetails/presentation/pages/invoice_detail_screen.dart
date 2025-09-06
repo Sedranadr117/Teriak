@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
+import 'package:teriak/features/bottom_sheet_management/invoice_printer.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_item_model.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/data/models/purchase_invoice_model.dart';
 import 'package:teriak/main.dart';
@@ -39,41 +40,50 @@ class _PurchaseInvoiceDetailScreenState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    // if (invoiceItem == null) {
-    //   return Scaffold(
-    //     resizeToAvoidBottomInset: false,
-    //     appBar: AppBar(
-    //       title: Text('Invoice Details'.tr,
-    //           style: Theme.of(context).textTheme.titleLarge),
-    //     ),
-    //     body: Center(
-    //       child: CircularProgressIndicator(),
-    //     ),
-    //   );
-    // }
+    void _handleMenuAction(String action) {
+      switch (action) {
+        case 'print':
+          final printer = PurchaseInvoicePrinter(invoice: invoiceItem);
+          printer.printInvoice();
+          break;
+      }
+    }
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          title: Text('Invoice Details'.tr,
-              style: Theme.of(context).textTheme.titleLarge),
-          actions: [
-            (role == "PHARMACY_MANAGER")
-                ? Container()
-                : IconButton(
-                    icon: CustomIconWidget(
-                      iconName: 'edit',
-                      size: 24,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? AppColors.primaryDark
-                          : AppColors.primaryLight,
+        title: Text('Invoice Details'.tr,
+            style: Theme.of(context).textTheme.titleLarge),
+        actions: [
+          PopupMenuButton<String>(
+            icon: CustomIconWidget(
+              iconName: 'more_vert',
+              color: theme.colorScheme.onSurface,
+              size: 6.w,
+            ),
+            onSelected: _handleMenuAction,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                value: 'print',
+                child: Row(
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'print',
+                      color: theme.brightness == Brightness.light
+                          ? const Color(0xFF212121)
+                          : const Color(0xFFFFFFFF),
+                      size: 5.w,
                     ),
-                    onPressed: () {
-                      // Get.toNamed(AppPages.editPurchaseInvoice);
-                    }),
-          ]),
+                    SizedBox(width: 3.w),
+                    Text('Print'.tr),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
       body: Column(
         children: [
           // Main Content
@@ -107,23 +117,6 @@ class _PurchaseInvoiceDetailScreenState
                           '${'Items'.tr} (${invoiceItem.items.length})',
                           style: theme.textTheme.titleLarge?.copyWith(
                             fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Spacer(),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 3.w, vertical: 1.h),
-                          decoration: BoxDecoration(
-                            color: theme.colorScheme.primaryContainer
-                                .withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Tap to expand'.tr,
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w500,
-                            ),
                           ),
                         ),
                       ],

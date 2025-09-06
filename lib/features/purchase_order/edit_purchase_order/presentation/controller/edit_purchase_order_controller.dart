@@ -81,6 +81,7 @@ class EditPurchaseOrderController extends GetxController {
   var isLoading = false.obs;
   var isPharmacist = true.obs;
   var isInitializing = false.obs; // Start with false
+     final RxString errorMessage = ''.obs;
 
   // Available currencies
   final List<String> availableCurrencies = ['SYP', 'USD'];
@@ -223,6 +224,9 @@ class EditPurchaseOrderController extends GetxController {
 
   void selectCurrency(String currency) {
     selectedCurrency.value = currency;
+     if (selectedProduct.value != null) {
+      _handleProductPriceLogic(selectedProduct.value!);
+    }
   }
 
   void selectProduct(ProductEntity product) {
@@ -233,17 +237,27 @@ class EditPurchaseOrderController extends GetxController {
     _handleProductPriceLogic(product);
   }
 
-  void _handleProductPriceLogic(ProductEntity product) {
+void _handleProductPriceLogic(ProductEntity product) {
     final productType = product.productType;
     final isMasterProduct = productType == "Master" || productType == "مركزي";
-    if (isMasterProduct) {
-      double price =
-          (product.refPurchasePrice > 0) ? product.refPurchasePrice : 2.0;
-      currentPrice.value = price;
-      priceController.text = price.toStringAsFixed(2);
+
+    double price;
+
+    if (selectedCurrency.value == "USD") {
+      // إذا العملة دولار
+      price =
+          product.refPurchasePriceUSD > 0 ? product.refPurchasePriceUSD : 2.0;
     } else {
-      currentPrice.value = product.refPurchasePrice;
-      priceController.text = product.refPurchasePrice.toStringAsFixed(2);
+      // إذا العملة ليرة
+      price = product.refPurchasePrice > 0 ? product.refPurchasePrice : 2.0;
+    }
+
+    if (isMasterProduct) {
+      currentPrice.value = price;
+      priceController.text = price.toString();
+    } else {
+      currentPrice.value = price;
+      priceController.text = price.toString();
     }
   }
 
@@ -426,23 +440,14 @@ class EditPurchaseOrderController extends GetxController {
       );
 
       final body = buildRequestBody();
-      // 🐞 Debug Prints
-      print("==================================");
-      print("📡 Update Purchase Order Request");
-      print("➡️ URL: ${EndPoints.baserUrl}/api/v1/purchase-orders/$orderId");
-      print("➡️ Method: PUT");
-      print("➡️ Headers: {Content-Type: application/json}");
-      print("➡️ Params: ${params.toString()}");
-      print("➡️ Body: ${body.toString()}");
-      print("==================================");
+
 
       final result = await editPurchaseOrderUseCase(params: params, body: body);
 
-      print("📥 Result: $result");
+     
 
       result.fold(
         (failure) {
-          print("💥 HTTP Error: $failure");
           Get.snackbar(
             'Error'.tr,
             'Failed to update purchase order'.tr,
@@ -450,7 +455,6 @@ class EditPurchaseOrderController extends GetxController {
           );
         },
         (updatedOrder) {
-          print("✅ Success: Purchase order updated");
           Get.snackbar(
             'Success'.tr,
             'Purchase order updated successfully'.tr,
@@ -458,13 +462,12 @@ class EditPurchaseOrderController extends GetxController {
           );
         },
       );
-    } catch (e, stacktrace) {
-      print("❌ Exception: $e");
-      print("📌 Stacktrace: $stacktrace");
+    } catch (e) {
+
+   errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
-        'An unexpected error occurred'.tr,
-        snackPosition: SnackPosition.BOTTOM,
+        errorMessage.value,
       );
     } finally {
       isLoading.value = false;

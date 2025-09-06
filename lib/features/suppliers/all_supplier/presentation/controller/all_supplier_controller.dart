@@ -65,7 +65,12 @@ class GetAllSupplierController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = e.toString();
+        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

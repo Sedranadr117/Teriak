@@ -77,7 +77,11 @@ class PurchaseOrderDetailsController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = e.toString();
+        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -116,8 +120,11 @@ class PurchaseOrderDetailsController extends GetxController {
         }
       }
     } catch (e) {
-      // If search fails, we'll continue without supplier ID
-      print('Failed to search for supplier ID: $e');
+  errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     }
   }
 }

@@ -13,6 +13,7 @@ class DeleteProductController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final DeleteProduct deleteProductUseCase;
   var isLoading = false.obs;
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -55,18 +56,21 @@ class DeleteProductController extends GetxController {
             Get.snackbar(
                 'Error',
                 'Cannot delete pharmacy product. It has stock items. Please remove all stock items first'
-                    .tr
                     .tr);
           } else {
             Get.snackbar('Error', failure.errMessage);
           }
         },
         (x) {
-          Get.snackbar('Success', 'Product deleted successfully');
+          Get.snackbar('Success', 'Product deleted successfully'.tr);
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

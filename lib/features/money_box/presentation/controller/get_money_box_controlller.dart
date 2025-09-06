@@ -55,7 +55,7 @@ class GetMoneyBoxController extends GetxController {
     );
   }
 
-  void refreshData() {
+  Future<void> refreshData() async{
     getMoneyBoxData();
   }
 }

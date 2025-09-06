@@ -32,7 +32,7 @@ class HttpConsumer extends ApiConsumer {
   @override
   Future<dynamic> get(String path,
       {Object? data, Map<String, dynamic>? queryParameters}) async {
-    try {
+    // try {
     final uri =
         Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
     final headers = _getHeaders();
@@ -44,14 +44,14 @@ class HttpConsumer extends ApiConsumer {
     );
     handleHttpResponse(response);
     return _tryDecode(response.body);
-    } catch (e) {
-      print('💥 HTTP Error: $e');
-      if (e is HttpException) {
-        handleHttpException(e);
-      } else {
-        rethrow;
-      }
-    }
+    // } catch (e) {
+    //   print('💥 HTTP Error: $e');
+    //   if (e is HttpException) {
+    //     handleHttpException(e);
+    //   } else {
+    //     rethrow;
+    //   }
+    // }
   }
 
   @override

@@ -9,6 +9,7 @@ class MoneyBoxModel extends MoneyBoxEntity {
     required super.lastReconciled,
     required super.totalBalanceInSYP,
     required super.totalBalanceInUSD,
+    required super.currentUSDToSYPRate,
   });
 
   factory MoneyBoxModel.fromJson(Map<String, dynamic> json) {
@@ -18,6 +19,7 @@ class MoneyBoxModel extends MoneyBoxEntity {
       lastReconciled: List<int>.from(json[ApiKeys.lastReconciled] ?? []),
       totalBalanceInSYP: json[ApiKeys.totalBalanceInSYP]??0.0,
       totalBalanceInUSD: json[ApiKeys.totalBalanceInUSD]??0.0,
+      currentUSDToSYPRate: json[ApiKeys.currentUSDToSYPRate]??0.0,
     );
   }
 
@@ -28,6 +30,7 @@ class MoneyBoxModel extends MoneyBoxEntity {
       ApiKeys.lastReconciled: lastReconciled,
       ApiKeys.totalBalanceInSYP: totalBalanceInSYP,
       ApiKeys.totalBalanceInUSD: totalBalanceInUSD,
+      ApiKeys.currentUSDToSYPRate: currentUSDToSYPRate,
     };
   }
 

@@ -350,9 +350,11 @@ class SearchByDateRangeParams {
     this.language = 'ar',
   });
   Map<String, dynamic> toMap() {
+        dateFormat(DateTime d) =>
+        '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
     return {
-      'startDate': startDate.toIso8601String(),
-      'endDate': endDate.toIso8601String(),
+      'startDate': dateFormat(startDate),
+      'endDate': dateFormat(endDate),
       'page': page.toString(),
       'size': size.toString(),
       'language': language,
@@ -524,17 +526,46 @@ class MoneyBoxTransactionParams {
 class GetMoneyBoxTransactionParams {
   final int page;
   final int size;
+  final DateTime? startDate; // اختياري
+  final DateTime? endDate;   // اختياري
+  final String? transactionType; // اختياري
 
-  const GetMoneyBoxTransactionParams(
-      {required this.page, required this.size});
+  GetMoneyBoxTransactionParams({
+    required this.page,
+    required this.size,
+    this.startDate,
+    this.endDate,
+    this.transactionType,
+  });
+
+  // // دالة لتحويل التاريخ للشكل المطلوب للـ API: YYYY-MM-DDTHH:MM:SS
+  // String dateFormat(DateTime d) {
+  //   final y = d.year.toString().padLeft(4, '0');
+  //   final m = d.month.toString().padLeft(2, '0');
+  //   final day = d.day.toString().padLeft(2, '0');
+  //   final h = d.hour.toString().padLeft(2, '0');
+  //   final min = d.minute.toString().padLeft(2, '0');
+  //   final s = d.second.toString().padLeft(2, '0');
+  //  return '$y-$m-$day' 'T$h:$min:$s';
+  // }
 
   Map<String, dynamic> toMap() {
-    return {
+    final Map<String, dynamic> query = {
       'page': page.toString(),
       'size': size.toString(),
     };
+        dateFormat(DateTime d) =>
+        '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
+
+    if (startDate != null) query['startDate'] = dateFormat(startDate!);
+    if (endDate != null) query['endDate'] = dateFormat(endDate!);
+    if (transactionType != null) query['transactionType'] = transactionType;
+
+    return query;
   }
 }
+
+
 
 class SearchInvoiceByDateRangeParams {
   final DateTime startDate;

@@ -74,7 +74,15 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
                   iconName: widget.drugData.requiresPrescription
                       ? 'lock'
                       : 'lock_open',
-                  color: AppColors.textPrimaryLight,
+                  color: widget.drugData.requiresPrescription
+                                ? (Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AppColors.warningDark
+                                    : AppColors.warningLight)
+                                : (Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? AppColors.successDark
+                                    : AppColors.successLight),
                   size: 16,
                 ),
                 //SizedBox(width: context.w * 0.01),
@@ -83,8 +91,17 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
                         ? 'Prescription Required'.tr
                         : 'No Prescription'.tr,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.textPrimaryLight,
-                          fontWeight: FontWeight.w500,
+                      color: widget.drugData.requiresPrescription
+                                        ? (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? AppColors.warningDark
+                                            : AppColors.warningLight)
+                                        : (Theme.of(context).brightness ==
+                                                Brightness.dark
+                                            ? AppColors.successDark
+                                            : AppColors.successLight),
+                                    fontWeight: FontWeight.w500,
+                       
                         )),
               ],
             ),

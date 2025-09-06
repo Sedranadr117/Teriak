@@ -18,6 +18,8 @@ class ProductModel extends ProductEntity {
     required super.notes,
     required super.refPurchasePrice,
     required super.refSellingPrice,
+    required super.refPurchasePriceUSD,
+    required super.refSellingPriceUSD,
     required super.minStockLevel,
     required super.quantity,
     required super.categories,
@@ -60,10 +62,16 @@ class ProductModel extends ProductEntity {
           : '',
       refPurchasePrice: json.containsKey(ApiKeys.refPurchasePrice) && json[ApiKeys.refPurchasePrice] != null
           ? json[ApiKeys.refPurchasePrice]
-          : '',
+          : 0,
       refSellingPrice: json.containsKey(ApiKeys.refSellingPrice) && json[ApiKeys.refSellingPrice] != null
           ? json[ApiKeys.refSellingPrice]
-          : '',
+          : 0,
+      refPurchasePriceUSD: json.containsKey(ApiKeys.refPurchasePriceUSD) && json[ApiKeys.refPurchasePriceUSD] != null
+          ? json[ApiKeys.refPurchasePriceUSD]
+          : 0,
+      refSellingPriceUSD: json.containsKey(ApiKeys.refSellingPriceUSD) && json[ApiKeys.refSellingPriceUSD] != null
+          ? json[ApiKeys.refSellingPriceUSD]
+          : 0,
       minStockLevel: json.containsKey(ApiKeys.minStockLevel) && json[ApiKeys.minStockLevel] != null
           ? json[ApiKeys.minStockLevel]
           : 0,

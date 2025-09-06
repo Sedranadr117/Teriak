@@ -144,6 +144,7 @@ class _EditPurchaseOrderPageState extends State<EditPurchaseOrderPage> {
 
           // Product Selection
           Obx(() => ProductSelectionCard(
+            currency: controller.selectedCurrency.value,
                 products: controller.products.cast(),
                 onProductSelected: controller.selectProduct,
                 onBarcodeScanned: controller.selectProductByBarcode,

@@ -101,6 +101,8 @@ class ApiKeys {
   static const String cancelSale = 'cancel';
   static const String refPurchasePrice = "refPurchasePrice";
   static const String refSellingPrice = "refSellingPrice";
+  static const String refPurchasePriceUSD = "refPurchasePriceUSD";
+  static const String refSellingPriceUSD = "refSellingPriceUSD";
   static const String minStockLevel = "minStockLevel";
   static const String tax = "tax";
 
@@ -123,6 +125,7 @@ class ApiKeys {
   static const String lastReconciled = 'lastReconciled';
   static const String totalBalanceInSYP = 'totalBalanceInSYP';
   static const String totalBalanceInUSD = 'totalBalanceInUSD';
+  static const String currentUSDToSYPRate = 'currentUSDToSYPRate';
 
   static const String balanceAfter = 'balanceAfter';
   static const String balanceBefore = 'balanceBefore';

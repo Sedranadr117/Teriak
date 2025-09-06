@@ -67,16 +67,18 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
               ),
             ),
             SizedBox(height: 1.h),
-            SaveProductButton(
+             Obx(
+              () =>SaveProductButton(
+              isLoading: addController.isLoading.value,
                 isFormValid: addController.isFormValid,
                 onTap: () {
-                  FocusScope.of(context).unfocus();
+                  
                   addController.addSupplier();
                   supplierController.refreshSuppliers();
 
-                  setState(() {});
+                
                 },
-                label: "Save Supplier".tr),
+                label: "Save Supplier".tr),),
             CommonWidgets.buildRequiredWidget(context: context),
           ],
         ),

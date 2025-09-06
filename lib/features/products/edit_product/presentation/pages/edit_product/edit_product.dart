@@ -224,16 +224,19 @@ class _EditProductPageState extends State<EditProductPage> {
                 ),
               ),
             ),
-            SaveProductButton(
-              isFormValid: editController.isFormValid,
-              onTap: () async {
-                FocusScope.of(context).unfocus();
-                await editController.editProduct(product.id);
-                productController.refreshProducts();
-                productDetailsController.getProductDetails(
-                    id: product.id, type: product.productType);
-              },
-              label: "Save Product".tr,
+            Obx(()=>
+              SaveProductButton(
+                isLoading: editController.isLoading.value,
+                isFormValid: editController.isFormValid,
+                onTap: () async {
+                  FocusScope.of(context).unfocus();
+                  await editController.editProduct(product.id);
+                  productController.refreshProducts();
+                  productDetailsController.getProductDetails(
+                      id: product.id, type: product.productType);
+                },
+                label: "Save Product".tr,
+              ),
             ),
           ],
         ),

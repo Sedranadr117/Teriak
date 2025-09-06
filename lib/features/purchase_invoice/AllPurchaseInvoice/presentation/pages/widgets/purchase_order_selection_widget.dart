@@ -189,9 +189,10 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 1.h),
                 DropdownButtonFormField<int>(
-                  value:  pendingOrders.any((o) => o.id == invoiceController.selectedOrderId.value)
-      ? invoiceController.selectedOrderId.value
-      : null,
+                  value: pendingOrders.any((o) =>
+                          o.id == invoiceController.selectedOrderId.value)
+                      ? invoiceController.selectedOrderId.value
+                      : null,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Select Purchase Order'.tr,
@@ -250,31 +251,46 @@ class PurchaseOrderSelectionWidget extends StatelessWidget {
                     final isOrderSelected =
                         invoiceController.selectedOrderId.value != null;
                     return ElevatedButton.icon(
-                     
                       onPressed: isOrderSelected
-                          ? () {
-                              final selectedOrder = pendingOrders.firstWhere(
-                                (order) =>
-                                    order.id ==
-                                    invoiceController.selectedOrderId.value,
-                              );
+          ? () {
+              final hasSelectedOrder = pendingOrders.any(
+                (order) => order.id == invoiceController.selectedOrderId.value,
+              );
 
-                              Get.toNamed(
-                                AppPages.enhancedCreateInvoice,
-                                arguments: selectedOrder as PurchaseOrderModel,
-                              );
-                            }
-                          : null,
+              if (hasSelectedOrder) {
+                final selectedOrder = pendingOrders.firstWhere(
+                  (order) =>
+                      order.id == invoiceController.selectedOrderId.value,
+                );
+
+                // الانتقال للصفحة
+                Get.toNamed(
+                  AppPages.enhancedCreateInvoice,
+                  arguments: selectedOrder,
+                );
+              } else {
+                // إذا الاختيار غير صحيح أو لا يوجد عنصر مطابق
+                Get.snackbar(
+                  "Error".tr,
+                  "Please select a valid order".tr,
+                  snackPosition: SnackPosition.BOTTOM,
+                  backgroundColor: Colors.red.shade400,
+                  colorText: Colors.white,
+                );
+              }
+            }
+          : null,
                       icon: Icon(
                         Icons.add_shopping_cart,
                         size: 6.w,
                       ),
                       label: Text(
                         'Create Invoice'.tr,
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                              color: AppColors.onPrimaryLight,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.labelMedium?.copyWith(
+                                  color: AppColors.onPrimaryLight,
+                                  fontWeight: FontWeight.w600,
+                                ),
                       ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: theme.colorScheme.primary,

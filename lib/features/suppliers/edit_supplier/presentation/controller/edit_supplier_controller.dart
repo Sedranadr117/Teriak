@@ -22,6 +22,7 @@ class EditSupplierController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final PutEditSupplier editSupplierUseCase;
   var isLoading = false.obs;
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -114,7 +115,12 @@ class EditSupplierController extends GetxController {
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

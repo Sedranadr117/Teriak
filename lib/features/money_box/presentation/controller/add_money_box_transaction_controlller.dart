@@ -7,7 +7,6 @@ import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/money_box/data/datasources/post_money_box_transaction_remote_data_source.dart';
 import 'package:teriak/features/money_box/data/repositories/add_money_box_transaction_repository_impl.dart';
-import 'package:teriak/features/money_box/domain/entities/money_box_entity.dart';
 import 'package:teriak/features/money_box/domain/usecases/add_money_box_transaction.dart';
 
 class AddMoneyBoxTransactionController extends GetxController {
@@ -18,6 +17,8 @@ class AddMoneyBoxTransactionController extends GetxController {
   // Observable variables
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
+  final RxString transactionType = 'deposit'.obs;
+
 
   late final NetworkInfoImpl networkInfo;
   late final PostMoneyBoxTransaction addMoneyBoxTransactionUseCase;
@@ -81,7 +82,8 @@ class AddMoneyBoxTransactionController extends GetxController {
     errorMessage.value = '';
 
     try {
-      final amount = double.parse(amountController.text.trim());
+      final rawAmount = double.parse(amountController.text.trim());
+final amount = transactionType.value == 'withdraw' ? -rawAmount : rawAmount;
       final description = notesController.text.trim();
 
       final params = MoneyBoxTransactionParams(
@@ -108,7 +110,11 @@ class AddMoneyBoxTransactionController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = 'An unexpected error occurred'.tr;
+          errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

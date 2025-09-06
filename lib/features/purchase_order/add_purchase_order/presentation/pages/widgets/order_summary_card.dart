@@ -153,7 +153,7 @@ class OrderSummaryCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${total.toStringAsFixed(2)} $currency',
+                '${total.toString()} $currency',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold,

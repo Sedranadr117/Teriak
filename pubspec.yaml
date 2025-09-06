@@ -29,6 +29,7 @@ dependencies:
   sizer: ^2.0.15
   printing: ^5.14.2
   pdf: ^3.11.3
+  flutter_speed_dial: ^7.0.0
 
 dev_dependencies:
   flutter_test:

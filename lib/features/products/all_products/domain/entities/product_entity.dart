@@ -14,6 +14,8 @@ class ProductEntity {
   final String? notes;
   final double refPurchasePrice;
   final double refSellingPrice;
+  final double refPurchasePriceUSD;
+  final double refSellingPriceUSD;
   final int? minStockLevel;
   final int quantity;
   final List<dynamic>? categories;
@@ -34,6 +36,8 @@ class ProductEntity {
     required this.notes,
     required this.refPurchasePrice,
     required this.refSellingPrice,
+    required this.refPurchasePriceUSD,
+    required this.refSellingPriceUSD,
     required this.minStockLevel,
     required this.quantity,
     required this.categories,

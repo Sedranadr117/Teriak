@@ -52,6 +52,10 @@ class AddMoneyBoxReconcileController extends GetxController {
       errorMessage.value = 'Please enter actual amount'.tr;
       return false;
     }
+       if (notesController.text.trim().isEmpty) {
+      errorMessage.value = 'Please enter notes'.tr;
+      return false;
+    }
 
     final amount = actualAmountController.text.trim();
     if (double.tryParse(amount) == null) {
@@ -98,7 +102,11 @@ class AddMoneyBoxReconcileController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = 'An unexpected error occurred'.tr;
+       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

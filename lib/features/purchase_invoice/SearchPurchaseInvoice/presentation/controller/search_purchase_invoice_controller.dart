@@ -121,7 +121,11 @@ class SearchPurchaseInvoiceController extends GetxController {
         },
       );
     } catch (e) {
-      searchError.value = e.toString();
+      searchError.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        searchError.value,
+      );
       hasSearchResults.value = false;
     } finally {
       isSearchingSupplier.value = false;
@@ -152,6 +156,8 @@ class SearchPurchaseInvoiceController extends GetxController {
         size: 5,
         language: languageCode,
       );
+      print(params.startDate);
+      print(params.endDate);
 
       final result =
           await searchByDateRangeUseCase.callByDateRange(params: params);
@@ -170,7 +176,11 @@ class SearchPurchaseInvoiceController extends GetxController {
         },
       );
     } catch (e) {
-      searchError.value = e.toString();
+      searchError.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        searchError.value,
+      );
       hasSearchResults.value = false;
     } finally {
       isSearchingDate.value = false;
@@ -219,6 +229,8 @@ class SearchPurchaseInvoiceController extends GetxController {
           size: 5,
           language: languageCode,
         );
+        print(params.startDate);
+        print(params.endDate);
 
         final result =
             await searchByDateRangeUseCase.callByDateRange(params: params);
@@ -236,7 +248,11 @@ class SearchPurchaseInvoiceController extends GetxController {
         isSearchingDate.value = false;
       }
     } catch (e) {
-      searchError.value = e.toString();
+      searchError.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        searchError.value,
+      );
       currentPage.value--;
       isSearchingSupplier.value = false;
       isSearchingDate.value = false;

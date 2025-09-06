@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/controller/all_purchase_invoice_controller.dart';
 
@@ -11,6 +12,8 @@ class InvoiceSummaryWidget extends StatefulWidget {
   final int totalBonusItems;
   final double totalAmount;
   final bool isSaving;
+  final String currency;
+
   final VoidCallback onProceedToPayment;
 
   const InvoiceSummaryWidget({
@@ -19,7 +22,9 @@ class InvoiceSummaryWidget extends StatefulWidget {
     required this.totalBonusItems,
     required this.totalAmount,
     required this.isSaving,
+    required this.currency,
     required this.onProceedToPayment,
+
   });
 
   @override
@@ -31,7 +36,6 @@ class _InvoiceSummaryWidgetState extends State<InvoiceSummaryWidget> {
   @override
   void didUpdateWidget(InvoiceSummaryWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // تحديث الواجهة عند تغيير البيانات
     if (oldWidget.totalAmount != widget.totalAmount ||
         oldWidget.totalReceivedItems != widget.totalReceivedItems ||
         oldWidget.totalBonusItems != widget.totalBonusItems) {
@@ -131,6 +135,7 @@ class _InvoiceSummaryWidgetState extends State<InvoiceSummaryWidget> {
                   'Total Amount'.tr,
                   widget.totalAmount,
                   true,
+                  widget.currency
                 ),
               ],
             ),
@@ -236,6 +241,7 @@ class _InvoiceSummaryWidgetState extends State<InvoiceSummaryWidget> {
     String label,
     double amount,
     bool isTotal,
+    String currency,
   ) {
     final theme = Theme.of(context);
 
@@ -254,7 +260,8 @@ class _InvoiceSummaryWidgetState extends State<InvoiceSummaryWidget> {
                 ),
         ),
         Text(
-          '\$${NumberFormat('#,##0.00').format(amount)}',
+          '${currency}${amount.toString()}'
+,
           style: isTotal
               ? theme.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w700,

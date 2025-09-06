@@ -13,6 +13,7 @@ class DeletePurchaseOrderController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final DeletePurchaseOrder deletePurchaseOrderUseCase;
   var isLoading = false.obs;
+   final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -60,8 +61,11 @@ class DeletePurchaseOrderController extends GetxController {
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
-      print(e.toString());
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

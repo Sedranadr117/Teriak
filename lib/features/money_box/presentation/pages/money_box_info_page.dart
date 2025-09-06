@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
@@ -22,99 +23,112 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final isRtl = Get.locale?.languageCode == 'ar';
+    final fabLocation = isRtl
+        ? FloatingActionButtonLocation.startFloat
+        : FloatingActionButtonLocation.endFloat;
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Money Box Information'.tr),
-        backgroundColor: AppColors.surfaceLight,
-        foregroundColor: AppColors.textPrimaryLight,
-        elevation: 1,
-        actions: [
-          IconButton(
-            onPressed: () {
-              moneyBoxController.refreshData();
-              transactionsController.refreshData();
-            },
-            icon: Icon(Icons.refresh),
-          ),
-          IconButton(
-            onPressed: () {
+      floatingActionButtonLocation: fabLocation,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      resizeToAvoidBottomInset: false,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await Future.wait([
+            moneyBoxController.refreshData(),
+            transactionsController.refreshData(),
+          ]);
+        },
+        child: Column(
+          children: [
+            // // Fixed Pharmacy Name
+            // Container(
+            //   width: double.infinity,
+            //   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+            //   decoration: BoxDecoration(
+            //     color: AppColors.primaryLight,
+            //     boxShadow: [
+            //       BoxShadow(
+            //         color: Colors.black.withOpacity(0.1),
+            //         blurRadius: 4,
+            //         offset: Offset(0, 2),
+            //       ),
+            //     ],
+            //   ),
+            //   child: Text(
+            //     'Pharmacy Name', // This should be fetched from pharmacy settings
+            //     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            //           color: AppColors.textPrimaryLight,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //     textAlign: TextAlign.center,
+            //   ),
+            // ),
+
+            // SizedBox(height: 2.h),
+
+            // Money Box Information Card
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 1.w, vertical: 1.h),
+              child: _buildMoneyBoxInfoCard(),
+            ),
+
+            // Transactions List
+            Expanded(
+              child: _buildTransactionsList(),
+            ),
+
+            // Pagination Info
+            Obx(() {
+              if (transactionsController.transactions.value?.totalElements !=
+                      null &&
+                  transactionsController.transactions.value!.totalElements >
+                      0) {
+                return Container(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${'Total'.tr}: ${transactionsController.transactions.value!.totalElements} ${'transactions'.tr}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      Text(
+                        '${'Page'.tr} ${transactionsController.currentPage.value + 1} ${'of'.tr} ${transactionsController.transactions.value!.totalPages}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
+          ],
+        ),
+      ),
+      floatingActionButton: SpeedDial(
+        icon: Icons.add,
+        activeIcon: Icons.close,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        overlayOpacity: 0.5,
+        spacing: 10,
+        spaceBetweenChildren: 10,
+        direction: SpeedDialDirection.up,
+        switchLabelPosition: false,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.swap_vert, color: Colors.white),
+            backgroundColor: AppColors.appColor4,
+            onTap: () {
               Get.dialog(AddTransactionDialog());
             },
-            icon: Icon(Icons.add),
-            tooltip: 'Add Transaction'.tr,
           ),
-          IconButton(
-            onPressed: () {
+          SpeedDialChild(
+            child: Icon(Icons.balance, color: Colors.white),
+            backgroundColor: AppColors.primaryVariantLight,
+            onTap: () {
               Get.dialog(AddReconcileDialog());
             },
-            icon: Icon(Icons.account_balance_wallet),
-            tooltip: 'Reconcile Money Box'.tr,
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // // Fixed Pharmacy Name
-          // Container(
-          //   width: double.infinity,
-          //   padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-          //   decoration: BoxDecoration(
-          //     color: AppColors.primaryLight,
-          //     boxShadow: [
-          //       BoxShadow(
-          //         color: Colors.black.withOpacity(0.1),
-          //         blurRadius: 4,
-          //         offset: Offset(0, 2),
-          //       ),
-          //     ],
-          //   ),
-          //   child: Text(
-          //     'Pharmacy Name', // This should be fetched from pharmacy settings
-          //     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          //           color: AppColors.textPrimaryLight,
-          //           fontWeight: FontWeight.bold,
-          //         ),
-          //     textAlign: TextAlign.center,
-          //   ),
-          // ),
-
-          // SizedBox(height: 2.h),
-
-          // Money Box Information Card
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            child: _buildMoneyBoxInfoCard(),
-          ),
-
-          // Transactions List
-          Expanded(
-            child: _buildTransactionsList(),
-          ),
-
-          // Pagination Info
-          Obx(() {
-            if (transactionsController.transactions.value?.totalElements !=
-                    null &&
-                transactionsController.transactions.value!.totalElements > 0) {
-              return Container(
-                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '${'Total'.tr}: ${transactionsController.transactions.value!.totalElements} ${'transactions'.tr}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    Text(
-                      '${'Page'.tr} ${transactionsController.currentPage.value + 1} ${'of'.tr} ${transactionsController.transactions.value!.totalPages}',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                  ],
-                ),
-              );
-            }
-            return const SizedBox.shrink();
-          }),
         ],
       ),
     );
@@ -159,23 +173,25 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
 
       return Card(
         child: Padding(
-          padding: EdgeInsets.all(4.w),
+          padding: EdgeInsets.symmetric(horizontal: 4.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 1.h),
               Text(
                 'Money Box Information'.tr,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(),
               ),
               SizedBox(height: 1.h),
               _buildInfoRow('Status'.tr, moneyBox.status),
-              _buildInfoRow('Last Reconciled'.tr, moneyBox.formattedCreationDateTime),
+              _buildInfoRow(
+                  'Last Reconciled'.tr, moneyBox.formattedCreationDateTime),
+              _buildInfoRow('current USD To SYP Rate'.tr,
+                  moneyBox.currentUSDToSYPRate.toString()),
               _buildInfoRow('Total Balance (SYP)'.tr,
-                  '${moneyBox.totalBalanceInSYP.toStringAsFixed(2)} SYP'),
+                  '${moneyBox.totalBalanceInSYP.toString()} SYP'),
               _buildInfoRow('Total Balance (USD)'.tr,
-                  '${moneyBox.totalBalanceInUSD.toStringAsFixed(2)} USD'),
+                  '${moneyBox.totalBalanceInUSD.toString()} USD'),
             ],
           ),
         ),
@@ -195,7 +211,6 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
-                    color: AppColors.textSecondaryLight,
                   ),
             ),
           ),
@@ -204,8 +219,8 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
             child: Text(
               value,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.primary),
             ),
           ),
         ],
@@ -214,6 +229,199 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
   }
 
   Widget _buildTransactionsList() {
+    Widget _buildDateField(
+      BuildContext context,
+      String label,
+      DateTime? selectedDate,
+      Function(DateTime) onDateSelected,
+      String? errorText,
+    ) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.8),
+            ),
+          ),
+          SizedBox(height: 0.5.h),
+          InkWell(
+            onTap: () async {
+              final date = await showDatePicker(
+                context: context,
+                initialDate: selectedDate ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime.now().add(const Duration(days: 365)),
+              );
+              if (date != null) {
+                onDateSelected(date);
+                setState(() {});
+              }
+            },
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.h),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: errorText != null
+                      ? Colors.red
+                      : Theme.of(context).colorScheme.outline,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    selectedDate != null
+                        ? '${selectedDate.day.toString().padLeft(2, '0')}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.year}'
+                        : 'Select Date'.tr,
+                    style: TextStyle(
+                      fontSize: 11.sp,
+                      color: selectedDate != null
+                          ? Theme.of(context).textTheme.bodyMedium?.color
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.8),
+                    ),
+                  ),
+                  Icon(
+                    Icons.calendar_today,
+                    size: 11.sp,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.8),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    Widget _buildTypeField(
+      BuildContext context,
+      String label,
+      String? selectedType,
+      Function(String) onTypeSelected,
+    ) {
+      const List<String> types = [
+        "OPENING_BALANCE",
+        "CASH_DEPOSIT",
+        "CASH_WITHDRAWAL",
+        "SALE_PAYMENT",
+        "SALE_REFUND",
+        "PURCHASE_REFUND",
+        "PURCHASE_PAYMENT",
+        "INCOME",
+        "ADJUSTMENT",
+        "CLOSING_BALANCE",
+      ];
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.8),
+            ),
+          ),
+          SizedBox(height: 0.5.h),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 0.5.h),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: selectedType?.isNotEmpty == true ? selectedType : null,
+                hint: Text('Select Type'.tr),
+                isExpanded: true,
+                items: types.map((type) {
+                  return DropdownMenuItem<String>(
+                    value: type,
+                    child: Text(type),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    onTypeSelected(value);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    void showFilterDialog() {
+      Get.bottomSheet(
+        Container(
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Obx(() => _buildDateField(
+                      context,
+                      'Start Date'.tr,
+                      transactionsController.startDateFilter.value,
+                      (date) =>
+                          transactionsController.startDateFilter.value = date,
+                      null,
+                    )),
+                SizedBox(height: 1.h),
+                Obx(() => _buildDateField(
+                      context,
+                      'End Date'.tr,
+                      transactionsController.endDateFilter.value,
+                      (date) =>
+                          transactionsController.endDateFilter.value = date,
+                      null,
+                    )),
+                SizedBox(height: 1.h),
+                // Obx(() => _buildTypeField(
+                //       context,
+                //       'Transaction Type'.tr,
+                //       transactionsController.transactionTypeFilter.value,
+                //       (type) => transactionsController.setTransactionType(type),
+                //     )),
+                SizedBox(height: 2.h),
+                ElevatedButton(
+                  onPressed: () {
+                    transactionsController.getTransactionsData();
+                   
+                  },
+                  child: Text('Apply Filters'.tr),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Obx(() {
       if (transactionsController.isLoading.value) {
         return Center(
@@ -257,6 +465,12 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
                     ),
                 textAlign: TextAlign.center,
               ),
+              Center(
+                  child: CommonWidgets.buildErrorWidget(
+                context: context,
+                errorMessage: "",
+                onPressed: transactionsController.refreshData,
+              ))
             ],
           ),
         );
@@ -272,23 +486,29 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
                 Container(
                   padding: EdgeInsets.all(2.w),
                   decoration: BoxDecoration(
-                    color: AppColors.primaryLight.withOpacity(0.1),
+                    color:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(
                     Icons.receipt_long,
-                    color: AppColors.primaryLight,
+                    color: Theme.of(context).colorScheme.primary,
                     size: 20,
                   ),
                 ),
                 SizedBox(width: 3.w),
                 Text(
                   'Money Box Transactions'.tr,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color: AppColors.primaryLight,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                 ),
+                Spacer(),
+                IconButton(
+                  icon: Icon(Icons.filter_list,color:Theme.of(context).colorScheme.primary ,),
+                  onPressed: () => showFilterDialog(),
+                )
               ],
             ),
           ),
@@ -355,7 +575,7 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
                       ),
                 ),
                 Text(
-                  '${transaction.amount.toStringAsFixed(2)}',
+                  '${transaction.amount.toString()}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color:
@@ -365,10 +585,10 @@ class _MoneyBoxInfoPageState extends State<MoneyBoxInfoPage> {
               ],
             ),
             SizedBox(height: 1.h),
-            _buildTransactionInfoRow('Balance Before'.tr,
-                '${transaction.balanceBefore.toStringAsFixed(2)}'),
-            _buildTransactionInfoRow('Balance After'.tr,
-                '${transaction.balanceAfter.toStringAsFixed(2)}'),
+            _buildTransactionInfoRow(
+                'Balance Before'.tr, '${transaction.balanceBefore.toString()}'),
+            _buildTransactionInfoRow(
+                'Balance After'.tr, '${transaction.balanceAfter.toString()}'),
             if (transaction.description.isNotEmpty)
               _buildTransactionInfoRow(
                   'Description'.tr, transaction.description),

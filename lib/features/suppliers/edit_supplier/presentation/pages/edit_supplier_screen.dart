@@ -78,7 +78,9 @@ class _EditSupplierScreenState extends State<EditSupplierScreen> {
                 ),
               ),
               SizedBox(height: 1.h),
-              SaveProductButton(
+               Obx(
+                () =>SaveProductButton(
+                isLoading: editController.isLoading.value,
                   isFormValid: editController.isFormValid,
                   onTap: () {
                     FocusScope.of(context).unfocus();
@@ -87,7 +89,7 @@ class _EditSupplierScreenState extends State<EditSupplierScreen> {
 
                     setState(() {});
                   },
-                  label: "Save Supplier".tr),
+                  label: "Save Supplier".tr),),
               CommonWidgets.buildRequiredWidget(context: context),
             ],
           ),

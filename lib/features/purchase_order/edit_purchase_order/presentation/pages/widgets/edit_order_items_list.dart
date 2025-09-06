@@ -362,7 +362,7 @@ class EditOrderItemsList extends StatelessWidget {
                       ),
                 ),
                 Text(
-                  '${currency == 'USD' ? '\$' : 'ل.س'}${item.total.toStringAsFixed(2)}',
+                  '${currency == 'USD' ? '\$' : 'ل.س'}${item.total.toString()}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                         color: Theme.of(context).colorScheme.primary,

@@ -23,6 +23,7 @@ class AddPurchaseInvoiceController extends GetxController {
   final RxBool _isSaving = false.obs;
   final RxString _searchQuery = ''.obs;
   final RxBool _hasUnsavedChanges = false.obs;
+  final RxString errorMessage = ''.obs;
 
   // Getters
   GlobalKey<FormState> get formKey => _formKey;
@@ -193,7 +194,7 @@ class AddPurchaseInvoiceController extends GetxController {
         final actualPrice = totalQty > 0
             ? (receivedQty * invoicePrice) / totalQty
             : invoicePrice;
-        total += totalQty * actualPrice;
+        total += receivedQty * actualPrice;
       }
     }
     return total;
@@ -298,11 +299,18 @@ class AddPurchaseInvoiceController extends GetxController {
           );
           _hasUnsavedChanges.value = false;
           resetForm();
-          return;
+          // Future.delayed(const Duration(milliseconds: 500), () {
+          //   Get.back();
+          // });
+   
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       _isSaving.value = false;
     }

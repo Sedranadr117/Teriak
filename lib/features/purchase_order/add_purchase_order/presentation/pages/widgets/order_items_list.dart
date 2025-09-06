@@ -254,7 +254,7 @@ class OrderItemsList extends StatelessWidget {
 
   Widget _buildPriceField(PurchaseOrderItem item, int index) {
     final priceController =
-        TextEditingController(text: item.price.toStringAsFixed(2));
+        TextEditingController(text: item.price.toString());
 
     final isMasterProduct = item.product.productType != null &&
         (item.product.productType == "Master" ||
@@ -323,7 +323,7 @@ class OrderItemsList extends StatelessWidget {
             ),
           ),
           Text(
-            '${item.total.toStringAsFixed(2)} $currency',
+            '${item.total.toString()} $currency',
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,

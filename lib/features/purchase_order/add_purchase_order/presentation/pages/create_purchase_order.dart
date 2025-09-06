@@ -91,6 +91,7 @@ class _CreatePurchaseOrderPageState extends State<CreatePurchaseOrderPage> {
 
           // Product Selection
           ProductSelectionCard(
+            currency: controller.selectedCurrency.value,
             products: productController.products.cast(),
             onProductSelected: controller.selectProduct,
             onBarcodeScanned: controller.selectProductByBarcode,

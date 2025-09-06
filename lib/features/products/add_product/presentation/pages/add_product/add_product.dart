@@ -190,19 +190,22 @@ class _AddProductPageState extends State<AddProductPage> {
                 ),
               ),
             ),
-            SaveProductButton(
-              isFormValid: c.isFormValid,
-              onTap: ()  {
-                FocusScope.of(context).unfocus();
-
-                 c.addProduct();
-
-                productController.refreshProducts();
-            
-
-                setState(() {});
-              },
-              label: "Save Product".tr,
+            Obx(()=>
+               SaveProductButton(
+                isFormValid: c.isFormValid,
+                isLoading: productController.isLoading.value,
+                onTap: ()  {
+                  FocusScope.of(context).unfocus();
+              
+                   c.addProduct();
+              
+                  productController.refreshProducts();
+              
+              
+                  setState(() {});
+                },
+                label: "Save Product".tr,
+              ),
             ),
           ],
         ),

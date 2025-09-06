@@ -9,6 +9,7 @@ import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/core/themes/app_assets.dart';
 import 'package:teriak/features/home/presentation/widgets/custom_bottom_nav.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/features/money_box/presentation/pages/money_box_page.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/pages/all_purchase_invoice_screen.dart';
 
@@ -39,9 +40,9 @@ class _HomePageState extends State<HomePage> {
 
   List<Widget> _buildScreens() {
     final screns = [
-      AllProductPage(),
       StockManagement(),
       MultiSalesScreen(),
+      MoneyBoxPage(),
     ];
     if (role != "PHARMACY_TRAINEE") {
       screns.add(PurchaseOrderList());
@@ -54,9 +55,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<String> appBarTitle = [
-    "Pharmacy Product".tr,
     "Stock Management".tr,
     "Point of Sale".tr,
+    "Money Box".tr,
     "Purchase Orders Management".tr,
     'Purchase Invoice Management'.tr,
   ];
@@ -69,14 +70,14 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: [
             DrawerHeader(
-                decoration: BoxDecoration(color: AppColors.primaryLight),
+                decoration:
+                    BoxDecoration(color: Theme.of(context).colorScheme.surface),
                 child: Stack(
                   children: [
                     Image.asset(
                       Assets.assetsImagesJustLogo,
-                      height: 10,
-                      width: 10,
-                      scale: 10,
+                      height: 15.h,
+                      width: double.infinity,
                     ),
                     Obx(() => IconButton(
                           onPressed: () => themeController.toggleTheme(),
@@ -102,6 +103,13 @@ class _HomePageState extends State<HomePage> {
                     },
                   )
                 : SizedBox(),
+            ListTile(
+              leading: const Icon(Icons.science),
+              title: Text("Pharmacy Product".tr),
+              onTap: () {
+                Get.toNamed(AppPages.allProductPage);
+              },
+            ),
             ListTile(
               leading: const Icon(Icons.receipt),
               title: Text("Sales Invoices".tr),
@@ -140,7 +148,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             SizedBox(
-              height: 25.h,
+              height: 20.h,
             ),
             ListTile(
               leading: const Icon(Icons.logout),

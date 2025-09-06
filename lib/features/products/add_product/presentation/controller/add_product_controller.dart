@@ -47,6 +47,7 @@ class AddProductController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final GetAddProduct addProductUseCase;
   var isLoading = false.obs;
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -227,7 +228,11 @@ class AddProductController extends GetxController {
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

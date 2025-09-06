@@ -63,29 +63,29 @@ class _ProductItemCardState extends State<ProductItemCard>
     final totalAmount = (widget.productData.actualPrice) *
         (widget.productData.receivedQty + widget.productData.bonusQty);
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: _toggleExpansion,
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            width: 1,
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          // Main Product Info
-          GestureDetector(
-            onTap: _toggleExpansion,
-            child: Container(
+          boxShadow: [
+            BoxShadow(
+              color: theme.colorScheme.shadow.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            // Main Product Info
+            Container(
               padding: EdgeInsets.all(4.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +98,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                     ),
                   ),
                   SizedBox(height: 2.h),
-
+            
                   // Quantity and Price Row
                   Row(
                     children: [
@@ -172,7 +172,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                     ],
                   ),
                   SizedBox(height: 2.h),
-
+            
                   // Total Amount and Expand Icon
                   Row(
                     children: [
@@ -214,56 +214,56 @@ class _ProductItemCardState extends State<ProductItemCard>
                 ],
               ),
             ),
-          ),
-
-          // Expanded Details
-          SizeTransition(
-            sizeFactor: _expandAnimation,
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest
-                    .withValues(alpha: 0.3),
-                borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(12)),
-              ),
-              padding: EdgeInsets.all(4.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Divider(
-                    color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                    height: 1,
-                  ),
-                  SizedBox(height: 2.h),
-
-                  // Additional Details Grid
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDetailItem(
-                          context,
-                          'Expiry Date'.tr,
-                          widget.productData.formattedExpiryDate,
-                          'calendar_today',
+      
+            // Expanded Details
+            SizeTransition(
+              sizeFactor: _expandAnimation,
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.3),
+                  borderRadius:
+                      const BorderRadius.vertical(bottom: Radius.circular(12)),
+                ),
+                padding: EdgeInsets.all(4.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                      height: 1,
+                    ),
+                    SizedBox(height: 2.h),
+      
+                    // Additional Details Grid
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildDetailItem(
+                            context,
+                            'Expiry Date'.tr,
+                            widget.productData.formattedExpiryDate,
+                            'calendar_today',
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: _buildDetailItem(
-                          context,
-                          'Batch Number'.tr,
-                          widget.productData.batchNo,
-                          'numbers',
+                        Expanded(
+                          child: _buildDetailItem(
+                            context,
+                            'Batch Number'.tr,
+                            widget.productData.batchNo,
+                            'numbers',
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 1.h),
-                ],
+                      ],
+                    ),
+                    SizedBox(height: 1.h),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -608,6 +608,7 @@ final Map<String, String> enUS = {
   "Supplier updated successfully": "Supplier updated successfully",
   "Error Suppliers Loading": "Error Suppliers Loading",
   "Error Searching Suppliers": "Error Searching Suppliers",
+  'Product deleted successfully':'Product deleted successfully',
   "No suppliers found": "No suppliers found",
   "Search suppliers...": "Search suppliers...",
   'All Purchase Orders': 'All Purchase Orders',
@@ -651,13 +652,18 @@ final Map<String, String> enUS = {
   "Invoice n": "Invoice number",
   "Status": "Status",
   "Purchase Invoices": "Purchase Invoices",
+  "current USD To SYP Rate": "Current USD To SYP Rate",
+  "Purchase Invoice": "Purchase Invoice",
   "item": "item",
+  "Purchase order updated successfully": "Purchase order updated successfully",
+  "Withdraw": "Withdraw",
+  "deposit": "Deposit",
   "items": "items",
   "Loading purchase orders": "Loading purchase orders",
   "Failed to load purchase orders": "Failed to load purchase orders",
   "Failed to load invoices": "Failed to load invoices",
   "Refresh": "Refresh",
-  "Create Invoice": "Create Invoice",
+  "Create Invoice": "Receiving a purchase order",
   "No data available": "No data available",
   "View Details": "View Details",
   "No pending purchase orders available":
@@ -691,7 +697,9 @@ final Map<String, String> enUS = {
   "Received Items": "Received Items",
   "Bonus Items": "Bonus Items",
   "Total Items": "Total Items",
-  "Continue to Payment": "Continue to Payment",
+  "Continue to Payment": "Create Purchase Invoice",
+  "Invoice Number2":"Invoice Number ",
+  "Please select a valid order":"Please select a valid order",
 
   // Products Table
   "No Products": "No Products",
@@ -1022,5 +1030,6 @@ final Map<String, String> enUS = {
   "Please enter actual amount": "Please enter actual amount",
   "⚠️ Cannot add product": "⚠️ Cannot add product",
   'Available quantity:': 'Available quantity:',
-  ', Requested:': ', Requested:'
+  ', Requested:': ', Requested:',
+  'Supplier deleted successfully':'Supplier deleted successfully',
 };

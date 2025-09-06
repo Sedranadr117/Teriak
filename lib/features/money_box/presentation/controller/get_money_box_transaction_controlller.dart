@@ -17,6 +17,13 @@ class GetMoneyBoxTransactionController extends GetxController {
       Rx<MoneyBoxTransactionPaginatedEntity?>(null);
   final RxInt currentPage = 0.obs;
   final RxInt pageSize = 10.obs;
+  final Rx<DateTime?> startDateFilter = Rx<DateTime?>(null);
+  final Rx<DateTime?> endDateFilter = Rx<DateTime?>(null);
+  RxString transactionTypeFilter = ''.obs;
+
+  void setTransactionType(String type) {
+    transactionTypeFilter.value = type;
+  }
 
   late final NetworkInfoImpl networkInfo;
   late final GetMoneyBoxTransactions getMoneyBoxTransactionsUseCase;
@@ -43,6 +50,12 @@ class GetMoneyBoxTransactionController extends GetxController {
         GetMoneyBoxTransactions(repository: repository);
   }
 
+  void resetFilters() {
+    startDateFilter.value = null;
+    endDateFilter.value = null;
+    transactionTypeFilter.value = '';
+  }
+
   Future<void> getTransactionsData({int? page}) async {
     if (page != null) {
       currentPage.value = page;
@@ -54,7 +67,13 @@ class GetMoneyBoxTransactionController extends GetxController {
     final params = GetMoneyBoxTransactionParams(
       page: currentPage.value,
       size: pageSize.value,
+      startDate: startDateFilter.value,
+      endDate: endDateFilter.value,
     );
+
+    print(params.startDate);
+    print(params.endDate);
+    print(params.toMap().toString());
 
     final result = await getMoneyBoxTransactionsUseCase(params: params);
 
@@ -62,10 +81,12 @@ class GetMoneyBoxTransactionController extends GetxController {
       (failure) {
         errorMessage.value = failure.errMessage;
         isLoading.value = false;
+        resetFilters();
       },
       (transactionsData) {
         transactions.value = transactionsData;
         isLoading.value = false;
+        resetFilters();
       },
     );
   }
@@ -88,7 +109,7 @@ class GetMoneyBoxTransactionController extends GetxController {
     }
   }
 
-  void refreshData() {
-    getTransactionsData(page: 0);
+  Future<void> refreshData() async {
+    getTransactionsData();
   }
 }

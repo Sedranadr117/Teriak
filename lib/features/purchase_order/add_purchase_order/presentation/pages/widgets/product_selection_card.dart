@@ -28,9 +28,11 @@ class ProductSelectionCard extends StatelessWidget {
   final String? productError;
   final String? quantityError;
   final String? priceError;
+  final String currency;
 
   const ProductSelectionCard({
     super.key,
+    required this.currency,
     required this.products,
     required this.onProductSelected,
     required this.onBarcodeScanned,
@@ -113,7 +115,7 @@ class ProductSelectionCard extends StatelessWidget {
               SizedBox(width: context.w * 0.02),
               Container(
                 decoration: BoxDecoration(
-                  color:  Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: IconButton(
@@ -321,6 +323,11 @@ class ProductSelectionCard extends StatelessWidget {
                           horizontal: 3.w,
                           vertical: 1.h,
                         ),
+                        suffixText: currency, 
+                        suffixStyle: TextStyle(
+                          fontSize: 10.sp,
+                          color: AppColors.textSecondaryLight,
+                        ),
                         suffixIcon: !isPriceEditable
                             ? Icon(
                                 Icons.lock,
@@ -395,7 +402,7 @@ class ProductSelectionCard extends StatelessWidget {
                         ),
                   ),
                   Text(
-                    '${(currentQuantity * currentPrice).toStringAsFixed(2)}',
+                    '${(currentQuantity * currentPrice).toString()}',
                     style: TextStyle(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w700,

@@ -77,7 +77,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                           ...supplierController.suppliers.map(
                             (supplier) => SupplierCardWidget(
                               supplier: supplier,
-                              onTap: () => SupplierDetailBottomSheet.show(
+                              onTap: () => SupplierDetailBottomSheet().show(
                                 context: context,
                                 supplier: supplier,
                               ),
@@ -127,7 +127,7 @@ class _SupplierListScreenState extends State<SupplierListScreen> {
                         ...searchController.results.map(
                           (supplier) => SupplierCardWidget(
                             supplier: supplier,
-                            onTap: () => SupplierDetailBottomSheet.show(
+                            onTap: () =>  SupplierDetailBottomSheet(). show(
                               context: context,
                               supplier: supplier,
                             ),

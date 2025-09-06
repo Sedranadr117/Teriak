@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/features/money_box/presentation/controller/add_money_box_transaction_controlller.dart';
+import 'package:teriak/features/money_box/presentation/controller/get_money_box_controlller.dart';
 import 'package:teriak/features/money_box/presentation/controller/get_money_box_transaction_controlller.dart';
 
 class AddTransactionDialog extends StatelessWidget {
@@ -42,6 +43,31 @@ class AddTransactionDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Type Selector (Deposit / Withdraw)
+            Obx(() {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ChoiceChip(
+                    label: Text('+ Deposit'.tr),
+                    selected: controller.transactionType.value == 'deposit',
+                    selectedColor: AppColors.secondaryVariantLight,
+                    onSelected: (_) =>
+                        controller.transactionType.value = 'deposit',
+                  ),
+                  SizedBox(width: 3.w),
+                  ChoiceChip(
+                    label: Text('- Withdraw'.tr),
+                    selected: controller.transactionType.value == 'withdraw',
+                    selectedColor: Colors.red.withOpacity(0.2),
+                    onSelected: (_) =>
+                        controller.transactionType.value = 'withdraw',
+                  ),
+                ],
+              );
+            }),
+            SizedBox(height: 2.h),
+
             // Amount Field
             TextFormField(
               controller: controller.amountController,
@@ -130,11 +156,12 @@ class AddTransactionDialog extends StatelessWidget {
                 : () async {
                     await controller.addTransaction();
                     if (controller.errorMessage.value.isEmpty) {
-                      Get.back();
-                      // Refresh the transactions list
-                      final transactionsController =
+                      final moneyBoxController =
+                          Get.find<GetMoneyBoxController>();
+                      final moneyBoxTransactionController =
                           Get.find<GetMoneyBoxTransactionController>();
-                      transactionsController.refreshData();
+                      moneyBoxController.refreshData();
+                      moneyBoxTransactionController.refreshData();
                     }
                   },
             style: ElevatedButton.styleFrom(

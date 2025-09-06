@@ -73,7 +73,6 @@ class GetAllProductController extends GetxController {
       result.fold(
         (failure) => errorMessage.value = failure.errMessage,
         (paginatedData) {
-          // ندمج المنتجات مع الموجودة مع التحقق من uniqueness
           final newProducts = <ProductEntity>[];
           for (var product in paginatedData.content) {
             bool exists = products.any((p) =>
@@ -96,8 +95,12 @@ class GetAllProductController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = e.toString();
-      print(errorMessage.value);
+      print(e.toString());
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -137,8 +140,12 @@ class GetAllProductController extends GetxController {
           },
         );
       } catch (e) {
-        errorMessage.value = e.toString();
-        print(errorMessage.value);
+        errorMessage.value =
+            'An unexpected error occurred. Please try again.'.tr;
+        Get.snackbar(
+          'Error'.tr,
+          errorMessage.value,
+        );
       } finally {
         isLoadingMore.value = false;
       }

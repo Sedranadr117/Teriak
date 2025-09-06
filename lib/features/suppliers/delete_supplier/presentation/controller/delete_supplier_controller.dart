@@ -13,6 +13,7 @@ class DeleteSupplierController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final DeleteSupplier deleteSupplierUseCase;
   var isLoading = false.obs;
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -61,11 +62,16 @@ class DeleteSupplierController extends GetxController {
           }
         },
         (x) {
-          Get.snackbar('Success', 'Supplier deleted successfully');
+          Get.snackbar('Success', 'Supplier deleted successfully'.tr);
         },
       );
     } catch (e) {
-      Get.snackbar('Error', e.toString());
+        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }

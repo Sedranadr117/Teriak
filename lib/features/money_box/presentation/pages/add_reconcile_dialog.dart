@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/features/money_box/presentation/controller/add_money_box_reconcile_controlller.dart';
 import 'package:teriak/features/money_box/presentation/controller/get_money_box_controlller.dart';
+import 'package:teriak/features/money_box/presentation/controller/get_money_box_transaction_controlller.dart';
 
 class AddReconcileDialog extends StatelessWidget {
   const AddReconcileDialog({super.key});
@@ -130,11 +131,13 @@ class AddReconcileDialog extends StatelessWidget {
                 : () async {
                     await controller.addReconcile();
                     if (controller.errorMessage.value.isEmpty) {
-                      Get.back();
                       // Refresh the money box data
                       final moneyBoxController =
                           Get.find<GetMoneyBoxController>();
+                      final moneyBoxTransactionController =
+                          Get.find<GetMoneyBoxTransactionController>();
                       moneyBoxController.refreshData();
+                      moneyBoxTransactionController.refreshData();
                     }
                   },
             style: ElevatedButton.styleFrom(

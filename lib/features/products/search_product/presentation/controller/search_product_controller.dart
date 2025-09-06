@@ -98,7 +98,6 @@ class SearchProductController extends GetxController {
           searchStatus.value = RxStatus.error(failure.errMessage);
         },
         (paginatedData) {
-          // دمج البيانات الجديدة مع الموجودة مع uniqueness حسب id + productType
           final newResults = <ProductEntity>[];
           for (var product in paginatedData.content) {
             bool exists = results.any((p) =>
@@ -121,8 +120,12 @@ class SearchProductController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = e.toString();
-      searchStatus.value = RxStatus.error(e.toString());
+        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
+      searchStatus.value = RxStatus.error('An unexpected error occurred. Please try again.'.tr);
     } finally {
       isSearching.value = false;
     }
@@ -138,7 +141,17 @@ class SearchProductController extends GetxController {
 
       final query = searchController.text.trim();
       await search(query);
-    } finally {
+    }
+     catch (e) {
+       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
+      currentPage.value--;
+      isSearching.value = false;
+    }
+     finally {
       isLoadingMore.value = false;
     }
   }

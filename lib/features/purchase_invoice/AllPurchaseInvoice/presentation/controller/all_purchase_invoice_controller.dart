@@ -97,8 +97,11 @@ class AllPurchaseInvoiceController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessageInvoices.value = e.toString();
-      print(errorMessageInvoices.value.toString());
+          errorMessageInvoices.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessageInvoices.value,
+      );
     } finally {
       isLoadingInvoices.value = false;
     }
@@ -129,8 +132,11 @@ class AllPurchaseInvoiceController extends GetxController {
           },
         );
       } catch (e) {
-        errorMessageInvoices.value = e.toString();
-        print(errorMessageInvoices.value);
+          errorMessageInvoices.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessageInvoices.value,
+      );
       } finally {
         isLoadingMore.value = false;
       }

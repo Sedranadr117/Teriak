@@ -183,7 +183,8 @@ class InvoiceProductsTableWidget extends StatelessWidget {
                                             color: theme.colorScheme.onSurface
                                                 .withValues(alpha: 0.7))),
                                 Text(
-                                    '${currency}${NumberFormat('#,##0.00').format(product['actualPrice'])}',
+                                    '${currency}${product['actualPrice']}'
+,
                                     style: theme.textTheme.titleMedium
                                         ?.copyWith(
                                             fontWeight: FontWeight.w600,
@@ -289,7 +290,8 @@ class InvoiceProductsTableWidget extends StatelessWidget {
       SizedBox(height: 0.5.h),
       if (isMasterProduct)
         Text(
-          '${currency}${NumberFormat('#,##0.00').format(product['invoicePrice'])}',
+          '${currency}${product['invoicePrice']}'
+,
           style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w600, color: theme.colorScheme.primary),
         )

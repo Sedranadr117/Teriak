@@ -48,6 +48,10 @@ class _AllProductPageState extends State<AllProductPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        title: Text("Pharmacy Product".tr,
+            style: Theme.of(context).textTheme.titleLarge),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -160,47 +164,64 @@ class ProductList extends StatelessWidget {
           );
         }
         if (allController.products.isEmpty) {
-          return Center(child: Text("empty list".tr));
+          return Center(
+              child: Column(
+            children: [
+              Text("empty list".tr),
+              SizedBox(height: 2.h),
+              ElevatedButton(
+                onPressed: () => allController.refreshProducts(),
+                child: Text('Retry'.tr),
+              ),
+            ],
+          ));
         }
 
-        return ListView.builder(
-          controller: scrollController,
-          padding: EdgeInsets.symmetric(
-            horizontal: context.w * 0.04,
-            vertical: context.h * 0.02,
-          ),
-          itemCount:
-              allController.products.length + (allController.hasNext.value ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index == allController.products.length) {
-              return Obx(() {
-                if (allController.isLoadingMore.value) {
-                  return Container(
-                    padding: EdgeInsets.all(4.w),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              });
-            }
+        return RefreshIndicator(
+          onRefresh: () => allController.refreshProducts(),
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: scrollController,
+            padding: EdgeInsets.symmetric(
+              horizontal: context.w * 0.04,
+              vertical: context.h * 0.02,
+            ),
+            itemCount: allController.products.length +
+                (allController.hasNext.value ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == allController.products.length) {
+                return Obx(() {
+                  if (allController.isLoadingMore.value) {
+                    return Container(
+                      padding: EdgeInsets.all(4.w),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                });
+              }
 
-            final product = allController.products[index];
-            return Padding(
-              padding: EdgeInsets.only(bottom: context.h * 0.02),
-              child: ProductWidget(
-                drug: product,
-                onTap: () {
-                  searchController.searchFocus.unfocus();
-                  Get.toNamed(
-                    AppPages.productDetailPage,
-                    arguments: {'id': product.id, 'type': product.productType},
-                  );
-                },
-              ),
-            );
-          },
+              final product = allController.products[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: context.h * 0.02),
+                child: ProductWidget(
+                  drug: product,
+                  onTap: () {
+                    searchController.searchFocus.unfocus();
+                    Get.toNamed(
+                      AppPages.productDetailPage,
+                      arguments: {
+                        'id': product.id,
+                        'type': product.productType
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+          ),
         );
       }
 
@@ -212,11 +233,16 @@ class ProductList extends StatelessWidget {
         return Center(child: Text(searchController.errorMessage.value));
       }
       if (status.isEmpty && searchController.results.isEmpty) {
-        return Center(child: Text('no search'.tr));
+        return Column(
+          children: [
+            Center(child: Text('no search'.tr)),
+          ],
+        );
       }
 
       if (status.isSuccess) {
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           controller: scrollController,
           padding: EdgeInsets.symmetric(
             horizontal: context.w * 0.04,
