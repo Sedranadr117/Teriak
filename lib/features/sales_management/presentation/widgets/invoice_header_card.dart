@@ -60,7 +60,11 @@ class InvoiceHeaderCard extends StatelessWidget {
                     runSpacing: 1.h,
                     children: [
                       _buildPaymentStatusBadge(context),
-                      _buildRefundStatusBadge(context),
+                      if (((invoiceData["refundStatus"] as String?) ?? '')
+                          .trim()
+                          .isNotEmpty) ...[
+                        _buildRefundStatusBadge(context),
+                      ]
                     ],
                   ),
                 ),
@@ -103,6 +107,17 @@ class InvoiceHeaderCard extends StatelessWidget {
                     'Payment Method'.tr,
                     invoiceData["paymentMethod"] ?? "N/A",
                   ),
+                  if (((invoiceData["refundReason"] as String?) ?? '')
+                      .trim()
+                      .isNotEmpty) ...[
+                    SizedBox(height: 0.5.h),
+                    _buildCustomerInfoRow(
+                      context,
+                      'Refund reason'.tr,
+                      invoiceData["refundReason"],
+                      isHighlight: false,
+                    ),
+                  ],
                 ],
               ),
             ),

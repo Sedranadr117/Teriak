@@ -211,11 +211,30 @@ class CustomerController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     try {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
+        return;
+      }
       final result = await _deleteCustomer(id);
       result.fold(
         (failure) {
-          errorMessage.value = failure.errMessage;
-          Get.snackbar('Error'.tr, failure.errMessage);
+          if (failure.statusCode == 409) {
+            errorMessage.value =
+                "Cannot delete customer with active debts. Please settle all debts first."
+                    .tr;
+            Get.snackbar('Error'.tr, errorMessage.value);
+            print(failure.errMessage);
+          } else if (failure.statusCode == 500) {
+            errorMessage.value =
+                'An unexpected error occurred. Please try again.'.tr;
+            Get.snackbar('Error'.tr, errorMessage.value);
+          } else {
+            errorMessage.value = failure.errMessage;
+            Get.snackbar('Errors'.tr, errorMessage.value);
+          }
         },
         (_) {
           Get.snackbar('Success'.tr, 'Customer deleted successfully!'.tr);

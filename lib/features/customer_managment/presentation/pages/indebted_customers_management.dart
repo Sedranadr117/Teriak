@@ -160,7 +160,7 @@ class _IndebtedCustomersManagementState
                   ? _buildLoadingView(theme, colorScheme)
                   : RefreshIndicator(
                       onRefresh: () async {
-                        customerController.refreshData;
+                        customerController.refreshData();
                       },
                       child: customerController.customers.isEmpty
                           ? _buildEmptyView(theme, colorScheme)

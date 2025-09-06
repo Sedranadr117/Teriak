@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
 class IndebtedCustomerCard extends StatelessWidget {
@@ -22,7 +23,10 @@ class IndebtedCustomerCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final double totalDebt = (customer['totalDebt'] as num?)?.toDouble() ?? 0.0;
+    final double totalDebt =
+        (customer['remainingDebt'] as num?)?.toDouble() ?? 0.0;
+    final int activeDebtsCount =
+        (customer['activeDebtsCount'] as num?)?.toInt() ?? 0;
     return Dismissible(
       key: Key(customer['id'].toString()),
       background: _buildSwipeBackground(context, isLeft: true),
@@ -80,6 +84,31 @@ class IndebtedCustomerCard extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
+                              if (activeDebtsCount > 0) ...[
+                                SizedBox(width: 2.w),
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.successLight
+                                        .withValues(alpha: 0.6),
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: colorScheme.outline
+                                          .withValues(alpha: 0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    activeDebtsCount.toString(),
+                                    style: theme.textTheme.labelSmall?.copyWith(
+                                      color: colorScheme.onSecondaryContainer,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                           SizedBox(height: 0.5.h),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
@@ -242,7 +243,6 @@ class StockController extends GetxController {
               'barcodes': product.barcodes,
               'totalQuantity': product.totalQuantity,
               'totalBonusQuantity': product.totalBonusQuantity,
-              'averagePurchasePrice': product.averagePurchasePrice,
               'totalValue': product.totalValue,
               'categories': product.categories,
               'sellingPrice': product.sellingPrice,
@@ -262,8 +262,11 @@ class StockController extends GetxController {
       isLoading.value = true;
       print('Search Status: Loading');
       errorMessage.value = '';
+      final languageCode = LocaleController.to.locale.languageCode;
+
       final q = SearchStockParams(
         keyword: query.trim(),
+        lang: languageCode,
       );
       print('Searching for: $query');
 

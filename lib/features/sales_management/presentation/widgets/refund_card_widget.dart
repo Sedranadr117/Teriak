@@ -25,6 +25,7 @@ class RefundCardWidget extends StatelessWidget {
     final String paymentStatus =
         (invoice['paymentStatus'] as String?) ?? 'unknown';
     final String paymentMethod = (invoice['paymentMethod'] as String?) ?? '';
+    final String? refundReason = invoice['refundReason'] as String?;
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
@@ -123,6 +124,56 @@ class RefundCardWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+
+                if ((refundReason ?? '').trim().isNotEmpty) ...[
+                  SizedBox(height: 1.2.h),
+                  Container(
+                    width: double.infinity,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.2.h),
+                    decoration: BoxDecoration(
+                      color: colorScheme.surface.withValues(alpha: 0.5),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: colorScheme.outline.withValues(alpha: 0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CustomIconWidget(
+                          iconName: 'forum',
+                          size: 16,
+                          color: colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
+                        SizedBox(width: 2.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Refund reason'.tr,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 0.4.h),
+                              Text(
+                                refundReason!,
+                                style: theme.textTheme.bodyMedium,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

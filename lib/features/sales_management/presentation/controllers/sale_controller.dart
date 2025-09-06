@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
@@ -25,7 +26,10 @@ import '../../../stock_management/data/repositories/stock_repository_impl.dart';
 
 class SaleController extends GetxController {
   final String customerTag;
-  SaleController({required this.customerTag});
+  SaleController({required this.customerTag}) {
+    print(
+        '🏗️ SaleController initialized with currency: ${selectedCurrency.value}');
+  }
   final TextEditingController discountController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final TextEditingController dateOfHireController = TextEditingController();
@@ -45,6 +49,7 @@ class SaleController extends GetxController {
   final RxBool isLoading = false.obs;
   final RxString errorMessage = ''.obs;
   RxList<InvoiceItem> invoiceItems = <InvoiceItem>[].obs;
+  RxList<StockModel> cachedStockItems = <StockModel>[].obs;
   final FocusNode searchFocusNode = FocusNode();
   RxList<String> searchHistory = <String>[].obs;
 
@@ -77,7 +82,6 @@ class SaleController extends GetxController {
     selectedPaymentType = 'CASH'.obs;
     selectedPaymentMethod = 'CASH'.obs;
     discountController.text = '0';
-    deferredAmountController.text = "0";
     dueDateController.text = DateTime.now().toString();
     deferredAmountController.addListener(() {
       final value = double.tryParse(deferredAmountController.text) ?? 0.0;
@@ -166,6 +170,10 @@ class SaleController extends GetxController {
     await fetchAllInvoices();
   }
 
+  Future<void> refreshRefund() async {
+    await fetchRefunds();
+  }
+
   Future<void> searchByDateRange() async {
     if (startDate.value == null || endDate.value == null) {
       errorMessage.value = 'Please select both start and end dates'.tr;
@@ -187,6 +195,13 @@ class SaleController extends GetxController {
     errorMessage.value = '';
 
     try {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
+        return;
+      }
       final params = SearchInvoiceByDateRangeParams(
         startDate: startDate.value!,
         endDate: endDate.value!,
@@ -227,11 +242,27 @@ class SaleController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     try {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
+        return;
+      }
       final result = await _getInvoices();
       result.fold((failure) {
         print('❌ Error fetching Invoices: ${failure.errMessage}');
-        errorMessage.value = failure.errMessage;
-        Get.snackbar('Error'.tr, errorMessage.value);
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar(
+            'Error'.tr,
+            errorMessage.value,
+          );
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (invoicesList) {
         print('✅ Invoices fetched: ${invoicesList.length}');
 
@@ -250,10 +281,27 @@ class SaleController extends GetxController {
     isLoading.value = true;
     errorMessage.value = '';
     try {
+      final isConnected = await networkInfo.isConnected;
+      if (!isConnected) {
+        errorMessage.value =
+            'No internet connection. Please check your network.'.tr;
+        Get.snackbar('Error'.tr, errorMessage.value);
+        return;
+      }
       final result = await _getRefunds();
       result.fold((failure) {
-        errorMessage.value = failure.errMessage;
-        Get.snackbar('Error'.tr, errorMessage.value);
+        print('❌ Error fetching refund: ${failure.errMessage}');
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar(
+            'Error'.tr,
+            errorMessage.value,
+          );
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (data) {
         refunds.assignAll(data);
       });
@@ -269,10 +317,13 @@ class SaleController extends GetxController {
     try {
       isLoading.value = true;
       isSearching.value = true;
+      final languageCode = LocaleController.to.locale.languageCode;
+
       print('Search Status: Loading');
       errorMessage.value = '';
       final q = SearchStockParams(
         keyword: query.trim(),
+        lang: languageCode,
       );
       print('Searching for: $query');
 
@@ -337,11 +388,31 @@ class SaleController extends GetxController {
   }
 
   void onPaymentTypeChanged(String type) {
-    selectedCurrency.value = type;
+    selectedPaymentType.value = type;
   }
 
   void onCurrencyChanged(String currency) {
     selectedCurrency.value = currency;
+    updateItemPricesForCurrency();
+  }
+
+  void updateItemPricesForCurrency() {
+    for (int i = 0; i < invoiceItems.length; i++) {
+      final item = invoiceItems[i];
+      final stockItem =
+          cachedStockItems.firstWhereOrNull((stock) => stock.id == item.id);
+      if (stockItem != null) {
+        final newPrice = selectedCurrency.value == 'USD'
+            ? stockItem.sellingPriceUSD
+            : stockItem.sellingPrice;
+        invoiceItems[i] = item.copyWith(unitPrice: newPrice);
+      } else {
+        print(
+            '❌ Could not find cached stock item for ${item.name} (ID: ${item.id})');
+      }
+    }
+    invoiceItems.refresh();
+    calculateTotals();
   }
 
   void applyDiscount() {
@@ -351,11 +422,11 @@ class SaleController extends GetxController {
   String getCurrencySymbol(String currencyCode) {
     switch (currencyCode) {
       case 'USD':
-        return 'USD';
+        return '\$';
       case 'SYP':
-        return 'SYP';
+        return 'Sp';
       default:
-        return 'SYP';
+        return 'Sp';
     }
   }
 
@@ -373,11 +444,16 @@ class SaleController extends GetxController {
 
         return;
       }
-
+      String? dueDate;
+      if (selectedPaymentType.value == "CREDIT" &&
+          dueDateController.text.isNotEmpty) {
+        final date = DateTime.tryParse(dueDateController.text);
+        if (date != null) {
+          dueDate = date.toIso8601String().split('T').first;
+        }
+      }
       final sale = SaleProcessParams(
-          debtDueDate: selectedPaymentType.value == "CREDIT"
-              ? dueDateController.text
-              : '',
+          debtDueDate: dueDate!,
           customerId: customerId,
           paymentType: selectedPaymentType.value,
           paymentMethod: selectedPaymentMethod.value,
@@ -414,6 +490,7 @@ class SaleController extends GetxController {
                 '⚠️ There is an error in adding the products. Please check the quantity.'
                     .tr;
           }
+
           Get.snackbar(
             'Error'.tr,
             errorMessage.value,
@@ -451,22 +528,36 @@ class SaleController extends GetxController {
   }
 
   void addItemFromProduct(InvoiceItemModel product) {
-    final existingItem =
-        invoiceItems.firstWhereOrNull((item) => item.id == product.id);
-    if (existingItem != null) {
-      final index = invoiceItems.indexOf(existingItem);
-      invoiceItems[index] =
-          existingItem.copyWith(quantity: existingItem.quantity + 1);
-    } else {
-      invoiceItems.add(InvoiceItem(
-        id: product.id,
-        name: product.productName,
-        quantity: 1,
-        unitPrice: product.unitPrice,
-      ));
+    print(
+        '💰 Controller Debug: Adding ${product.productName}, Price=${product.unitPrice}, Currency=${selectedCurrency.value}');
+    final stockItem =
+        results.firstWhereOrNull((stock) => stock.id == product.id);
+    if (stockItem != null &&
+        !cachedStockItems.any((item) => item.id == stockItem.id)) {
+      cachedStockItems.add(stockItem);
+      print('💾 Cached stock item: ${stockItem.productName}');
     }
+
+    invoiceItems.add(InvoiceItem(
+      id: product.id,
+      name: product.productName,
+      quantity: 1,
+      unitPrice: product.unitPrice,
+    ));
+
     invoiceItems.refresh();
     calculateTotals();
+  }
+
+  double getSellingPriceForCurrency(InvoiceItemModel product) {
+    final stockItem =
+        results.firstWhereOrNull((stock) => stock.id == product.id);
+    if (stockItem != null) {
+      return selectedCurrency.value == 'USD'
+          ? stockItem.sellingPriceUSD
+          : stockItem.sellingPrice;
+    }
+    return product.unitPrice;
   }
 
   void onPaymentMethodSelected(String method) {

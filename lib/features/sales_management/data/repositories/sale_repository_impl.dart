@@ -68,8 +68,9 @@ class SaleRepositoryImpl extends SaleRepository {
       return Right(remoteRefund);
     } on ServerException catch (e) {
       return Left(Failure(
-          errMessage: e.errorModel.errorMessage,
-          statusCode: e.errorModel.status));
+        errMessage: e.toString(),
+        statusCode: e.errorModel.status,
+      ));
     }
   }
 
@@ -80,8 +81,9 @@ class SaleRepositoryImpl extends SaleRepository {
       return Right(remote);
     } on ServerException catch (e) {
       return Left(Failure(
-          errMessage: e.errorModel.errorMessage,
-          statusCode: e.errorModel.status));
+        errMessage: e.toString(),
+        statusCode: e.errorModel.status,
+      ));
     }
   }
 }

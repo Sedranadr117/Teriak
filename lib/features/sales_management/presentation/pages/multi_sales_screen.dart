@@ -123,39 +123,41 @@ class _MultiSalesScreenState extends State<MultiSalesScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.primary,
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(3.h),
-          child: SizedBox(
-            height: 50,
-            child: TabBar(
-              indicator: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
+          child: Padding(
+            padding: EdgeInsets.only(left: 1.w, right: 1.w),
+            child: SizedBox(
+              height: 50,
+              child: TabBar(
+                indicator: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
                 ),
-              ),
-              indicatorSize: TabBarIndicatorSize.tab,
-              controller: _tabController,
-              isScrollable: true,
-              labelColor: Colors.white,
-              unselectedLabelColor: Colors.white.withOpacity(0.7),
-              labelStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-              unselectedLabelStyle: TextStyle(
-                fontWeight: FontWeight.normal,
-                fontSize: 14,
-              ),
-              tabs: List.generate(_salesTabs.length, (index) {
-                final tab = _salesTabs[index];
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4),
-                  child: Tab(
+                indicatorSize: TabBarIndicatorSize.tab,
+                controller: _tabController,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                padding: EdgeInsets.zero,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white.withOpacity(0.7),
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+                unselectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                ),
+                tabs: List.generate(_salesTabs.length, (index) {
+                  final tab = _salesTabs[index];
+                  return Tab(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -196,9 +198,9 @@ class _MultiSalesScreenState extends State<MultiSalesScreen>
                           ),
                       ],
                     ),
-                  ),
-                );
-              }),
+                  );
+                }),
+              ),
             ),
           ),
         ),

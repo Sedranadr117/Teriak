@@ -308,63 +308,61 @@ class _StockManagementState extends State<StockManagement>
             },
             searchController: controller.searchController,
           ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.w),
-            child: TabBar(
-              isScrollable: true,
-              controller: controller.tabController,
-              onTap: (index) {},
-              tabs: [
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomIconWidget(
-                        iconName: 'inventory_2_outlined',
-                        color: controller.tabController.index == 0
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        size: 18,
-                      ),
-                      SizedBox(width: 2.w),
-                      Text('All Stock'.tr),
-                    ],
-                  ),
+          TabBar(
+            isScrollable: true,
+            controller: controller.tabController,
+            tabAlignment: TabAlignment.start,
+            padding: EdgeInsets.zero,
+            tabs: [
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'inventory_2_outlined',
+                      color: controller.tabController.index == 0
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: 18,
+                    ),
+                    SizedBox(width: 2.w),
+                    Text('All Stock'.tr),
+                  ],
                 ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomIconWidget(
-                        iconName: 'warning_amber_outlined',
-                        color: controller.tabController.index == 1
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        size: 18,
-                      ),
-                      SizedBox(width: 2.w),
-                      Text('Low Stock'.tr),
-                    ],
-                  ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'warning_amber_outlined',
+                      color: controller.tabController.index == 1
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: 18,
+                    ),
+                    SizedBox(width: 2.w),
+                    Text('Low Stock'.tr),
+                  ],
                 ),
-                Tab(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomIconWidget(
-                        iconName: 'schedule_outlined',
-                        color: controller.tabController.index == 2
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurfaceVariant,
-                        size: 18,
-                      ),
-                      SizedBox(width: 2.w),
-                      Text('Near Expiry'.tr),
-                    ],
-                  ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomIconWidget(
+                      iconName: 'schedule_outlined',
+                      color: controller.tabController.index == 2
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                      size: 18,
+                    ),
+                    SizedBox(width: 2.w),
+                    Text('Near Expiry'.tr),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           Expanded(
             child: TabBarView(controller: controller.tabController, children: [
@@ -394,7 +392,6 @@ class _StockManagementState extends State<StockManagement>
                       'barcodes': product.barcodes,
                       'totalQuantity': product.totalQuantity,
                       'totalBonusQuantity': product.totalBonusQuantity,
-                      'averagePurchasePrice': product.averagePurchasePrice,
                       'totalValue': product.totalValue,
                       'categories': product.categories,
                       'sellingPrice': product.sellingPrice,

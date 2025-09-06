@@ -469,7 +469,6 @@ class CustomerParams {
 
 class SearchParams {
   final String name;
-
   const SearchParams({required this.name});
 
   Map<String, dynamic> toMap() {
@@ -481,13 +480,12 @@ class SearchParams {
 
 class SearchStockParams {
   final String keyword;
+  final String lang;
 
-  const SearchStockParams({required this.keyword});
+  const SearchStockParams({required this.lang, required this.keyword});
 
   Map<String, dynamic> toMap() {
-    return {
-      'keyword': keyword,
-    };
+    return {'keyword': keyword, 'lang': lang};
   }
 }
 
@@ -525,8 +523,7 @@ class GetMoneyBoxTransactionParams {
   final int page;
   final int size;
 
-  const GetMoneyBoxTransactionParams(
-      {required this.page, required this.size});
+  const GetMoneyBoxTransactionParams({required this.page, required this.size});
 
   Map<String, dynamic> toMap() {
     return {

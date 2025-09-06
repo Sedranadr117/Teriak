@@ -566,7 +566,7 @@ final Map<String, String> arSY = {
   "Are you sure you want to remove": "هل أنت متأكد من رغبتك في إزالة",
   "from indebted customers?": "من قائمة العملاء المدينين؟",
   "Delete Customer": "حذف العميل",
-  "Contact Information": "معلومات التواصل",
+  // Duplicate removed: "Contact Information"
   "The order cannot be deleted in its current state":
       "لا يمكن حذف الطلبية في حالتها الحالية",
 
@@ -957,10 +957,6 @@ final Map<String, String> arSY = {
   "Open Money Box": "فتح صندوق الصيدلية",
   "Initial Balance": "الرصيد الافتتاحي",
   "Enter initial balance": "أدخل الرصيد الافتتاحي",
-  "Currency": "العملة",
-  "Select Currency": "اختر العملة",
-  "USD": "دولار أمريكي",
-  "SYP": "ليرة سورية",
   "Open Box": "فتح الصندوق",
   "Money box opened successfully": "تم فتح صندوق الصيدلية بنجاح",
   "Failed to open money box": "فشل في فتح صندوق الصيدلية",
@@ -971,33 +967,25 @@ final Map<String, String> arSY = {
   "Money Box Information": "معلومات صندوق الصيدلية",
   "Money Box Transactions": "معاملات صندوق الصيدلية",
   "Total Balance": "الرصيد الإجمالي",
-  "Status": "الحالة",
   "Please enter notes": "ادخل الملاحظات",
 
   "Last Reconciled": "آخر تسوية",
   "Transaction Type": "نوع المعاملة",
-  "Amount": "المبلغ",
   "Balance Before": "الرصيد قبل",
   "Balance After": "الرصيد بعد",
   "Description": "الوصف",
   "No transactions found": "لم يتم العثور على معاملات",
   "Transactions will appear here once created":
       "ستظهر المعاملات هنا عند إنشائها",
-  "Total": "الإجمالي",
   "transactions": "معاملات",
   "Page": "الصفحة",
   "of": "من",
-  "Next": "التالي",
-  "Previous": "السابق",
-  "Refresh": "تحديث",
 
   // Add Transaction Dialog
   "Add Transaction": "إضافة معاملة",
-  "Enter amount": "أدخل المبلغ",
   "Enter transaction notes (optional)": "أدخل ملاحظات المعاملة (اختياري)",
   "Transaction added successfully": "تمت إضافة المعاملة بنجاح",
   "Please enter amount": "يرجى إدخال المبلغ",
-  "Please enter a valid amount": "يرجى إدخال مبلغ صحيح",
 
   // Add Reconcile Dialog
   "Reconcile Money Box": "تسوية صندوق الصيدلية",
@@ -1009,5 +997,19 @@ final Map<String, String> arSY = {
   "Please enter actual amount": "يرجى إدخال المبلغ الفعلي",
   "⚠️ Cannot add product": "⚠️ لا يمكن اضافة المنتج",
   'Available quantity:': 'الكمية المتوفرة:',
-  ', Requested:': ', المطلوبة:'
+  ', Requested:': ', المطلوبة:',
+  "Cannot delete customer with active debts. Please settle all debts first.":
+      "لا يمكن حذف العميل الذي لديه ديون نشطة. يرجى تسوية جميع الديون أولًا.",
+  "Amount:": "المبلغ:",
+  "Paid:": "المدفوع:",
+  "Remaining:": "المتبقي:",
+  "Status:": "الحالة:",
+  "Due Date:": "تاريخ الاستحقاق:",
+  "No notes available": "لا توجد ملاحظات",
+  "Not available": "غير متاح",
+  "Loading Debts...": "جاري تحميل الديون...",
+  "Please select payment type": "يرجى اختيار نوع الدفع",
+  "Please select a customer for credit payment": "يرجى اختيار عميل للدفع الآجل",
+  "Refresh Customers": "تحديث العملاء",
+  "Contact Information": "معلومات التواصل",
 };

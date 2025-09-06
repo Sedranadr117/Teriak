@@ -37,13 +37,16 @@ class _InvoiceTotalCardState extends State<InvoiceTotalCard> {
       case 'USD':
         return '\$';
       case 'SYP':
-        return 'SYP';
+        return 'Sp';
     }
     return curr;
   }
 
   @override
   Widget build(BuildContext context) {
+    // Use more decimal places for USD to show small values like 0.0007
+    final priceFormat = widget.selectedCurrency == 'USD' ? 4 : 2;
+
     return Card(
       child: Padding(
         padding: EdgeInsets.all(4.w),
@@ -73,7 +76,7 @@ class _InvoiceTotalCardState extends State<InvoiceTotalCard> {
             _buildSummaryRow(
               context,
               'Subtotal'.tr,
-              '${symble(widget.selectedCurrency)} ${widget.subtotal.toStringAsFixed(2)}',
+              '${symble(widget.selectedCurrency)} ${widget.subtotal.toStringAsFixed(priceFormat)}',
               isSubtotal: true,
             ),
 
@@ -95,7 +98,7 @@ class _InvoiceTotalCardState extends State<InvoiceTotalCard> {
             _buildSummaryRow(
               context,
               'Total'.tr,
-              '${symble(widget.selectedCurrency)} ${widget.total.toStringAsFixed(2)}',
+              '${symble(widget.selectedCurrency)} ${widget.total.toStringAsFixed(priceFormat)}',
               isTotal: true,
             ),
           ],
@@ -256,7 +259,7 @@ class _InvoiceTotalCardState extends State<InvoiceTotalCard> {
                   ],
                 ),
                 Text(
-                  '-${widget.discountType == 'PERCENTAGE' ? '%' : symble(widget.selectedCurrency)} ${widget.discountAmount.toStringAsFixed(2)}',
+                  '-${widget.discountType == 'PERCENTAGE' ? '%' : symble(widget.selectedCurrency)} ${widget.discountAmount.toStringAsFixed(widget.selectedCurrency == 'USD' ? 4 : 2)}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.successLight,
                         fontWeight: FontWeight.w600,

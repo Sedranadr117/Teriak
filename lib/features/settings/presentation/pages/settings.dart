@@ -47,11 +47,11 @@ class _SettingsState extends State<Settings> {
             icon: const Icon(Icons.refresh),
             tooltip: 'Refresh Profile'.tr,
           ),
-           IconButton(
+          IconButton(
             onPressed: () => Get.toNamed(AppPages.moneyBox),
             icon: const Icon(Icons.car_crash),
           ),
-           IconButton(
+          IconButton(
             onPressed: () => Get.toNamed(AppPages.moneyBoxInfo),
             icon: const Icon(Icons.dangerous),
           ),
@@ -75,14 +75,6 @@ class _SettingsState extends State<Settings> {
               SettingsSectionWidget(
                 title: 'Pharmacy Preferences'.tr,
                 children: [
-                  SettingsItemWidget(
-                    icon: 'store',
-                    title: 'Default Pharmacy Location'.tr,
-                    subtitle: 'Set your primary pharmacy'.tr,
-                    onTap: () => _showComingSoonDialog(
-                        context, 'Default Pharmacy Location'.tr),
-                    showArrow: true,
-                  ),
                   SettingsItemWidget(
                     icon: 'notifications',
                     title: 'Notifications'.tr,
@@ -335,28 +327,6 @@ class _SettingsState extends State<Settings> {
               foregroundColor: AppColors.onErrorLight,
             ),
             child: Text('Sign Out'.tr),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showComingSoonDialog(BuildContext context, String feature) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          'Coming Soon'.tr,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        content: Text(
-          '\$feature feature is coming soon in the next update.'.tr,
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'.tr),
           ),
         ],
       ),

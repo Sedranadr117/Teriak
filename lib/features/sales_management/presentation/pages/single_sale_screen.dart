@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
 import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
 import 'package:teriak/features/sales_management/presentation/widgets/currency_selection_card_widget.dart';
 import 'package:teriak/features/sales_management/presentation/widgets/customer_information_card.dart';
@@ -42,7 +41,6 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
   void dispose() {
     Get.delete<SaleController>(tag: widget.tabId);
     Get.delete<CustomerController>(tag: widget.tabId);
-
     super.dispose();
   }
 
@@ -79,10 +77,16 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                         saleController.search(code).then((_) {
                           if (saleController.results.isNotEmpty) {
                             for (var stock in saleController.results) {
+                              final unitPrice =
+                                  saleController.selectedCurrency.value == 'USD'
+                                      ? stock.sellingPriceUSD
+                                      : stock.sellingPrice;
+                              print(
+                                  '🔍 Barcode Debug: Currency=${saleController.selectedCurrency.value}, SYP=${stock.sellingPrice}, USD=${stock.sellingPriceUSD}, Selected=$unitPrice');
                               final item = InvoiceItemModel(
                                 id: stock.id,
                                 productName: stock.productName,
-                                unitPrice: stock.sellingPrice,
+                                unitPrice: unitPrice,
                                 stockItemId: stock.id,
                                 quantity: stock.totalQuantity,
                                 subTotal: 0,
@@ -91,6 +95,10 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                               );
                               saleController.addItemFromProduct(item);
                             }
+                            saleController.searchFocusNode.unfocus();
+                            saleController.searchController.clear();
+                            saleController.results.clear();
+                            setState(() {});
                           }
                         });
                       },
@@ -102,10 +110,16 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     title: Text(product.productName),
                   ),
                   onItemTap: (stock) {
+                    final unitPrice =
+                        saleController.selectedCurrency.value == 'USD'
+                            ? stock.sellingPriceUSD
+                            : stock.sellingPrice;
+                    print(
+                        '🔍 Manual Debug: Currency=${saleController.selectedCurrency.value}, SYP=${stock.sellingPrice}, USD=${stock.sellingPriceUSD}, Selected=$unitPrice');
                     final item = InvoiceItemModel(
                       id: stock.id,
                       productName: stock.productName,
-                      unitPrice: stock.sellingPrice,
+                      unitPrice: unitPrice,
                       stockItemId: stock.id,
                       quantity: stock.totalQuantity,
                       subTotal: 0,
@@ -113,32 +127,29 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                       availableForRefund: stock.totalQuantity,
                     );
                     saleController.addItemFromProduct(item);
-                    saleController.searchController.text = item.productName;
+                    saleController.searchController.clear();
                     saleController.results.clear();
+                    saleController.searchFocusNode.unfocus();
+                    setState(() {});
                   },
                   hintText: 'Search by product name or generic name...'.tr,
                   isScanner: true,
                 ),
               ),
-              CustomerInformationCard(
-                isLoading: customerController.isLoading,
-                customers: customerController.customers,
-                selectedCustomer: customerController.selectedCustomer,
-                customerController: customerController,
-              ),
-              Obx(() => InvoiceItemsCard(
-                    items: saleController.invoiceItems.toList(),
-                    onQuantityChanged: saleController.updateItemQuantity,
-                  )),
-              SizedBox(height: 4.w),
               Obx(
                 () => CurrencySelectionCardWidget(
                   selectedCurrency: saleController.selectedCurrency.value,
                   onCurrencyChanged: (currency) {
+                    print('🎯 SingleSaleScreen: Currency changed to $currency');
                     saleController.onCurrencyChanged(currency);
                   },
                 ),
               ),
+              Obx(() => InvoiceItemsCard(
+                    items: saleController.invoiceItems.toList(),
+                    onQuantityChanged: saleController.updateItemQuantity,
+                    selectedCurrency: saleController.selectedCurrency.value,
+                  )),
               Obx(
                 () => InvoiceTotalCard(
                   subtotal: saleController.subtotal.value,
@@ -168,7 +179,6 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     saleController.selectedPaymentType.value = type;
                   },
                   controller: saleController.deferredAmountController,
-                  focusNode: saleController.searchFocusNode,
                   onDateTap: () async {
                     await saleController.selectDueDate(
                         initialDate:
@@ -181,6 +191,17 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                   },
                 ),
               ),
+              Obx(() => saleController.selectedPaymentType.value == 'CREDIT'
+                  ? CustomerInformationCard(
+                      isLoading: customerController.isLoading,
+                      customers: customerController.customers,
+                      selectedCustomer: customerController.selectedCustomer,
+                      customerController: customerController,
+                      onRefresh: () {
+                        customerController.fetchCustomers();
+                      },
+                    )
+                  : SizedBox()),
               Obx(
                 () => PaymentMethodSelectionWidget(
                   selectedMethod: saleController.selectedPaymentMethod.value,
@@ -207,7 +228,12 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                     totalAmount:
                         saleController.selectedPaymentType.value == "CREDIT"
                             ? saleController.defferredAmount.value
-                            : saleController.total.value),
+                            : saleController.total.value,
+                    isPaymentTypeSelected:
+                        saleController.selectedPaymentType.value.isNotEmpty,
+                    isCustomerSelected:
+                        customerController.selectedCustomer.value != null,
+                    paymentType: saleController.selectedPaymentType.value),
               )
             ],
           ),
