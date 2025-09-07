@@ -183,6 +183,7 @@ final Map<String, String> enUS = {
   "Contains uppercase letter": "Contains uppercase letter",
   "Contains lowercase letter": "Contains lowercase letter",
   "Contains number": "Contains number",
+  "Contains special character": "Contains special character",
   "Update Shift": "Update Shift",
   "Add Shift": "Add Shift",
   "Start Time": "Start Time",
@@ -564,6 +565,8 @@ final Map<String, String> enUS = {
   "Not provided": "Not provided",
   "Address": "Address",
   "Debt Information": "Debt Information",
+  'Please save this password, you will not be able to view it again in employee profile.':
+      'Please save this password, you will not be able to view it again in employee profile.',
   "Amount:": "Amount:",
   "Paid:": "Paid:",
   "Remaining:": "Remaining:",
@@ -621,7 +624,7 @@ final Map<String, String> enUS = {
   "Supplier updated successfully": "Supplier updated successfully",
   "Error Suppliers Loading": "Error Suppliers Loading",
   "Error Searching Suppliers": "Error Searching Suppliers",
-  'Product deleted successfully':'Product deleted successfully',
+  'Product deleted successfully': 'Product deleted successfully',
   "No suppliers found": "No suppliers found",
   "Search suppliers...": "Search suppliers...",
   'All Purchase Orders': 'All Purchase Orders',
@@ -711,8 +714,8 @@ final Map<String, String> enUS = {
   "Bonus Items": "Bonus Items",
   "Total Items": "Total Items",
   "Continue to Payment": "Create Purchase Invoice",
-  "Invoice Number2":"Invoice Number ",
-  "Please select a valid order":"Please select a valid order",
+  "Invoice Number2": "Invoice Number ",
+  "Please select a valid order": "Please select a valid order",
 
   // Products Table
   "No Products": "No Products",
@@ -1018,7 +1021,7 @@ final Map<String, String> enUS = {
   "transactions": "transactions",
   "Page": "Page",
   "of": "of",
-  "login cancel":"Please log in again",
+  "login cancel": "Please log in again",
 
   // Add Transaction Dialog
   "Add Transaction": "Add Transaction",
@@ -1037,7 +1040,6 @@ final Map<String, String> enUS = {
   "⚠️ Cannot add product": "⚠️ Cannot add product",
   'Available quantity:': 'Available quantity:',
   ', Requested:': ', Requested:',
-  'Supplier deleted successfully':'Supplier deleted successfully',
   "Cannot delete customer with active debts. Please settle all debts first.":
       "Cannot delete customer with active debts. Please settle all debts first.",
 };

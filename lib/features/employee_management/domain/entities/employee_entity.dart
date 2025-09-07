@@ -7,10 +7,12 @@ class EmployeeEntity {
   final String status;
   final String roleName;
   final String dateOfHire;
+  final String email;
   final int roleId;
   final List<WorkingHoursRequestEntity> workingHoursRequests;
 
   const EmployeeEntity({
+    required this.email,
     required this.id,
     required this.firstName,
     required this.lastName,

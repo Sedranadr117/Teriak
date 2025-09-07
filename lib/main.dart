@@ -41,7 +41,7 @@ void main() async {
     remoteDataSource: remoteDataSource,
     networkInfo: networkInfo,
   );
-  Get.put(saleRepository); // صار جاهز للاستخدام بالـ Controllers
+  Get.put(saleRepository);
 
   await cacheHelper.init();
   role = cacheHelper.getData(key: 'Role');
@@ -71,7 +71,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<ThemeController>(
       builder: (themeController) => Obx(() => GetMaterialApp(
-        
             debugShowCheckedModeBanner: false,
             theme: AppTheme.lightTheme(context),
             darkTheme: AppTheme.darkTheme(context),

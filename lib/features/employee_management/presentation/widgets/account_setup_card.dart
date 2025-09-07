@@ -208,6 +208,37 @@ class _AccountSetupCardState extends State<AccountSetupCard> {
                 ],
               ),
             ),
+            SizedBox(height: 3.w),
+            Container(
+              padding: EdgeInsets.all(3.w),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurfaceVariant
+                    .withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                children: [
+                  CustomIconWidget(
+                    iconName: 'info',
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 16,
+                  ),
+                  SizedBox(width: 2.w),
+                  Expanded(
+                    child: Text(
+                      'Please save this password, you will not be able to view it again in employee profile.'
+                          .tr,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant,
+                          ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

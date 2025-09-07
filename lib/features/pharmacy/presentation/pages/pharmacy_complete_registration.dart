@@ -636,6 +636,12 @@ class _PharmacyCompleteRegistrationState
                                               addPharmacyController
                                                   .passwordController.text
                                                   .contains(RegExp(r'[0-9]'))),
+                                          buildRequirement(
+                                              'Contains special character'.tr,
+                                              addPharmacyController
+                                                  .passwordController.text
+                                                  .contains(RegExp(
+                                                      r'[!@#$%^&*(),.?":{}|<>]'))),
                                         ],
                                       ),
                                     ),

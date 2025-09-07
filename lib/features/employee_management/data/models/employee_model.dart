@@ -9,11 +9,13 @@ class EmployeeModel extends EmployeeEntity {
     required String phoneNumber,
     required String status,
     required String roleName,
+    required String email,
     required String dateOfHire,
     required int roleId,
     required List<WorkingHoursRequestModel> workingHoursRequests,
   }) : super(
           id: id,
+          email: email,
           firstName: firstName,
           lastName: lastName,
           password: password,
@@ -28,6 +30,7 @@ class EmployeeModel extends EmployeeEntity {
   factory EmployeeModel.fromJson(Map<String, dynamic> json) {
     return EmployeeModel(
       id: json['id'],
+      email: json['email'],
       firstName: json['firstName'] ?? '',
       lastName: json['lastName'] ?? '',
       password: json['password'] ?? '',
@@ -53,6 +56,7 @@ class EmployeeModel extends EmployeeEntity {
       'password': password,
       'phoneNumber': phoneNumber,
       'status': status,
+      'email': email,
       'dateOfHire': dateOfHire,
       'roleId': roleId,
       'workingHoursRequests':

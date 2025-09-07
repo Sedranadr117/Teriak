@@ -174,6 +174,7 @@ final Map<String, String> arSY = {
   "Contains uppercase letter": "تحتوي على حرف كبير",
   "Contains lowercase letter": "تحتوي على حرف صغير",
   "Contains number": "تحتوي على رقم",
+  "Contains special character": "يحتوي على رمز خاص",
   "Update Shift": "تحديث الوردية",
   "Add Shift": "إضافة وردية",
   "Start Time": "وقت البدء",
@@ -592,7 +593,7 @@ final Map<String, String> arSY = {
   "Delete Supplier": "حذف المورد",
   "This action cannot be undone.": "لا يمكن التراجع عن هذا الإجراء.",
   "Supplier deleted successfully": "تم حذف المورد بنجاح",
-    'Product deleted successfully':'تم حذف الدواء بنجاح',
+  'Product deleted successfully': 'تم حذف الدواء بنجاح',
 
   "Supplier added successfully": "تم إضافة المورد بنجاح",
   "Supplier updated successfully": "تم تحديث المورد بنجاح",
@@ -671,9 +672,9 @@ final Map<String, String> arSY = {
   "current USD To SYP Rate": "سعر الدولار الأمريكي الحالي مقابل الليرة السورية",
   "Products from Purchase Order": "المنتجات من طلب الشراء",
   "Proceed to Payment": "متابعة الدفع",
-    "Purchase order updated successfully": "تم تعديل الطلبية بنجاح",
+  "Purchase order updated successfully": "تم تعديل الطلبية بنجاح",
   "Saving...": "جاري الحفظ...",
-   "Withdraw": "سحب",
+  "Withdraw": "سحب",
   "deposit": "إيداع",
   "Save Success": "تم الحفظ بنجاح",
   "Save Error": "فشل في حفظ الفاتورة",
@@ -689,10 +690,8 @@ final Map<String, String> arSY = {
   "Bonus Items": "العناصر المجانية",
   "Total Items": "إجمالي العناصر",
   "Continue to Payment": "انشاء فاتورة شراء",
-  "Invoice Number2":"رقم الفاتورة",
-  "Please select a valid order":"اختر طلبية شراء صحيحة",
-
-
+  "Invoice Number2": "رقم الفاتورة",
+  "Please select a valid order": "اختر طلبية شراء صحيحة",
 
   // Products Table
   "No Products": "لا توجد منتجات",
@@ -1009,11 +1008,10 @@ final Map<String, String> arSY = {
   "⚠️ Cannot add product": "⚠️ لا يمكن اضافة المنتج",
   'Available quantity:': 'الكمية المتوفرة:',
   ', Requested:': ', المطلوبة:',
-   'Supplier deleted successfully':'تم حذف المورد بنجاح',
   "Cannot delete customer with active debts. Please settle all debts first.":
       "لا يمكن حذف العميل الذي لديه ديون نشطة. يرجى تسوية جميع الديون أولًا.",
   "Amount:": "المبلغ:",
-  "login cancel":"اعد تسجيل الدخول مرة اخرى",
+  "login cancel": "اعد تسجيل الدخول مرة اخرى",
   "Paid:": "المدفوع:",
   "Remaining:": "المتبقي:",
   "Status:": "الحالة:",
@@ -1025,5 +1023,7 @@ final Map<String, String> arSY = {
   "Please select a customer for credit payment": "يرجى اختيار عميل للدفع الآجل",
   "Refresh Customers": "تحديث العملاء",
   "Contact Information": "معلومات التواصل",
-  "Select Area": "اختر منطقة"
+  "Select Area": "اختر منطقة",
+  'Please save this password, you will not be able to view it again in employee profile.':
+      " يرجى حفظ كلمة المرور، لن تتمكن من عرضها مرة أخرى في الملف الشخصي للموظف.",
 };

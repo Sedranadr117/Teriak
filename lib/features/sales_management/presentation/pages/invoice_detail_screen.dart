@@ -6,6 +6,7 @@ import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/customer_managment/presentation/controllers/customer_controller.dart';
 import 'package:teriak/features/sales_management/presentation/controllers/sale_controller.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/main.dart';
 
 import '../widgets/invoice_header_card.dart';
 import '../widgets/invoice_totals_card.dart';
@@ -246,33 +247,40 @@ class _InvoiceDetailScreenState extends State<InvoiceDetailScreen> {
                           ),
                     ),
                     const Spacer(),
-                    if (_selectedItems.isNotEmpty)
-                      TextButton(
-                        onPressed: _clearSelection,
-                        child: Text(
-                          'Clear Selection'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    if (role != "PHARMACY_TRAINEE") ...[
+                      if (_selectedItems.isNotEmpty)
+                        TextButton(
+                          onPressed: _clearSelection,
+                          child: Text(
+                            'Clear Selection'.tr,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                          ),
                         ),
-                      ),
+                    ],
                   ],
                 ),
               ),
-
+              if (role != "PHARMACY_TRAINEE") ...[
+                ..._invoiceData['items'].map((product) => ProductItemCard(
+                      product: product,
+                      isSelected: _selectedItems.containsKey(product["id"]),
+                      selectedQuantity: _selectedItems[product["id"]] ?? 0,
+                      onTap: () => _toggleProductSelection(product),
+                      onQuantityChanged: (quantity) =>
+                          _updateSelectedQuantity(product["id"], quantity),
+                    )),
+              ] else ...[
+                ..._invoiceData['items'].map((product) => ProductItemCard(
+                      product: product,
+                    )),
+              ],
               // Product list
-              ..._invoiceData['items'].map((product) => ProductItemCard(
-                    product: product,
-                    isSelected: _selectedItems.containsKey(product["id"]),
-                    selectedQuantity: _selectedItems[product["id"]] ?? 0,
-                    onTap: () => _toggleProductSelection(product),
-                    onQuantityChanged: (quantity) =>
-                        _updateSelectedQuantity(product["id"], quantity),
-                  )),
 
               // Invoice totals
               InvoiceTotalsCard(invoiceData: _invoiceData),

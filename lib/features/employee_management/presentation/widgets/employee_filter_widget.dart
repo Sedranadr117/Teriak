@@ -17,9 +17,9 @@ class EmployeeFilterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filters = [
-      {'label': 'All'.tr, 'icon': 'filter_list'},
-      {'label': 'Active'.tr, 'icon': 'check_circle'},
-      {'label': 'Inactive'.tr, 'icon': 'cancel'},
+      {'key': 'all', 'label': 'All'.tr, 'icon': 'filter_list'},
+      {'key': 'active', 'label': 'Active'.tr, 'icon': 'check_circle'},
+      {'key': 'inactive', 'label': 'Inactive'.tr, 'icon': 'cancel'},
     ];
 
     return Container(
@@ -30,7 +30,7 @@ class EmployeeFilterWidget extends StatelessWidget {
         itemCount: filters.length,
         itemBuilder: (context, index) {
           final filter = filters[index];
-          final isSelected = selectedFilter == filter['label'];
+          final isSelected = selectedFilter == filter['key'];
 
           return Container(
             margin: EdgeInsets.only(right: 2.w),
@@ -65,7 +65,7 @@ class EmployeeFilterWidget extends StatelessWidget {
                 ],
               ),
               onSelected: (selected) {
-                onFilterChanged(filter['label']!);
+                onFilterChanged(filter['key']!);
               },
               backgroundColor: Theme.of(context).colorScheme.surface,
               selectedColor: Theme.of(context).colorScheme.primary,

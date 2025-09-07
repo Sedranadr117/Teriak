@@ -98,6 +98,7 @@ class _EmployeeDetailState extends State<EmployeeDetail> {
                           'dateOfHire': controller.employee.value!.dateOfHire,
                           'roleId': controller.employee.value!.roleId,
                           'roleName': controller.employee.value!.roleName,
+                          'email': controller.employee.value!.email,
                           'workingHours': controller
                               .employee.value!.workingHoursRequests
                               .map((e) =>

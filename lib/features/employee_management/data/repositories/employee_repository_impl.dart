@@ -22,7 +22,8 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
       final remoteEmployee = await remoteDataSource.createEmployee(params);
       return Right(remoteEmployee);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(
+          Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
     }
   }
 
@@ -38,7 +39,8 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
       );
       return const Right(null);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(
+          Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
     }
   }
 
@@ -58,7 +60,8 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
       final remoteEmployees = await remoteDataSource.getAllEmployees();
       return Right(remoteEmployees);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(
+          Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
     }
   }
 
@@ -72,7 +75,8 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
           await remoteDataSource.editEmployeeInfo(employeeId, params);
       return Right(updatedEmployee);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(
+          Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
     }
   }
 
@@ -82,8 +86,9 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
       await remoteDataSource.deleteEmployee(id);
 
       return const Right(null);
-    } catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+    } on ServerException catch (e) {
+      return Left(
+          Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
     }
   }
 
@@ -96,7 +101,8 @@ class EmployeeRepositoryImpl extends EmployeeRepository {
           await remoteDataSource.getEmloyeeById(employeeId: employeeId);
       return Right(remoteEmployee);
     } on ServerException catch (e) {
-      return Left(Failure(errMessage: e.toString()));
+      return Left(
+          Failure(errMessage: e.toString(), statusCode: e.errorModel.status));
     }
   }
 }

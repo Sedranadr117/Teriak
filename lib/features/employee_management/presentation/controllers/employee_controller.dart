@@ -30,6 +30,8 @@ class EmployeeController extends GetxController {
   final TextEditingController shiftStartController = TextEditingController();
   final TextEditingController shiftEndController = TextEditingController();
   final TextEditingController shiftDescController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
   final RxList<RoleModel> myRoles = <RoleModel>[].obs;
   final RxString currentUserType = 'intern'.obs;
   final List<String> employeeStatuses = ['Active', 'Inactive'];
@@ -47,7 +49,7 @@ class EmployeeController extends GetxController {
   final TextEditingController searchController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String searchQuery = '';
-  final RxString selectedFilter = 'All'.obs;
+  late final RxString selectedFilter;
   final RxList<int> selectedEmployees = <int>[].obs;
   late final AddEmployee _addEmployee;
   late final GetAllRoles _getAllRoles;
@@ -221,6 +223,8 @@ class EmployeeController extends GetxController {
     super.onInit();
     dateOfHireController.text = DateTime.now().toString().split(' ')[0];
     statusController.text = 'ACTIVE';
+    selectedFilter = 'all'.obs;
+
     if (currentUserType.value == 'pharmacist') {
       selectedRoleId.value = 1;
     } else {
@@ -259,8 +263,14 @@ class EmployeeController extends GetxController {
     try {
       final result = await _getAllRoles();
       result.fold((failure) {
-        errorMessage.value = failure.errMessage;
-        Get.snackbar('Error'.tr, errorMessage.value);
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar('Error'.tr, errorMessage.value);
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (roleList) {
         myRoles
             .assignAll(roleList.map((e) => RoleModel.fromEntity(e)).toList());
@@ -372,8 +382,14 @@ class EmployeeController extends GetxController {
       );
       result.fold(
         (failure) {
-          print('❌ Error adding working hours: ${failure.errMessage}');
-          Get.snackbar('Error'.tr, 'Failed to add working hours.'.tr);
+          if (failure.statusCode == 500) {
+            errorMessage.value = 'Failed to add working hours.'.tr;
+            Get.snackbar('Error'.tr, errorMessage.value);
+          } else {
+            errorMessage.value = 'Failed to add working hours.'.tr;
+
+            Get.snackbar('Errors'.tr, errorMessage.value);
+          }
         },
         (_) {
           Get.back();
@@ -394,11 +410,9 @@ class EmployeeController extends GetxController {
     return employees
         .where((e) => e.roleName == role)
         .where((e) {
-          if (selectedFilter.value == 'All'.tr) return true;
-          if (selectedFilter.value == 'Active'.tr) return e.status == 'ACTIVE';
-          if (selectedFilter.value == 'Inactive'.tr) {
-            return e.status == 'INACTIVE';
-          }
+          if (selectedFilter.value == 'all') return true;
+          if (selectedFilter.value == 'active') return e.status == 'ACTIVE';
+          if (selectedFilter.value == 'inactive') return e.status == 'INACTIVE';
           return true;
         })
         .map((e) => {
@@ -408,6 +422,7 @@ class EmployeeController extends GetxController {
               "status": e.status,
               "dateOfHire": e.dateOfHire,
               "roleName": e.roleName,
+              'email': e.email,
               "phoneNumber": e.phoneNumber,
               "workingHours": e.workingHoursRequests,
             })
@@ -432,9 +447,14 @@ class EmployeeController extends GetxController {
     try {
       final result = await _getAllEmployees();
       result.fold((failure) {
-        print('❌ Error fetching employees: ${failure.errMessage}');
-        errorMessage.value = failure.errMessage;
-        Get.snackbar('Error'.tr, errorMessage.value);
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar('Error'.tr, errorMessage.value);
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (employeeList) {
         print('✅ Employees fetched: ${employeeList.length}');
         for (var emp in employeeList) {
@@ -461,10 +481,18 @@ class EmployeeController extends GetxController {
       final result = await _getEmployeeById(employeeId: employeeId);
       result.fold((failure) {
         print('❌ Error fetching employee : ${failure.errMessage}');
-        errorMessage.value = failure.errMessage;
-        Get.snackbar('Error'.tr, errorMessage.value);
+        if (failure.statusCode == 500) {
+          errorMessage.value =
+              'An unexpected error occurred. Please try again.'.tr;
+          Get.snackbar('Error'.tr, errorMessage.value);
+        } else {
+          errorMessage.value = failure.errMessage;
+          Get.snackbar('Errors'.tr, errorMessage.value);
+        }
       }, (currEmployee) {
         employee.value = currEmployee;
+        print(
+            '📧 Employee email from response: ${currEmployee.email}'); // 👈 هون
       });
     } catch (e) {
       print('💥 Unexpected error while fetching employees: $e');
