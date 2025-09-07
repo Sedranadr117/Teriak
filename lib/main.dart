@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:nominatim_geocoding/nominatim_geocoding.dart';
 import 'package:sizer/sizer.dart';
@@ -28,12 +27,16 @@ void main() async {
   Hive.registerAdapter(HiveSaleItemAdapter());
 
   final saleBox = await Hive.openBox<HiveSaleInvoice>('saleInvoices');
+  print("--------------------${Hive.isBoxOpen('saleInvoices')}");
+  print(
+      '📦 [DEBUG] Hive box "cached_stock" opened. Current items: ${saleBox.values.length}');
+
   final localDataSource = LocalSaleDataSourceImpl(saleBox: saleBox);
   final cacheHelper = CacheHelper();
   final httpConsumer =
       HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
-  final remoteDataSource = SaleRemoteDataSource(api: httpConsumer); // مثال
+  final remoteDataSource = SaleRemoteDataSource(api: httpConsumer);
   final networkInfo = NetworkInfoImpl(); // مثال
 
   final saleRepository = SaleRepositoryImpl(

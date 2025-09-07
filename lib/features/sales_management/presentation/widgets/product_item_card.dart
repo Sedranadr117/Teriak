@@ -59,7 +59,6 @@ class _ProductItemCardState extends State<ProductItemCard>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
     return AnimatedBuilder(
       animation: _scaleAnimation,
       builder: (context, child) {
@@ -176,7 +175,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                               Expanded(
                                 child: _buildInfoChip(
                                   context,
-                                  'Sp ${(widget.product["unitPrice"] as double? ?? 0.0).toStringAsFixed(2)}',
+                                  'Sp ${(widget.product["unitPrice"] as double? ?? 0.0).toString()}',
                                   CustomIconWidget(
                                     iconName: 'attach_money',
                                     color: theme.brightness == Brightness.light
@@ -196,7 +195,7 @@ class _ProductItemCardState extends State<ProductItemCard>
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${'Total:'.tr} Sp ${(widget.product["subtotal"] as double? ?? 0.0)}',
+                                '${'Total:'.tr} Sp ${widget.product["quantity"] * (widget.product["unitPrice"])}',
                                 style: theme.textTheme.titleMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: colorScheme.primary,

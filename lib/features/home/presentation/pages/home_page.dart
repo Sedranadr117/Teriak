@@ -28,50 +28,44 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late PersistentTabController _controller;
+  bool _isLoading = true;
 
-
-@override
-void initState() {
-  super.initState();
-  Get.put(GetAllSupplierController(), permanent: true);
-  _controller = PersistentTabController(initialIndex: 0); // مؤقت
-  _loadRole();
-}
-
-Future<void> _loadRole() async {
-  final cacheHelper = CacheHelper();
-  role = await cacheHelper.getData(key: 'Role');
-
-  int initialIndex = role == "PHARMACY_TRAINEE" ? 0 : 2;
-
-  final screens = _buildScreens();
-  if (initialIndex >= screens.length) {
-    initialIndex = screens.length - 1;
+  @override
+  void initState() {
+    super.initState();
+    Get.put(GetAllSupplierController(), permanent: true);
+    _controller = PersistentTabController(initialIndex: 0);
+    _loadRole();
   }
 
-  // هون بدل ما تبدل الcontroller، غير الindex مباشرة
-  _controller.index = initialIndex;
+  Future<void> _loadRole() async {
+    final cacheHelper = CacheHelper();
+    role = await cacheHelper.getData(key: 'Role');
 
-  setState(() {}); // بس لحتى يعمل rebuild للـ AppBar والـ titles
-}
-
+    int initialIndex = role == "PHARMACY_TRAINEE" ? 0 : 2;
+    final screens = _buildScreens();
+    if (initialIndex >= screens.length) {
+      initialIndex = screens.length - 1;
+    }
+    setState(() {
+      _controller = PersistentTabController(initialIndex: initialIndex);
+      _isLoading = false;
+    });
+  }
 
   List<Widget> _buildScreens() {
-    final screns = [
+    final screens = [
       StockManagement(),
       MultiSalesScreen(),
     ];
+
     if (role != "PHARMACY_TRAINEE") {
-      screns.add(MoneyBoxPage());
-    }
-    if (role != "PHARMACY_TRAINEE") {
-      screns.add(PurchaseOrderList());
-    }
-    if (role != "PHARMACY_TRAINEE") {
-      screns.add(AllPurchaseInvoiceScreen());
+      screens.add(MoneyBoxPage());
+      screens.add(PurchaseOrderList());
+      screens.add(AllPurchaseInvoiceScreen());
     }
 
-    return screns;
+    return screens;
   }
 
   List<String> get appBarTitle {
@@ -90,8 +84,12 @@ Future<void> _loadRole() async {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()), // شاشة تحميل
+      );
+    }
     final themeController = Get.find<ThemeController>();
-
 
     return Scaffold(
       drawer: Drawer(
@@ -191,7 +189,6 @@ Future<void> _loadRole() async {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
-
                           title: Text(
                             'Sign Out'.tr,
                             style: Theme.of(context).textTheme.titleLarge,
