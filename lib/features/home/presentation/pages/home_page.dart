@@ -31,7 +31,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 0); // مؤقت
     _loadRole();
   }
 
@@ -39,12 +38,10 @@ class _HomePageState extends State<HomePage> {
     final cacheHelper = CacheHelper();
     role = await cacheHelper.getData(key: 'Role');
 
-    List<Widget> screens = _buildScreens();
+    final screens = _buildScreens();
     int initialIndex = role == "PHARMACY_TRAINEE" ? 0 : 2;
 
-    if (initialIndex >= screens.length) {
-      initialIndex = screens.length - 1;
-    }
+    if (initialIndex >= screens.length) initialIndex = screens.length - 1;
 
     setState(() {
       _controller = PersistentTabController(initialIndex: initialIndex);
@@ -69,13 +66,20 @@ class _HomePageState extends State<HomePage> {
     return screns;
   }
 
-  List<String> appBarTitle = [
-    "Stock Management".tr,
-    "Point of Sale".tr,
-    "Money Box".tr,
-    "Purchase Orders Management".tr,
-    'Purchase Invoice Management'.tr,
-  ];
+  List<String> get appBarTitle {
+    final titles = ["Stock Management".tr, "Point of Sale".tr];
+
+    if (role != "PHARMACY_TRAINEE") {
+      titles.addAll([
+        "Money Box".tr,
+        "Purchase Orders Management".tr,
+        "Purchase Invoice Management".tr,
+      ]);
+    }
+
+    return titles;
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
@@ -234,7 +238,9 @@ class _HomePageState extends State<HomePage> {
             : null,
       ),
       body: CustomBottomNav(
-        onTabChanged: (index) {},
+        onTabChanged: (index) {
+          setState(() {});
+        },
         controller: _controller,
         screens: _buildScreens(),
       ),
