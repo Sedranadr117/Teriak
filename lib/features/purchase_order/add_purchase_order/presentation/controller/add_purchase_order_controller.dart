@@ -145,12 +145,10 @@ class AddPurchaseOrderController extends GetxController {
     double price;
 
     if (selectedCurrency.value == "USD") {
-      // إذا العملة دولار
       price =
-          product.refPurchasePriceUSD > 0 ? product.refPurchasePriceUSD : 2.0;
+          product.refPurchasePriceUSD > 0 ? product.refPurchasePriceUSD : 0.0;
     } else {
-      // إذا العملة ليرة
-      price = product.refPurchasePrice > 0 ? product.refPurchasePrice : 2.0;
+      price = product.refPurchasePrice > 0 ? product.refPurchasePrice : 0.0;
     }
 
     if (isMasterProduct) {
@@ -375,15 +373,15 @@ class AddPurchaseOrderController extends GetxController {
 
       result.fold(
         (failure) {
-            if (failure.statusCode == 401) {
+          if (failure.statusCode == 401) {
             Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            Get.snackbar(
+              'Error'.tr,
+              failure.errMessage,
+              snackPosition: SnackPosition.TOP,
+            );
           }
-          else{
-          Get.snackbar(
-            'Error'.tr,
-            failure.errMessage,
-            snackPosition: SnackPosition.TOP,
-          );}
         },
         (purchaseOrder) {
           Get.snackbar(

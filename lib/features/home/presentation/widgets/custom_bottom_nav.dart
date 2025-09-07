@@ -16,7 +16,7 @@ class CustomBottomNav extends StatelessWidget {
   });
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
-    print(role);
+    print("roleeeeeeeeeeee$role");
     final items = [
       PersistentBottomNavBarItem(
         icon: Icon(Icons.inventory),
@@ -25,19 +25,23 @@ class CustomBottomNav extends StatelessWidget {
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
+        icon: Icon(Icons.point_of_sale),
         title: ("POS".tr),
         activeColorPrimary: AppColors.primaryLight,
         inactiveColorPrimary: Colors.grey,
       ),
-           PersistentBottomNavBarItem(
-        icon: Icon(Icons.monetization_on),
-        title: ("Money Box".tr),
-        activeColorPrimary: AppColors.primaryLight,
-        inactiveColorPrimary: Colors.grey,
-      ),
     ];
-        if (role != "PHARMACY_TRAINEE") {
+    if (role != "PHARMACY_TRAINEE") {
+      items.add(
+        PersistentBottomNavBarItem(
+          icon: Icon(Icons.monetization_on),
+          title: ("Money Box".tr),
+          activeColorPrimary: AppColors.primaryLight,
+          inactiveColorPrimary: Colors.grey,
+        ),
+      );
+    }
+    if (role != "PHARMACY_TRAINEE") {
       items.add(
         PersistentBottomNavBarItem(
           icon: Icon(Icons.shopping_cart),
@@ -58,7 +62,6 @@ class CustomBottomNav extends StatelessWidget {
         ),
       );
     }
-
 
     return items;
   }

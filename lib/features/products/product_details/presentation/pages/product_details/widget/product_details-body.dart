@@ -27,6 +27,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
           child: Text(widget.drugData.manufacturer ?? "N/A",
               style: Theme.of(context).textTheme.bodyLarge),
         ),
+        widget.drugData.categories!.isEmpty?SizedBox():
         InfoDetailsCardWidget(
           title: "Pharmacological classification".tr,
           child: ListView.separated(
@@ -42,6 +43,7 @@ class _ProductDetailsBodyState extends State<ProductDetailsBody> {
             },
           ),
         ),
+        if (!(widget.drugData.type as String).isNullOrEmpty())
         InfoDetailsCardWidget(
           title: "Product Type".tr,
           child: Text(widget.drugData.type ?? "N/A",

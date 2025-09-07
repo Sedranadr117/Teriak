@@ -310,6 +310,7 @@ class _SettingsState extends State<Settings> {
             onPressed: () async {
               final cacheHelper = CacheHelper();
               await cacheHelper.removeData(key: 'token');
+              await cacheHelper.removeData(key: 'Role');
               Get.offAllNamed(AppPages.signin);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Signed out successfully'.tr)),
