@@ -19,7 +19,6 @@ class AddMoneyBoxTransactionController extends GetxController {
   final RxString errorMessage = ''.obs;
   final RxString transactionType = 'deposit'.obs;
 
-
   late final NetworkInfoImpl networkInfo;
   late final PostMoneyBoxTransaction addMoneyBoxTransactionUseCase;
 
@@ -83,7 +82,8 @@ class AddMoneyBoxTransactionController extends GetxController {
 
     try {
       final rawAmount = double.parse(amountController.text.trim());
-final amount = transactionType.value == 'withdraw' ? -rawAmount : rawAmount;
+      final amount =
+          transactionType.value == 'withdraw' ? -rawAmount : rawAmount;
       final description = notesController.text.trim();
 
       final params = MoneyBoxTransactionParams(
@@ -96,7 +96,11 @@ final amount = transactionType.value == 'withdraw' ? -rawAmount : rawAmount;
 
       result.fold(
         (failure) {
-          errorMessage.value = failure.errMessage;
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
         },
         (moneyBox) {
           Get.snackbar(
@@ -110,7 +114,7 @@ final amount = transactionType.value == 'withdraw' ? -rawAmount : rawAmount;
         },
       );
     } catch (e) {
-          errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,

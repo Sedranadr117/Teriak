@@ -107,7 +107,14 @@ class SearchPurchaseOrderController extends GetxController {
       final result = await searchBySupplierUseCase.callSupplier(params: params);
       result.fold(
         (failure) {
-          searchError.value = failure.errMessage;
+               if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
+
+         searchError.value = failure.errMessage;
+           }
+          
           hasSearchResults.value = false;
         },
         (paginatedResult) {
@@ -160,7 +167,17 @@ class SearchPurchaseOrderController extends GetxController {
       final result = await searchByDateRangeUseCase.callDate(params: params);
       result.fold(
         (failure) {
-          searchError.value = failure.errMessage;
+          {
+               if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
+
+         searchError.value = failure.errMessage;
+           }
+          
+          hasSearchResults.value = false;
+        }
           hasSearchResults.value = false;
         },
         (paginatedResult) {
@@ -205,7 +222,17 @@ class SearchPurchaseOrderController extends GetxController {
             await searchBySupplierUseCase.callSupplier(params: params);
         result.fold(
           (failure) {
-            searchError.value = failure.errMessage;
+           {
+               if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
+
+         searchError.value = failure.errMessage;
+           }
+          
+          hasSearchResults.value = false;
+        }
             currentPage.value--;
           },
           (paginatedResult) {

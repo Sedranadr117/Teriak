@@ -71,7 +71,13 @@ class GetAllProductController extends GetxController {
 
       final result = await getAllProductUseCase(params: params);
       result.fold(
-        (failure) => errorMessage.value = failure.errMessage,
+        (failure) {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
+        },
         (paginatedData) {
           final newProducts = <ProductEntity>[];
           for (var product in paginatedData.content) {
@@ -95,7 +101,6 @@ class GetAllProductController extends GetxController {
         },
       );
     } catch (e) {
-      print(e.toString());
       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
@@ -121,7 +126,13 @@ class GetAllProductController extends GetxController {
 
         final result = await getAllProductUseCase(params: params);
         result.fold(
-          (failure) => errorMessage.value = failure.errMessage,
+          (failure) {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              errorMessage.value = failure.errMessage;
+            }
+          },
           (paginatedData) {
             final newProducts = <ProductEntity>[];
             for (var product in paginatedData.content) {

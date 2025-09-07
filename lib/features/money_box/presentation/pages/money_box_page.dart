@@ -21,7 +21,6 @@ class _MoneyBoxPageState extends State<MoneyBoxPage> {
   @override
   void initState() {
     super.initState();
-    // تحميل بيانات الصندوق عند الدخول
     getMoneyBoxController.getMoneyBoxData();
   }
 
@@ -35,10 +34,8 @@ class _MoneyBoxPageState extends State<MoneyBoxPage> {
       }
 
       if (getMoneyBoxController.moneyBox.value == null) {
-        // ما في صندوق → عرض واجهة فتح الصندوق
         return _buildOpenBoxView();
       } else {
-        // في صندوق → عرض معلومات الصندوق
         return const MoneyBoxInfoPage();
       }
     });

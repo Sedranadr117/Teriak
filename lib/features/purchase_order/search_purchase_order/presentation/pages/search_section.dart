@@ -98,7 +98,8 @@ class _SearchSectionState extends State<SearchSection> {
             ),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: DropdownButtonFormField<SupplierModel>(
+          child:Obx(()=>
+           DropdownButtonFormField<SupplierModel>(
             value: widget.selectedSupplier,
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -122,7 +123,7 @@ class _SearchSectionState extends State<SearchSection> {
                 widget.onSupplierSelected(value);
               }
             },
-          ),
+          ),),
         ),
         Obx(() {
           final error = widget.searchController.supplierError.value;

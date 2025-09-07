@@ -103,19 +103,22 @@ class AddSupplierController extends GetxController {
       result.fold(
         (failure) {
           if (failure.statusCode == 409) {
-            Get.snackbar('Error',
+            Get.snackbar('Error'.tr,
                 "Supplier name must be unique within this pharmacy".tr);
+          }
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
           } else {
-            Get.snackbar('Error', failure.errMessage);
+            Get.snackbar('Error'.tr, failure.errMessage);
           }
         },
         (product) {
-          Get.snackbar('Success', 'Supplier added successfully'.tr);
+          Get.snackbar('Success'.tr, 'Supplier added successfully'.tr);
           resetForm();
         },
       );
     } catch (e) {
-        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
 
       Get.snackbar(
         'Error'.tr,

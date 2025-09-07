@@ -48,7 +48,12 @@ class GetAllSupplierController extends GetxController {
       final result = await getAllSupplierUseCase();
       result.fold(
         (failure) {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
           errorMessage.value = failure.errMessage;
+          }
         },
         (supplierList) {
           // Ensure we have unique suppliers based on ID
@@ -79,7 +84,7 @@ class GetAllSupplierController extends GetxController {
   Future<void> refreshSuppliers() async {
     try {
       isRefreshing.value = true;
-      await Future.delayed(const Duration(milliseconds: 1500));
+      await Future.delayed(const Duration(milliseconds: 1000));
       getSuppliers();
     } finally {
       isRefreshing.value = false;

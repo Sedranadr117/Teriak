@@ -217,13 +217,16 @@ class AddProductController extends GetxController {
       result.fold(
         (failure) {
           if (failure.statusCode == 409) {
-            Get.snackbar('Error', "Barcode is already exists".tr);
-          } else {
-            Get.snackbar('Error', failure.errMessage);
+            Get.snackbar('Error'.tr, "Barcode is already exists".tr);
+          }   if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else {
+            Get.snackbar('Error'.tr, failure.errMessage);
           }
         },
         (product) {
-          Get.snackbar('Success', 'Product added successfully'.tr);
+          Get.snackbar('Success'.tr, 'Product added successfully'.tr);
           resetForm();
         },
       );

@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 2);
+    _controller = PersistentTabController(initialIndex: role == "PHARMACY_TRAINEE" ? 0 : 2,);
     _controller.addListener(() {
       setState(() {});
     });
@@ -42,8 +42,10 @@ class _HomePageState extends State<HomePage> {
     final screns = [
       StockManagement(),
       MultiSalesScreen(),
-      MoneyBoxPage(),
     ];
+     if (role != "PHARMACY_TRAINEE") {
+      screns.add(MoneyBoxPage());
+    }
     if (role != "PHARMACY_TRAINEE") {
       screns.add(PurchaseOrderList());
     }

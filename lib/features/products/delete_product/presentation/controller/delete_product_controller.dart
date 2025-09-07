@@ -57,6 +57,9 @@ class DeleteProductController extends GetxController {
                 'Error',
                 'Cannot delete pharmacy product. It has stock items. Please remove all stock items first'
                     .tr);
+          }
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
           } else {
             Get.snackbar('Error', failure.errMessage);
           }

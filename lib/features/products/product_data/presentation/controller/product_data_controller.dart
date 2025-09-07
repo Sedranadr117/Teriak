@@ -54,7 +54,13 @@ class ProductDataController extends GetxController {
 
       final result = await getProductDataUseCase.callData(params: params);
       result.fold(
-        (failure) => errorMessage.value = failure.errMessage,
+        (failure) {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
+        },
         (productList) => dataList.value = productList,
       );
     } catch (e) {

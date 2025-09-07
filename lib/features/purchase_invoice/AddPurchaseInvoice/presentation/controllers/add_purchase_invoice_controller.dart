@@ -178,7 +178,6 @@ class AddPurchaseInvoiceController extends GetxController {
       _products[index]['actualPrice'] = invoicePrice;
     }
 
-    // تحديث الواجهة
     _products.refresh();
   }
 
@@ -194,7 +193,7 @@ class AddPurchaseInvoiceController extends GetxController {
         final actualPrice = totalQty > 0
             ? (receivedQty * invoicePrice) / totalQty
             : invoicePrice;
-        total += receivedQty * actualPrice;
+        total += totalQty * actualPrice;
       }
     }
     return total;
@@ -281,6 +280,9 @@ class AddPurchaseInvoiceController extends GetxController {
           if (failure.statusCode == 409) {
             Get.snackbar('Error', failure.errMessage);
             print(failure.errMessage.toString());
+          }
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
           } else {
             Get.snackbar(
               'Error',
@@ -302,7 +304,6 @@ class AddPurchaseInvoiceController extends GetxController {
           // Future.delayed(const Duration(milliseconds: 500), () {
           //   Get.back();
           // });
-   
         },
       );
     } catch (e) {

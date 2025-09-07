@@ -108,10 +108,14 @@ class EditSupplierController extends GetxController {
 
       result.fold(
         (failure) {
-          Get.snackbar('Error', failure.errMessage);
+            if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
+          Get.snackbar('Error'.tr, failure.errMessage);}
         },
         (supplier) {
-          Get.snackbar('Success', 'Supplier updated successfully');
+          Get.snackbar('Success'.tr, 'Supplier updated successfully');
         },
       );
     } catch (e) {

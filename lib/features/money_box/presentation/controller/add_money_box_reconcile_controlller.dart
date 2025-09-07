@@ -88,7 +88,12 @@ class AddMoneyBoxReconcileController extends GetxController {
 
       result.fold(
         (failure) {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
           errorMessage.value = failure.errMessage;
+          }
         },
         (moneyBox) {
           Get.snackbar(

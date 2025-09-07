@@ -375,11 +375,15 @@ class AddPurchaseOrderController extends GetxController {
 
       result.fold(
         (failure) {
+            if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
           Get.snackbar(
             'Error'.tr,
             failure.errMessage,
             snackPosition: SnackPosition.TOP,
-          );
+          );}
         },
         (purchaseOrder) {
           Get.snackbar(

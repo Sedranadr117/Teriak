@@ -80,8 +80,11 @@ class AllPurchaseInvoiceController extends GetxController {
       final result = await getAllPurchaseInvoiceUseCase(params: params);
       result.fold(
         (failure) {
-          print(failure.errMessage);
-          return errorMessageInvoices.value = failure.errMessage;
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessageInvoices.value = failure.errMessage;
+          }
         },
         (paginatedData) {
           if (refresh) {
@@ -97,7 +100,8 @@ class AllPurchaseInvoiceController extends GetxController {
         },
       );
     } catch (e) {
-          errorMessageInvoices.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessageInvoices.value =
+          'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessageInvoices.value,
@@ -122,7 +126,13 @@ class AllPurchaseInvoiceController extends GetxController {
 
         final result = await getAllPurchaseInvoiceUseCase(params: params);
         result.fold(
-          (failure) => errorMessageInvoices.value = failure.errMessage,
+          (failure)  {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessageInvoices.value = failure.errMessage;
+          }
+        },
           (paginatedData) {
             invoices.addAll(paginatedData.content);
             totalPages.value = paginatedData.totalPages;
@@ -132,11 +142,12 @@ class AllPurchaseInvoiceController extends GetxController {
           },
         );
       } catch (e) {
-          errorMessageInvoices.value = 'An unexpected error occurred. Please try again.'.tr;
-      Get.snackbar(
-        'Error'.tr,
-        errorMessageInvoices.value,
-      );
+        errorMessageInvoices.value =
+            'An unexpected error occurred. Please try again.'.tr;
+        Get.snackbar(
+          'Error'.tr,
+          errorMessageInvoices.value,
+        );
       } finally {
         isLoadingMore.value = false;
       }

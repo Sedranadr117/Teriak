@@ -239,7 +239,10 @@ class EditProductController extends GetxController {
         (failure) {
           if (failure.statusCode == 409) {
             Get.snackbar('Error', "Barcode is already exists".tr);
-          } else {
+          }  if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else {
             Get.snackbar('Error', failure.errMessage);
           }
         },

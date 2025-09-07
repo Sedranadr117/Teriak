@@ -55,8 +55,14 @@ class ProductNamesController extends GetxController {
       final result = await getProductDataUseCase.callNames(params: params);
       result.fold(
         (failure) {
-          errorMessage.value = failure.errMessage;
-          ;
+          {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              errorMessage.value = failure.errMessage;
+            }
+          }
+
           productNames.value = null;
         },
         (data) {
@@ -64,7 +70,7 @@ class ProductNamesController extends GetxController {
         },
       );
     } catch (e) {
-        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,

@@ -67,7 +67,13 @@ class PurchaseOrderDetailsController extends GetxController {
       final result = await getDetailsPurchaseOrdersUseCase(params: params);
 
       result.fold(
-        (failure) => errorMessage.value = failure.errMessage,
+        (failure) {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
+        },
         (data) {
           purchaseOrder.value = data;
           // Search for supplier ID after getting order details
@@ -77,7 +83,7 @@ class PurchaseOrderDetailsController extends GetxController {
         },
       );
     } catch (e) {
-        errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,
@@ -120,7 +126,7 @@ class PurchaseOrderDetailsController extends GetxController {
         }
       }
     } catch (e) {
-  errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,

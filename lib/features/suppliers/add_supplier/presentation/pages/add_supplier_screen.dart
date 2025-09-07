@@ -71,12 +71,12 @@ class _AddSupplierScreenState extends State<AddSupplierScreen> {
               () =>SaveProductButton(
               isLoading: addController.isLoading.value,
                 isFormValid: addController.isFormValid,
-                onTap: () {
+                onTap: () async{
                   
-                  addController.addSupplier();
-                  supplierController.refreshSuppliers();
+                  await addController.addSupplier();
+                  await supplierController.refreshSuppliers();
 
-                
+          
                 },
                 label: "Save Supplier".tr),),
             CommonWidgets.buildRequiredWidget(context: context),

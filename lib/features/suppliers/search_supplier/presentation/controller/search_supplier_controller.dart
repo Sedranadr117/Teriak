@@ -56,6 +56,9 @@ class SearchSupplierController extends GetxController {
       final result = await searchSupplierUseCase(params: q);
       result.fold(
         (failure) {
+            if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
           results.clear();
           errorMessage.value = failure.errMessage;
           searchStatus.value = RxStatus.error(failure.errMessage);

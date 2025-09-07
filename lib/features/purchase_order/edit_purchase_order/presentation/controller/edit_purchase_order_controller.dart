@@ -448,11 +448,18 @@ void _handleProductPriceLogic(ProductEntity product) {
 
       result.fold(
         (failure) {
-          Get.snackbar(
+               if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
+
+           Get.snackbar(
             'Error'.tr,
             'Failed to update purchase order'.tr,
             snackPosition: SnackPosition.TOP,
           );
+           }
+        
         },
         (updatedOrder) {
           Get.snackbar(

@@ -108,7 +108,13 @@ class SearchPurchaseInvoiceController extends GetxController {
           await searchBySupplierUseCase.callBySupplier(params: params);
       result.fold(
         (failure) {
-          searchError.value = failure.errMessage;
+          {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              searchError.value = failure.errMessage;
+            }
+          }
           hasSearchResults.value = false;
         },
         (paginatedResult) {
@@ -163,7 +169,14 @@ class SearchPurchaseInvoiceController extends GetxController {
           await searchByDateRangeUseCase.callByDateRange(params: params);
       result.fold(
         (failure) {
-          searchError.value = failure.errMessage;
+          {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              searchError.value = failure.errMessage;
+            }
+          }
+
           hasSearchResults.value = false;
         },
         (paginatedResult) {
@@ -208,7 +221,13 @@ class SearchPurchaseInvoiceController extends GetxController {
             await searchBySupplierUseCase.callBySupplier(params: params);
         result.fold(
           (failure) {
-            searchError.value = failure.errMessage;
+            {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              searchError.value = failure.errMessage;
+            }
+          }
             currentPage.value--;
           },
           (paginatedResult) {
@@ -236,7 +255,13 @@ class SearchPurchaseInvoiceController extends GetxController {
             await searchByDateRangeUseCase.callByDateRange(params: params);
         result.fold(
           (failure) {
-            searchError.value = failure.errMessage;
+          {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              searchError.value = failure.errMessage;
+            }
+          }
             currentPage.value--;
           },
           (paginatedResult) {

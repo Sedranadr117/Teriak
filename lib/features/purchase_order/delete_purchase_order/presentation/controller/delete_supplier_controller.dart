@@ -13,7 +13,7 @@ class DeletePurchaseOrderController extends GetxController {
   late final NetworkInfoImpl networkInfo;
   late final DeletePurchaseOrder deletePurchaseOrderUseCase;
   var isLoading = false.obs;
-   final RxString errorMessage = ''.obs;
+  final RxString errorMessage = ''.obs;
 
   @override
   void onInit() {
@@ -53,8 +53,11 @@ class DeletePurchaseOrderController extends GetxController {
 
       result.fold(
         (failure) {
-          Get.snackbar('Error', failure.errMessage);
-          print(failure.errMessage.toString());
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            Get.snackbar('Error', failure.errMessage);
+          }
         },
         (x) {
           Get.snackbar('Success', 'PurchaseOrder deleted successfully');

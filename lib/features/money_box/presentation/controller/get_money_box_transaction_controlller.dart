@@ -79,7 +79,12 @@ class GetMoneyBoxTransactionController extends GetxController {
 
     result.fold(
       (failure) {
-        errorMessage.value = failure.errMessage;
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          }
+          else{
+          errorMessage.value = failure.errMessage;
+          }
         isLoading.value = false;
         resetFilters();
       },

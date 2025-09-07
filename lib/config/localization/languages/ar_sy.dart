@@ -1013,6 +1013,7 @@ final Map<String, String> arSY = {
   "Cannot delete customer with active debts. Please settle all debts first.":
       "لا يمكن حذف العميل الذي لديه ديون نشطة. يرجى تسوية جميع الديون أولًا.",
   "Amount:": "المبلغ:",
+  "login cancel":"اعد تسجيل الدخول مرة اخرى",
   "Paid:": "المدفوع:",
   "Remaining:": "المتبقي:",
   "Status:": "الحالة:",

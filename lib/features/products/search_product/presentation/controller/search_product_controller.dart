@@ -94,7 +94,13 @@ class SearchProductController extends GetxController {
       result.fold(
         (failure) {
           results.clear();
-          errorMessage.value = failure.errMessage;
+          {
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
+        }
           searchStatus.value = RxStatus.error(failure.errMessage);
         },
         (paginatedData) {

@@ -76,8 +76,11 @@ class GetAllPurchaseOrderController extends GetxController {
       final result = await getAllPurchaseUseCase(params: params);
       result.fold(
         (failure) {
-          print(failure.errMessage);
-          return errorMessage.value = failure.errMessage;
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
         },
         (paginatedData) {
           if (refresh) {
@@ -93,8 +96,11 @@ class GetAllPurchaseOrderController extends GetxController {
         },
       );
     } catch (e) {
-      errorMessage.value = e.toString();
-      print(errorMessage.value.toString());
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      Get.snackbar(
+        'Error'.tr,
+        errorMessage.value,
+      );
     } finally {
       isLoading.value = false;
     }
@@ -115,7 +121,13 @@ class GetAllPurchaseOrderController extends GetxController {
 
         final result = await getAllPurchaseUseCase(params: params);
         result.fold(
-          (failure) => errorMessage.value = failure.errMessage,
+          (failure) {
+            if (failure.statusCode == 401) {
+              Get.snackbar('Error'.tr, "login cancel".tr);
+            } else {
+              errorMessage.value = failure.errMessage;
+            }
+          },
           (paginatedData) {
             purchaseOrders.addAll(paginatedData.content);
             totalPages.value = paginatedData.totalPages;
@@ -125,11 +137,12 @@ class GetAllPurchaseOrderController extends GetxController {
           },
         );
       } catch (e) {
-      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
-      Get.snackbar(
-        'Error'.tr,
-        errorMessage.value,
-      );
+        errorMessage.value =
+            'An unexpected error occurred. Please try again.'.tr;
+        Get.snackbar(
+          'Error'.tr,
+          errorMessage.value,
+        );
       } finally {
         isLoadingMore.value = false;
       }
@@ -152,7 +165,11 @@ class GetAllPurchaseOrderController extends GetxController {
       final result = await getAllPurchaseUseCase(params: params);
       result.fold(
         (failure) {
-          errorMessagePendingOrders.value = failure.errMessage;
+          if (failure.statusCode == 401) {
+            Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            errorMessage.value = failure.errMessage;
+          }
         },
         (paginatedData) {
           final allPendingOrders = paginatedData.content
@@ -162,7 +179,8 @@ class GetAllPurchaseOrderController extends GetxController {
         },
       );
     } catch (e) {
-        errorMessagePendingOrders.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessagePendingOrders.value =
+          'An unexpected error occurred. Please try again.'.tr;
 
       Get.snackbar(
         'Error'.tr,

@@ -1018,6 +1018,7 @@ final Map<String, String> enUS = {
   "transactions": "transactions",
   "Page": "Page",
   "of": "of",
+  "login cancel":"Please log in again",
 
   // Add Transaction Dialog
   "Add Transaction": "Add Transaction",
