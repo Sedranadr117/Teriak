@@ -29,27 +29,32 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late PersistentTabController _controller;
 
+
 @override
-  void initState() {
-    super.initState();
-    Get.put(GetAllSupplierController(), permanent: true);
-    _controller = PersistentTabController(initialIndex: role == "PHARMACY_TRAINEE" ? 0 : 2);  
-    _loadRole();
+void initState() {
+  super.initState();
+  Get.put(GetAllSupplierController(), permanent: true);
+  _controller = PersistentTabController(initialIndex: 0); // مؤقت
+  _loadRole();
+}
+
+Future<void> _loadRole() async {
+  final cacheHelper = CacheHelper();
+  role = await cacheHelper.getData(key: 'Role');
+
+  int initialIndex = role == "PHARMACY_TRAINEE" ? 0 : 2;
+
+  final screens = _buildScreens();
+  if (initialIndex >= screens.length) {
+    initialIndex = screens.length - 1;
   }
 
-  Future<void> _loadRole() async {
-    final cacheHelper = CacheHelper();
-    role = await cacheHelper.getData(key: 'Role');
+  // هون بدل ما تبدل الcontroller، غير الindex مباشرة
+  _controller.index = initialIndex;
 
-    int initialIndex = role == "PHARMACY_TRAINEE" ? 0 : 2;
-    final screens = _buildScreens();
-    if (initialIndex >= screens.length) {
-      initialIndex = screens.length - 1;
-    }
-    setState(() {
-      _controller = PersistentTabController(initialIndex: initialIndex);
-    });
-  }
+  setState(() {}); // بس لحتى يعمل rebuild للـ AppBar والـ titles
+}
+
 
   List<Widget> _buildScreens() {
     final screns = [

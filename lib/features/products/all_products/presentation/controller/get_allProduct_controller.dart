@@ -128,6 +128,7 @@ class GetAllProductController extends GetxController {
         result.fold(
           (failure) {
             if (failure.statusCode == 401) {
+              errorMessage.value = '';
               Get.snackbar('Error'.tr, "login cancel".tr);
             } else {
               errorMessage.value = failure.errMessage;
