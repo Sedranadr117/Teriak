@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:teriak/config/extensions/responsive.dart';
+import 'package:teriak/config/extensions/string.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
@@ -141,6 +142,7 @@ class ProductWidget extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: context.w * 0.02),
+                  if (!(dosageSize).isNullOrEmpty())
                   Expanded(
                     child: BoxInProductWidget(
                       icon: 'fitness_center',

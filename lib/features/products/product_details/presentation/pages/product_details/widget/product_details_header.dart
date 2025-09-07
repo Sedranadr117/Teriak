@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:teriak/config/extensions/responsive.dart';
+import 'package:teriak/config/extensions/string.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
@@ -140,7 +141,7 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
                   SizedBox(width: context.w * 0.02),
                   Expanded(
                     child: Text(
-                      widget.drugData.scientificName as String? ?? "N/A",
+                      widget.drugData.scientificName as String? ??" " ,
                       style: TextStyle(
                         fontSize: context.h * 0.018,
                         fontWeight: FontWeight.w500,
@@ -171,6 +172,7 @@ class _ProductDetailsHeaderState extends State<ProductDetailsHeader> {
                   value: widget.drugData.size as String? ?? "N/A",
                 ),
                 space(context),
+                if (!(widget.drugData.concentration ).isNullOrEmpty())
                 InfoDetailsColumnWidget(
                     iconName: 'medication',
                     labelName: "Dosage".tr,

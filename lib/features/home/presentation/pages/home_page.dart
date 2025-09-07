@@ -15,6 +15,7 @@ import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
+import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 
 import 'package:teriak/main.dart';
 
@@ -28,11 +29,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late PersistentTabController _controller;
 
-  @override
+@override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(
-        initialIndex: role == "PHARMACY_TRAINEE" ? 0 : 2);
+    Get.put(GetAllSupplierController(), permanent: true);
+    _controller = PersistentTabController(initialIndex: role == "PHARMACY_TRAINEE" ? 0 : 2);  
     _loadRole();
   }
 
@@ -85,6 +86,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
+
 
     return Scaffold(
       drawer: Drawer(
@@ -184,6 +186,7 @@ class _HomePageState extends State<HomePage> {
                 showDialog(
                     context: context,
                     builder: (context) => AlertDialog(
+
                           title: Text(
                             'Sign Out'.tr,
                             style: Theme.of(context).textTheme.titleLarge,

@@ -16,7 +16,7 @@ class MoneyBoxPage extends StatefulWidget {
 class _MoneyBoxPageState extends State<MoneyBoxPage> {
   final openBoxController = Get.put(AddMoneyBoxController());
   final getMoneyBoxController = Get.put(GetMoneyBoxController());
-  final getSupplierController=Get.put(GetAllSupplierController(), permanent: true);
+  
 
   @override
   void initState() {

@@ -244,12 +244,10 @@ void _handleProductPriceLogic(ProductEntity product) {
     double price;
 
     if (selectedCurrency.value == "USD") {
-      // إذا العملة دولار
       price =
-          product.refPurchasePriceUSD > 0 ? product.refPurchasePriceUSD : 2.0;
+          product.refPurchasePriceUSD > 0 ? product.refPurchasePriceUSD : 0.0;
     } else {
-      // إذا العملة ليرة
-      price = product.refPurchasePrice > 0 ? product.refPurchasePrice : 2.0;
+      price = product.refPurchasePrice > 0 ? product.refPurchasePrice : 0.0;
     }
 
     if (isMasterProduct) {

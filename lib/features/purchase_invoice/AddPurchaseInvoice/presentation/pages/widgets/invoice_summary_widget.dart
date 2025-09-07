@@ -259,18 +259,20 @@ class _InvoiceSummaryWidgetState extends State<InvoiceSummaryWidget> {
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.8),
                 ),
         ),
-        Text(
-          '${currency}${amount.toString()}'
-,
-          style: isTotal
-              ? theme.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.primary,
-                )
-              : theme.textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
+        Flexible(
+          child: Text(
+            '${currency}${amount.toString()}'
+          ,
+            style: isTotal
+                ? theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.primary,
+                  )
+                : theme.textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: theme.colorScheme.onSurface,
+                  ),
+          ),
         ),
       ],
     );

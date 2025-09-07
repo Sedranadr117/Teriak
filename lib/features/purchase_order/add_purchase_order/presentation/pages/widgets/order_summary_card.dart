@@ -152,14 +152,16 @@ class OrderSummaryCard extends StatelessWidget {
                       : AppColors.onPrimaryLight,
                 ),
               ),
-              Text(
-                '${total.toString()} $currency',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? AppColors.onPrimaryDark
-                      : AppColors.onPrimaryLight,
+              Flexible(
+                child: Text(
+                  '${total.toString()} $currency',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? AppColors.onPrimaryDark
+                        : AppColors.onPrimaryLight,
+                  ),
                 ),
               ),
             ],
