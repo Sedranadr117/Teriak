@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
     _loadRole();
   }
 
@@ -38,11 +39,11 @@ class _HomePageState extends State<HomePage> {
     final cacheHelper = CacheHelper();
     role = await cacheHelper.getData(key: 'Role');
 
-    final screens = _buildScreens();
     int initialIndex = role == "PHARMACY_TRAINEE" ? 0 : 2;
-
-    if (initialIndex >= screens.length) initialIndex = screens.length - 1;
-
+    final screens = _buildScreens();
+    if (initialIndex >= screens.length) {
+      initialIndex = screens.length - 1;
+    }
     setState(() {
       _controller = PersistentTabController(initialIndex: initialIndex);
     });
