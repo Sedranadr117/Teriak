@@ -31,7 +31,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _controller = PersistentTabController(initialIndex: 0);
+    _controller = PersistentTabController(
+        initialIndex: role == "PHARMACY_TRAINEE" ? 0 : 2);
     _loadRole();
   }
 
