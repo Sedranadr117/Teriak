@@ -84,9 +84,11 @@ class CustomBottomNav extends StatelessWidget {
       items: _navBarsItems(),
       navBarStyle: NavBarStyle.style1,
       onItemSelected: (index) {
-        if (controller.index != index) {
-          controller.index = index;
-          onTabChanged(index);
+        if (index < screens.length) {
+          if (controller.index != index) {
+            controller.index = index;
+            onTabChanged(index);
+          }
         }
       },
     );

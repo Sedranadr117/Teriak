@@ -15,6 +15,7 @@ import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
+import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 
 import 'package:teriak/main.dart';
 
@@ -31,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Get.put(GetAllSupplierController(), permanent: true);
     _controller = PersistentTabController(
         initialIndex: role == "PHARMACY_TRAINEE" ? 0 : 2);
     _loadRole();
@@ -51,21 +53,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _buildScreens() {
-    final screns = [
+    final screens = [
       StockManagement(),
       MultiSalesScreen(),
     ];
+
     if (role != "PHARMACY_TRAINEE") {
-      screns.add(MoneyBoxPage());
-    }
-    if (role != "PHARMACY_TRAINEE") {
-      screns.add(PurchaseOrderList());
-    }
-    if (role != "PHARMACY_TRAINEE") {
-      screns.add(AllPurchaseInvoiceScreen());
+      screens.add(MoneyBoxPage());
+      screens.add(PurchaseOrderList());
+      screens.add(AllPurchaseInvoiceScreen());
     }
 
-    return screns;
+    return screens;
   }
 
   List<String> get appBarTitle {
