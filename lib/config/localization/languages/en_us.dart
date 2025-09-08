@@ -509,6 +509,7 @@ final Map<String, String> enUS = {
   "Please add at least one product": "Please add at least one product",
   "Please enter quantity": "Please enter quantity",
   "Please enter price": "Please enter price",
+  "Payment added successfully!": "Payment added successfully!",
   "Scan Product Barcode": "Scan Product Barcode",
   "Product not found": "Product not found",
   "Price is readonly for central users": "Price is readonly for central users",

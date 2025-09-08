@@ -497,6 +497,7 @@ final Map<String, String> arSY = {
   "Please enter quantity": "يرجى إدخال الكمية",
   "Please enter price": "يرجى إدخال السعر",
   "Scan Product Barcode": "مسح باركود المنتج",
+  "Payment added successfully!": "تمت إضافة الدفعة بنجاح !",
   "Product not found": "المنتج غير موجود",
   "Price is readonly for central users":
       "السعر للقراءة فقط للمستخدمين المركزيين",
