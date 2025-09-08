@@ -418,41 +418,44 @@ class _StockManagementState extends State<StockManagement>
 
     return RefreshIndicator(
       onRefresh: controller.refreshStock,
-      child: controller.isLoading.value
-          ? _buildLoadingView(theme, colorScheme)
-          : ListView.builder(
-              padding: EdgeInsets.only(bottom: 10.h),
-              itemCount: displayList.length,
-              itemBuilder: (context, index) {
-                final product = displayList[index];
-                final mapy = {
-                  'id': product['id'],
-                  'productId': product['productId'],
-                  'productName': product['productName'],
-                  'productType': product['productType'],
-                  'barcodes': product['barcodes'],
-                  'totalQuantity': product['totalQuantity'],
-                  'totalBonusQuantity': product['totalBonusQuantity'],
-                  'averagePurchasePrice': product['averagePurchasePrice'],
-                  'totalValue': product['totalValue'],
-                  'categories': product['categories'],
-                  'sellingPrice': product['sellingPrice'],
-                  'minStockLevel': product['minStockLevel'],
-                  'hasExpiredItems': product['hasExpiredItems'],
-                  'hasExpiringSoonItems':
-                      product['hasExpiringSoonItems'] ?? false,
-                  'earliestExpiryDate': product['earliestExpiryDate'] ?? false,
-                  'latestExpiryDate': product['latestExpiryDate'],
-                  'numberOfBatches': product['numberOfBatches'],
-                  'pharmacyId': product['pharmacyId'],
-                };
-                return ProductCard(
-                  product: mapy,
-                  onTap: () => _showProductDetails(mapy),
-                  onAdjustStock: () => _showStockAdjustmentSheet(mapy),
-                );
-              },
-            ),
+      child: Obx(
+        () => controller.isLoading.value
+            ? _buildLoadingView(theme, colorScheme)
+            : ListView.builder(
+                padding: EdgeInsets.only(bottom: 10.h),
+                itemCount: displayList.length,
+                itemBuilder: (context, index) {
+                  final product = displayList[index];
+                  final mapy = {
+                    'id': product['id'],
+                    'productId': product['productId'],
+                    'productName': product['productName'],
+                    'productType': product['productType'],
+                    'barcodes': product['barcodes'],
+                    'totalQuantity': product['totalQuantity'],
+                    'totalBonusQuantity': product['totalBonusQuantity'],
+                    'averagePurchasePrice': product['averagePurchasePrice'],
+                    'totalValue': product['totalValue'],
+                    'categories': product['categories'],
+                    'sellingPrice': product['sellingPrice'],
+                    'minStockLevel': product['minStockLevel'],
+                    'hasExpiredItems': product['hasExpiredItems'],
+                    'hasExpiringSoonItems':
+                        product['hasExpiringSoonItems'] ?? false,
+                    'earliestExpiryDate':
+                        product['earliestExpiryDate'] ?? false,
+                    'latestExpiryDate': product['latestExpiryDate'],
+                    'numberOfBatches': product['numberOfBatches'],
+                    'pharmacyId': product['pharmacyId'],
+                  };
+                  return ProductCard(
+                    product: mapy,
+                    onTap: () => _showProductDetails(mapy),
+                    onAdjustStock: () => _showStockAdjustmentSheet(mapy),
+                  );
+                },
+              ),
+      ),
     );
   }
 
