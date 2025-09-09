@@ -14,6 +14,7 @@ import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation
 
 import 'package:teriak/features/sales_management/presentation/pages/multi_sales_screen.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/pages/purchase_order_list.dart';
+import 'package:teriak/features/stock_management/presentation/controller/stock_controller.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 
@@ -34,6 +35,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     Get.put(GetAllSupplierController(), permanent: true);
+    Get.put(StockController(), permanent: true);
+
     _controller = PersistentTabController(initialIndex: 0);
     _loadRole();
   }

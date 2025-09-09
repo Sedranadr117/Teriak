@@ -38,8 +38,7 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
     customerController = Get.put(CustomerController(), tag: widget.tabId);
     saleController =
         Get.put(SaleController(customerTag: widget.tabId), tag: widget.tabId);
-    stockcontroller = Get.find<StockController>();
-    moneyBoxController = Get.find<GetMoneyBoxController>();
+    moneyBoxController = Get.put(GetMoneyBoxController());
     customerController.fetchCustomers();
   }
 

@@ -27,7 +27,7 @@ class CustomerDetailsSheet extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final totalDebt = (customer['totalDebt'] as num?)?.toDouble() ?? 0.0;
+    final totalDebt = (customer['remainingDebt'] as num?)?.toDouble() ?? 0.0;
 
     return Container(
       height: 90.h,
