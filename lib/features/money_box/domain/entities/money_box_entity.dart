@@ -6,7 +6,7 @@ class MoneyBoxEntity {
   final List<int> lastReconciled;
   final double totalBalanceInSYP;
   final double totalBalanceInUSD;
-  final int currentUSDToSYPRate;
+  final double currentUSDToSYPRate;
 
   MoneyBoxEntity({
     required this.id,
