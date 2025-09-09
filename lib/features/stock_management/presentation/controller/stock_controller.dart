@@ -68,7 +68,6 @@ class StockController extends GetxController {
 
   Future<void> refreshStock() async {
     isLoading.value = true;
-    await Future.delayed(const Duration(milliseconds: 1500));
     fetchStock();
     isLoading.value = false;
   }

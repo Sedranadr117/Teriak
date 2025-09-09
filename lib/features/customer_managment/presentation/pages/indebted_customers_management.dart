@@ -49,7 +49,6 @@ class _IndebtedCustomersManagementState
   }
 
   void _showAddPaymentSheet(Map<String, dynamic> customer) {
-    Navigator.pop(context);
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
