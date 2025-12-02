@@ -39,6 +39,8 @@ import 'package:teriak/features/stock_management/presentation/pages/stock_manage
 import 'package:teriak/features/sales_management/presentation/pages/refunds_list_screan.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/all_product_page.dart';
 import 'package:teriak/features/products/product_details/presentation/pages/product_details/product_details_page.dart';
+import 'package:teriak/features/notification/presentation/pages/notification_page.dart';
+import 'package:teriak/features/notification/presentation/controller/notification_controller.dart';
 
 class AppRoutes {
   static final List<GetPage> routes = [
@@ -216,6 +218,15 @@ class AppRoutes {
       name: AppPages.refundsList,
       page: () => const RefundsListScreen(),
       transition: Transition.fadeIn,
+    ),
+    GetPage(
+      name: AppPages.notifications,
+      page: () => const NotificationPage(),
+      transition: Transition.fadeIn,
+      binding: BindingsBuilder(() {
+        Get.lazyPut<NotificationController>(() => NotificationController(),
+            fenix: true);
+      }),
     ),
   ];
 }

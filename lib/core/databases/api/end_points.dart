@@ -6,8 +6,7 @@ class EndPoints {
   // Auth endpoints
   static const String addPharmacy = "pharmacy/complete-registration";
   static const String mangerLogin = "pharmacy/login";
-    static const String getAreas = "areas";
-
+  static const String getAreas = "areas";
 
   //sale
   static const String sales = "sales";
@@ -55,6 +54,9 @@ class EndPoints {
   static String moneyBoxReconcile = "moneybox/reconcile";
   static String moneyBoxCurrencyRates = "moneybox/currency/rates";
   static String moneyBoxCurrencyConvert = "moneybox/currency/convert";
+  static const String registerToken = "notifications/register-token";
+  static const String notifications = "notifications";
+  static const String unRegisterToken = "notifications/unregister-token";
 }
 
 class ApiKeys {
@@ -136,4 +138,21 @@ class ApiKeys {
   static const String amount = 'amount';
   static const String transactionType = 'transactionType';
   static const String description = 'description';
+
+  // Notification
+static const String title = "title";
+static const String body = "body";
+static const String notificationType = "notificationType";
+static const String sentAt = "sentAt";
+static const String readAt = "readAt";
+
+
+static const String content = "content";
+static const String totalElements = "totalElements";
+static const String totalPages = "totalPages";
+static const String hasNext = "hasNext";
+static const String hasPrevious = "hasPrevious";
+
+
+
 }

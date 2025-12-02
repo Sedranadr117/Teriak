@@ -808,6 +808,15 @@ final Map<String, String> arSY = {
   "Mark as Read": "تحديد كمقروء",
   "Mark All as Read": "تحديد الكل كمقروء",
   "No Notifications": "لا توجد إشعارات",
+  "You have no notifications yet": "ليس لديك إشعارات حتى الآن",
+  "Just now": "الآن",
+  "minute": "دقيقة",
+  "minutes": "دقائق",
+  "hour": "ساعة",
+  "hours": "ساعات",
+  "day": "يوم",
+  "days ago": "أيام مضت",
+  "Yesterday": "أمس",
 
   // Help
   "Help": "المساعدة",

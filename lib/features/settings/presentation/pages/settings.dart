@@ -13,6 +13,7 @@ import '../widgets/settings_item_widget.dart';
 import '../widgets/settings_section_widget.dart';
 import '../widgets/user_profile_header_widget.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
+import 'package:teriak/features/notification/presentation/controller/notification_controller.dart';
 import '../controllers/user_profile_controller.dart';
 
 class Settings extends StatefulWidget {
@@ -307,6 +308,15 @@ class _SettingsState extends State<Settings> {
           ),
           ElevatedButton(
             onPressed: () async {
+              // Remove FCM token before logout
+              try {
+                if (Get.isRegistered<NotificationController>()) {
+                  await NotificationController.to.removeFcmToken();
+                }
+              } catch (e) {
+                debugPrint('⚠️ Failed to remove FCM token: $e');
+              }
+
               final cacheHelper = CacheHelper();
               await cacheHelper.removeData(key: 'token');
               await cacheHelper.removeData(key: 'Role');

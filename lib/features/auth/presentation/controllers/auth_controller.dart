@@ -10,6 +10,7 @@ import 'package:teriak/features/auth/data/datasources/auth_remote_data_source.da
 import 'package:teriak/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:teriak/features/auth/domain/usecases/get_auth.dart';
 import 'package:teriak/features/auth/domain/entities/auth_entity.dart';
+import 'package:teriak/features/notification/presentation/controller/notification_controller.dart';
 import 'package:teriak/main.dart';
 
 class AuthController extends GetxController {
@@ -106,6 +107,21 @@ class AuthController extends GetxController {
             final cacheHelper = CacheHelper();
             await cacheHelper.saveData(key: 'token', value: authEntity.token);
             await cacheHelper.saveData(key: 'Role', value: authEntity.role);
+
+            // Send FCM token after successful login
+            try {
+              if (Get.isRegistered<NotificationController>()) {
+                await NotificationController.to.sendFcmToken();
+              } else {
+                // Initialize NotificationController if not already registered
+                Get.put(NotificationController(), permanent: true);
+                await NotificationController.to.sendFcmToken();
+              }
+            } catch (e) {
+              print('⚠️ Failed to send FCM token: $e');
+              // Don't block login if FCM token sending fails
+            }
+
             if (authEntity.isActive == true) {
               Get.offNamed(AppPages.home);
             } else {

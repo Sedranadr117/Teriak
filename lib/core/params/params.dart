@@ -351,7 +351,7 @@ class SearchByDateRangeParams {
     this.language = 'ar',
   });
   Map<String, dynamic> toMap() {
-        dateFormat(DateTime d) =>
+    dateFormat(DateTime d) =>
         '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
     return {
       'startDate': dateFormat(startDate),
@@ -526,7 +526,7 @@ class GetMoneyBoxTransactionParams {
   final int page;
   final int size;
   final DateTime? startDate; // اختياري
-  final DateTime? endDate;   // اختياري
+  final DateTime? endDate; // اختياري
   final String? transactionType; // اختياري
 
   GetMoneyBoxTransactionParams({
@@ -553,7 +553,7 @@ class GetMoneyBoxTransactionParams {
       'page': page.toString(),
       'size': size.toString(),
     };
-        dateFormat(DateTime d) =>
+    dateFormat(DateTime d) =>
         '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
     if (startDate != null) query['startDate'] = dateFormat(startDate!);
@@ -563,8 +563,6 @@ class GetMoneyBoxTransactionParams {
     return query;
   }
 }
-
-
 
 class SearchInvoiceByDateRangeParams {
   final DateTime startDate;
@@ -669,4 +667,28 @@ class SaleRefundParams {
       'refundReason': refundReason,
     };
   }
+}
+
+class NotificationParams {
+  final int page;
+  final int size;
+  
+  const NotificationParams({required this.page,required this.size});
+  Map<String, dynamic> toJson() {
+    return {'page': page.toString(),'size':size.toString()};
+  }
+}
+
+
+class FcmTokenParams {
+  final String deviceToken;
+  final String deviceType;
+  const FcmTokenParams({required this.deviceToken, required this.deviceType});
+  Map<String, dynamic> toJson() =>
+      {'deviceToken': deviceToken, 'deviceType': deviceType};
+}
+
+class DeleteFcmTokenParams {
+  final String deviceToken;
+  const DeleteFcmTokenParams({required this.deviceToken});
 }

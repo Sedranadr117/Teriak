@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
+import 'package:teriak/config/themes/app_assets.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/config/themes/theme_controller.dart';
-import 'package:teriak/core/themes/app_assets.dart';
 import 'package:teriak/features/home/presentation/widgets/custom_bottom_nav.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/features/money_box/presentation/pages/money_box_page.dart';
@@ -17,6 +17,7 @@ import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/
 import 'package:teriak/features/stock_management/presentation/controller/stock_controller.dart';
 import 'package:teriak/features/stock_management/presentation/pages/stock_management.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
+import 'package:teriak/features/notification/presentation/controller/notification_controller.dart';
 
 import 'package:teriak/main.dart';
 
@@ -176,6 +177,13 @@ class _HomePageState extends State<HomePage> {
                           },
                         ),
                   ListTile(
+                    leading: const Icon(Icons.notifications),
+                    title: Text("Notifications".tr),
+                    onTap: () {
+                      Get.toNamed(AppPages.notifications);
+                    },
+                  ),
+                  ListTile(
                     leading: const Icon(Icons.settings),
                     title: Text("Settings".tr),
                     onTap: () {
@@ -208,6 +216,18 @@ class _HomePageState extends State<HomePage> {
                             ),
                             ElevatedButton(
                               onPressed: () async {
+                                // Remove FCM token before logout
+                                try {
+                                  if (Get.isRegistered<
+                                      NotificationController>()) {
+                                    await NotificationController.to
+                                        .removeFcmToken();
+                                  }
+                                } catch (e) {
+                                  debugPrint(
+                                      '⚠️ Failed to remove FCM token: $e');
+                                }
+
                                 final cacheHelper = CacheHelper();
                                 await cacheHelper.removeData(key: 'token');
                                 await cacheHelper.removeData(key: 'Role');

@@ -41,4 +41,6 @@ class AppPages {
   //money box routes
   static const String moneyBox = '/money-box';
   static const String moneyBoxInfo = '/money-box-info';
+  //notification routes
+  static const String notifications = '/notifications';
 }

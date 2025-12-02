@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:teriak/core/databases/api/api_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/errors/exceptions.dart';
+import 'package:teriak/core/errors/error_model.dart';
 
 class HttpConsumer extends ApiConsumer {
   final String baseUrl;
@@ -33,21 +34,24 @@ class HttpConsumer extends ApiConsumer {
   Future<dynamic> get(String path,
       {Object? data, Map<String, dynamic>? queryParameters}) async {
     try {
-    final uri =
-        Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
-    final headers = _getHeaders();
-    final response = await http.get(uri, headers: headers).timeout(
-      const Duration(seconds: 30),
-      onTimeout: () {
-        throw TimeoutException('Request timed out after 30 seconds');
-      },
-    );
-    handleHttpResponse(response);
-    return _tryDecode(response.body);
+      final uri =
+          Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+      final headers = _getHeaders();
+      final response = await http.get(uri, headers: headers).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException('Request timed out after 30 seconds');
+        },
+      );
+      handleHttpResponse(response);
+      return _tryDecode(response.body);
     } catch (e) {
       print('💥 HTTP Error: $e');
       if (e is HttpException) {
         handleHttpException(e);
+      } else if (e is SocketException) {
+        throw ConnectionErrorException(ErrorModel(
+            errorMessage: 'Connection error: ${e.message}', status: 0));
       } else {
         rethrow;
       }
@@ -60,30 +64,30 @@ class HttpConsumer extends ApiConsumer {
       Map<String, dynamic>? queryParameters,
       bool isFormData = false}) async {
     try {
-    final uri =
-        Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
+      final uri =
+          Uri.parse('$baseUrl$path').replace(queryParameters: queryParameters);
 
-    print('🌐 Full URL: $uri');
-    print('📤 Request method: POST');
-    print('📦 Request data: $data');
+      print('🌐 Full URL: $uri');
+      print('📤 Request method: POST');
+      print('📦 Request data: $data');
 
-    final headers = _getHeaders(isFormData: isFormData);
-    print('📋 Headers: $headers');
+      final headers = _getHeaders(isFormData: isFormData);
+      print('📋 Headers: $headers');
 
-    final body = isFormData ? data : json.encode(data);
-    print('📄 Request body: $body');
+      final body = isFormData ? data : json.encode(data);
+      print('📄 Request body: $body');
 
-    final response = await http.post(
-      uri,
-      body: body,
-      headers: headers,
-    );
+      final response = await http.post(
+        uri,
+        body: body,
+        headers: headers,
+      );
 
-    print('📥 Response status: ${response.statusCode}');
-    print('📥 Response body: ${response.body}');
+      print('📥 Response status: ${response.statusCode}');
+      print('📥 Response body: ${response.body}');
 
-    handleHttpResponse(response);
-    return _tryDecode(response.body);
+      handleHttpResponse(response);
+      return _tryDecode(response.body);
     } catch (e) {
       print('💥 HTTP Error: $e');
       if (e is HttpException) {

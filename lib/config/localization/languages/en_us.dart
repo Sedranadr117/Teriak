@@ -832,6 +832,15 @@ final Map<String, String> enUS = {
   "Mark as Read": "Mark as read",
   "Mark All as Read": "Mark all as read",
   "No Notifications": "No notifications",
+  "You have no notifications yet": "You have no notifications yet",
+  "Just now": "Just now",
+  "minute": "minute",
+  "minutes": "minutes",
+  "hour": "hour",
+  "hours": "hours",
+  "day": "day",
+  "days ago": "days ago",
+  "Yesterday": "Yesterday",
 
   // Help
   "Help": "Help",
