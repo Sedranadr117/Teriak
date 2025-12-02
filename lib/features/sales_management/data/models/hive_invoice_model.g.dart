@@ -18,7 +18,7 @@ class HiveSaleInvoiceAdapter extends TypeAdapter<HiveSaleInvoice> {
     };
     return HiveSaleInvoice(
       id: fields[0] as int,
-      customerId: fields[1] as int,
+      customerId: fields[1] as int?,
       customerName: fields[2] as String,
       invoiceDate: fields[3] as String,
       totalAmount: fields[4] as double,

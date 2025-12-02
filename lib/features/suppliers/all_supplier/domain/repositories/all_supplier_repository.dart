@@ -3,5 +3,5 @@ import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_mode
 import '../../../../../core/errors/failure.dart';
 
 abstract class AllSupplierRepository {
-  Future<Either<Failure, List<SupplierModel>>> getAllSupplier();
+  Future<Either<Failure, List<SupplierModel>>> getAllSupplier({bool skipCache = false});
 }

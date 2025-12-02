@@ -6,4 +6,7 @@ import '../../../../../core/params/params.dart';
 abstract class AddProductRepository {
   Future<Either<Failure, ProductEntity>> postAddProduct(
       {required AddProductParams params, required Map<String, dynamic> body});
+
+  Future<Either<Failure, List<ProductEntity>>> syncPendingProducts();
+  int getPendingProductsCount();
 }

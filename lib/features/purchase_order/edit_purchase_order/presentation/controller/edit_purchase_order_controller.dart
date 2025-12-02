@@ -81,7 +81,7 @@ class EditPurchaseOrderController extends GetxController {
   var isLoading = false.obs;
   var isPharmacist = true.obs;
   var isInitializing = false.obs; // Start with false
-     final RxString errorMessage = ''.obs;
+  final RxString errorMessage = ''.obs;
 
   // Available currencies
   final List<String> availableCurrencies = ['SYP', 'USD'];
@@ -177,7 +177,7 @@ class EditPurchaseOrderController extends GetxController {
     originalSupplierId = supplierId;
     originalSupplierName = order.supplierName;
 
-    suppliers.value = supplierController.suppliers.cast<SupplierModel>();
+    suppliers.value = supplierController.suppliers.toList();
     products.value = productController.products.cast<ProductModel>();
 
     if (supplierId != null) {
@@ -224,7 +224,7 @@ class EditPurchaseOrderController extends GetxController {
 
   void selectCurrency(String currency) {
     selectedCurrency.value = currency;
-     if (selectedProduct.value != null) {
+    if (selectedProduct.value != null) {
       _handleProductPriceLogic(selectedProduct.value!);
     }
   }
@@ -237,7 +237,7 @@ class EditPurchaseOrderController extends GetxController {
     _handleProductPriceLogic(product);
   }
 
-void _handleProductPriceLogic(ProductEntity product) {
+  void _handleProductPriceLogic(ProductEntity product) {
     final productType = product.productType;
     final isMasterProduct = productType == "Master" || productType == "مركزي";
 
@@ -439,25 +439,19 @@ void _handleProductPriceLogic(ProductEntity product) {
 
       final body = buildRequestBody();
 
-
       final result = await editPurchaseOrderUseCase(params: params, body: body);
-
-     
 
       result.fold(
         (failure) {
-               if (failure.statusCode == 401) {
+          if (failure.statusCode == 401) {
             Get.snackbar('Error'.tr, "login cancel".tr);
+          } else {
+            Get.snackbar(
+              'Error'.tr,
+              'Failed to update purchase order'.tr,
+              snackPosition: SnackPosition.TOP,
+            );
           }
-          else{
-
-           Get.snackbar(
-            'Error'.tr,
-            'Failed to update purchase order'.tr,
-            snackPosition: SnackPosition.TOP,
-          );
-           }
-        
         },
         (updatedOrder) {
           Get.snackbar(
@@ -468,8 +462,7 @@ void _handleProductPriceLogic(ProductEntity product) {
         },
       );
     } catch (e) {
-
-   errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,

@@ -6,4 +6,6 @@ import '../../../../../core/params/params.dart';
 abstract class AddPurchaseOrderRepository {
   Future<Either<Failure, PurchaseOrderEntity>> postAddPurchaseOrder(
       {required LanguageParam params, required Map<String, dynamic> body});
+  
+  Future<Either<Failure, List<PurchaseOrderEntity>>> syncPendingPurchaseOrders();
 }

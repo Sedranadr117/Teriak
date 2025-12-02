@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/config/themes/app_colors.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 
@@ -23,7 +24,7 @@ class ProductCard extends StatelessWidget {
 
     final int currentStock = (product['totalQuantity'] as num?)?.toInt() ?? 0;
     final int reorderPoint = (product['minStockLevel'] as num?)?.toInt() ?? 0;
-    print("reorderPoint $reorderPoint");
+    // print("reorderPoint $reorderPoint");
     final DateTime? expiryDate = product['earliestExpiryDate'] != null
         ? DateTime.tryParse(product['earliestExpiryDate'].toString())
         : null;
@@ -69,8 +70,7 @@ class ProductCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          product['productName']?.toString() ??
-                              'Unknown Product'.tr,
+                          _getProductName(),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
@@ -286,5 +286,23 @@ class ProductCard extends StatelessWidget {
     if (isNearExpiry) return AppColors.warningLight.withOpacity(0.4);
     if (isLowStock) return AppColors.errorLight.withOpacity(0.4);
     return colorScheme.outline.withValues(alpha: 0.2);
+  }
+
+  String _getProductName() {
+    // Use Arabic name if available and locale is Arabic
+    if (LocaleController.to.isArabic) {
+      final arabicName = product['productNameAr']?.toString();
+      if (arabicName != null && arabicName.isNotEmpty) {
+        return arabicName;
+      }
+    } else {
+      // Use English name if available and locale is English
+      final englishName = product['productNameEn']?.toString();
+      if (englishName != null && englishName.isNotEmpty) {
+        return englishName;
+      }
+    }
+    // Fallback to productName
+    return product['productName']?.toString() ?? 'Unknown Product'.tr;
   }
 }

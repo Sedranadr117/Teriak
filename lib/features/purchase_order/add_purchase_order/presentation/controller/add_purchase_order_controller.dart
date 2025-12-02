@@ -1,16 +1,25 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/core/errors/failure.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity .dart';
 import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
+import 'package:teriak/features/purchase_order/add_purchase_order/data/datasources/add_purchase_local_data_source.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/data/datasources/add_purchase_remote_data_source.dart';
+import 'package:teriak/features/purchase_order/add_purchase_order/data/models/hive_pending_purchase_order_model.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/data/repositories/add_purchase_repository_impl.dart';
 import 'package:teriak/features/purchase_order/add_purchase_order/domain/usecases/post_add_purchase.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/data/datasources/purchase_order_local_data_source.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/hive_purchase_order_model.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/controller/all_purchase_order_controller.dart';
 import 'package:teriak/features/suppliers/all_supplier/data/models/supplier_model.dart';
 import 'package:teriak/features/products/all_products/data/models/product_model.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
@@ -61,6 +70,7 @@ class AddPurchaseOrderController extends GetxController {
 
   late final NetworkInfoImpl networkInfo;
   late final AddPurchaseOrder addPurchaseOrderUseCase;
+  late final AddPurchaseOrderRepositoryImpl repository;
 
   var products = <ProductModel>[].obs;
   final productController = Get.find<GetAllProductController>();
@@ -86,9 +96,24 @@ class AddPurchaseOrderController extends GetxController {
     final remoteDataSource =
         AddPurchaseOrderRemoteDataSource(api: httpConsumer);
 
-    final repository = AddPurchaseOrderRepositoryImpl(
+    // Get Hive box for purchase orders
+    final purchaseOrderBox =
+        Hive.box<HivePurchaseOrderModel>('purchaseOrderCache');
+    final localDataSource =
+        PurchaseOrderLocalDataSourceImpl(purchaseOrderBox: purchaseOrderBox);
+
+    // Get Hive box for pending purchase orders
+    final pendingPurchaseOrderBox =
+        Hive.box<HivePendingPurchaseOrderModel>('pendingPurchaseOrders');
+    final pendingPurchaseOrderLocalDataSource =
+        AddPurchaseOrderLocalDataSourceImpl(
+            pendingPurchaseOrderBox: pendingPurchaseOrderBox);
+
+    repository = AddPurchaseOrderRepositoryImpl(
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
+      localDataSource: localDataSource,
+      pendingPurchaseOrderLocalDataSource: pendingPurchaseOrderLocalDataSource,
     );
 
     addPurchaseOrderUseCase = AddPurchaseOrder(repository: repository);
@@ -343,36 +368,58 @@ class AddPurchaseOrderController extends GetxController {
               "quantity": item.quantity,
               "price": item.price,
               "productType": mapProductType(item.product.productType),
+              // Store product information for offline orders
+              "productName": item.product.tradeName.isNotEmpty
+                  ? item.product.tradeName
+                  : item.product.scientificName.isNotEmpty
+                      ? item.product.scientificName
+                      : 'Unknown Product',
+              "barcode": item.product.barcode,
+              "refSellingPrice": item.product.refSellingPrice,
+              "minStockLevel": item.product.minStockLevel,
             })
         .toList();
 
     return {
       "supplierId": selectedSupplier.value!.id,
+      "supplierName": selectedSupplier
+          .value!.name, // Store supplier name for offline orders
       "currency": selectedCurrency.value,
       "items": items,
     };
   }
 
-  Future<void> createPurchaseOrder() async {
-    if (!_validateOrder()) return;
+  Future<bool> createPurchaseOrder() async {
+    if (!_validateOrder()) {
+      print('❌ Validation failed');
+      return false;
+    }
 
     isLoading.value = true;
     clearValidationErrors();
 
     try {
+      print('🔄 Starting purchase order creation...');
       final languageCode = LocaleController.to.locale.languageCode;
       final params = LanguageParam(languageCode: languageCode, key: 'language');
       final body = buildRequestBody();
+
+      print("📤 Currency sent: ${selectedCurrency.value}");
+      print("📤 Request body: $body");
+      print("📤 Supplier ID: ${selectedSupplier.value?.id}");
+      print("📤 Items count: ${orderItems.length}");
 
       final result = await addPurchaseOrderUseCase.call(
         params: params,
         body: body,
       );
-      print("Currency sent: ${selectedCurrency.value}");
-      print("Request body: $body");
 
+      bool success = false;
       result.fold(
         (failure) {
+          print('❌ Purchase order creation failed: ${failure.errMessage}');
+          print('❌ Status code: ${failure.statusCode}');
+
           if (failure.statusCode == 401) {
             Get.snackbar('Error'.tr, "login cancel".tr);
           } else {
@@ -380,25 +427,60 @@ class AddPurchaseOrderController extends GetxController {
               'Error'.tr,
               failure.errMessage,
               snackPosition: SnackPosition.TOP,
+              duration: const Duration(seconds: 4),
             );
           }
+          success = false;
         },
-        (purchaseOrder) {
+        (purchaseOrder) async {
+          // The purchase order is already cached in the repository
+          // Now we need to ensure it appears in the list
+          print('✅ Purchase order created and cached: ID ${purchaseOrder.id}');
+          print('✅ Status: ${purchaseOrder.status}');
+          print('✅ Total: ${purchaseOrder.total}');
+
+          // Add the order to the list immediately if the controller exists
+          try {
+            if (Get.isRegistered<GetAllPurchaseOrderController>()) {
+              final allOrdersController =
+                  Get.find<GetAllPurchaseOrderController>();
+              allOrdersController.addNewPurchaseOrder(purchaseOrder);
+              print(
+                  '✅ Added new order to list immediately: ID ${purchaseOrder.id}');
+            }
+          } catch (e) {
+            print('⚠️ Could not add order to list immediately: $e');
+          }
+
           Get.snackbar(
             'Success'.tr,
             'Purchase order created successfully'.tr,
             snackPosition: SnackPosition.TOP,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
           );
 
           _resetForm();
+          success = true;
+
+          // Navigate back after successful creation with result
+          // Wait a moment to ensure cache is written
+          await Future.delayed(const Duration(milliseconds: 200));
+          Get.back(result: true);
         },
       );
-    } catch (e) {
-      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      return success;
+    } catch (e, stackTrace) {
+      print('❌ Exception creating purchase order: $e');
+      print('❌ Stack trace: $stackTrace');
+      errorMessage.value = 'An unexpected error occurred: $e'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 4),
       );
+      return false;
     } finally {
       isLoading.value = false;
     }
@@ -410,6 +492,12 @@ class AddPurchaseOrderController extends GetxController {
     orderItems.clear();
     _clearCurrentProductData();
     clearValidationErrors();
+  }
+
+  /// Sync offline purchase orders from cache to server
+  Future<Either<Failure, List<PurchaseOrderEntity>>>
+      syncOfflinePurchaseOrdersFromCache() async {
+    return await repository.syncPendingPurchaseOrders();
   }
 
   @override

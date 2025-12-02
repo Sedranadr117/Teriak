@@ -13,7 +13,7 @@ class ProductRemoteDataSource {
       EndPoints.product,
       queryParameters: params.toMap(),
     );
-
+    print('📊 response: ${response}');
     return PaginatedProductsModel.fromJson(response as Map<String, dynamic>);
   }
 }

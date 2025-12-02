@@ -30,14 +30,20 @@ class ProductModel extends ProductEntity {
       id: json[ApiKeys.id],
       tradeName: json[ApiKeys.tradeName],
       scientificName: json[ApiKeys.scientificName],
-      barcode:
-          (json.containsKey(ApiKeys.barcode) && json[ApiKeys.barcode] != null)
-              ? json[ApiKeys.barcode].toString()
-              : " ",
       barcodes:
           (json.containsKey(ApiKeys.barcodes) && json[ApiKeys.barcodes] != null)
               ? (json[ApiKeys.barcodes]).map((e) => e.toString()).toList()
               : [],
+      barcode:
+          // First try to get barcode from barcode field
+          (json.containsKey(ApiKeys.barcode) && json[ApiKeys.barcode] != null)
+              ? json[ApiKeys.barcode].toString()
+              // If not found, use first barcode from barcodes array
+              : (json.containsKey(ApiKeys.barcodes) && 
+                 json[ApiKeys.barcodes] != null && 
+                 (json[ApiKeys.barcodes] as List).isNotEmpty)
+                  ? (json[ApiKeys.barcodes] as List).first.toString()
+                  : "",
       productType: json[ApiKeys.productType],
       requiresPrescription: json[ApiKeys.requiresPrescription],
       concentration: json.containsKey(ApiKeys.concentration) &&

@@ -26,53 +26,218 @@ class SearchSection extends StatefulWidget {
 }
 
 class _SearchSectionState extends State<SearchSection> {
+  void _showSearchBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (bottomSheetContext) => Container(
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: DraggableScrollableSheet(
+          initialChildSize: 0.75,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          expand: false,
+          builder: (innerContext, scrollController) => Column(
+            children: [
+              // Handle bar
+              Container(
+                margin: EdgeInsets.only(top: 1.h),
+                width: 40.w,
+                height: 0.5.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              // Header
+              Padding(
+                padding: EdgeInsets.all(4.w),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(1.5.w),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        Icons.filter_list,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20.sp,
+                      ),
+                    ),
+                    SizedBox(width: 2.w),
+                    Expanded(
+                      child: Text(
+                        'Search Purchase Orders'.tr,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () => Navigator.pop(bottomSheetContext),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(height: 1),
+              // Search Options
+              Expanded(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  padding: EdgeInsets.all(4.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Supplier Search Section
+                      _buildSupplierSearch(innerContext),
+                      SizedBox(height: 2.h),
+
+                      // Date Range Search Section
+                      _buildDateRangeSearch(innerContext),
+                      SizedBox(height: 2.h),
+
+                      // Search Buttons
+                      _buildSearchButtonsForBottomSheet(bottomSheetContext),
+                      SizedBox(height: 2.h),
+
+                      // Error Display
+                      Obx(() {
+                        final error = widget.searchController.searchError.value;
+                        if (error.isNotEmpty) {
+                          return _buildErrorText(innerContext, error);
+                        }
+                        return const SizedBox.shrink();
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
-      padding: EdgeInsets.all(2.w),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Search Purchase Orders'.tr,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+          // Search Bar
+          InkWell(
+            onTap: () => _showSearchBottomSheet(context),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 1.5.h),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                  width: 1.5,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.search,
+                    color: Theme.of(context).colorScheme.primary,
+                    size: 20.sp,
+                  ),
+                  SizedBox(width: 2.w),
+                  Expanded(
+                    child: Obx(() {
+                      final hasSearch =
+                          widget.searchController.hasSearchResults.value;
+                      final selectedSupplier = widget.selectedSupplier;
+                      final startDate = widget.searchController.startDate.value;
+                      final endDate = widget.searchController.endDate.value;
+
+                      String searchText =
+                          'Search by supplier or date range...'.tr;
+
+                      if (hasSearch) {
+                        if (selectedSupplier != null) {
+                          searchText = 'Supplier: ${selectedSupplier.name}';
+                        } else if (startDate != null && endDate != null) {
+                          searchText =
+                              'Date: ${startDate.day}/${startDate.month}/${startDate.year} - ${endDate.day}/${endDate.month}/${endDate.year}';
+                        } else if (startDate != null) {
+                          searchText =
+                              'From: ${startDate.day}/${startDate.month}/${startDate.year}';
+                        }
+                      }
+
+                      return Text(
+                        searchText,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          color: hasSearch
+                              ? Theme.of(context).colorScheme.onSurface
+                              : Colors.grey.shade600,
+                          fontWeight:
+                              hasSearch ? FontWeight.w500 : FontWeight.normal,
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(width: 2.w),
+                  Obx(() {
+                    if (widget.searchController.hasSearchResults.value) {
+                      return InkWell(
+                        onTap: () {
+                          widget.searchController.resetSearch();
+                          setState(() {});
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(1.w),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.errorContainer,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Icon(
+                            Icons.clear,
+                            size: 16.sp,
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      );
+                    }
+                    return Icon(
+                      Icons.arrow_forward_ios,
+                      size: 14.sp,
+                      color: Colors.grey.shade400,
+                    );
+                  }),
+                ],
+              ),
+            ),
           ),
-          SizedBox(height: 1.h),
-
-          // Supplier Search Section
-          _buildSupplierSearch(context),
-          SizedBox(height: 1.h),
-
-          // Date Range Search Section
-          _buildDateRangeSearch(context),
-          SizedBox(height: 0.5.h),
-
-          // Search Buttons
-          _buildSearchButtons(context),
-
-          // Error Display
-          Obx(() {
-            final error = widget.searchController.searchError.value;
-            if (error.isNotEmpty) {
-              return _buildErrorText(context, error);
-            }
-            return const SizedBox.shrink();
-          }),
         ],
       ),
     );
@@ -89,42 +254,41 @@ class _SearchSectionState extends State<SearchSection> {
               ),
         ),
         SizedBox(height: 0.5.h),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: widget.searchController.supplierError.value != null
-                  ? Colors.red
-                  : Theme.of(context).colorScheme.outline,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child:Obx(()=>
-           DropdownButtonFormField<SupplierModel>(
-            value: widget.selectedSupplier,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'Select Supplier'.tr,
-              hintStyle: TextStyle(
-                color: Colors.grey.shade500,
-                fontSize: 8.sp,
-              ),
-            ),
-            items: widget.suppliers.map((supplier) {
-              return DropdownMenuItem<SupplierModel>(
-                value: supplier,
-                child: Text(
-                  supplier.name,
-                  style: TextStyle(fontSize: 12.sp),
+        Obx(() => Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: widget.searchController.supplierError.value != null
+                      ? Colors.red
+                      : Theme.of(context).colorScheme.outline,
                 ),
-              );
-            }).toList(),
-            onChanged: (SupplierModel? value) {
-              if (value != null) {
-                widget.onSupplierSelected(value);
-              }
-            },
-          ),),
-        ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: DropdownButtonFormField<SupplierModel>(
+                value: widget.selectedSupplier,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Select Supplier'.tr,
+                  hintStyle: TextStyle(
+                    color: Colors.grey.shade500,
+                    fontSize: 8.sp,
+                  ),
+                ),
+                items: widget.suppliers.map((supplier) {
+                  return DropdownMenuItem<SupplierModel>(
+                    value: supplier,
+                    child: Text(
+                      supplier.name,
+                      style: TextStyle(fontSize: 12.sp),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (SupplierModel? value) {
+                  if (value != null) {
+                    widget.onSupplierSelected(value);
+                  }
+                },
+              ),
+            )),
         Obx(() {
           final error = widget.searchController.supplierError.value;
           if (error != null) {
@@ -321,6 +485,95 @@ class _SearchSectionState extends State<SearchSection> {
               onPressed: isSearching
                   ? null
                   : () => widget.searchController.searchByDateRange(),
+              icon: isSearching
+                  ? SizedBox(
+                      width: 11.sp,
+                      height: 11.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                    )
+                  : Icon(Icons.date_range, size: 11.sp),
+              label: Text(
+                isSearching ? 'Searching...'.tr : 'Search by Date'.tr,
+                style: TextStyle(fontSize: 11.sp),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryLight,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 1.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchButtonsForBottomSheet(BuildContext bottomSheetContext) {
+    return Row(
+      children: [
+        Expanded(
+          child: Obx(() {
+            final isSearching =
+                widget.searchController.isSearchingSupplier.value;
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () async {
+                      await widget.searchController.searchBySupplier();
+                      if (mounted &&
+                          widget.searchController.hasSearchResults.value) {
+                        Navigator.pop(bottomSheetContext);
+                      }
+                    },
+              icon: isSearching
+                  ? SizedBox(
+                      width: 11.sp,
+                      height: 11.sp,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Colors.white,
+                        ),
+                      ),
+                    )
+                  : Icon(Icons.search, size: 11.sp),
+              label: Text(
+                isSearching ? 'Searching...'.tr : 'Search by Supplier'.tr,
+                style: TextStyle(fontSize: 11.sp),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.secondaryVariantLight,
+                foregroundColor: Colors.white,
+                padding: EdgeInsets.symmetric(vertical: 1.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            );
+          }),
+        ),
+        SizedBox(width: 2.w),
+        Expanded(
+          child: Obx(() {
+            final isSearching = widget.searchController.isSearchingDate.value;
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () async {
+                      await widget.searchController.searchByDateRange();
+                      if (mounted &&
+                          widget.searchController.hasSearchResults.value) {
+                        Navigator.pop(bottomSheetContext);
+                      }
+                    },
               icon: isSearching
                   ? SizedBox(
                       width: 11.sp,

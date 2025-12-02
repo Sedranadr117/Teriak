@@ -53,7 +53,7 @@ class _SearchPurchaseInvoicePageState extends State<SearchPurchaseInvoicePage> {
         children: [
           SizedBox(height: 2.h),
           SearchSection(
-            suppliers: supplierController.suppliers.cast(),
+            suppliers: supplierController.suppliers.toList(),
             onSupplierSelected: searchController.selectSupplier,
             selectedSupplier: searchController.selectedSupplier.value,
             errorText: searchController.searchError.value.isNotEmpty

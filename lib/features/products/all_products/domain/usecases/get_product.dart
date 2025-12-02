@@ -4,14 +4,15 @@ import 'package:teriak/features/products/all_products/domain/entities/paginated_
 import 'package:teriak/features/products/all_products/domain/repositories/product_repository.dart';
 import '../../../../../core/errors/failure.dart';
 
-
 class GetAllProduct {
   final ProductRepository repository;
 
   GetAllProduct({required this.repository});
 
-  Future<Either<Failure, PaginatedProductsEntity>> call(
-      {required AllProductParams params}) {
-    return repository.getAllProduct(params: params);
+  Future<Either<Failure, PaginatedProductsEntity>> call({
+    required AllProductParams params,
+    bool skipCache = false,
+  }) {
+    return repository.getAllProduct(params: params, skipCache: skipCache);
   }
 }

@@ -40,13 +40,26 @@ class CreateOrderButton extends StatelessWidget {
           textStyle: TextStyle(fontSize: 14.sp),
         ),
         child: isLoading
-            ? SizedBox(
-                width: 5.w,
-                height: 2.5.h,
-                child: CircularProgressIndicator(
-                  color: AppColors.onPrimaryLight,
-                  strokeWidth: 2,
-                ),
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 4.w,
+                    height: 4.w,
+                    child: CircularProgressIndicator(
+                      color: AppColors.onPrimaryLight,
+                      strokeWidth: 2.5,
+                    ),
+                  ),
+                  SizedBox(width: 2.w),
+                  Text(
+                    'Creating...'.tr,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,

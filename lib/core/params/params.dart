@@ -218,8 +218,9 @@ class EditProductParams {
 
 class DeleteProductParams {
   final int id;
+  final String productType;
 
-  const DeleteProductParams({required this.id});
+  const DeleteProductParams({required this.id, required this.productType});
 }
 
 class ProductNamesParams {

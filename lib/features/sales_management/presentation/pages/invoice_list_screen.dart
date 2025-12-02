@@ -26,6 +26,8 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
         tag: 'invoice_list');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       saleController.fetchAllInvoices();
+      // Update sync status when screen opens
+      saleController.refreshSyncStatus();
     });
   }
 
@@ -83,10 +85,118 @@ class _InvoiceListScreenState extends State<InvoiceListScreen> {
             ),
             tooltip: 'Refresh Stock'.tr,
           ),
+          Obx(() => Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  IconButton(
+                    onPressed: saleController.isSyncing.value
+                        ? null
+                        : saleController.manualSyncOfflineInvoices,
+                    icon: saleController.isSyncing.value
+                        ? SizedBox(
+                            width: 6.w,
+                            height: 6.w,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: colorScheme.onSurface,
+                            ),
+                          )
+                        : CustomIconWidget(
+                            iconName: 'sync',
+                            color: colorScheme.onSurface,
+                            size: 6.w,
+                          ),
+                    tooltip: saleController.isSyncing.value
+                        ? 'Syncing...'.tr
+                        : 'Sync Offline Invoices'.tr,
+                  ),
+                  if (saleController.pendingSyncCount.value > 0)
+                    Positioned(
+                      right: 4,
+                      top: 4,
+                      child: Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 16,
+                          minHeight: 16,
+                        ),
+                        child: Center(
+                          child: Text(
+                            saleController.pendingSyncCount.value > 9
+                                ? '9+'
+                                : '${saleController.pendingSyncCount.value}',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              )),
         ],
       ),
       body: Column(
         children: [
+          // Sync Status Banner
+          Obx(() {
+            if (saleController.pendingSyncCount.value > 0) {
+              return Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.w),
+                color: saleController.isSyncing.value
+                    ? Colors.blue.shade100
+                    : Colors.orange.shade100,
+                child: Row(
+                  children: [
+                    if (saleController.isSyncing.value)
+                      SizedBox(
+                        width: 4.w,
+                        height: 4.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.blue,
+                        ),
+                      )
+                    else
+                      Icon(
+                        Icons.cloud_off,
+                        color: Colors.orange.shade700,
+                        size: 5.w,
+                      ),
+                    SizedBox(width: 2.w),
+                    Expanded(
+                      child: Text(
+                        saleController.isSyncing.value
+                            ? 'Syncing offline invoices...'.tr
+                            : '${saleController.pendingSyncCount.value} offline invoice(s) waiting to sync'
+                                .tr,
+                        style: TextStyle(
+                          color: saleController.isSyncing.value
+                              ? Colors.blue.shade700
+                              : Colors.orange.shade700,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                    if (!saleController.isSyncing.value)
+                      TextButton(
+                        onPressed: saleController.manualSyncOfflineInvoices,
+                        child: Text('Sync Now'.tr),
+                      ),
+                  ],
+                ),
+              );
+            }
+            return SizedBox.shrink();
+          }),
           Padding(
             padding: EdgeInsets.all(4.w),
             child: Row(

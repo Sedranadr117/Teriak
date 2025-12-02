@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/features/products/all_products/data/datasources/product_local_data_source.dart';
+import 'package:teriak/features/products/all_products/data/models/hive_product_model.dart';
 import 'package:teriak/features/products/all_products/domain/entities/product_entity.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/products/product_details/data/datasources/product_details_remote_data_source.dart';
@@ -38,10 +41,13 @@ class GetProductDetailsController extends GetxController {
     networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = ProductDetailsRemoteDataSource(api: httpConsumer);
+    final productBox = Hive.box<HiveProductModel>('productCache');
+    final localDataSource = ProductLocalDataSourceImpl(productBox: productBox);
 
     final repository = ProductDetailsRepositoryImpl(
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
+      localDataSource: localDataSource,
     );
 
     getProductDetailsUseCase = GetProductDetails(repository: repository);

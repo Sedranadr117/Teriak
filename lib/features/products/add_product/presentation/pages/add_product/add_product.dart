@@ -190,18 +190,18 @@ class _AddProductPageState extends State<AddProductPage> {
                 ),
               ),
             ),
-            Obx(()=>
-               SaveProductButton(
+            Obx(
+              () => SaveProductButton(
                 isFormValid: c.isFormValid,
                 isLoading: productController.isLoading.value,
-                onTap: ()  {
+                onTap: () async {
                   FocusScope.of(context).unfocus();
-              
-                   c.addProduct();
-              
-                  productController.refreshProducts();
-              
-              
+
+                  await c.addProduct();
+
+                  // Refresh with skipCache to get fresh data and avoid duplicates
+                  productController.refreshProducts(skipCache: true);
+
                   setState(() {});
                 },
                 label: "Save Product".tr,

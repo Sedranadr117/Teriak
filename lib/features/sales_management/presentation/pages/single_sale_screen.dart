@@ -39,6 +39,13 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
     saleController =
         Get.put(SaleController(customerTag: widget.tabId), tag: widget.tabId);
     moneyBoxController = Get.put(GetMoneyBoxController());
+    // StockController is registered as permanent in HomePage, so use Get.find
+    try {
+      stockcontroller = Get.find<StockController>();
+    } catch (e) {
+      // If not found, register it (fallback)
+      stockcontroller = Get.put(StockController(), permanent: true);
+    }
     customerController.fetchCustomers();
   }
 
@@ -221,7 +228,8 @@ class _SingleSaleScreenState extends State<SingleSaleScreen> {
                         customerController.selectedCustomer.value?.id);
                     if (saleController.done) {
                       _completeSale();
-                      await stockcontroller.fetchStock();
+                      // Stock is automatically updated by SaleController after sale
+                      // No need to manually refresh here
                       moneyBoxController.refreshData();
                       setState(() {});
                     }

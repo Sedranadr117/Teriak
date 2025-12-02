@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:hive/hive.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
@@ -8,8 +8,10 @@ import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/customer_managment/data/datasources/customer_remote_data_source.dart';
+import 'package:teriak/features/customer_managment/data/datasources/customer_local_data_source.dart';
 import 'package:teriak/features/customer_managment/data/models/customer_debts_model.dart';
 import 'package:teriak/features/customer_managment/data/models/customer_model.dart';
+import 'package:teriak/features/customer_managment/data/models/hive_customer_model.dart';
 import 'package:teriak/features/customer_managment/data/repositories/customer_repository_impl.dart';
 import 'package:teriak/features/customer_managment/domain/entities/customer_entity.dart';
 import 'package:teriak/features/customer_managment/domain/usecases/add_payment.dart';
@@ -71,9 +73,13 @@ class CustomerController extends GetxController {
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
     final remoteDataSource = CustomerRemoteDataSource(api: httpConsumer);
+    final customerBox = Hive.box<HiveCustomerModel>('customerCache');
+    final localDataSource =
+        CustomerLocalDataSourceImpl(customerBox: customerBox);
 
     final repository = CustomerRepositoryImpl(
       remoteDataSource: remoteDataSource,
+      localDataSource: localDataSource,
       networkInfo: networkInfo,
     );
 
@@ -101,32 +107,55 @@ class CustomerController extends GetxController {
       final isConnected = await networkInfo.isConnected;
       print('📡  Network connected: $isConnected');
 
-      if (!isConnected) {
-        errorMessage.value =
-            '⚠️ No internet connection. Please check your network.'.tr;
-        Get.snackbar('Error'.tr,
-            'No internet connection. Please check your network.'.tr);
-        print('❌ No internet connection detected!');
-        return;
-      }
-
-      print('📥  Fetching customer list from API...');
+      // Try to fetch customers (repository will use cache if offline)
+      print('📥  Fetching customer list...');
       final result = await _getCustomers();
 
       result.fold(
         (failure) {
           errorMessage.value = failure.errMessage;
           print('❌  Failed to fetch customers: ${failure.errMessage}');
-          Get.snackbar(
-              'Error'.tr, 'Faild to get customer please try again later'.tr);
+          if (isConnected) {
+            Get.snackbar(
+                'Error'.tr, 'Faild to get customer please try again later'.tr);
+          }
         },
         (list) {
           isSuccess.value = true;
-          customers.assignAll(list.cast<CustomerModel>());
+          // Convert CustomerEntity to CustomerModel (needed for cached data)
+          customers.assignAll(list
+              .map((entity) => CustomerModel(
+                    id: entity.id,
+                    name: entity.name,
+                    phoneNumber: entity.phoneNumber,
+                    address: entity.address,
+                    notes: entity.notes,
+                    totalDebt: entity.totalDebt,
+                    remainingDebt: entity.remainingDebt,
+                    totalPaid: entity.totalPaid,
+                    activeDebtsCount: entity.activeDebtsCount,
+                    debts: entity.debts
+                        .map((debt) => DebtModel(
+                              id: debt.id,
+                              customerId: debt.customerId,
+                              customerName: debt.customerName,
+                              amount: debt.amount,
+                              paidAmount: debt.paidAmount,
+                              remainingAmount: debt.remainingAmount,
+                              dueDate: debt.dueDate,
+                              status: debt.status,
+                              notes: debt.notes,
+                            ))
+                        .toList(),
+                  ))
+              .toList());
           for (var cu in customers) {
             print("--------------${cu.id}");
           }
-          print('✅  Successfully fetched ${list.length} customers.');
+          print('✅  Successfully loaded ${list.length} customers.');
+          if (!isConnected) {
+            print('📦 Loaded customers from cache (offline mode)');
+          }
         },
       );
     } catch (e) {

@@ -8,6 +8,7 @@ class AllSupplierRemoteDataSource {
   AllSupplierRemoteDataSource({required this.api});
   Future<List<SupplierModel>> getAllSupplier() async {
     final response = await api.get(EndPoints.suppliers);
+    print(response);
     return (response as List<dynamic>)
         .map((item) => SupplierModel.fromJson(item as Map<String, dynamic>))
         .toList();

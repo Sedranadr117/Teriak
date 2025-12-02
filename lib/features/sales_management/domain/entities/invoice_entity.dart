@@ -1,6 +1,6 @@
 class InvoiceEntity {
   final int id;
-  final int customerId;
+  final int? customerId;
   final String customerName;
   final String invoiceDate;
   final double totalAmount;
@@ -20,7 +20,7 @@ class InvoiceEntity {
   InvoiceEntity({
     required this.id,
     required this.debtDueDate,
-    required this.customerId,
+    this.customerId,
     required this.customerName,
     required this.invoiceDate,
     required this.totalAmount,

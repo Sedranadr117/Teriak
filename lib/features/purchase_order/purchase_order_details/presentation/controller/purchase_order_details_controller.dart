@@ -1,10 +1,13 @@
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/data/datasources/purchase_order_local_data_source.dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/hive_purchase_order_model.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity .dart';
 import 'package:teriak/features/purchase_order/purchase_order_details/data/datasources/details_purchase_remote_data_source.dart';
 import 'package:teriak/features/purchase_order/purchase_order_details/data/repositories/details_purchase_repository_impl.dart';
@@ -42,9 +45,14 @@ class PurchaseOrderDetailsController extends GetxController {
     final remoteDataSource =
         DetailsPurchaseOrdersRemoteDataSource(api: httpConsumer);
 
+    // Get Hive box for purchase orders
+    final purchaseOrderBox = Hive.box<HivePurchaseOrderModel>('purchaseOrderCache');
+    final localDataSource = PurchaseOrderLocalDataSourceImpl(purchaseOrderBox: purchaseOrderBox);
+
     final repository = DetailsPurchaseOrdersRepositoryImpl(
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
+      localDataSource: localDataSource,
     );
 
     getDetailsPurchaseOrdersUseCase =

@@ -110,7 +110,7 @@ class SupplierCardWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            supplier.name as String? ?? "Unknown Supplier".tr,
+                            supplier.name,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: colorScheme.onSurface,
@@ -129,7 +129,7 @@ class SupplierCardWidget extends StatelessWidget {
                               SizedBox(width: 1.w),
                               Expanded(
                                 child: Text(
-                                  supplier.phone as String? ?? "No phone".tr,
+                                  supplier.phone,
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: colorScheme.onSurfaceVariant,
                                   ),
@@ -150,7 +150,7 @@ class SupplierCardWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        supplier.preferredCurrency as String? ?? "USD",
+                        supplier.preferredCurrency,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: colorScheme.onSecondaryContainer,
                           fontWeight: FontWeight.w500,
@@ -213,10 +213,8 @@ class SupplierCardWidget extends StatelessWidget {
           builder: (context) => AlertDialog(
             title: Text('Delete Supplier'.tr),
             content: Text(
-              '${"Are you sure you want to delete".tr} "${supplier.name}"'
-                  .tr,
+              '${"Are you sure you want to delete".tr} "${supplier.name}"'.tr,
             ),
-
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
