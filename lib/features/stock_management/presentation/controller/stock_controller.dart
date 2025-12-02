@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 
 import 'package:teriak/config/routes/app_pages.dart';
@@ -9,7 +10,9 @@ import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/stock_management/data/datasources/Stock_remote_data_source.dart';
+import 'package:teriak/features/stock_management/data/datasources/stock_local_data_source.dart';
 import 'package:teriak/features/stock_management/data/models/Stock_model.dart';
+import 'package:teriak/features/stock_management/data/models/hive_stock_model.dart';
 import 'package:teriak/features/stock_management/data/repositories/stock_repository_impl.dart';
 import 'package:teriak/features/stock_management/domain/entities/stock_entity.dart';
 import 'package:teriak/features/stock_management/domain/entities/stock_item_entity.dart';
@@ -53,10 +56,13 @@ class StockController extends GetxController {
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
 
     final remoteDataSource = StockRemoteDataSource(api: httpConsumer);
+    final stockBox = Hive.box<HiveStockModel>('stockCache');
+    final localDataSource = StockLocalDataSourceImpl(stockBox: stockBox);
 
     final repository = StockRepositoryImpl(
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
+      localDataSource: localDataSource,
     );
 
     _getStock = GetStock(repository: repository);
@@ -82,15 +88,6 @@ class StockController extends GetxController {
       final isConnected = await networkInfo.isConnected;
       print('📡  Network connected: $isConnected');
 
-      if (!isConnected) {
-        errorMessage.value =
-            '⚠️ No internet connection. Please check your network.'.tr;
-        Get.snackbar('Error'.tr,
-            'No internet connection. Please check your network.'.tr);
-        print('❌ No internet connection detected!');
-        return;
-      }
-
       print('📥  Fetching customer list from API...');
       final result = await _getStock();
 
@@ -103,11 +100,13 @@ class StockController extends GetxController {
                 'An unexpected error occurred. Please try again.'.tr;
           }
 
-          Get.snackbar(
-              'Error'.tr, 'Faild to get stock please try again later'.tr);
+          Get.snackbar('Error'.tr, failure.errMessage);
         },
         (list) {
-          allStokes.assignAll(list.map((e) => (e as StockModel).toEntity()));
+          allStokes.assignAll(list);
+          // if (!isConnected) {
+          //   Get.snackbar('Offline mode'.tr, 'Showing cached stock data.'.tr);
+          // }
           for (var emp in allStokes) {
             print('MYMID: ${emp.productName} ');
           }
@@ -135,31 +134,36 @@ class StockController extends GetxController {
       final isConnected = await networkInfo.isConnected;
       print('📡  Network connected: $isConnected');
 
-      if (!isConnected) {
-        errorMessage.value =
-            '⚠️ No internet connection. Please check your network.'.tr;
-        Get.snackbar('Error'.tr,
-            'No internet connection. Please check your network.'.tr);
-        print('❌ No internet connection detected!');
-        return;
-      }
-
+      // Try to fetch details (repository will use cache if offline)
       final result = await _getDetailsStock(
         productId: productId,
         productType: productType,
       );
 
-      result.fold((failure) => errorMessage.value = failure.errMessage,
-          (data) => {stockDetails.add(data)});
+      result.fold(
+        (failure) {
+          errorMessage.value = failure.errMessage;
+          print('❌ Failed to fetch stock details: ${failure.errMessage}');
+          // Clear details on error
+          stockDetails.clear();
+        },
+        (data) {
+          // Clear previous details and set only the current product's details
+          stockDetails.clear();
+          stockDetails.add(data);
+          print(
+              '✅ Loaded stock details for productId: $productId, productType: $productType');
+        },
+      );
     } catch (e) {
       print('💥  Exception occurred while fetching Stock: $e');
       errorMessage.value =
           'An unexpected error occurred while fetching Stock.'.tr;
+      stockDetails.clear();
     } finally {
       isLoading.value = false;
       print('🔚  Fetch Stock process finished.');
     }
-    isLoading.value = false;
   }
 
   Future<void> editStock(int stockId, StockParams params) async {

@@ -1,10 +1,13 @@
 // controllers/add_Product_controller.dart
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/products/all_products/data/datasources/product_local_data_source.dart';
+import 'package:teriak/features/products/all_products/data/models/hive_product_model.dart';
 import 'package:teriak/features/products/delete_product/data/datasources/delete_product_remote_data_source.dart';
 import 'package:teriak/features/products/delete_product/data/repositories/delete_product_repository_impl.dart';
 import 'package:teriak/features/products/delete_product/domain/usecases/delete_product.dart';
@@ -29,21 +32,25 @@ class DeleteProductController extends GetxController {
     networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = DeleteProductRemoteDataSource(api: httpConsumer);
+    final productBox = Hive.box<HiveProductModel>('productCache');
+    final localDataSource = ProductLocalDataSourceImpl(productBox: productBox);
 
     final repository = DeleteProductRepositoryImpl(
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
+      localDataSource: localDataSource,
     );
 
     deleteProductUseCase = DeleteProduct(repository: repository);
   }
 
-  Future<void> deleteProduct(int ProductId) async {
+  Future<void> deleteProduct(int productId, String productType) async {
     isLoading.value = true;
 
     try {
       final params = DeleteProductParams(
-        id: ProductId,
+        id: productId,
+        productType: productType,
       );
 
       final result = await deleteProductUseCase(

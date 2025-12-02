@@ -4,7 +4,7 @@ import 'package:teriak/features/sales_management/domain/entities/invoice_entity.
 class InvoiceModel extends InvoiceEntity {
   InvoiceModel(
       {required super.id,
-      required super.customerId,
+      super.customerId,
       required super.customerName,
       required super.invoiceDate,
       required super.totalAmount,

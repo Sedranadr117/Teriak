@@ -1,14 +1,22 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/core/params/params.dart';
+import 'package:teriak/features/products/add_product/data/datasources/add_product_local_data_source.dart';
 import 'package:teriak/features/products/add_product/data/datasources/add_product_remote_data_source.dart';
+import 'package:teriak/features/products/add_product/data/models/hive_pending_product_model.dart';
 import 'package:teriak/features/products/add_product/data/repositories/add_product_repository_impl.dart';
 import 'package:teriak/features/products/add_product/domain/usecases/post_add_product.dart';
+import 'package:teriak/features/products/all_products/data/datasources/product_local_data_source.dart';
+import 'package:teriak/features/products/all_products/data/models/hive_product_model.dart';
+import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/products/product_data/data/models/product_data_model.dart';
 import 'package:teriak/features/products/product_data/presentation/controller/product_data_controller.dart';
 
@@ -46,13 +54,103 @@ class AddProductController extends GetxController {
 
   late final NetworkInfoImpl networkInfo;
   late final GetAddProduct addProductUseCase;
+  late final AddProductRepositoryImpl repository;
   var isLoading = false.obs;
   final RxString errorMessage = ''.obs;
+
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  bool _wasOffline = false;
 
   @override
   void onInit() {
     super.onInit();
     _initializeDependencies();
+    _startConnectivityMonitoring();
+  }
+
+  @override
+  void onClose() {
+    _connectivitySubscription?.cancel();
+    arabicTradeNameController.dispose();
+    englishTradeNameController.dispose();
+    englishScientificNameController.dispose();
+    arabicScientificNameController.dispose();
+    quantityController.dispose();
+    barcodeController.dispose();
+    dosageController.dispose();
+    notesController.dispose();
+    super.onClose();
+  }
+
+  /// Start monitoring connectivity changes to auto-sync pending products
+  void _startConnectivityMonitoring() async {
+    // Check initial connectivity state
+    final initialConnectivity = await Connectivity().checkConnectivity();
+    _wasOffline = initialConnectivity.contains(ConnectivityResult.none);
+
+    // If we're already online on app start, check for pending products to sync
+    if (!_wasOffline) {
+      final pendingCount = getPendingProductsCount();
+      if (pendingCount > 0) {
+        print('📦 Found $pendingCount pending product(s). Syncing...');
+        // Delay slightly to ensure app is fully initialized
+        Future.delayed(
+            const Duration(seconds: 1), () => _autoSyncPendingProducts());
+      }
+    }
+
+    // Listen for connectivity changes
+    _connectivitySubscription = Connectivity().onConnectivityChanged.listen(
+      (List<ConnectivityResult> results) async {
+        final isNowOnline = !results.contains(ConnectivityResult.none);
+
+        // If we were offline and now we're online, sync pending products
+        if (_wasOffline && isNowOnline) {
+          print('🔄 Connectivity restored! Auto-syncing pending products...');
+          await _autoSyncPendingProducts();
+        }
+
+        _wasOffline = !isNowOnline;
+      },
+    );
+  }
+
+  /// Auto-sync pending products (called automatically when connectivity is restored)
+  Future<void> _autoSyncPendingProducts() async {
+    final pendingCount = getPendingProductsCount();
+    if (pendingCount == 0) {
+      return; // No pending products to sync
+    }
+
+    try {
+      final result = await repository.syncPendingProducts();
+      result.fold(
+        (failure) {
+          print('⚠️ Auto-sync failed: ${failure.errMessage}');
+          // Don't show snackbar for auto-sync failures to avoid annoying users
+        },
+        (syncedProducts) {
+          if (syncedProducts.isNotEmpty) {
+            print('✅ Auto-synced ${syncedProducts.length} pending product(s)');
+            // Refresh products list if available
+            _refreshProductsList();
+          }
+        },
+      );
+    } catch (e) {
+      print('⚠️ Auto-sync error: $e');
+    }
+  }
+
+  /// Refresh products list after sync (if GetAllProductController is available)
+  void _refreshProductsList() {
+    try {
+      final productController = Get.find<GetAllProductController>();
+      productController.refreshProducts();
+    } catch (e) {
+      // Controller might not be initialized yet, that's okay
+      print('ℹ️ Could not refresh products list: $e');
+    }
   }
 
   void _initializeDependencies() {
@@ -63,9 +161,17 @@ class AddProductController extends GetxController {
     networkInfo = NetworkInfoImpl();
 
     final remoteDataSource = AddProductRemoteDataSource(api: httpConsumer);
+    final productBox = Hive.box<HiveProductModel>('productCache');
+    final localDataSource = ProductLocalDataSourceImpl(productBox: productBox);
+    final pendingProductBox =
+        Hive.box<HivePendingProductModel>('pendingProducts');
+    final pendingProductLocalDataSource =
+        AddProductLocalDataSourceImpl(pendingProductBox: pendingProductBox);
 
-    final repository = AddProductRepositoryImpl(
+    repository = AddProductRepositoryImpl(
       remoteDataSource: remoteDataSource,
+      localDataSource: localDataSource,
+      pendingProductLocalDataSource: pendingProductLocalDataSource,
       networkInfo: networkInfo,
     );
 
@@ -128,20 +234,6 @@ class AddProductController extends GetxController {
     selectedCategoryIds.clear();
     barcodes.clear();
     requiresPrescription.value = false;
-  }
-
-  @override
-  void onClose() {
-    arabicTradeNameController.dispose();
-    englishTradeNameController.dispose();
-    englishScientificNameController.dispose();
-    arabicScientificNameController.dispose();
-    quantityController.dispose();
-    barcodeController.dispose();
-    dosageController.dispose();
-    notesController.dispose();
-    //minStockController.dispose();
-    super.onClose();
   }
 
   String getSelectedCategoryNames() {
@@ -218,20 +310,55 @@ class AddProductController extends GetxController {
         (failure) {
           if (failure.statusCode == 409) {
             Get.snackbar('Error'.tr, "Barcode is already exists".tr);
-          }   if (failure.statusCode == 401) {
+          } else if (failure.statusCode == 401) {
             Get.snackbar('Error'.tr, "login cancel".tr);
-          }
-          else {
+          } else {
             Get.snackbar('Error'.tr, failure.errMessage);
           }
         },
         (product) {
-          Get.snackbar('Success'.tr, 'Product added successfully'.tr);
+          // Check if product was added offline
+          // Offline products have specific default values we set:
+          // quantity: 0, refPurchasePrice: 0, refSellingPrice: 0,
+          // refPurchasePriceUSD: 0, refSellingPriceUSD: 0, form: '', etc.
+          final isOfflineProduct = product.quantity == 0 &&
+              product.refPurchasePrice == 0 &&
+              product.refSellingPrice == 0 &&
+              product.refPurchasePriceUSD == 0 &&
+              product.refSellingPriceUSD == 0 &&
+              product.form.isEmpty &&
+              product.productType == 'Pharmacy';
+
+          if (isOfflineProduct) {
+            Get.snackbar(
+              'Success'.tr,
+              'Product saved offline. Will sync when back online.'.tr,
+              duration: const Duration(seconds: 3),
+            );
+            // Update pending products count in GetAllProductController if available
+            try {
+              final productController = Get.find<GetAllProductController>();
+              productController.updatePendingProductsCount();
+            } catch (e) {
+              // Controller might not be initialized yet, that's okay
+            }
+          } else {
+            Get.snackbar('Success'.tr, 'Product added successfully'.tr);
+            // Clean up duplicates after adding product online
+            final productBox = Hive.box<HiveProductModel>('productCache');
+            final localDataSource =
+                ProductLocalDataSourceImpl(productBox: productBox);
+            localDataSource.clearDuplicateProducts().then((_) {
+              print('🧹 Cleaned up duplicates after adding product');
+            }).catchError((e) {
+              print('⚠️ Error cleaning duplicates: $e');
+            });
+          }
           resetForm();
         },
       );
     } catch (e) {
-       errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
+      errorMessage.value = 'An unexpected error occurred. Please try again.'.tr;
       Get.snackbar(
         'Error'.tr,
         errorMessage.value,
@@ -239,5 +366,40 @@ class AddProductController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// Sync pending products when back online
+  Future<void> syncPendingProducts() async {
+    try {
+      isLoading.value = true;
+      final result = await repository.syncPendingProducts();
+
+      result.fold(
+        (failure) {
+          Get.snackbar('Sync Error'.tr, failure.errMessage);
+        },
+        (syncedProducts) {
+          if (syncedProducts.isEmpty) {
+            Get.snackbar('Sync'.tr, 'No pending products to sync.'.tr);
+          } else {
+            Get.snackbar(
+              'Sync Success'.tr,
+              'Synced ${syncedProducts.length} product(s) successfully.'.tr,
+            );
+            // Refresh products list after successful sync
+            _refreshProductsList();
+          }
+        },
+      );
+    } catch (e) {
+      Get.snackbar('Sync Error'.tr, 'Failed to sync products: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// Get count of pending products
+  int getPendingProductsCount() {
+    return repository.getPendingProductsCount();
   }
 }

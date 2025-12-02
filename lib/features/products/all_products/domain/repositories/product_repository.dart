@@ -4,5 +4,8 @@ import 'package:teriak/features/products/all_products/domain/entities/paginated_
 import '../../../../../core/errors/failure.dart';
 
 abstract class ProductRepository {
-  Future<Either<Failure, PaginatedProductsEntity>> getAllProduct({required AllProductParams params});
+  Future<Either<Failure, PaginatedProductsEntity>> getAllProduct({
+    required AllProductParams params,
+    bool skipCache = false,
+  });
 }

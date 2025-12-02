@@ -42,13 +42,13 @@ class _SearchWidgetState extends State<SearchWidget> {
               ),
               child: TextField(
                 controller: searchController.searchController,
+                onChanged: (value) {
+                  // All search is handled by the controller's listener
+                  // This ensures all search types (typing, QR, Enter, etc.) work the same way
+                },
                 onSubmitted: (value) {
-                  if (value.trim().isNotEmpty) {
-                    searchController.search(value.trim());
-                  } else {
-                    searchController.results.clear();
-                    searchController.searchStatus.value = null;
-                  }
+                  // Just unfocus - search is handled by onChanged
+                  searchController.searchFocus.unfocus();
                 },
                 focusNode: searchController.searchFocus,
                 decoration: InputDecoration(
@@ -72,8 +72,9 @@ class _SearchWidgetState extends State<SearchWidget> {
                     onPressed: () async {
                       await showBarcodeScannerBottomSheet(
                         onScanned: (code) {
-                          searchController.searchController.text = code;
-                          searchController.search(code);
+                          // Set the text - this will trigger onChanged which handles search
+                          // All search types use the same onChanged mechanism
+                          searchController.setSearchText(code);
                         },
                       );
                     },

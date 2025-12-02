@@ -7,6 +7,7 @@ import 'package:teriak/features/purchase_order/search_purchase_order/presentatio
 import 'package:teriak/features/purchase_order/search_purchase_order/presentation/pages/search_section.dart';
 import 'package:teriak/features/suppliers/all_supplier/presentation/controller/all_supplier_controller.dart';
 import './widgets/purchase_order_card.dart';
+import './widgets/sync_bar_widget.dart';
 import '../controller/all_purchase_order_controller.dart';
 
 class PurchaseOrderList extends StatefulWidget {
@@ -35,12 +36,24 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (!_scrollController.hasClients) return;
+
+    final position = _scrollController.position;
+    final maxScroll = position.maxScrollExtent;
+    final currentScroll = position.pixels;
+
+    // Trigger when user scrolls within 100 pixels of the bottom
+    if (maxScroll > 0 && currentScroll >= maxScroll - 100) {
       if (searchController.hasSearchResults.value) {
-        searchController.loadNextPage();
+        if (searchController.hasNext.value &&
+            !searchController.isSearchingSupplier.value &&
+            !searchController.isSearchingDate.value) {
+          searchController.loadNextPage();
+        }
       } else {
-        controller.loadNextPage();
+        if (controller.hasNext.value && !controller.isLoadingMore.value) {
+          controller.loadNextPage();
+        }
       }
     }
   }
@@ -53,43 +66,19 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
         body: Column(
           children: [
             SizedBox(height: 1.h),
-            SearchSection(
-              suppliers: supplierController.suppliers.cast(),
-              onSupplierSelected: searchController.selectSupplier,
-              selectedSupplier: searchController.selectedSupplier.value,
-              errorText: searchController.searchError.value.isNotEmpty
-                  ? searchController.searchError.value
-                  : null,
-              searchController: searchController,
-            ),
+            // Sync bar
+            const SyncBarWidget(),
             SizedBox(height: 1.h),
-
-            // Clear Search Button (when search results are shown)
-            Obx(() {
-              if (searchController.hasSearchResults.value) {
-                return Container(
-                  margin: EdgeInsets.symmetric(horizontal: 4.w),
-                  child: ElevatedButton.icon(
-                    onPressed: (){
-                      searchController.resetSearch();
-                      setState(() {});
-                    },
-                    icon: Icon(Icons.clear_all, size: 5.sp),
-                    label: Text('Clear search'.tr),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey.shade300,
-                      foregroundColor: Colors.grey.shade700,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            }),
+            // Search Section (collapsible with icon)
+            Obx(() => SearchSection(
+                  suppliers: supplierController.suppliers.toList(),
+                  onSupplierSelected: searchController.selectSupplier,
+                  selectedSupplier: searchController.selectedSupplier.value,
+                  errorText: searchController.searchError.value.isNotEmpty
+                      ? searchController.searchError.value
+                      : null,
+                  searchController: searchController,
+                )),
             SizedBox(height: 1.h),
 
             // Search Results or All Orders
@@ -155,15 +144,25 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
           ],
         ),
         floatingActionButton: AddButton(
-          onTap: () {
-            Get.toNamed(AppPages.createPurchaseOrder);
+          onTap: () async {
+            final result = await Get.toNamed(AppPages.createPurchaseOrder);
+            // Refresh the list when returning from create page
+            if (result == true || result == null) {
+              // Wait a bit to ensure cache is written
+              await Future.delayed(const Duration(milliseconds: 300));
+
+              // Refresh to get the new order from server/cache
+              await controller.refreshPurchaseOrders();
+              controller.getAllPendingPurchaseOrders();
+            }
           },
           label: 'New Order'.tr,
         ));
   }
 
   Widget _buildSearchResults() {
-    if (searchController.isSearchingSupplier.value||searchController.isSearchingDate.value) {
+    if (searchController.isSearchingSupplier.value ||
+        searchController.isSearchingDate.value) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -227,7 +226,8 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
         itemBuilder: (context, index) {
           if (index == searchController.searchResults.length) {
             return Obx(() {
-              if (searchController.isSearchingSupplier.value||searchController.isSearchingDate.value) {
+              if (searchController.isSearchingSupplier.value ||
+                  searchController.isSearchingDate.value) {
                 return Container(
                   padding: EdgeInsets.all(4.w),
                   child: const Center(
@@ -298,17 +298,20 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
       );
     }
 
-    return Container(
-       margin: EdgeInsets.symmetric(horizontal: 4.w),
-      child: Column(
-         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 4.w),
+          child: Row(
             children: [
               Container(
                 padding: EdgeInsets.all(2.w),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .secondary
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -318,53 +321,81 @@ class _PurchaseOrderListState extends State<PurchaseOrderList> {
                 ),
               ),
               SizedBox(width: 3.w),
-              Text(
-                'All Purchase Orders'.tr,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).colorScheme.secondary,
+              Expanded(
+                child: Text(
+                  'All Purchase Orders'.tr,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                 ),
               ),
+              // Manual sync button
+              Obx(() => IconButton(
+                    icon: controller.isSyncing.value
+                        ? SizedBox(
+                            width: 20.sp,
+                            height: 20.sp,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.secondary,
+                              ),
+                            ),
+                          )
+                        : Icon(
+                            Icons.sync,
+                            color: Theme.of(context).colorScheme.secondary,
+                            size: 20.sp,
+                          ),
+                    onPressed: controller.isSyncing.value
+                        ? null
+                        : () => controller.manualSyncPurchaseOrders(),
+                    tooltip: 'Sync purchase orders'.tr,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  )),
             ],
           ),
-          Expanded(
-            child: RefreshIndicator(
-               onRefresh: controller.refreshPurchaseOrders,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: controller.purchaseOrders.length +
-                    (controller.hasNext.value ? 1 : 0),
-                itemBuilder: (context, index) {
-                  if (index == controller.purchaseOrders.length) {
-                    return Obx(() {
-                      if (controller.isLoadingMore.value) {
-                        return Container(
-                          padding: EdgeInsets.all(4.w),
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: controller.refreshPurchaseOrders,
+            child: Obx(() => ListView.builder(
+                  controller: _scrollController,
+                  padding: EdgeInsets.symmetric(horizontal: 4.w),
+                  itemCount: controller.purchaseOrders.length +
+                      (controller.hasNext.value &&
+                              !controller.isLoadingMore.value
+                          ? 1
+                          : 0),
+                  itemBuilder: (context, index) {
+                    if (index == controller.purchaseOrders.length) {
+                      // Trigger load more when we reach the end
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (controller.hasNext.value &&
+                            !controller.isLoadingMore.value) {
+                          controller.loadNextPage();
+                        }
+                      });
                       return const SizedBox.shrink();
-                    });
-                  }
-              
-                  final order = controller.purchaseOrders[index];
-                  return PurchaseOrderCard(
-                    orderData: order,
-                    onTap: () => Get.toNamed(
-                      AppPages.purchaseOrderDetail,
-                      arguments: {
-                        'id': order.id,
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
+                    }
+
+                    final order = controller.purchaseOrders[index];
+                    return PurchaseOrderCard(
+                      orderData: order,
+                      onTap: () => Get.toNamed(
+                        AppPages.purchaseOrderDetail,
+                        arguments: {
+                          'id': order.id,
+                        },
+                      ),
+                    );
+                  },
+                )),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

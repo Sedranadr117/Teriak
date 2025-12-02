@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
 
+import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/core/params/params.dart';
 
@@ -22,6 +23,24 @@ class StockAdjustmentSheet extends StatefulWidget {
 }
 
 class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
+  String _getProductName() {
+    // Use Arabic name if available and locale is Arabic
+    if (LocaleController.to.isArabic) {
+      final arabicName = widget.product['productNameAr']?.toString();
+      if (arabicName != null && arabicName.isNotEmpty) {
+        return arabicName;
+      }
+    } else {
+      // Use English name if available and locale is English
+      final englishName = widget.product['productNameEn']?.toString();
+      if (englishName != null && englishName.isNotEmpty) {
+        return englishName;
+      }
+    }
+    // Fallback to productName
+    return widget.product['productName']?.toString() ?? 'Unknown Product'.tr;
+  }
+
   final TextEditingController _reasonController = TextEditingController();
   final TextEditingController _notesController = TextEditingController();
 
@@ -164,8 +183,7 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.product['productName']?.toString() ??
-                      'Unknown Product'.tr,
+                  _getProductName(),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),

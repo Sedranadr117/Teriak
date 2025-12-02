@@ -9,7 +9,7 @@ class GetAllSupplier {
 
   GetAllSupplier({required this.repository});
 
-  Future<Either<Failure, List<SupplierModel>>> call() {
-    return repository.getAllSupplier();
+  Future<Either<Failure, List<SupplierModel>>> call({bool skipCache = false}) {
+    return repository.getAllSupplier(skipCache: skipCache);
   }
 }

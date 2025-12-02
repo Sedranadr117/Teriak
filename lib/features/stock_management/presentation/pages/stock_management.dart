@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
+import 'package:teriak/config/localization/locale_controller.dart';
 import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/core/params/params.dart';
 import 'package:teriak/features/bottom_sheet_management/barcode_bottom_sheet.dart';
@@ -33,6 +34,10 @@ class _StockManagementState extends State<StockManagement>
   void _showProductDetails(Map<String, dynamic> product) {
     final productId = product['productId'];
     final productType = product['productType'];
+
+    // Clear previous details first to avoid showing wrong product's data
+    controller.stockDetails.clear();
+
     controller.fetchStockDetails(
       productId: productId,
       productType: productType,
@@ -42,6 +47,14 @@ class _StockManagementState extends State<StockManagement>
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Obx(() {
+        // Verify that the displayed details match the selected product
+        if (controller.stockDetails.isNotEmpty) {
+          final displayedProductId = controller.stockDetails.first.productId;
+          if (displayedProductId != productId) {
+            // Data doesn't match, show loading or empty state
+            return _buildProductDetailsSheetFromEndpoint([], product);
+          }
+        }
         return _buildProductDetailsSheetFromEndpoint(
             controller.stockDetails, product);
       }),
@@ -96,7 +109,7 @@ class _StockManagementState extends State<StockManagement>
             child: Row(
               children: [
                 Text(
-                  product['productName'].toString(),
+                  _getProductName(product),
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -216,7 +229,7 @@ class _StockManagementState extends State<StockManagement>
       builder: (context) => AlertDialog(
         title: Text('Delete From Stock'.tr),
         content: Text(
-            '${'Are you sure you want to remove'.tr} ${product['productName']} ${'from Stock?'.tr}'),
+            '${'Are you sure you want to remove'.tr} ${_getProductName(product)} ${'from Stock?'.tr}'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -388,6 +401,8 @@ class _StockManagementState extends State<StockManagement>
                       'id': product.id,
                       'productId': product.productId,
                       'productName': product.productName,
+                      'productNameAr': product.productNameAr,
+                      'productNameEn': product.productNameEn,
                       'productType': product.productType,
                       'barcodes': product.barcodes,
                       'totalQuantity': product.totalQuantity,
@@ -430,6 +445,8 @@ class _StockManagementState extends State<StockManagement>
                     'id': product['id'],
                     'productId': product['productId'],
                     'productName': product['productName'],
+                    'productNameAr': product['productNameAr'],
+                    'productNameEn': product['productNameEn'],
                     'productType': product['productType'],
                     'barcodes': product['barcodes'],
                     'totalQuantity': product['totalQuantity'],
@@ -457,6 +474,24 @@ class _StockManagementState extends State<StockManagement>
               ),
       ),
     );
+  }
+
+  String _getProductName(Map<String, dynamic> product) {
+    // Use Arabic name if available and locale is Arabic
+    if (LocaleController.to.isArabic) {
+      final arabicName = product['productNameAr']?.toString();
+      if (arabicName != null && arabicName.isNotEmpty) {
+        return arabicName;
+      }
+    } else {
+      // Use English name if available and locale is English
+      final englishName = product['productNameEn']?.toString();
+      if (englishName != null && englishName.isNotEmpty) {
+        return englishName;
+      }
+    }
+    // Fallback to productName
+    return product['productName']?.toString() ?? 'Unknown Product'.tr;
   }
 
   Widget _buildLoadingView(ThemeData theme, ColorScheme colorScheme) {

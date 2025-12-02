@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
-class PaymentMethodSelectionWidget extends StatelessWidget {
+class PaymentMethodSelectionWidget extends StatefulWidget {
   final String selectedMethod;
   final Function(String) onMethodSelected;
 
@@ -10,6 +11,15 @@ class PaymentMethodSelectionWidget extends StatelessWidget {
     required this.selectedMethod,
     required this.onMethodSelected,
   });
+
+  @override
+  State<PaymentMethodSelectionWidget> createState() =>
+      _PaymentMethodSelectionWidgetState();
+}
+
+class _PaymentMethodSelectionWidgetState
+    extends State<PaymentMethodSelectionWidget> {
+  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,75 +32,107 @@ class PaymentMethodSelectionWidget extends StatelessWidget {
       margin: const EdgeInsets.all(16),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withAlpha(25),
-                    borderRadius: BorderRadius.circular(10),
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              isExpanded = !isExpanded;
+            });
+          },
+          borderRadius: BorderRadius.vertical(
+            top: const Radius.circular(12),
+            bottom: isExpanded ? Radius.zero : const Radius.circular(1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color:
+                          Theme.of(context).colorScheme.primary.withAlpha(25),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.payment_rounded,
+                      color: Colors.blueAccent,
+                      size: 26,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.payment_rounded,
-                    color: Colors.blueAccent,
-                    size: 26,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Payment Method'.tr,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Choose payment option'.tr,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant
+                                        .withValues(alpha: 0.6),
+                                  ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Payment Method'.tr,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Choose payment option'.tr,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant
-                                  .withValues(alpha: 0.6),
-                            ),
-                      ),
-                    ],
+                  AnimatedRotation(
+                    turns: isExpanded ? 0.5 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: CustomIconWidget(
+                      iconName: 'keyboard_arrow_down',
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 24,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _paymentMethod(
-                      onMethodSelected: () => onMethodSelected('CASH'),
-                      isSelected: selectedMethod == 'CASH'.tr,
-                      title: "Cash".tr,
-                      subtitle: "Pay directly with cash".tr,
-                      icon: Icons.attach_money,
-                      color: Colors.green),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: _paymentMethod(
-                      onMethodSelected: () => onMethodSelected("BANK_ACCOUNT"),
-                      isSelected: selectedMethod == 'BANK_ACCOUNT'.tr,
-                      title: "Credit Card".tr,
-                      subtitle: "Pay with bank".tr,
-                      icon: Icons.credit_card_rounded,
-                      color: Colors.blue),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 20),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                height: isExpanded ? null : 0,
+                child: isExpanded
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: _paymentMethod(
+                                onMethodSelected: () =>
+                                    widget.onMethodSelected('CASH'),
+                                isSelected: widget.selectedMethod == 'CASH'.tr,
+                                title: "Cash".tr,
+                                subtitle: "Pay directly with cash".tr,
+                                icon: Icons.attach_money,
+                                color: Colors.green),
+                          ),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: _paymentMethod(
+                                onMethodSelected: () =>
+                                    widget.onMethodSelected("BANK_ACCOUNT"),
+                                isSelected:
+                                    widget.selectedMethod == 'BANK_ACCOUNT'.tr,
+                                title: "Credit Card".tr,
+                                subtitle: "Pay with bank".tr,
+                                icon: Icons.credit_card_rounded,
+                                color: Colors.blue),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ),
         ),
       ),
     );

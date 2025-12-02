@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 
 Future<void> showBarcodeScannerBottomSheet({
   required Function(String) onScanned,
 }) async {
-  bool scanned = false; 
+  bool scanned = false;
 
   await Get.bottomSheet(
     Container(
@@ -48,7 +49,7 @@ class _ScannerSheetState extends State<_ScannerSheet> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-         Padding(
+        Padding(
           padding: EdgeInsets.all(16),
           child: Row(
             children: [
@@ -60,9 +61,23 @@ class _ScannerSheetState extends State<_ScannerSheet> {
             ],
           ),
         ),
+        ValueListenableBuilder(
+          valueListenable: ValueNotifier(controller.torchEnabled),
+          builder: (context, state, child) {
+            // بناء الأيقونة بناءً على حالة الفلاش
+
+            return IconButton(
+              onPressed: () => controller.toggleTorch(), // تبديل حالة الفلاش
+              icon: CustomIconWidget(
+                  iconName: state == TorchState.off ? 'flash_off' : 'flash_on',
+                  color: Colors.grey),
+            );
+          },
+        ),
         Expanded(
           child: MobileScanner(
             controller: controller,
+            fit: BoxFit.fitWidth,
             onDetect: (capture) {
               final barcode = capture.barcodes.first;
               final value = barcode.rawValue;

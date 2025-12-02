@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
 import 'package:teriak/core/databases/cache/cache_helper.dart';
 import 'package:teriak/features/money_box/data/datasources/get_money_box_remote_data_source.dart';
+import 'package:teriak/features/money_box/data/datasources/money_box_local_data_source.dart';
+import 'package:teriak/features/money_box/data/models/hive_money_box_model.dart';
 import 'package:teriak/features/money_box/data/repositories/get_money_box_repository_impl.dart';
 import 'package:teriak/features/money_box/domain/entities/money_box_entity.dart';
 import 'package:teriak/features/money_box/domain/usecases/get_money_box.dart';
@@ -30,9 +33,16 @@ class GetMoneyBoxController extends GetxController {
         HttpConsumer(baseUrl: EndPoints.baserUrl, cacheHelper: cacheHelper);
     networkInfo = NetworkInfoImpl();
     final remoteDataSource = MoneyBoxRemoteDataSource(api: httpConsumer);
+
+    // Get Hive box for money box
+    final moneyBoxBox = Hive.box<HiveMoneyBoxModel>('moneyBoxCache');
+    final localDataSource =
+        MoneyBoxLocalDataSourceImpl(moneyBoxBox: moneyBoxBox);
+
     final repository = MoneyBoxRepositoryImpl(
       remoteDataSource: remoteDataSource,
       networkInfo: networkInfo,
+      localDataSource: localDataSource,
     );
     getMoneyBoxUseCase = GetMoneyBox(repository: repository);
   }

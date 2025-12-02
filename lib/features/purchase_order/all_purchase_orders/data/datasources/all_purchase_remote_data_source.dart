@@ -12,6 +12,7 @@ class AllPurchaseOrdersRemoteDataSource {
       PaginationParams params) async {
     final response = await api.get(EndPoints.purchaseOrders,
         queryParameters: params.toMap());
+    print(response);
     return PaginatedPurchaseOrderModel.fromJson(
         response as Map<String, dynamic>);
   }

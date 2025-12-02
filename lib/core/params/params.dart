@@ -218,8 +218,9 @@ class EditProductParams {
 
 class DeleteProductParams {
   final int id;
+  final String productType;
 
-  const DeleteProductParams({required this.id});
+  const DeleteProductParams({required this.id, required this.productType});
 }
 
 class ProductNamesParams {
@@ -351,7 +352,7 @@ class SearchByDateRangeParams {
     this.language = 'ar',
   });
   Map<String, dynamic> toMap() {
-        dateFormat(DateTime d) =>
+    dateFormat(DateTime d) =>
         '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
     return {
       'startDate': dateFormat(startDate),
@@ -526,7 +527,7 @@ class GetMoneyBoxTransactionParams {
   final int page;
   final int size;
   final DateTime? startDate; // اختياري
-  final DateTime? endDate;   // اختياري
+  final DateTime? endDate; // اختياري
   final String? transactionType; // اختياري
 
   GetMoneyBoxTransactionParams({
@@ -553,7 +554,7 @@ class GetMoneyBoxTransactionParams {
       'page': page.toString(),
       'size': size.toString(),
     };
-        dateFormat(DateTime d) =>
+    dateFormat(DateTime d) =>
         '${d.year.toString().padLeft(4, '0')}-${d.month.toString().padLeft(2, '0')}-${d.day.toString().padLeft(2, '0')}';
 
     if (startDate != null) query['startDate'] = dateFormat(startDate!);
@@ -563,8 +564,6 @@ class GetMoneyBoxTransactionParams {
     return query;
   }
 }
-
-
 
 class SearchInvoiceByDateRangeParams {
   final DateTime startDate;

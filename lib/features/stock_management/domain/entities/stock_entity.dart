@@ -2,6 +2,8 @@ class StockEntity {
   final int id;
   final int productId;
   final String productName;
+  final String? productNameAr; // Arabic name
+  final String? productNameEn; // English name
   final String productType;
   final List<String> barcodes;
   final int totalQuantity;
@@ -29,6 +31,8 @@ class StockEntity {
     required this.id,
     required this.productId,
     required this.productName,
+    this.productNameAr,
+    this.productNameEn,
     required this.productType,
     required this.barcodes,
     required this.totalQuantity,

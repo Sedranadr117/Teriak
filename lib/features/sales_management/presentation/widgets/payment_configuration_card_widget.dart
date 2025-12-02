@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:teriak/config/themes/app_icon.dart';
 import 'package:teriak/features/sales_management/presentation/widgets/debt_details_section.dart';
 
 class PaymentConfigurationCardWidget extends StatefulWidget {
@@ -26,6 +27,8 @@ class PaymentConfigurationCardWidget extends StatefulWidget {
 
 class _PaymentConfigurationCardWidgetState
     extends State<PaymentConfigurationCardWidget> {
+  bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -35,83 +38,113 @@ class _PaymentConfigurationCardWidgetState
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withAlpha(26),
-                    borderRadius: BorderRadius.circular(8),
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              isExpanded = !isExpanded;
+            });
+          },
+          borderRadius: BorderRadius.vertical(
+            top: const Radius.circular(12),
+            bottom: isExpanded ? Radius.zero : const Radius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withAlpha(26),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(
+                      Icons.payment,
+                      color: Colors.orange,
+                      size: 24,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.payment,
-                    color: Colors.orange,
-                    size: 24,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Payment Configuration'.tr,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Configure payment type and terms'.tr,
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant
+                                        .withValues(alpha: 0.6),
+                                  ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Payment Configuration'.tr,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Configure payment type and terms'.tr,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant
-                                  .withValues(alpha: 0.6),
-                            ),
-                      ),
-                    ],
+                  AnimatedRotation(
+                    turns: isExpanded ? 0.5 : 0.0,
+                    duration: const Duration(milliseconds: 200),
+                    child: CustomIconWidget(
+                      iconName: 'keyboard_arrow_down',
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 24,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: _PaymentTypeCard(
-                    title: 'Cash Payment'.tr,
-                    subtitle: 'Immediate payment'.tr,
-                    icon: Icons.money,
-                    isSelected: widget.paymentType == 'CASH'.tr,
-                    onTap: () => widget.onPaymentTypeChanged('CASH'.tr),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _PaymentTypeCard(
-                    title: 'Deferred Payment'.tr,
-                    subtitle: 'Pay later terms'.tr,
-                    icon: Icons.schedule,
-                    isSelected: widget.paymentType == 'CREDIT'.tr,
-                    onTap: () => widget.onPaymentTypeChanged('CREDIT'.tr),
-                  ),
-                ),
-              ],
-            ),
-            if (widget.paymentType == 'CREDIT') ...[
-              const SizedBox(height: 16),
-              DebtDetailsSection(
-                debtAmountController: widget.controller,
-                dueDate: widget.dueDate,
-                onDueDateChanged: widget.onDateTap,
+                ],
               ),
+              const SizedBox(height: 20),
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                height: isExpanded ? null : 0,
+                child: isExpanded
+                    ? Row(
+                        children: [
+                          Expanded(
+                            child: _PaymentTypeCard(
+                              title: 'Cash Payment'.tr,
+                              subtitle: 'Immediate payment'.tr,
+                              icon: Icons.money,
+                              isSelected: widget.paymentType == 'CASH'.tr,
+                              onTap: () =>
+                                  widget.onPaymentTypeChanged('CASH'.tr),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _PaymentTypeCard(
+                              title: 'Deferred Payment'.tr,
+                              subtitle: 'Pay later terms'.tr,
+                              icon: Icons.schedule,
+                              isSelected: widget.paymentType == 'CREDIT'.tr,
+                              onTap: () =>
+                                  widget.onPaymentTypeChanged('CREDIT'.tr),
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+              if (widget.paymentType == 'CREDIT') ...[
+                const SizedBox(height: 16),
+                DebtDetailsSection(
+                  debtAmountController: widget.controller,
+                  dueDate: widget.dueDate,
+                  onDueDateChanged: widget.onDateTap,
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

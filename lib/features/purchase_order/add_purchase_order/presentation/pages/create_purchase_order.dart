@@ -65,87 +65,117 @@ class _CreatePurchaseOrderPageState extends State<CreatePurchaseOrderPage> {
   }
 
   Widget _buildBody() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(3.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Supplier Selection
-          SupplierSelectionCard(
-            suppliers: supplierController.suppliers.cast(),
-            onSupplierSelected: controller.selectSupplier,
-            selectedSupplier: controller.selectedSupplier.value,
-            errorText: controller.supplierError.value,
-          ),
+    return Obx(() => Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.all(3.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Supplier Selection
+                  SupplierSelectionCard(
+                    suppliers: supplierController.suppliers.toList(),
+                    onSupplierSelected: controller.selectSupplier,
+                    selectedSupplier: controller.selectedSupplier.value,
+                    errorText: controller.supplierError.value,
+                  ),
 
-          SizedBox(height: 1.5.h),
+                  SizedBox(height: 1.5.h),
 
-          // Currency Selection
-          CurrencySelectionCard(
-            selectedCurrency: controller.selectedCurrency.value,
-            onCurrencyChanged: controller.selectCurrency,
-            availableCurrencies: controller.availableCurrencies,
-          ),
+                  // Currency Selection
+                  CurrencySelectionCard(
+                    selectedCurrency: controller.selectedCurrency.value,
+                    onCurrencyChanged: controller.selectCurrency,
+                    availableCurrencies: controller.availableCurrencies,
+                  ),
 
-          SizedBox(height: 1.5.h),
+                  SizedBox(height: 1.5.h),
 
-          // Product Selection
-          ProductSelectionCard(
-            currency: controller.selectedCurrency.value,
-            products: productController.products.cast(),
-            onProductSelected: controller.selectProduct,
-            onBarcodeScanned: controller.selectProductByBarcode,
-            selectedProduct: controller.selectedProduct.value,
-            barcodeController: controller.barcodeController,
-            quantityController: controller.quantityController,
-            priceController: controller.priceController,
-            currentQuantity: controller.currentQuantity.value,
-            currentPrice: controller.currentPrice.value,
-            onQuantityChanged: controller.updateQuantity,
-            onPriceChanged: controller.updatePrice,
-            onAddProduct: controller.addProductToOrder,
-            productError: controller.productError.value,
-            quantityError: controller.quantityError.value,
-            priceError: controller.priceError.value,
-          ),
+                  // Product Selection
+                  ProductSelectionCard(
+                    currency: controller.selectedCurrency.value,
+                    products: productController.products.cast(),
+                    onProductSelected: controller.selectProduct,
+                    onBarcodeScanned: controller.selectProductByBarcode,
+                    selectedProduct: controller.selectedProduct.value,
+                    barcodeController: controller.barcodeController,
+                    quantityController: controller.quantityController,
+                    priceController: controller.priceController,
+                    currentQuantity: controller.currentQuantity.value,
+                    currentPrice: controller.currentPrice.value,
+                    onQuantityChanged: controller.updateQuantity,
+                    onPriceChanged: controller.updatePrice,
+                    onAddProduct: controller.addProductToOrder,
+                    productError: controller.productError.value,
+                    quantityError: controller.quantityError.value,
+                    priceError: controller.priceError.value,
+                  ),
 
-          SizedBox(height: 3.h),
+                  SizedBox(height: 3.h),
 
-          // Order Items List
-          OrderItemsList(
-            items: controller.orderItems,
-            currency: controller.selectedCurrency.value,
-            onUpdateItem: controller.updateOrderItem,
-            onRemoveItem: controller.removeOrderItem,
-          ),
+                  // Order Items List
+                  OrderItemsList(
+                    items: controller.orderItems,
+                    currency: controller.selectedCurrency.value,
+                    onUpdateItem: controller.updateOrderItem,
+                    onRemoveItem: controller.removeOrderItem,
+                  ),
 
-          SizedBox(height: 1.5.h),
+                  SizedBox(height: 1.5.h),
 
-          // Order Summary
-          OrderSummaryCard(
-            total: controller.orderTotal,
-            currency: controller.selectedCurrency.value,
-            itemCount: controller.orderItems.length,
-          ),
+                  // Order Summary
+                  OrderSummaryCard(
+                    total: controller.orderTotal,
+                    currency: controller.selectedCurrency.value,
+                    itemCount: controller.orderItems.length,
+                  ),
 
-          SizedBox(height: 1.5.h),
+                  SizedBox(height: 1.5.h),
 
-          // Create Order Button
-          CreateOrderButton(
-            onPressed: () async {
-              await controller.createPurchaseOrder();
+                  // Create Order Button
+                  Obx(() => CreateOrderButton(
+                        onPressed: () async {
+                          final success =
+                              await controller.createPurchaseOrder();
 
-              await orderController.refreshPurchaseOrders();
-              await orderController.getAllPendingPurchaseOrders();
-            },
-            isLoading: controller.isLoading.value,
-            isEnabled: controller.canCreateOrder,
-            buttonText: 'Create Order'.tr,
-          ),
+                          // Return success result so the list page can refresh
+                          if (success && mounted) {
+                            Get.back(result: true);
+                          }
+                        },
+                        isLoading: controller.isLoading.value,
+                        isEnabled: controller.canCreateOrder,
+                        buttonText: 'Create Order'.tr,
+                      )),
 
-          SizedBox(height: 1.5.h),
-        ],
-      ),
-    );
+                  SizedBox(height: 1.5.h),
+                ],
+              ),
+            ),
+            // Loading overlay
+            if (controller.isLoading.value)
+              Container(
+                color: Colors.black.withOpacity(0.3),
+                child: Center(
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(4.w),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(height: 2.h),
+                          Text(
+                            'Creating Purchase Order...'.tr,
+                            style: TextStyle(fontSize: 12.sp),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ));
   }
 }

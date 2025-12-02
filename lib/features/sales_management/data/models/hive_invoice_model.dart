@@ -9,7 +9,7 @@ class HiveSaleInvoice extends HiveObject {
   final int id;
 
   @HiveField(1)
-  final int customerId;
+  final int? customerId;
 
   @HiveField(2)
   final String customerName;
@@ -58,7 +58,7 @@ class HiveSaleInvoice extends HiveObject {
 
   HiveSaleInvoice({
     required this.id,
-    required this.customerId,
+    this.customerId,
     this.customerName = '',
     required this.invoiceDate,
     required this.totalAmount,
@@ -97,16 +97,56 @@ class HiveSaleInvoice extends HiveObject {
     };
   }
 
-  static HiveSaleInvoice fromSaleParams(SaleProcessParams params) {
-    final invoiceId = DateTime.now().millisecondsSinceEpoch;
+  /// Creates a HiveSaleInvoice from SaleProcessParams for offline storage
+  ///
+  /// **Important Notes:**
+  /// - The generated ID is TEMPORARY and only used for local Hive storage
+  /// - When syncing to backend, the backend will assign a new ID
+  /// - This ID is used as the Hive key to store/retrieve the invoice
+  /// - ID must be within 32-bit range (0 - 0xFFFFFFFF) for Hive compatibility
+  ///
+  /// **ID Generation:**
+  /// - Combines timestamp + customer ID + items count for uniqueness
+  /// - Uses hash function to ensure valid 32-bit integer
+  /// - Stored in Hive with: `saleBox.put(invoiceId, invoice)`
+  ///
+  /// **When Syncing:**
+  /// - Invoice is converted back to SaleProcessParams (without ID)
+  /// - Backend creates sale and assigns its own ID
+  /// - Offline invoice is deleted after successful sync
+  static HiveSaleInvoice fromSaleParams(
+    SaleProcessParams params, {
+    Map<int, String>? productNames,
+  }) {
+    // Generate a unique 32-bit ID that fits Hive's integer key limit (0 - 0xFFFFFFFF)
+    // This ID is ONLY for local Hive storage - backend will assign real ID on sync
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final customerId =
+        params.customerId ?? 0; // Use 0 for hash calculation only
+    final itemsCount = params.items.length;
+
+    // Create a hash using bitwise operations for better distribution
+    // This reduces collision probability while staying within 32-bit range
+    var hash = timestamp;
+    hash = ((hash << 5) - hash) + customerId; // hash * 31 + customerId
+    hash = ((hash << 5) - hash) + itemsCount; // hash * 31 + itemsCount
+    hash = hash ^ (hash >> 16); // XOR with upper bits for better distribution
+
+    // Ensure it's positive and within valid range (1 to 0xFFFFFFFF)
+    // This ID will be used as: saleBox.put(invoiceId, invoice)
+    final invoiceId = (hash.abs() % 0xFFFFFFFF).clamp(1, 0xFFFFFFFF);
+
+    int itemCounter = 0; // To ensure unique item IDs
 
     final items = params.items.map((item) {
-      final itemId = DateTime.now().millisecondsSinceEpoch +
-          item.stockItemId; // ضمان عدم التكرار
+      // Generate item ID within 32-bit range
+      final itemHash = ((invoiceId * 1000 + itemCounter++) % 0xFFFFFFFF);
+      final itemId = itemHash.abs().clamp(1, 0xFFFFFFFF);
       return HiveSaleItem(
         id: itemId,
         productId: item.stockItemId,
-        productName: "", // ممكن تعدلي حسب توفر الاسم
+        productName: productNames?[item.stockItemId] ??
+            "Product ${item.stockItemId}", // Fallback if name not found
         quantity: item.quantity,
         refundedQuantity: 0,
         availableForRefund: item.quantity,
@@ -117,7 +157,7 @@ class HiveSaleInvoice extends HiveObject {
 
     return HiveSaleInvoice(
       id: invoiceId,
-      customerId: params.customerId ?? 0,
+      customerId: params.customerId, // Keep null if no customer selected
       customerName: "",
       invoiceDate: DateTime.now().toIso8601String(),
       totalAmount: items.fold(0.0, (sum, item) => sum + item.subTotal),

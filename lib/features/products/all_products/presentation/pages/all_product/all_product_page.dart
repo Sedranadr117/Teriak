@@ -4,6 +4,7 @@ import 'package:sizer/sizer.dart';
 import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/features/products/all_products/presentation/controller/get_allProduct_controller.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/widget/add_product_button.dart';
+import 'package:teriak/features/products/all_products/presentation/pages/all_product/widget/sync_bar_widget.dart';
 import 'package:teriak/features/products/search_product/presentation/controller/search_product_controller.dart';
 import 'package:teriak/features/products/all_products/presentation/pages/all_product/subwidget/product_widget.dart';
 import 'package:teriak/config/extensions/responsive.dart';
@@ -25,6 +26,10 @@ class _AllProductPageState extends State<AllProductPage> {
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    // Update pending products count when page is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      allController.updatePendingProductsCount();
+    });
   }
 
   @override
@@ -51,10 +56,66 @@ class _AllProductPageState extends State<AllProductPage> {
       appBar: AppBar(
         title: Text("Pharmacy Product".tr,
             style: Theme.of(context).textTheme.titleLarge),
+        actions: [
+          // Manual sync icon
+          Obx(() {
+            final controller = Get.find<GetAllProductController>();
+            if (controller.pendingProductsCount.value > 0) {
+              return IconButton(
+                icon: Stack(
+                  children: [
+                    Icon(
+                      controller.isSyncing.value
+                          ? Icons.sync
+                          : Icons.sync_outlined,
+                      color: controller.isSyncing.value
+                          ? Theme.of(context).colorScheme.primary
+                          : null,
+                    ),
+                    if (controller.pendingProductsCount.value > 0)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.error,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 14.sp,
+                            minHeight: 14.sp,
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${controller.pendingProductsCount.value}',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onError,
+                                fontSize: 8.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                onPressed: controller.isSyncing.value
+                    ? null
+                    : () => controller.manualSyncPendingProducts(),
+                tooltip: 'Sync pending products'.tr,
+              );
+            }
+            return const SizedBox.shrink();
+          }),
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
+            // Sync bar
+            SyncBarWidget(),
+
             // Search bar
             SearchWidget(),
 

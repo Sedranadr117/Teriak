@@ -98,9 +98,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     (role == "PHARMACY_MANAGER"))
                   IconButton(
                     onPressed: () async {
-                      await _showDeleteConfirmation(context, () {
-                        deleteController.deleteProduct(drugData.id);
-                        allController.refreshProducts();
+                      await _showDeleteConfirmation(context, () async {
+                        await deleteController.deleteProduct(
+                            drugData.id, drugData.productType);
+                        // Force refresh from server to get updated list
+                        allController.refreshProducts(skipCache: true);
 
                         Navigator.of(context).pop(true);
                       });
