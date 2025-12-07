@@ -20,4 +20,31 @@ class PurchaseOrderEntity {
     required this.createdAt,
     required this.items,
   });
+
+  
+  DateTime get creationDateTime {
+    if (createdAt.length >= 6) {
+      return DateTime(
+        createdAt[0],
+        createdAt[1],
+        createdAt[2],
+        createdAt[3],
+        createdAt[4],
+        createdAt[5],
+      );
+    }
+    return DateTime.now();
+  }
+
+  String get formattedCreationDateTime {
+    final date = creationDateTime;
+
+    final formattedDate =
+        '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+
+    final formattedTime =
+        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+
+    return '$formattedDate, $formattedTime';
+  }
 }

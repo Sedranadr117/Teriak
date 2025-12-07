@@ -43,27 +43,4 @@ class PurchaseOrderModel extends PurchaseOrderEntity {
           items.map((e) => (e as ProductItemModel).toJson()).toList(),
     };
   }
-
-      DateTime get creationDateTime {
-    if (createdAt.length >= 6) {
-      return DateTime(
-        createdAt[0], // year
-        createdAt[1], // month
-        createdAt[2], // day
-        createdAt[3], // hour
-        createdAt[4], // minute
-        createdAt[5], // second
-      );
-    }
-    return DateTime.now();
-  }
-
-  String get formattedCreationDateTime {
-    final date = creationDateTime;
-    final formattedDate =
-        '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
-    final formattedTime =
-        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-    return '$formattedDate, $formattedTime';
-  }
 }

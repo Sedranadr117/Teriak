@@ -1,9 +1,16 @@
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:teriak/config/routes/app_pages.dart' show AppPages;
 import 'package:teriak/core/databases/cache/cache_helper.dart';
+import 'package:teriak/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   debugPrint("🔥 Background Message Received: ${message.messageId}");
 }
 
@@ -49,11 +56,28 @@ class NotificationService {
     );
   }
 
-  Future<void> _initLocalNotifications() async {
-    const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const settings = InitializationSettings(android: android);
-    await _local.initialize(settings);
-  }
+ Future<void> _initLocalNotifications() async {
+  // 1) إعدادات البداية
+  const android = AndroidInitializationSettings('@mipmap/ic_launcher');
+  const settings = InitializationSettings(android: android);
+
+  // 2) إنشاء Notification Channel (مهم جداً)
+  final androidImplementation =
+      _local.resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
+
+  await androidImplementation?.createNotificationChannel(
+    const AndroidNotificationChannel(
+      'default_channel',
+      'General Notifications',
+      importance: Importance.high,
+    ),
+  );
+
+  // 3) تهيئة local notifications
+  await _local.initialize(settings);
+}
+
 
   Future<void> getAndSaveToken() async {
     final token = await _messaging.getToken();
@@ -86,9 +110,6 @@ class NotificationService {
 
       // Notify controller if callback is set
       onNotificationClicked?.call(message);
-
-      // هنا لو بدك تنقلي لنقطة معينة
-      // navigatorKey.currentState?.pushNamed("/details");
     }
   }
 
@@ -105,6 +126,7 @@ class NotificationService {
     print("➡️ User clicked notification (background)");
     // Notify controller if callback is set
     onNotificationClicked?.call(message);
+      // Navigation
   }
 
   Future<void> _showLocalNotification({

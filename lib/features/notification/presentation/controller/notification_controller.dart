@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:teriak/config/routes/app_pages.dart';
 import 'package:teriak/core/connection/network_info.dart';
 import 'package:teriak/core/databases/api/end_points.dart';
 import 'package:teriak/core/databases/api/http_consumer.dart';
@@ -62,9 +63,16 @@ class NotificationController extends GetxController {
 
   void _handleNotificationClicked(RemoteMessage message) {
     debugPrint("📬 Notification clicked: ${message.messageId}");
+
+    // أول شي ضيف الإشعار لقائمة الإشعارات
     _handleNotificationReceived(message);
-    // Optionally navigate to notification page
-    // Get.toNamed(AppPages.notifications);
+
+    // التنقل إلى صفحة الإشعارات
+    Future.delayed(Duration(milliseconds: 200), () {
+      if (Get.currentRoute != AppPages.notifications) {
+        Get.toNamed(AppPages.notifications);
+      }
+    });
   }
 
   void _handleNotificationReceived(RemoteMessage message) {
@@ -103,7 +111,10 @@ class NotificationController extends GetxController {
           debugPrint('❌ Failed to fetch notifications: ${failure.errMessage}');
         },
         (paginatedEntity) {
-          notifications.assignAll(paginatedEntity.content);
+          final filtered =
+              paginatedEntity.content.where((n) => n.status == 'SENT').toList();
+
+          notifications.assignAll(filtered);
           debugPrint(
               '✅ Successfully fetched ${paginatedEntity.content.length} notifications');
         },

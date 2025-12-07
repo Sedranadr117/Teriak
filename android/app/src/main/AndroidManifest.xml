@@ -15,6 +15,22 @@
         android:label="Uqar"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+
+    <service
+    android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+    android:exported="true"
+    tools:replace="android:exported">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+
+
+
+
+
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -35,6 +51,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <meta-data
+    android:name="com.google.firebase.messaging.default_notification_icon"
+    android:resource="@drawable/ic_notification" />
 
         <meta-data
             android:name="flutterEmbedding"

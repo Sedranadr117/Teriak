@@ -37,6 +37,7 @@ class NotificationEntity {
     required this.readAt,
     required this.status,
   });
+
 }
 
 

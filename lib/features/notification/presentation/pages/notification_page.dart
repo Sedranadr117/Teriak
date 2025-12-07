@@ -117,85 +117,79 @@ class NotificationPage extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      child: InkWell(
-        onTap: () {
-          // Handle notification tap if needed
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: EdgeInsets.all(4.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 12.w,
-                height: 12.w,
-                decoration: BoxDecoration(
-                  color: isUnread
-                      ? theme.colorScheme.primary.withOpacity(0.1)
-                      : theme.colorScheme.onSurface.withOpacity(0.05),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  _getNotificationIcon(notification.notificationType),
-                  color: isUnread
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurface.withOpacity(0.5),
-                  size: 6.w,
-                ),
+      child: Padding(
+        padding: EdgeInsets.all(4.w),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 12.w,
+              height: 12.w,
+              decoration: BoxDecoration(
+                color: isUnread
+                    ? theme.colorScheme.primary.withOpacity(0.1)
+                    : theme.colorScheme.onSurface.withOpacity(0.05),
+                shape: BoxShape.circle,
               ),
-              SizedBox(width: 4.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500,
-                              color: isUnread
-                                  ? theme.colorScheme.onSurface
-                                  : theme.colorScheme.onSurface.withOpacity(0.8),
-                            ),
+              child: Icon(
+                _getNotificationIcon(notification.notificationType),
+                color: isUnread
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.onSurface.withOpacity(0.5),
+                size: 6.w,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: isUnread ? FontWeight.w600 : FontWeight.w500,
+                            color: isUnread
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurface.withOpacity(0.8),
                           ),
                         ),
-                        if (isUnread)
-                          Container(
-                            width: 2.w,
-                            height: 2.w,
-                            decoration: BoxDecoration(
-                              color: theme.colorScheme.primary,
-                              shape: BoxShape.circle,
-                            ),
+                      ),
+                      if (isUnread)
+                        Container(
+                          width: 2.w,
+                          height: 2.w,
+                          decoration: BoxDecoration(
+                            color: theme.colorScheme.primary,
+                            shape: BoxShape.circle,
                           ),
-                      ],
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: 1.h),
+                  Text(
+                    notification.body,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.7),
                     ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (notification.sentAt != null) ...[
                     SizedBox(height: 1.h),
                     Text(
-                      notification.body,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      _formatDate(notification.sentAt!),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.5),
                       ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
                     ),
-                    if (notification.sentAt != null) ...[
-                      SizedBox(height: 1.h),
-                      Text(
-                        _formatDate(notification.sentAt!),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withOpacity(0.5),
-                        ),
-                      ),
-                    ],
                   ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

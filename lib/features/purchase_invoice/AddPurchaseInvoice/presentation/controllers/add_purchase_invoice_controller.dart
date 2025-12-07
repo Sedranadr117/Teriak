@@ -10,6 +10,7 @@ import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/data/datasou
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/data/repositories/add_purchase_invoice_repository_impl.dart';
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/domain/usecases/post_add_purchase_invoice.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/purchase_model .dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity%20.dart';
 
 class AddPurchaseInvoiceController extends GetxController {
   final _formKey = GlobalKey<FormState>();
@@ -18,7 +19,7 @@ class AddPurchaseInvoiceController extends GetxController {
   final ScrollController _scrollController = ScrollController();
 
   // Observable variables
-  final Rx<PurchaseOrderModel?> _purchaseOrder = Rx<PurchaseOrderModel?>(null);
+  final Rx<PurchaseOrderEntity?> _purchaseOrder = Rx<PurchaseOrderEntity?>(null);
   final RxList<Map<String, dynamic>> _products = <Map<String, dynamic>>[].obs;
   final RxBool _isSaving = false.obs;
   final RxString _searchQuery = ''.obs;
@@ -30,7 +31,7 @@ class AddPurchaseInvoiceController extends GetxController {
   TextEditingController get invoiceNumberController => _invoiceNumberController;
   TextEditingController get searchController => _searchController;
   ScrollController get scrollController => _scrollController;
-  PurchaseOrderModel? get purchaseOrder => _purchaseOrder.value;
+  PurchaseOrderEntity? get purchaseOrder => _purchaseOrder.value;
   List<Map<String, dynamic>> get products => _products;
   bool get isSaving => _isSaving.value;
   String get searchQuery => _searchQuery.value;
@@ -68,12 +69,12 @@ class AddPurchaseInvoiceController extends GetxController {
     super.onClose();
   }
 
-  void setPurchaseOrder(PurchaseOrderModel po) {
+  void setPurchaseOrder(PurchaseOrderEntity po) {
     _purchaseOrder.value = po;
     _generateProductsFromPO(po);
   }
 
-  void _generateProductsFromPO(PurchaseOrderModel po) {
+  void _generateProductsFromPO(PurchaseOrderEntity po) {
     final List<Map<String, dynamic>> products = po.items
         .map((item) => {
               "id": item.id,

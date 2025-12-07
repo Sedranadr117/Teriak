@@ -9,6 +9,7 @@ import 'package:teriak/features/products/all_products/presentation/controller/ge
 import 'package:teriak/features/purchase_invoice/AddPurchaseInvoice/presentation/pages/widgets/invoice_products_table_widget.dart';
 import 'package:teriak/features/purchase_invoice/AllPurchaseInvoice/presentation/controller/all_purchase_invoice_controller.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/data/models/purchase_model .dart';
+import 'package:teriak/features/purchase_order/all_purchase_orders/domain/entities/purchase_entity%20.dart';
 import 'package:teriak/features/purchase_order/all_purchase_orders/presentation/controller/all_purchase_order_controller.dart';
 import 'package:teriak/features/stock_management/presentation/controller/stock_controller.dart';
 import '../controllers/add_purchase_invoice_controller.dart';
@@ -25,7 +26,7 @@ class EnhancedCreateInvoiceScreen extends StatefulWidget {
 
 class _EnhancedCreateInvoiceScreenState
     extends State<EnhancedCreateInvoiceScreen> {
-  late PurchaseOrderModel orderItem;
+  late PurchaseOrderEntity orderItem;
   late final AddPurchaseInvoiceController controller;
   late final AllPurchaseInvoiceController allController;
   late final GetAllPurchaseOrderController orderController;
@@ -44,7 +45,7 @@ class _EnhancedCreateInvoiceScreenState
     stockController = Get.put(StockController());
     moneyBoxController = Get.find<GetMoneyBoxController>();
     moneyBoxTransactionController = Get.find<GetMoneyBoxTransactionController>();
-    orderItem = Get.arguments as PurchaseOrderModel;
+    orderItem = Get.arguments;
     _loadPurchaseOrderData();
   }
 

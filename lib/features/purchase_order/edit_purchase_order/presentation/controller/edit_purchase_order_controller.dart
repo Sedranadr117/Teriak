@@ -95,7 +95,7 @@ class EditPurchaseOrderController extends GetxController {
   late final EditPurchaseOrders editPurchaseOrderUseCase;
 
   var suppliers = <SupplierModel>[].obs;
-  var products = <ProductModel>[].obs;
+  var products = <ProductEntity>[].obs;
   final productController = Get.find<GetAllProductController>();
   final supplierController = Get.find<GetAllSupplierController>();
 
@@ -147,7 +147,7 @@ class EditPurchaseOrderController extends GetxController {
 
     ever(productController.products, (products) {
       if (products.isNotEmpty) {
-        this.products.value = products.cast<ProductModel>();
+        this.products.value = products;
         if (originalOrder != null && !isInitializing.value) {
           loadOrderData(originalOrder!, supplierId: originalSupplierId);
         }
@@ -178,7 +178,7 @@ class EditPurchaseOrderController extends GetxController {
     originalSupplierName = order.supplierName;
 
     suppliers.value = supplierController.suppliers.toList();
-    products.value = productController.products.cast<ProductModel>();
+    products.value = productController.products;
 
     if (supplierId != null) {
       final supplier = suppliers.firstWhereOrNull((s) => s.id == supplierId);

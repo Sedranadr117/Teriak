@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
@@ -10,7 +9,6 @@ import 'package:teriak/config/themes/app_theme.dart';
 import 'package:teriak/config/themes/theme_controller.dart';
 import 'package:teriak/core/initializer/app_initializer.dart';
 
-
 String? role;
 Future<void> main() async {
   await AppInitializer.init();
@@ -18,7 +16,6 @@ Future<void> main() async {
     AppInitializer.runAppWithSizer(const MyApp()),
   );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
